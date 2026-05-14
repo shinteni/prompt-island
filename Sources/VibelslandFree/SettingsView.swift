@@ -139,7 +139,7 @@ struct SettingsView: View {
 private struct SettingsHeader: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 7) {
-            Text("Vibelsland Free")
+            Text(">_ - island")
                 .font(.system(size: 28, weight: .semibold))
             Text("管理浮岛显示、提醒来源和本机审批接入。正常状态下不显示健康检查细节。")
                 .font(.system(size: 13, weight: .medium))

@@ -1,6 +1,6 @@
 # Privacy
 
-Vibelsland Free is a local macOS utility. It does not create an account, call a cloud service, upload telemetry, or sync data to a remote server.
+&gt;_ - island is a local macOS utility. It does not create an account, call a cloud service, upload telemetry, or sync data to a remote server.
 
 ## Local Data Used
 
@@ -30,7 +30,7 @@ Logs are intentionally conservative. They record connection state, event types, 
 
 ## Network
 
-Vibelsland Free does not require an internet connection for its core features. Claude Code, Codex CLI, and Codex Desktop may use their own network connections independently of this app.
+&gt;_ - island does not require an internet connection for its core features. Claude Code, Codex CLI, and Codex Desktop may use their own network connections independently of this app.
 
 ## Uninstall
 

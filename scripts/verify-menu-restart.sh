@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-APP_DIR="$ROOT/dist/Vibelsland Free.app"
+APP_DIR="$ROOT/dist/>_ - island.app"
 EXECUTABLE="$APP_DIR/Contents/MacOS/VibelslandFree"
 WINDOW_CHECKER="$ROOT/scripts/window-check.swift"
 WAIT_SECONDS="${VIBELSLAND_MENU_RESTART_SECONDS:-5}"
@@ -89,7 +89,7 @@ tell application "System Events"
   tell process "VibelslandFree"
     click menu bar item 1 of menu bar 2
     delay 0.2
-    click menu item "重启 Vibelsland Free" of menu 1 of menu bar item 1 of menu bar 2
+    click menu item "重启 >_ - island" of menu 1 of menu bar item 1 of menu bar 2
   end tell
 end tell
 APPLESCRIPT

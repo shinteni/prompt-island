@@ -1483,7 +1483,7 @@ struct VibelslandFreeCoreTests {
 
     @Test func testAppRestartPolicyReopensAfterCurrentInstanceCanExit() {
         let command = AppRestartPolicy.command(
-            bundlePath: "/Applications/Vibelsland Free.app",
+            bundlePath: "/Applications/>_ - island.app",
             environment: [:],
             currentProcessID: 1234
         )
@@ -1496,7 +1496,7 @@ struct VibelslandFreeCoreTests {
                 "vibelsland-restart",
                 "1234",
                 "-n",
-                "/Applications/Vibelsland Free.app"
+                "/Applications/>_ - island.app"
             ],
             "Restart waits for the old process to exit before reopening so the old and new floating UI do not overlap"
         )
@@ -1505,7 +1505,7 @@ struct VibelslandFreeCoreTests {
 
     @Test func testAppRestartPolicyPreservesVerificationEnvironment() {
         let command = AppRestartPolicy.command(
-            bundlePath: "/Applications/Vibelsland Free.app",
+            bundlePath: "/Applications/>_ - island.app",
             environment: [
                 "PATH": "/usr/bin",
                 "VIBELSLAND_HOME": "/tmp/vibelsland-restart",
@@ -1526,7 +1526,7 @@ struct VibelslandFreeCoreTests {
                 "--env",
                 "VIBELSLAND_ENABLE_VERIFICATION_ACTIONS=1",
                 "-n",
-                "/Applications/Vibelsland Free.app"
+                "/Applications/>_ - island.app"
             ],
             "Internal restart keeps only the app-specific verification overrides needed by isolated regression scripts"
         )
@@ -1537,22 +1537,22 @@ struct VibelslandFreeCoreTests {
             processID: 200,
             bundleIdentifier: "free.vibelsland.macos",
             executableName: "VibelslandFree",
-            bundleName: "Vibelsland Free.app",
-            localizedName: "Vibelsland Free",
+            bundleName: ">_ - island.app",
+            localizedName: ">_ - island",
             isTerminated: false
         )
         let match = AppSingleInstancePolicy.existingInstance(
             currentProcessID: 300,
             currentBundleIdentifier: "free.vibelsland.macos",
             currentExecutableName: "VibelslandFree",
-            currentBundleName: "Vibelsland Free.app",
+            currentBundleName: ">_ - island.app",
             runningApplications: [
                 AppInstanceSnapshot(
                     processID: 300,
                     bundleIdentifier: "free.vibelsland.macos",
                     executableName: "VibelslandFree",
-                    bundleName: "Vibelsland Free.app",
-                    localizedName: "Vibelsland Free",
+                    bundleName: ">_ - island.app",
+                    localizedName: ">_ - island",
                     isTerminated: false
                 ),
                 existing
@@ -1574,15 +1574,15 @@ struct VibelslandFreeCoreTests {
             currentProcessID: 300,
             currentBundleIdentifier: "free.vibelsland.macos",
             currentExecutableName: "VibelslandFree",
-            currentBundleName: "Vibelsland Free.app",
+            currentBundleName: ">_ - island.app",
             runningApplications: [
                 existingDebugRun,
                 AppInstanceSnapshot(
                     processID: 300,
                     bundleIdentifier: "free.vibelsland.macos",
                     executableName: "VibelslandFree",
-                    bundleName: "Vibelsland Free.app",
-                    localizedName: "Vibelsland Free",
+                    bundleName: ">_ - island.app",
+                    localizedName: ">_ - island",
                     isTerminated: false
                 )
             ]
@@ -1595,8 +1595,8 @@ struct VibelslandFreeCoreTests {
             processID: 200,
             bundleIdentifier: "free.vibelsland.macos",
             executableName: "VibelslandFree",
-            bundleName: "Vibelsland Free.app",
-            localizedName: "Vibelsland Free",
+            bundleName: ">_ - island.app",
+            localizedName: ">_ - island",
             isTerminated: false
         )
         let match = AppSingleInstancePolicy.existingInstance(
@@ -1680,14 +1680,14 @@ struct VibelslandFreeCoreTests {
             currentProcessID: 300,
             currentBundleIdentifier: "free.vibelsland.macos",
             currentExecutableName: "VibelslandFree",
-            currentBundleName: "Vibelsland Free.app",
+            currentBundleName: ">_ - island.app",
             runningApplications: [
                 AppInstanceSnapshot(
                     processID: 100,
                     bundleIdentifier: "free.vibelsland.macos",
                     executableName: "VibelslandFree",
-                    bundleName: "Vibelsland Free.app",
-                    localizedName: "Vibelsland Free",
+                    bundleName: ">_ - island.app",
+                    localizedName: ">_ - island",
                     isTerminated: true
                 ),
                 AppInstanceSnapshot(
@@ -1700,7 +1700,7 @@ struct VibelslandFreeCoreTests {
                 )
             ]
         )
-        XCTAssertEqual(match, nil, "Only a live Vibelsland Free instance should block a new launch")
+        XCTAssertEqual(match, nil, "Only a live >_ - island instance should block a new launch")
     }
 
     @Test func testAppPathsSupportsExplicitVerificationHomeOverride() {

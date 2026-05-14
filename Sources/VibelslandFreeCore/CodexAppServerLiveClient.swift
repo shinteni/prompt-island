@@ -349,7 +349,7 @@ package final class CodexAppServerLiveClient: @unchecked Sendable {
             "id": id,
             "method": "initialize",
             "params": [
-                "clientInfo": ["name": "vibelsland-free", "version": "2"],
+                "clientInfo": ["name": "prompt-island", "version": "2"],
                 "capabilities": [:]
             ]
         ])
@@ -404,7 +404,7 @@ package final class CodexAppServerLiveClient: @unchecked Sendable {
                 "id": message["id"] ?? NSNull(),
                 "error": [
                     "code": -32601,
-                    "message": "Vibelsland Free does not handle \(method)"
+                    "message": ">_ - island does not handle \(method)"
                 ]
             ])
         }

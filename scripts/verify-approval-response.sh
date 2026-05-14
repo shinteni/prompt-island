@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-APP_DIR="$ROOT/dist/Vibelsland Free.app"
+APP_DIR="$ROOT/dist/>_ - island.app"
 EXECUTABLE="$APP_DIR/Contents/MacOS/VibelslandFree"
 WINDOW_CHECKER="$ROOT/scripts/window-check.swift"
 WAIT_SECONDS="${VIBELSLAND_APPROVAL_RESPONSE_SECONDS:-5}"
@@ -195,8 +195,8 @@ JSON
 }
 
 run_decision "accept" '"behavior":"allow"'
-run_decision "decline" '"behavior":"deny"' 'Permission denied in Vibelsland Free.'
-run_decision "cancel" '"interrupt":true' 'Permission cancelled in Vibelsland Free.'
+run_decision "decline" '"behavior":"deny"' 'Permission denied in >_ - island.'
+run_decision "cancel" '"interrupt":true' 'Permission cancelled in >_ - island.'
 run_decision "acceptForSession" '"behavior":"allow"' '"updatedPermissions"'
 
 if /usr/bin/grep -q 'approval.timedOut' "$LOG"; then

@@ -103,7 +103,7 @@ final class CodexDesktopLiveClient: @unchecked Sendable {
         defer { cleanup() }
 
         let deadline = Date().addingTimeInterval(timeout)
-        try writeLine(#"{"id":1,"method":"initialize","params":{"clientInfo":{"name":"vibelsland-free","version":"0"},"capabilities":{}}}"#)
+        try writeLine(#"{"id":1,"method":"initialize","params":{"clientInfo":{"name":"prompt-island","version":"0"},"capabilities":{}}}"#)
         guard state.waitForResponse(id: 1, process: process, until: deadline) else {
             throw NSError(domain: "VibelslandFree.codex", code: 1, userInfo: [NSLocalizedDescriptionKey: "Timed out waiting for initialize response"])
         }

@@ -159,7 +159,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject, NSWi
         if let button = item.button {
             button.image = MenuBarIconFactory.vibelslandIcon()
             button.imageScaling = .scaleProportionallyDown
-            button.toolTip = "Vibelsland Free"
+            button.toolTip = ">_ - island"
         }
 
         let menu = NSMenu()
@@ -168,8 +168,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject, NSWi
         menu.addItem(NSMenuItem(title: "设置...", action: #selector(openSettings), keyEquivalent: ","))
         menu.addItem(NSMenuItem(title: "打开日志", action: #selector(openLogs), keyEquivalent: "l"))
         menu.addItem(.separator())
-        menu.addItem(NSMenuItem(title: "重启 Vibelsland Free", action: #selector(restart), keyEquivalent: "r"))
-        menu.addItem(NSMenuItem(title: "退出 Vibelsland Free", action: #selector(quit), keyEquivalent: "q"))
+        menu.addItem(NSMenuItem(title: "重启 >_ - island", action: #selector(restart), keyEquivalent: "r"))
+        menu.addItem(NSMenuItem(title: "退出 >_ - island", action: #selector(quit), keyEquivalent: "q"))
         item.menu = menu
         statusItem = item
     }
@@ -337,7 +337,7 @@ private enum MenuBarIconFactory {
             return true
         }
         image.isTemplate = true
-        image.accessibilityDescription = "Vibelsland Free"
+        image.accessibilityDescription = ">_ - island"
         return image
     }
 }

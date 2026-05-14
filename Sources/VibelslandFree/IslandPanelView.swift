@@ -234,7 +234,7 @@ struct IslandPanelView: View {
                 HStack(spacing: 7) {
                     sourceDots
                     VStack(alignment: .leading, spacing: 1) {
-                        Text(compactSession.map { SessionDisplaySnapshot(session: $0).title } ?? "Vibelsland Free")
+                        Text(compactSession.map { SessionDisplaySnapshot(session: $0).title } ?? ">_ - island")
                             .font(.system(size: 11, weight: .semibold))
                             .foregroundStyle(GlassText.primary)
                             .lineLimit(1)
@@ -583,7 +583,7 @@ struct IdleMiniContent: View {
                 .frame(width: 21, height: 18)
                 .shadow(color: Color.white.opacity(0.36), radius: 1.2, y: 0.5)
         }
-        .accessibilityLabel("Vibelsland Free \(status.displayName)")
+        .accessibilityLabel(">_ - island \(status.displayName)")
     }
 }
 
