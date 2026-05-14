@@ -1,0 +1,95 @@
+# Vibelsland Free
+
+<p align="center">
+  <img src="docs/assets/readme/app-icon.png" alt="Vibelsland Free app icon" width="128">
+</p>
+
+<p align="center">
+  <a href="README.md">中文</a> | <a href="README.en.md">English</a>
+</p>
+
+<p align="center">
+  <strong>Local AI coding island for macOS.</strong>
+</p>
+
+<p align="center">
+  <a href="https://github.com/shinteni/vibelsland-free/releases/latest">Download latest release</a>
+  ·
+  <a href="PRIVACY.md">Privacy</a>
+  ·
+  <a href="#build-from-source">Build from source</a>
+</p>
+
+<p align="center">
+  <img src="docs/assets/readme/hero-island.png" alt="Vibelsland Free floating island preview" width="960">
+</p>
+
+`macOS 14+` `Swift` `Local-first` `No telemetry` `Claude Code` `Codex CLI` `Codex Desktop`
+
+## See AI Coding Work At A Glance
+
+Vibelsland Free is a native macOS utility for developers who work with AI coding tools every day. It brings local Claude Code, Codex CLI, and Codex Desktop session status, tool activity, token summaries, and approval requests into one floating island at the top of your screen.
+
+It does not replace your terminal or desktop client. It keeps the most important AI coding state visible while you work. When idle, it stays quiet. During a task, it becomes a compact pill. When an approval request or important update needs attention, it expands into a panel.
+
+## Highlights
+
+- **Floating island UI**: idle dot, compact task pill, and expandable session panel.
+- **RGB status glow**: the edge glow is the core visual signature for running, completed, failed, and approval states.
+- **Unified AI coding view**: supports Claude Code, Codex CLI, and Codex Desktop in one place.
+- **Session summaries**: shows task titles, tool activity, AI response snippets, token usage, and recent updates.
+- **Approval center**: respond to allow, reject, continue, or cancel requests from the island.
+- **Health dashboard**: check Bridge, Hooks, Codex Desktop connectivity, logs, and local runtime state from settings.
+- **Local-first privacy**: no account, no telemetry upload, no cloud sync, and no remote service required for core features.
+
+## Who It Is For
+
+- Developers who run Claude Code, Codex CLI, or Codex Desktop during daily work.
+- People who want AI task status visible without switching windows.
+- Users who want approvals, tool calls, and session progress in a single macOS-native surface.
+- Anyone who prefers quiet, local, low-friction tools.
+
+## Download And Install
+
+Download the latest build from GitHub Releases:
+
+[Download latest release](https://github.com/shinteni/vibelsland-free/releases/latest)
+
+Install:
+
+1. Download `Vibelsland-Free-0.1.0-macos.zip`.
+2. Unzip it and move `Vibelsland Free.app` to `Applications`.
+3. Open the app and install Hooks from the menu bar or settings window.
+4. Configure launch at login, sound, Do Not Disturb, and display position as needed.
+
+Note: the current release uses ad-hoc codesign. For broader public distribution, Developer ID signing and notarization are recommended for the smoothest first-run experience.
+
+## Privacy
+
+Vibelsland Free is local-first. It does not create an account, upload telemetry, or sync data to a remote server. It reads local Claude Code, Codex CLI, and Codex Desktop state only to display session status, tool activity, token summaries, and approval requests.
+
+Read the full privacy note in [PRIVACY.md](PRIVACY.md).
+
+## Build From Source
+
+```sh
+swift build
+swift test
+zsh scripts/package-release.sh
+```
+
+Local release artifacts are generated at:
+
+```text
+dist/Vibelsland Free.app
+dist/Vibelsland-Free-0.1.0-macos.zip
+dist/Vibelsland-Free-0.1.0-macos.zip.sha256
+```
+
+## Project Status
+
+Vibelsland Free already includes the core local app experience: floating island UI, settings, hook installation, approval UI, runtime health checks, single-instance protection, restart recovery, and release packaging scripts. Before broad public distribution, real-device regression testing, Developer ID signing, and notarization are still recommended.
+
+## Independence
+
+Vibelsland Free is an independent utility. It is not affiliated with Anthropic, OpenAI, Claude, or Codex. Product names are used only to describe local compatibility.
