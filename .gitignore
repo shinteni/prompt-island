@@ -1,0 +1,17 @@
+.DS_Store
+
+# Swift Package Manager build products
+.build/
+.swiftpm/
+
+# Xcode user state
+*.xcuserdata/
+*.xcuserstate
+DerivedData/
+
+# Local release artifacts; regenerate with scripts/package-release.sh.
+dist/
+
+# Local logs and temporary files
+*.log
+*.tmp
