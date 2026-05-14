@@ -28,8 +28,8 @@ package struct AppInstanceSnapshot: Equatable {
 package enum AppSingleInstancePolicy {
     package static let productionBundleIdentifier = "free.vibelsland.macos"
     package static let executableName = "VibelslandFree"
-    package static let appBundleName = "Vibelsland Free.app"
-    package static let appDisplayName = "Vibelsland Free"
+    package static let appBundleName = ">_ - island.app"
+    package static let appDisplayName = ">_ - island"
 
     package static func existingInstance(
         currentProcessID: Int32,

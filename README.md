@@ -1,7 +1,7 @@
-# Vibelsland Free
+# &gt;_ - island
 
 <p align="center">
-  <img src="docs/assets/readme/app-icon.png" alt="Vibelsland Free app icon" width="128">
+  <img src="docs/assets/readme/app-icon.png" alt="&gt;_ - island app icon" width="128">
 </p>
 
 <p align="center">
@@ -13,7 +13,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/shinteni/vibelsland-free/releases/latest">下载最新版</a>
+  <a href="https://github.com/shinteni/prompt-island/releases/latest">下载最新版</a>
   ·
   <a href="PRIVACY.md">隐私说明</a>
   ·
@@ -21,14 +21,14 @@
 </p>
 
 <p align="center">
-  <img src="docs/assets/readme/hero-island.png" alt="Vibelsland Free floating island preview" width="960">
+  <img src="docs/assets/readme/hero-island.png" alt="&gt;_ - island floating island preview" width="960">
 </p>
 
 `macOS 14+` `Swift` `Local-first` `No telemetry` `Claude Code` `Codex CLI` `Codex Desktop`
 
 ## 一眼看清 AI 编程现场
 
-Vibelsland Free 是给重度 AI 编程用户的 macOS 原生工具。它把 Claude Code、Codex CLI 和 Codex Desktop 的本机会话状态、工具调用、token 摘要和审批请求集中到屏幕顶部的浮岛里。
+&gt;_ - island 是给重度 AI 编程用户的 macOS 原生工具。它把 Claude Code、Codex CLI 和 Codex Desktop 的本机会话状态、工具调用、token 摘要和审批请求集中到屏幕顶部的浮岛里。
 
 它不是替代终端或桌面客户端，而是在你工作时把最重要的 AI 编程状态留在视线范围内。空闲时它安静收起，任务进行时变成紧凑药丸，遇到审批或重要状态时展开为面板。
 
@@ -53,12 +53,12 @@ Vibelsland Free 是给重度 AI 编程用户的 macOS 原生工具。它把 Clau
 
 最新版可以在 GitHub Releases 下载：
 
-[Download latest release](https://github.com/shinteni/vibelsland-free/releases/latest)
+[Download latest release](https://github.com/shinteni/prompt-island/releases/latest)
 
 安装方式：
 
-1. 下载 `Vibelsland-Free-0.1.0-macos.zip`。
-2. 解压后将 `Vibelsland Free.app` 拖到 `Applications`。
+1. 下载 `prompt-island-0.1.0-macos.zip`。
+2. 解压后将 `>_ - island.app` 拖到 `Applications`。
 3. 打开应用，在菜单栏或设置页安装 Hooks。
 4. 按需开启自动启动、声音、勿扰和显示位置。
 
@@ -66,7 +66,7 @@ Vibelsland Free 是给重度 AI 编程用户的 macOS 原生工具。它把 Clau
 
 ## 隐私
 
-Vibelsland Free 是本机工具，不创建账号，不上传遥测，不同步远程服务器。它只读取 Claude Code、Codex CLI 和 Codex Desktop 在本机留下的状态、会话和审批信息，用于展示浮岛状态。
+&gt;_ - island 是本机工具，不创建账号，不上传遥测，不同步远程服务器。它只读取 Claude Code、Codex CLI 和 Codex Desktop 在本机留下的状态、会话和审批信息，用于展示浮岛状态。
 
 更多细节见 [PRIVACY.md](PRIVACY.md)。
 
@@ -81,19 +81,19 @@ zsh scripts/package-release.sh
 本地打包产物会生成在：
 
 ```text
-dist/Vibelsland Free.app
-dist/Vibelsland-Free-0.1.0-macos.zip
-dist/Vibelsland-Free-0.1.0-macos.zip.sha256
+dist/>_ - island.app
+dist/prompt-island-0.1.0-macos.zip
+dist/prompt-island-0.1.0-macos.zip.sha256
 ```
 
 ## 项目状态
 
-Vibelsland Free 已经具备可运行的本机版本，包含浮岛展示、设置页、Hook 安装、审批窗口、运行状态检查、单实例保护、重启恢复和发布打包脚本。公开分发前仍建议完成真实设备回归、正式签名和 notarization。
+&gt;_ - island 已经具备可运行的本机版本，包含浮岛展示、设置页、Hook 安装、审批窗口、运行状态检查、单实例保护、重启恢复和发布打包脚本。公开分发前仍建议完成真实设备回归、正式签名和 notarization。
 
 ## 许可证
 
-Vibelsland Free 使用 [MIT License](LICENSE) 开源。
+&gt;_ - island 使用 [MIT License](LICENSE) 开源。
 
 ## 独立声明
 
-Vibelsland Free 是独立工具，不隶属于 Anthropic、OpenAI、Claude 或 Codex。相关产品名仅用于说明本地兼容性。
+&gt;_ - island 是独立工具，不隶属于 Anthropic、OpenAI、Claude 或 Codex。相关产品名仅用于说明本地兼容性。

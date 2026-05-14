@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-APP_DIR="$ROOT/dist/Vibelsland Free.app"
+APP_DIR="$ROOT/dist/>_ - island.app"
 INFO="$APP_DIR/Contents/Info.plist"
 EXECUTABLE="$APP_DIR/Contents/MacOS/VibelslandFree"
 ICON="$APP_DIR/Contents/Resources/AppIcon.icns"

@@ -7,7 +7,7 @@ fi
 
 EXISTING_PIDS="$(/usr/bin/pgrep -x VibelslandFree 2>/dev/null | /usr/bin/xargs || true)"
 if [[ -n "$EXISTING_PIDS" ]]; then
-    echo "This verification launches a visible isolated Vibelsland Free window." >&2
+    echo "This verification launches a visible isolated >_ - island window." >&2
     echo "Existing VibelslandFree process(es) are already running: $EXISTING_PIDS" >&2
     echo "Quit the app first, or set VIBELSLAND_ALLOW_VISIBLE_TEST_WINDOWS=1 if a temporary duplicate UI is intentional." >&2
     exit 3

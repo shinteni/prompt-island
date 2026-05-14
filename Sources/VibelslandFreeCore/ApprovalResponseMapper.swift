@@ -45,7 +45,7 @@ package enum ApprovalResponseMapper {
                     "hookEventName": "PermissionRequest",
                     "decision": [
                         "behavior": "deny",
-                        "message": "Denied in Vibelsland Free."
+                        "message": "Denied in >_ - island."
                     ]
                 ]
             ])
@@ -69,7 +69,7 @@ package enum ApprovalResponseMapper {
                 "hookSpecificOutput": [
                     "hookEventName": "PreToolUse",
                     "permissionDecision": permissionDecision,
-                    "permissionDecisionReason": "Vibelsland Free"
+                    "permissionDecisionReason": ">_ - island"
                 ]
             ])
         }
@@ -86,10 +86,10 @@ package enum ApprovalResponseMapper {
                 }
             case .decline:
                 responseDecision["behavior"] = "deny"
-                responseDecision["message"] = "Permission denied in Vibelsland Free."
+                responseDecision["message"] = "Permission denied in >_ - island."
             case .cancel:
                 responseDecision["behavior"] = "deny"
-                responseDecision["message"] = "Permission cancelled in Vibelsland Free."
+                responseDecision["message"] = "Permission cancelled in >_ - island."
                 responseDecision["interrupt"] = true
             }
             return encode([

@@ -1,10 +1,10 @@
-# Vibelsland Free Release Checklist
+# &gt;_ - island Release Checklist
 
 售卖或对外分发前，必须同时完成自动验证和真实人工回归。本清单记录自动脚本不能可靠覆盖的发布阻塞项。
 
 ## 自动验证
 
-- [ ] 运行隔离窗口验证前，确认日常 Vibelsland Free 实例已经退出；若确实需要同时显示临时测试窗口，显式设置 `VIBELSLAND_ALLOW_VISIBLE_TEST_WINDOWS=1`。
+- [ ] 运行隔离窗口验证前，确认日常 >_ - island 实例已经退出；若确实需要同时显示临时测试窗口，显式设置 `VIBELSLAND_ALLOW_VISIBLE_TEST_WINDOWS=1`。
 - [ ] 运行 `zsh scripts/verify-app.sh` 并确认通过。
 - [ ] 运行 `zsh scripts/package-release.sh` 并确认生成 zip 与 sha256。
 - [ ] 运行 `zsh scripts/verify-runtime.sh`，确认应用启动后无新错误、Bridge/socket 已刷新、CPU 和 RSS 内存在阈值内。
@@ -14,7 +14,7 @@
 - [ ] 运行 `zsh scripts/verify-menu-open-logs.sh`，确认隔离冷启动后状态栏“打开日志”能在 Finder 中打开当前日志目录，且当前日志文件存在。
 - [ ] 运行 `zsh scripts/verify-restart-recovery.sh`，确认隔离进程重启后 Bridge/socket/log 和小圆窗口能恢复。
 - [ ] 运行 `zsh scripts/verify-app-internal-restart.sh`，确认应用内部重启路径会先退出旧实例、再恢复新实例，过程中不会留下两个浮岛进程。
-- [ ] 运行 `zsh scripts/verify-menu-restart.sh`，确认状态栏菜单里的“重启 Vibelsland Free”会触发同一条重启恢复路径。
+- [ ] 运行 `zsh scripts/verify-menu-restart.sh`，确认状态栏菜单里的“重启 >_ - island”会触发同一条重启恢复路径。
 - [ ] 运行 `zsh scripts/verify-system-overview-restore.sh`，确认隔离 Mission Control 通知后浮岛会隐藏并自动恢复到小圆尺寸。
 - [ ] 运行 `zsh scripts/verify-menu-open-panel-restore.sh`，确认隔离隐藏态下状态栏“打开面板”能主动恢复浮岛。
 - [ ] 运行 `zsh scripts/verify-stale-events-idle-window.sh`，确认过期 Claude / Codex Hook 事件会被记录但不会唤醒任务药丸。
@@ -29,8 +29,8 @@
 - [ ] 运行 `zsh scripts/verify-approval-timeout.sh`，确认隔离审批请求超时后不会向原工具返回允许结果。
 - [ ] 运行 `zsh scripts/verify-bridge-events.sh`，确认 Claude / Codex 测试事件能通过真实 Bridge helper 进入应用。
 - [ ] 运行 `zsh scripts/verify-release-readiness.sh`，确认公开售卖门禁明确列出未完成的人工回归和正式签名阻塞项；如果日常实例正在运行，应先提示退出而不是制造第二个浮岛；所有人工项完成后再要求该脚本通过。
-- [ ] 确认产物位于 `dist/Vibelsland Free.app`。
-- [ ] 确认下载包位于 `dist/Vibelsland-Free-0.1.0-macos.zip`。
+- [ ] 确认产物位于 `dist/>_ - island.app`。
+- [ ] 确认下载包位于 `dist/prompt-island-0.1.0-macos.zip`。
 - [ ] 确认本地构建仍是 ad-hoc 签名；如果要对外分发，需要另行完成 Developer ID 签名和 notarization。
 
 ## 人工回归

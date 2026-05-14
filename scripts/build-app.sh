@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-APP_NAME="Vibelsland Free"
+APP_NAME=">_ - island"
 BUNDLE_ID="free.vibelsland.macos"
 APP_VERSION="0.1.0"
 BUILD_NUMBER="1"
@@ -145,7 +145,7 @@ cat > "$CONTENTS/Info.plist" <<PLIST
   <key>LSUIElement</key>
   <true/>
   <key>NSHumanReadableCopyright</key>
-  <string>Copyright © 2026 Vibelsland Free. All rights reserved.</string>
+  <string>Copyright © 2026 >_ - island. All rights reserved.</string>
   <key>NSHighResolutionCapable</key>
   <true/>
 </dict>
