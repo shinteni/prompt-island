@@ -90,6 +90,10 @@ dist/Vibelsland-Free-0.1.0-macos.zip.sha256
 
 Vibelsland Free already includes the core local app experience: floating island UI, settings, hook installation, approval UI, runtime health checks, single-instance protection, restart recovery, and release packaging scripts. Before broad public distribution, real-device regression testing, Developer ID signing, and notarization are still recommended.
 
+## License
+
+Vibelsland Free is open source under the [MIT License](LICENSE).
+
 ## Independence
 
 Vibelsland Free is an independent utility. It is not affiliated with Anthropic, OpenAI, Claude, or Codex. Product names are used only to describe local compatibility.

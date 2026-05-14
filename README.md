@@ -90,6 +90,10 @@ dist/Vibelsland-Free-0.1.0-macos.zip.sha256
 
 Vibelsland Free 已经具备可运行的本机版本，包含浮岛展示、设置页、Hook 安装、审批窗口、运行状态检查、单实例保护、重启恢复和发布打包脚本。公开分发前仍建议完成真实设备回归、正式签名和 notarization。
 
+## 许可证
+
+Vibelsland Free 使用 [MIT License](LICENSE) 开源。
+
 ## 独立声明
 
 Vibelsland Free 是独立工具，不隶属于 Anthropic、OpenAI、Claude 或 Codex。相关产品名仅用于说明本地兼容性。
