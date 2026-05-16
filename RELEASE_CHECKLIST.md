@@ -1,6 +1,6 @@
 # Vibelsland Free Release Checklist
 
-售卖或对外分发前，必须同时完成自动验证和真实人工回归。本清单记录自动脚本不能可靠覆盖的发布阻塞项。
+GitHub 免费发布或后续 notarized 分发前，必须同时完成自动验证和真实人工回归。本清单记录自动脚本不能可靠覆盖的发布阻塞项。
 
 ## 自动验证
 
@@ -8,6 +8,7 @@
 - [ ] 运行 `zsh scripts/verify-app.sh` 并确认通过。
 - [ ] 运行 `zsh scripts/package-release.sh` 并确认生成 zip 与 sha256。
 - [ ] 运行 `zsh scripts/verify-docs-site.sh`，确认官网本地链接、manifest 图标、sitemap、robots、canonical/hreflang、发布文案和 sha256 文件格式通过。
+- [ ] 运行 `zsh scripts/verify-docs-live.sh`，确认 GitHub Pages、`security.txt`、`llms.txt`、版本化 CSS/JS 和线上 Release checksum 都能访问且一致。
 - [ ] 若绑定正式域名，设置 `VIBELSLAND_SITE_URL=https://你的域名/ zsh scripts/verify-docs-site.sh` 并同步更新 GitHub Pages 自定义域名配置。
 - [ ] 运行 `zsh scripts/verify-runtime.sh`，确认应用启动后无新错误、Bridge/socket 已刷新、CPU 和 RSS 内存在阈值内。
 - [ ] 运行 `zsh scripts/verify-idle-window.sh`，确认隔离冷启动后 Bridge/socket/log 正常，且无任务状态保持小圆窗口尺寸。
@@ -30,10 +31,11 @@
 - [ ] 运行 `zsh scripts/verify-codex-desktop-approval-response.sh`，确认 Codex Desktop 隔离审批请求的允许一次、本轮始终允许、拒绝、取消任务会按 request id 返回给 app-server proxy 并标记完成。
 - [ ] 运行 `zsh scripts/verify-approval-timeout.sh`，确认隔离审批请求超时后不会向原工具返回允许结果。
 - [ ] 运行 `zsh scripts/verify-bridge-events.sh`，确认 Claude / Codex 测试事件能通过真实 Bridge helper 进入应用。
-- [ ] 运行 `zsh scripts/verify-release-readiness.sh`，确认公开售卖门禁明确列出未完成的人工回归和正式签名阻塞项；如果日常实例正在运行，应先提示退出而不是制造第二个浮岛；所有人工项完成后再要求该脚本通过。
+- [ ] 运行 `zsh scripts/verify-release-readiness.sh --github`，确认 GitHub 免费发布门禁明确列出未完成的人工回归；如果日常实例正在运行，应先提示退出而不是制造第二个浮岛；所有人工项完成后再要求该脚本通过。
+- [ ] 若走 Developer ID/notarization 分发线，运行 `zsh scripts/verify-release-readiness.sh --notarized`，确认正式签名、notarization 和下载后首次启动验证已经完成。
 - [ ] 确认产物位于 `dist/>_ - island.app`。
 - [ ] 确认下载包位于 `dist/Vibelsland-Free-0.1.0-macos.zip`。
-- [ ] 确认本地构建仍是 ad-hoc 签名；如果要对外分发，需要另行完成 Developer ID 签名和 notarization。
+- [ ] 确认 GitHub 免费发布包的 ad-hoc 签名、Gatekeeper 首次打开说明、SHA-256 校验、源码和 Release 说明保持一致；如果要走 notarized 分发线，再另行完成 Developer ID 签名和 notarization。
 
 ## 人工回归
 
@@ -50,4 +52,4 @@
 
 - [x] README 中的构建、测试、已知问题与当前版本一致。
 - [x] `PRIVACY.md` 与当前本地数据读取、日志和 Hook 写入行为一致。
-- [ ] 若不是本机自用构建，完成正式签名、notarization、下载后首次启动验证。
+- [ ] 若走 notarized 分发线，完成正式签名、notarization、下载后首次启动验证。

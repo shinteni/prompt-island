@@ -7,7 +7,7 @@ ARCHIVE="$ROOT/dist/Vibelsland-Free-0.1.0-macos.zip"
 CHECKSUM="$ARCHIVE.sha256"
 CHECKLIST="$ROOT/RELEASE_CHECKLIST.md"
 
-MODE="${VIBELSLAND_RELEASE_MODE:-public}"
+MODE="${VIBELSLAND_RELEASE_MODE:-github}"
 RUN_AUTOMATION=1
 ALLOW_PENDING=0
 
@@ -18,7 +18,15 @@ while [[ $# -gt 0 ]]; do
             shift
             ;;
         --public)
-            MODE="public"
+            MODE="github"
+            shift
+            ;;
+        --github)
+            MODE="github"
+            shift
+            ;;
+        --notarized)
+            MODE="notarized"
             shift
             ;;
         --no-run)
@@ -41,9 +49,9 @@ while [[ $# -gt 0 ]]; do
 done
 
 case "$MODE" in
-    local|public) ;;
+    local|github|notarized) ;;
     *)
-        echo "VIBELSLAND_RELEASE_MODE must be local or public" >&2
+        echo "VIBELSLAND_RELEASE_MODE must be local, github, or notarized" >&2
         exit 64
         ;;
 esac
@@ -83,11 +91,12 @@ fi
 )
 
 zsh "$ROOT/scripts/verify-docs-site.sh"
+zsh "$ROOT/scripts/verify-docs-live.sh"
 
 SIGNATURE_INFO="$(/usr/bin/codesign -dv --verbose=4 "$APP_DIR" 2>&1)"
 SIGNING_BLOCKER=""
-if [[ "$MODE" == "public" && "$SIGNATURE_INFO" == *"Signature=adhoc"* ]]; then
-    SIGNING_BLOCKER="- [ ] 正式签名：当前仍是 ad-hoc，本机自用可以，正式公开分发必须完成 Developer ID 签名和 notarization。"
+if [[ "$MODE" == "notarized" && "$SIGNATURE_INFO" == *"Signature=adhoc"* ]]; then
+    SIGNING_BLOCKER="- [ ] Notarized 分发签名：当前仍是 ad-hoc；若走 Developer ID/notarization 分发线，必须完成正式签名、notarization 和下载后首次启动验证。"
 elif [[ "$MODE" == "local" && "$SIGNATURE_INFO" != *"Signature=adhoc"* ]]; then
     SIGNING_BLOCKER="- [ ] 本机构建签名：当前不再是 ad-hoc，请确认打包脚本是否被改成正式分发模式。"
 fi
@@ -111,6 +120,9 @@ pending_section() {
 
 if [[ "$MODE" == "local" ]]; then
     /usr/bin/sed -i '' '/若不是本机自用/d' "$PENDING_FILE"
+    /usr/bin/sed -i '' '/若走 notarized/d' "$PENDING_FILE"
+elif [[ "$MODE" == "github" ]]; then
+    /usr/bin/sed -i '' '/若走 notarized/d' "$PENDING_FILE"
 fi
 
 if [[ -n "$SIGNING_BLOCKER" ]]; then
