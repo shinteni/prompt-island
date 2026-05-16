@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>安装与信任 | Vibelsland Free</title>
+    <meta
+      name="description"
+      content="Vibelsland Free 下载后的第一步：了解 Gatekeeper 首次打开、ad-hoc 签名、SHA-256 校验、源码与 Release 对照、本地权限和数据边界。"
+    >
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Vibelsland Free 安装与信任">
+    <meta property="og:description" content="下载后先确认首次打开、签名、校验、源码、Release 和本地数据边界。">
+    <meta property="og:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
+    <meta property="og:url" content="https://shinteni.github.io/prompt-island/install.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Vibelsland Free 安装与信任">
+    <meta name="twitter:description" content="下载后先确认首次打开、签名、校验、源码、Release 和本地数据边界。">
+    <meta name="twitter:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
+    <meta name="theme-color" content="#070706">
+    <link rel="canonical" href="https://shinteni.github.io/prompt-island/install.html">
+    <link rel="alternate" hreflang="zh-CN" href="https://shinteni.github.io/prompt-island/install.html">
+    <link rel="alternate" hreflang="en" href="https://shinteni.github.io/prompt-island/en/install.html">
+    <link rel="alternate" hreflang="ja" href="https://shinteni.github.io/prompt-island/ja/install.html">
+    <link rel="alternate" hreflang="x-default" href="https://shinteni.github.io/prompt-island/install.html">
+    <link rel="icon" href="assets/readme/app-icon.png">
+    <link rel="apple-touch-icon" href="assets/readme/app-icon.png">
+    <link rel="manifest" href="site.webmanifest">
+    <link rel="stylesheet" href="styles.css">
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "TechArticle",
+        "headline": "Vibelsland Free 安装与信任",
+        "description": "Vibelsland Free 下载后的 Gatekeeper、ad-hoc 签名、SHA-256、源码、Release 和本地数据边界说明。",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": "https://shinteni.github.io/prompt-island/install.html",
+        "about": {
+          "@type": "SoftwareApplication",
+          "name": "Vibelsland Free",
+          "operatingSystem": "macOS 14+",
+          "softwareVersion": "0.1.0"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main" data-i18n="shared.skip">跳到正文</a>
+    <header class="site-header" aria-label="主导航">
+      <a class="brand" href="index.html" aria-label="Vibelsland Free 首页">
+        <img src="assets/readme/app-icon.png" alt="" width="28" height="28">
+        <span>Vibelsland Free</span>
+      </a>
+      <nav class="nav-links" aria-label="页面导航">
+        <a href="index.html" data-i18n="shared.nav.home">首页</a>
+        <a href="advantages.html" data-i18n="shared.nav.advantages">优势</a>
+        <a href="download.html" data-i18n="shared.nav.download">下载</a>
+        <a href="privacy.html" data-i18n="shared.nav.privacy">隐私</a>
+        <a href="faq.html" data-i18n="shared.nav.faq">FAQ</a>
+      </nav>
+      <div class="header-tools">
+        <nav class="lang-switch" aria-label="语言切换">
+          <a data-lang-option="zh" href="install.html" class="active" aria-current="true">中文</a>
+          <a data-lang-option="en" href="en/install.html" aria-current="false">EN</a>
+          <a data-lang-option="ja" href="ja/install.html" aria-current="false">日本語</a>
+        </nav>
+        <a class="nav-cta" href="https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip">下载 v0.1.0</a>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="subpage-hero" aria-labelledby="install-title">
+        <div class="subpage-copy" data-reveal>
+          <p class="eyebrow">Install &amp; Trust</p>
+          <h1 id="install-title">下载后第一步。</h1>
+          <p>
+            在首次启动前，把 Gatekeeper 确认、ad-hoc 签名、SHA-256 校验、源码和本地数据边界一次核对清楚。Vibelsland Free 的下载包、发布页和源码都围绕同一个版本号对齐。
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#first-open">开始安装确认</a>
+            <a class="button secondary" href="download.html">返回下载页</a>
+          </div>
+        </div>
+        <div class="privacy-summary" aria-label="安装信任摘要" data-reveal>
+          <div>
+            <span>Gatekeeper</span>
+            <strong>首次打开确认</strong>
+          </div>
+          <div>
+            <span>签名</span>
+            <strong>ad-hoc</strong>
+          </div>
+          <div>
+            <span>数据</span>
+            <strong>本机边界</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="section install-section" id="first-open" aria-labelledby="first-open-title">
+        <div class="section-heading align-left" data-reveal>
+          <p class="eyebrow">首次打开</p>
+          <h2 id="first-open-title">用 macOS 的确认流程启动。</h2>
+        </div>
+        <ol class="large-steps">
+          <li data-reveal>
+            <span>01</span>
+            <strong>放入 Applications</strong>
+            <p>解压 <code>Vibelsland-Free-0.1.0-macos.zip</code>，把 <code>&gt;_ - island.app</code> 拖入 Applications，再从 Applications 中启动。</p>
+          </li>
+          <li data-reveal>
+            <span>02</span>
+            <strong>Control 点按打开</strong>
+            <p>如果 macOS 要求确认，请按住 Control 点按应用图标，选择 Open。这个动作明确告诉 Gatekeeper 你信任当前下载来源。</p>
+          </li>
+          <li data-reveal>
+            <span>03</span>
+            <strong>确认系统提示</strong>
+            <p>在系统提示中再次选择 Open。确认会记录在这台 Mac 上，之后可以按常规方式从 Applications、Spotlight 或菜单栏启动。</p>
+          </li>
+        </ol>
+      </section>
+
+      <section class="section split-section surface-section" aria-labelledby="signing-title">
+        <div class="split-copy" data-reveal>
+          <p class="eyebrow">签名含义</p>
+          <h2 id="signing-title">ad-hoc 签名是一次主动信任选择。</h2>
+          <p>
+            ad-hoc 签名让 macOS 识别应用包带有代码签名，但它不携带 Developer ID 发行者身份。Gatekeeper 因此会把首次打开交给你确认。判断是否继续安装时，请同时核对发布页、下载资产、SHA-256 和源码仓库。
+          </p>
+          <a class="text-link" href="support.html">查看安装与状态排障</a>
+        </div>
+        <div class="checksum-card" data-reveal>
+          <span>本机检查</span>
+          <code>codesign --display --verbose=4 "/Applications/&gt;_ - island.app"</code>
+          <code>spctl --assess --type execute "/Applications/&gt;_ - island.app"</code>
+        </div>
+      </section>
+
+      <section class="section split-section" id="sha256" aria-labelledby="sha-title">
+        <div class="split-copy" data-reveal>
+          <p class="eyebrow">SHA-256</p>
+          <h2 id="sha-title">用校验值确认下载包没有被替换。</h2>
+          <p>
+            下载 zip 和同名 <code>.sha256</code> 文件后，把它们放在同一目录执行校验。官网展示值、GitHub Release 的 checksum 文件和本机计算结果应当一致。
+          </p>
+          <a class="text-link" href="https://github.com/shinteni/prompt-island/releases/tag/v0.1.0">打开 v0.1.0 Release</a>
+        </div>
+        <div class="checksum-card" data-reveal>
+          <span>当前 SHA-256</span>
+          <code>64c7c0a4eae81042bbc3896e24a07ab5d5573aeaafa846eada2e982f887ecf81</code>
+          <code>shasum -a 256 Vibelsland-Free-0.1.0-macos.zip</code>
+          <code>shasum -a 256 -c Vibelsland-Free-0.1.0-macos.zip.sha256</code>
+        </div>
+      </section>
+
+      <section class="section note-section" aria-labelledby="release-title">
+        <div class="section-heading" data-reveal>
+          <p class="eyebrow">源码与 Release</p>
+          <h2 id="release-title">用同一个版本链交叉确认。</h2>
+        </div>
+        <div class="link-grid compact">
+          <a class="link-panel" href="https://github.com/shinteni/prompt-island/releases/tag/v0.1.0" data-reveal>
+            <span>Release</span>
+            <strong>核对发布文件</strong>
+            <p>确认 zip、<code>.sha256</code> 文件和发布说明来自同一个 v0.1.0 发布页。</p>
+          </a>
+          <a class="link-panel" href="https://github.com/shinteni/prompt-island" data-reveal>
+            <span>Source</span>
+            <strong>查看源码仓库</strong>
+            <p>对照实现、隐私说明、构建脚本和打包流程，理解应用在本机做了什么。</p>
+          </a>
+          <a class="link-panel" href="download.html" data-reveal>
+            <span>Download</span>
+            <strong>回到下载页</strong>
+            <p>查看系统要求、安装包名称、版本号和当前下载入口。</p>
+          </a>
+        </div>
+      </section>
+
+      <section class="section data-section" aria-labelledby="local-title">
+        <div class="section-heading align-left" data-reveal>
+          <p class="eyebrow">本地权限与数据边界</p>
+          <h2 id="local-title">只启用你需要的本机来源。</h2>
+        </div>
+        <div class="data-grid">
+          <article data-reveal>
+            <h3>读取边界</h3>
+            <ul>
+              <li>读取 Claude Code、Codex CLI 和 Codex Desktop 的本机状态，用于浮岛、工具调用摘要和审批显示。</li>
+              <li>读取本地 hook 配置、会话路径和运行状态，帮助判断来源是否启用、是否需要修复。</li>
+              <li>不会创建线上账号，也不会把会话内容同步到远程服务器。</li>
+            </ul>
+          </article>
+          <article data-reveal>
+            <h3>写入边界</h3>
+            <ul>
+              <li>应用配置写入 <code>~/Library/Application Support/VibelslandFree/config.json</code>。</li>
+              <li>应用日志写入 <code>~/Library/Logs/VibelslandFree/app.log</code>。</li>
+              <li>本地桥接运行文件放在 <code>~/.vibelsland-free</code>。</li>
+            </ul>
+          </article>
+          <article data-reveal>
+            <h3>用户控制</h3>
+            <ul>
+              <li>在设置页按来源启用或关闭 Claude Code、Codex CLI 和 Codex Desktop。</li>
+              <li>只有在你选择 Install、Repair 或 Uninstall Hooks 时，应用才会修改对应 hook 配置。</li>
+              <li>分享排障日志前，请删除敏感路径、提示词、令牌和会话内容。</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="section note-section" aria-labelledby="next-title">
+        <div class="section-heading" data-reveal>
+          <p class="eyebrow">继续阅读</p>
+          <h2 id="next-title">下载、隐私、FAQ 和支持互相对照。</h2>
+        </div>
+        <div class="link-grid compact">
+          <a class="link-panel" href="faq.html" data-reveal>
+            <span>FAQ</span>
+            <strong>常见安装问题</strong>
+            <p>查看首次打开、免费分发、校验、本地数据和卸载方式。</p>
+          </a>
+          <a class="link-panel" href="support.html" data-reveal>
+            <span>Support</span>
+            <strong>排障与日志位置</strong>
+            <p>处理 Gatekeeper、hooks、状态不显示、卸载和问题报告。</p>
+          </a>
+          <a class="link-panel" href="privacy.html" data-reveal>
+            <span>Privacy</span>
+            <strong>隐私与本地数据</strong>
+            <p>确认读取、写入、网络和 hook payload 的边界。</p>
+          </a>
+          <a class="link-panel" href="download.html" data-reveal>
+            <span>Download</span>
+            <strong>下载 macOS 版</strong>
+            <p>回到下载入口，核对版本、文件名和系统要求。</p>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div>
+        <strong>Vibelsland Free</strong>
+        <p data-i18n="shared.footer.tagline">面向 macOS 的本地优先 AI coding 状态显示。</p>
+      </div>
+      <nav aria-label="页脚导航">
+        <a href="index.html" data-i18n="shared.nav.home">首页</a>
+        <a href="advantages.html" data-i18n="shared.nav.advantages">优势</a>
+        <a href="download.html" data-i18n="shared.nav.download">下载</a>
+        <a href="install.html" data-i18n="shared.nav.install">安装</a>
+        <a href="release-notes.html" data-i18n="shared.nav.release">版本历史</a>
+        <a href="privacy.html" data-i18n="shared.nav.privacy">隐私</a>
+        <a href="faq.html" data-i18n="shared.nav.faq">FAQ</a>
+        <a href="support.html" data-i18n="shared.nav.support">支持</a>
+        <a href="https://github.com/shinteni/prompt-island">GitHub</a>
+      </nav>
+    </footer>
+    <script src="lang.js" defer></script>
+    <script src="effects.js" defer></script>
+  </body>
+</html>

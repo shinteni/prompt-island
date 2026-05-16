@@ -5,7 +5,7 @@
   --ink: #f5efe4;
   --ink-soft: #d9ccb2;
   --muted: #a79b86;
-  --quiet: #b2a58f;
+  --quiet: #c2b69d;
   --line: rgba(220, 184, 112, 0.18);
   --line-strong: rgba(220, 184, 112, 0.34);
   --blue: #d8b46b;
@@ -38,6 +38,16 @@ html {
   min-height: 100%;
   scroll-behavior: smooth;
   scroll-padding-top: calc(var(--header-height) + 24px);
+}
+
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 260ms;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 body {
@@ -894,7 +904,10 @@ button:focus-visible {
   border-top: 1px solid var(--line);
 }
 
-.link-grid.compact,
+.link-grid.compact {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
 .note-grid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
@@ -1205,6 +1218,14 @@ button:focus-visible {
     --header-height: 56px;
   }
 
+  body::before {
+    position: absolute;
+    background:
+      linear-gradient(118deg, transparent 0 22%, rgba(226, 191, 112, 0.1) 22.08%, transparent 22.18% 68%, rgba(226, 191, 112, 0.06) 68.08%, transparent 68.18%),
+      linear-gradient(180deg, rgba(226, 191, 112, 0.06), transparent 42%);
+    opacity: 0.38;
+  }
+
   main {
     padding-bottom: calc(78px + env(safe-area-inset-bottom));
   }
@@ -1215,6 +1236,8 @@ button:focus-visible {
     gap: 12px;
     padding: 0 14px;
     min-height: var(--header-height);
+    background: rgba(5, 5, 4, 0.92);
+    backdrop-filter: none;
   }
 
   .nav-links {
@@ -1230,10 +1253,10 @@ button:focus-visible {
     padding: 4px;
     border: 1px solid rgba(226, 191, 112, 0.2);
     border-radius: 999px;
-    background: rgba(8, 8, 7, 0.82);
+    background: rgba(8, 8, 7, 0.94);
     box-shadow: 0 18px 54px rgba(0, 0, 0, 0.38);
     transform: translateX(-50%);
-    backdrop-filter: saturate(180%) blur(18px);
+    backdrop-filter: none;
     overflow-x: auto;
     scrollbar-width: none;
   }
@@ -1245,6 +1268,7 @@ button:focus-visible {
     padding: 0 4px;
     border-radius: 999px;
     font-size: 12px;
+    white-space: nowrap;
   }
 
   .nav-links a.active {
@@ -1284,8 +1308,13 @@ button:focus-visible {
 
   .hero h1 {
     margin-inline: auto;
-    font-size: 44px;
+    font-size: clamp(38px, 11vw, 44px);
     line-height: 1.02;
+  }
+
+  html[lang="ja"] .hero h1 {
+    font-size: clamp(36px, 10.2vw, 42px);
+    line-height: 1.06;
   }
 
   .hero-kicker {
@@ -1299,6 +1328,19 @@ button:focus-visible {
     border-radius: 22px;
   }
 
+  .product-stage::before {
+    opacity: 0.64;
+    filter: blur(10px);
+  }
+
+  .product-stage img,
+  .device-card img,
+  .subpage-media img,
+  .download-media img {
+    filter: brightness(0.84) contrast(1.04) saturate(0.76);
+  }
+
+  .subpage-hero,
   .download-hero {
     align-content: start;
     gap: 28px;
@@ -1357,7 +1399,29 @@ button:focus-visible {
   }
 
   .release-card {
+    padding: 24px;
     margin-bottom: calc(72px + env(safe-area-inset-bottom));
+  }
+
+  .release-card strong {
+    margin-bottom: 14px;
+    font-size: 44px;
+  }
+
+  .release-card dl {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 18px;
+  }
+
+  .release-card dl div {
+    display: block;
+    padding: 10px 0;
+  }
+
+  .release-card dd {
+    margin-top: 4px;
+    text-align: left;
+    overflow-wrap: anywhere;
   }
 
   .status-float {
@@ -1465,6 +1529,10 @@ button:focus-visible {
     font-size: 20px;
   }
 
+  .release-card strong {
+    font-size: 40px;
+  }
+
   .hero-copy,
   .subpage-copy p,
   .download-lead p,
@@ -1494,6 +1562,10 @@ button:focus-visible {
     font-size: 15px;
   }
 
+  .nav-links a {
+    font-size: 10px;
+  }
+
   .product-stage img {
     aspect-ratio: 1.42 / 1;
   }
@@ -1514,6 +1586,10 @@ button:focus-visible {
     margin-top: 18px;
   }
 
+  .download-side .release-card {
+    display: none;
+  }
+
   .section-heading {
     text-align: left;
   }
@@ -1526,6 +1602,21 @@ button:focus-visible {
   .download-hero h1 {
     font-size: 40px;
     line-height: 1.04;
+  }
+}
+
+@media (max-width: 380px) {
+  .brand span {
+    display: none;
+  }
+
+  .lang-switch a {
+    min-width: 40px;
+    padding: 0 7px;
+  }
+
+  .subpage-hero .privacy-summary {
+    margin-top: 56px;
   }
 }
 

@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>インストールと信頼 | Vibelsland Free</title>
+    <meta
+      name="description"
+      content="Vibelsland Free をダウンロードした後の最初の手順。Gatekeeper 初回起動、ad-hoc 署名、SHA-256、ソースと Release、ローカル権限、データ境界を確認できます。"
+    >
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Vibelsland Free インストールと信頼">
+    <meta property="og:description" content="ダウンロード後に初回起動、署名、チェックサム、ソース、Release、ローカルデータ境界を確認します。">
+    <meta property="og:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
+    <meta property="og:url" content="https://shinteni.github.io/prompt-island/ja/install.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Vibelsland Free インストールと信頼">
+    <meta name="twitter:description" content="ダウンロード後に初回起動、署名、チェックサム、ソース、Release、ローカルデータ境界を確認します。">
+    <meta name="twitter:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
+    <meta name="theme-color" content="#070706">
+    <link rel="canonical" href="https://shinteni.github.io/prompt-island/ja/install.html">
+    <link rel="alternate" hreflang="zh-CN" href="https://shinteni.github.io/prompt-island/install.html">
+    <link rel="alternate" hreflang="en" href="https://shinteni.github.io/prompt-island/en/install.html">
+    <link rel="alternate" hreflang="ja" href="https://shinteni.github.io/prompt-island/ja/install.html">
+    <link rel="alternate" hreflang="x-default" href="https://shinteni.github.io/prompt-island/install.html">
+    <link rel="icon" href="../assets/readme/app-icon.png">
+    <link rel="apple-touch-icon" href="../assets/readme/app-icon.png">
+    <link rel="manifest" href="../site.webmanifest">
+    <link rel="stylesheet" href="../styles.css">
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "TechArticle",
+        "headline": "Vibelsland Free インストールと信頼",
+        "description": "Vibelsland Free ダウンロード後の Gatekeeper、ad-hoc 署名、SHA-256、ソース、Release、ローカルデータ境界の説明。",
+        "inLanguage": "ja",
+        "mainEntityOfPage": "https://shinteni.github.io/prompt-island/ja/install.html",
+        "about": {
+          "@type": "SoftwareApplication",
+          "name": "Vibelsland Free",
+          "operatingSystem": "macOS 14+",
+          "softwareVersion": "0.1.0"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main" data-i18n="shared.skip">本文へ移動</a>
+    <header class="site-header" aria-label="メインナビゲーション">
+      <a class="brand" href="index.html" aria-label="Vibelsland Free ホーム">
+        <img src="../assets/readme/app-icon.png" alt="" width="28" height="28">
+        <span>Vibelsland Free</span>
+      </a>
+      <nav class="nav-links" aria-label="ページナビゲーション">
+        <a href="index.html" data-i18n="shared.nav.home">ホーム</a>
+        <a href="advantages.html" data-i18n="shared.nav.advantages">強み</a>
+        <a href="download.html" data-i18n="shared.nav.download">ダウンロード</a>
+        <a href="privacy.html" data-i18n="shared.nav.privacy">プライバシー</a>
+        <a href="faq.html" data-i18n="shared.nav.faq">FAQ</a>
+      </nav>
+      <div class="header-tools">
+        <nav class="lang-switch" aria-label="言語切替">
+          <a data-lang-option="zh" href="../install.html" aria-current="false">中文</a>
+          <a data-lang-option="en" href="../en/install.html" aria-current="false">EN</a>
+          <a data-lang-option="ja" href="install.html" class="active" aria-current="true">日本語</a>
+        </nav>
+        <a class="nav-cta" href="https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip">v0.1.0 をダウンロード</a>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="subpage-hero" aria-labelledby="install-title">
+        <div class="subpage-copy" data-reveal>
+          <p class="eyebrow">Install &amp; Trust</p>
+          <h1 id="install-title">ダウンロード後の最初の手順。</h1>
+          <p>
+            初回起動の前に、Gatekeeper、ad-hoc 署名、SHA-256、ソース、ローカルデータ境界を一度に確認します。Vibelsland Free のパッケージ、Release ページ、ソースは同じバージョンを軸に確認できます。
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#first-open">インストール確認を始める</a>
+            <a class="button secondary" href="download.html">ダウンロードへ戻る</a>
+          </div>
+        </div>
+        <div class="privacy-summary" aria-label="インストール信頼概要" data-reveal>
+          <div>
+            <span>Gatekeeper</span>
+            <strong>初回起動確認</strong>
+          </div>
+          <div>
+            <span>署名</span>
+            <strong>ad-hoc</strong>
+          </div>
+          <div>
+            <span>データ</span>
+            <strong>Mac 内の境界</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="section install-section" id="first-open" aria-labelledby="first-open-title">
+        <div class="section-heading align-left" data-reveal>
+          <p class="eyebrow">初回起動</p>
+          <h2 id="first-open-title">macOS の確認フローで起動します。</h2>
+        </div>
+        <ol class="large-steps">
+          <li data-reveal>
+            <span>01</span>
+            <strong>Applications に移動</strong>
+            <p><code>Vibelsland-Free-0.1.0-macos.zip</code> を解凍し、<code>&gt;_ - island.app</code> を Applications に移動してから起動します。</p>
+          </li>
+          <li data-reveal>
+            <span>02</span>
+            <strong>Control クリックで開く</strong>
+            <p>macOS が確認を求めた場合は、Control キーを押しながらアプリのアイコンをクリックし、「開く」を選びます。この操作で Gatekeeper に入手元を信頼する意思を伝えます。</p>
+          </li>
+          <li data-reveal>
+            <span>03</span>
+            <strong>システム確認を承認</strong>
+            <p>システムの確認画面でもう一度「開く」を選びます。この確認はこの Mac に記録され、次回以降は Applications、Spotlight、メニューバーから通常どおり起動できます。</p>
+          </li>
+        </ol>
+      </section>
+
+      <section class="section split-section surface-section" aria-labelledby="signing-title">
+        <div class="split-copy" data-reveal>
+          <p class="eyebrow">署名の意味</p>
+          <h2 id="signing-title">ad-hoc 署名は利用者による信頼確認です。</h2>
+          <p>
+            ad-hoc 署名はアプリバンドルに付与されるローカルコード署名です。Developer ID の配布者 ID は含まないため、Gatekeeper は初回起動時に利用者の確認を求めます。続行するか判断するときは、Release ページ、ダウンロード資産、SHA-256、ソースリポジトリを合わせて確認してください。
+          </p>
+          <a class="text-link" href="support.html">インストールと状態表示のサポートを見る</a>
+        </div>
+        <div class="checksum-card" data-reveal>
+          <span>ローカル確認</span>
+          <code>codesign --display --verbose=4 "/Applications/&gt;_ - island.app"</code>
+          <code>spctl --assess --type execute "/Applications/&gt;_ - island.app"</code>
+        </div>
+      </section>
+
+      <section class="section split-section" id="sha256" aria-labelledby="sha-title">
+        <div class="split-copy" data-reveal>
+          <p class="eyebrow">SHA-256</p>
+          <h2 id="sha-title">パッケージが置き換えられていないことを確認します。</h2>
+          <p>
+            zip と同名の <code>.sha256</code> ファイルを同じフォルダに置き、チェックサムを確認します。サイト表示、GitHub Release の checksum ファイル、Mac で計算した結果が一致することを確認してください。
+          </p>
+          <a class="text-link" href="https://github.com/shinteni/prompt-island/releases/tag/v0.1.0">v0.1.0 Release を開く</a>
+        </div>
+        <div class="checksum-card" data-reveal>
+          <span>現在の SHA-256</span>
+          <code>64c7c0a4eae81042bbc3896e24a07ab5d5573aeaafa846eada2e982f887ecf81</code>
+          <code>shasum -a 256 Vibelsland-Free-0.1.0-macos.zip</code>
+          <code>shasum -a 256 -c Vibelsland-Free-0.1.0-macos.zip.sha256</code>
+        </div>
+      </section>
+
+      <section class="section note-section" aria-labelledby="release-title">
+        <div class="section-heading" data-reveal>
+          <p class="eyebrow">ソースと Release</p>
+          <h2 id="release-title">同じバージョンの流れで照合します。</h2>
+        </div>
+        <div class="link-grid compact">
+          <a class="link-panel" href="https://github.com/shinteni/prompt-island/releases/tag/v0.1.0" data-reveal>
+            <span>Release</span>
+            <strong>配布ファイルを確認</strong>
+            <p>zip、<code>.sha256</code> ファイル、リリースノートが同じ v0.1.0 のページにあることを確認します。</p>
+          </a>
+          <a class="link-panel" href="https://github.com/shinteni/prompt-island" data-reveal>
+            <span>Source</span>
+            <strong>ソースリポジトリを見る</strong>
+            <p>実装、プライバシー説明、ビルドスクリプト、パッケージングの流れを見比べ、アプリが Mac 内で行うことを確認できます。</p>
+          </a>
+          <a class="link-panel" href="download.html" data-reveal>
+            <span>Download</span>
+            <strong>ダウンロードへ戻る</strong>
+            <p>システム要件、パッケージ名、バージョン、現在のダウンロード入口を確認します。</p>
+          </a>
+        </div>
+      </section>
+
+      <section class="section data-section" aria-labelledby="local-title">
+        <div class="section-heading align-left" data-reveal>
+          <p class="eyebrow">ローカル権限とデータ境界</p>
+          <h2 id="local-title">必要なローカルソースだけを有効にします。</h2>
+        </div>
+        <div class="data-grid">
+          <article data-reveal>
+            <h3>読み取り境界</h3>
+            <ul>
+              <li>Claude Code、Codex CLI、Codex Desktop の Mac 内の状態を読み取り、アイランド、ツール実行サマリー、承認表示に使います。</li>
+              <li>ローカル hook 設定、セッションパス、実行状態を読み取り、ソースが有効か、修復が必要かを表示します。</li>
+              <li>オンラインアカウントを作成せず、セッション内容をリモートサーバーへ同期しません。</li>
+            </ul>
+          </article>
+          <article data-reveal>
+            <h3>書き込み境界</h3>
+            <ul>
+              <li>アプリ設定は <code>~/Library/Application Support/VibelslandFree/config.json</code> に保存します。</li>
+              <li>アプリログは <code>~/Library/Logs/VibelslandFree/app.log</code> に保存します。</li>
+              <li>ローカルブリッジのランタイムファイルは <code>~/.vibelsland-free</code> に置かれます。</li>
+            </ul>
+          </article>
+          <article data-reveal>
+            <h3>利用者の制御</h3>
+            <ul>
+              <li>設定画面で Claude Code、Codex CLI、Codex Desktop をソースごとに有効化または無効化できます。</li>
+              <li>アプリが hook 設定を変更するのは、Install、Repair、Uninstall Hooks を選んだときだけです。</li>
+              <li>トラブルシューティング用ログを共有する前に、機密パス、プロンプト、トークン、セッション内容を削除してください。</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="section note-section" aria-labelledby="next-title">
+        <div class="section-heading" data-reveal>
+          <p class="eyebrow">続けて読む</p>
+          <h2 id="next-title">Download、Privacy、FAQ、Support を相互に確認できます。</h2>
+        </div>
+        <div class="link-grid compact">
+          <a class="link-panel" href="faq.html" data-reveal>
+            <span>FAQ</span>
+            <strong>よくあるインストール質問</strong>
+            <p>初回起動、無料配布、チェックサム、ローカルデータ、アンインストールを確認します。</p>
+          </a>
+          <a class="link-panel" href="support.html" data-reveal>
+            <span>Support</span>
+            <strong>トラブルシューティングとログ</strong>
+            <p>Gatekeeper、hooks、状態表示、アンインストール、問題報告を確認します。</p>
+          </a>
+          <a class="link-panel" href="privacy.html" data-reveal>
+            <span>Privacy</span>
+            <strong>プライバシーとローカルデータ</strong>
+            <p>読み取り、書き込み、ネットワーク、hook payload の境界を確認します。</p>
+          </a>
+          <a class="link-panel" href="download.html" data-reveal>
+            <span>Download</span>
+            <strong>macOS 版をダウンロード</strong>
+            <p>ダウンロード入口に戻り、バージョン、ファイル名、システム要件を確認します。</p>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div>
+        <strong>Vibelsland Free</strong>
+        <p data-i18n="shared.footer.tagline">macOS 向けローカルファースト AI coding 状態表示。</p>
+      </div>
+      <nav aria-label="フッターナビゲーション">
+        <a href="index.html" data-i18n="shared.nav.home">ホーム</a>
+        <a href="advantages.html" data-i18n="shared.nav.advantages">強み</a>
+        <a href="download.html" data-i18n="shared.nav.download">ダウンロード</a>
+        <a href="install.html" data-i18n="shared.nav.install">インストール</a>
+        <a href="release-notes.html" data-i18n="shared.nav.release">リリースノート</a>
+        <a href="privacy.html" data-i18n="shared.nav.privacy">プライバシー</a>
+        <a href="faq.html" data-i18n="shared.nav.faq">FAQ</a>
+        <a href="support.html" data-i18n="shared.nav.support">サポート</a>
+        <a href="https://github.com/shinteni/prompt-island">GitHub</a>
+      </nav>
+    </footer>
+    <script src="../lang.js" defer></script>
+    <script src="../effects.js" defer></script>
+  </body>
+</html>
