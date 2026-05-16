@@ -36,36 +36,40 @@
     <link rel="icon" href="assets/readme/app-icon.png">
     <link rel="apple-touch-icon" href="assets/readme/app-icon.png">
     <link rel="manifest" href="site.webmanifest">
-    <link rel="stylesheet" href="styles.css?v=20260517-4">
+    <link rel="stylesheet" href="styles.css?v=20260517-5">
   </head>
-  <body>
-    <a class="skip-link" href="#main">跳到正文</a>
+  <body data-page="404">
+    <a class="skip-link" href="#main" data-i18n="shared.skip">跳到正文</a>
     <header class="site-header" aria-label="主导航">
       <a class="brand" href="index.html" aria-label="Vibelsland Free 首页">
         <img src="assets/readme/app-icon.png" alt="" width="28" height="28">
         <span>Vibelsland Free</span>
       </a>
       <nav class="nav-links" aria-label="页面导航">
-        <a href="index.html">首页</a>
-        <a href="advantages.html">优势</a>
-        <a href="download.html">下载</a>
-        <a href="install.html">安装</a>
-        <a href="release-notes.html">版本历史</a>
-        <a href="privacy.html">隐私</a>
-        <a href="faq.html">FAQ</a>
-        <a href="support.html">支持</a>
+        <a href="index.html" data-i18n="shared.nav.home">首页</a>
+        <a href="advantages.html" data-i18n="shared.nav.advantages">优势</a>
+        <a href="download.html" data-i18n="shared.nav.download">下载</a>
+        <a href="install.html" data-i18n="shared.nav.install">安装</a>
+        <a href="privacy.html" data-i18n="shared.nav.privacy">隐私</a>
+        <a href="faq.html" data-i18n="shared.nav.faq">FAQ</a>
+        <a href="support.html" data-i18n="shared.nav.support">支持</a>
       </nav>
       <div class="header-tools">
-        <a class="nav-cta" href="download.html">下载 macOS 版</a>
+        <nav class="lang-switch" aria-label="语言切换">
+          <a data-lang-option="zh" href="404.html" class="active" aria-current="true">中文</a>
+          <a data-lang-option="en" href="404.html?lang=en" aria-current="false">EN</a>
+          <a data-lang-option="ja" href="404.html?lang=ja" aria-current="false">日本語</a>
+        </nav>
+        <a class="nav-cta" href="download.html" data-i18n="shared.cta">下载 macOS 版</a>
       </div>
     </header>
 
     <main id="main">
       <section class="download-hero" aria-labelledby="not-found-title">
         <div>
-          <p class="eyebrow">404</p>
-          <h1 id="not-found-title">这个页面暂时不存在</h1>
-          <p>
+          <p class="eyebrow" data-i18n="notFound.hero.eyebrow">404</p>
+          <h1 id="not-found-title" data-i18n="notFound.hero.title">这个页面暂时不存在</h1>
+          <p data-i18n="notFound.hero.copy">
             链接可能已经移动，或者输入的地址有误。可以回到首页，继续了解 Vibelsland Free 的功能、下载方式和隐私边界。
           </p>
           <div class="hero-actions">
@@ -73,34 +77,34 @@
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M3 11.5 12 4l9 7.5M5 10v10h14V10M9 20v-6h6v6"></path>
               </svg>
-              返回首页
+              <span data-i18n="notFound.hero.primary">返回首页</span>
             </a>
-            <a class="button secondary" href="download.html">下载 macOS 版</a>
+            <a class="button secondary" href="download.html" data-i18n="notFound.hero.secondary">下载 macOS 版</a>
           </div>
         </div>
         <aside class="release-card" aria-label="可访问页面">
-          <span>可访问页面</span>
+          <span data-i18n="notFound.card.label">可访问页面</span>
           <strong>Vibelsland Free</strong>
           <dl>
             <div>
-              <dt>产品介绍</dt>
-              <dd><a href="advantages.html">优势</a></dd>
+              <dt data-i18n="notFound.card.product.title">产品介绍</dt>
+              <dd><a href="advantages.html" data-i18n="notFound.card.product.link">优势</a></dd>
             </div>
             <div>
-              <dt>获取应用</dt>
-              <dd><a href="download.html">下载</a></dd>
+              <dt data-i18n="notFound.card.download.title">获取应用</dt>
+              <dd><a href="download.html" data-i18n="notFound.card.download.link">下载</a></dd>
             </div>
             <div>
-              <dt>安装信任</dt>
-              <dd><a href="install.html">安装</a></dd>
+              <dt data-i18n="notFound.card.install.title">安装信任</dt>
+              <dd><a href="install.html" data-i18n="notFound.card.install.link">安装</a></dd>
             </div>
             <div>
-              <dt>版本记录</dt>
-              <dd><a href="release-notes.html">版本历史</a></dd>
+              <dt data-i18n="notFound.card.release.title">版本记录</dt>
+              <dd><a href="release-notes.html" data-i18n="notFound.card.release.link">版本历史</a></dd>
             </div>
             <div>
-              <dt>数据边界</dt>
-              <dd><a href="privacy.html">隐私</a></dd>
+              <dt data-i18n="notFound.card.privacy.title">数据边界</dt>
+              <dd><a href="privacy.html" data-i18n="notFound.card.privacy.link">隐私</a></dd>
             </div>
           </dl>
         </aside>
@@ -110,19 +114,20 @@
     <footer class="site-footer">
       <div>
         <strong>Vibelsland Free</strong>
-        <p>面向 macOS 的本地优先 AI coding 状态显示。</p>
+        <p data-i18n="shared.footer.tagline">面向 macOS 的本地优先 AI coding 状态显示。</p>
       </div>
       <nav aria-label="页脚导航">
-        <a href="index.html">首页</a>
-        <a href="advantages.html">优势</a>
-        <a href="download.html">下载</a>
-        <a href="install.html">安装</a>
-        <a href="release-notes.html">版本历史</a>
-        <a href="privacy.html">隐私</a>
-        <a href="faq.html">FAQ</a>
-        <a href="support.html">支持</a>
+        <a href="index.html" data-i18n="shared.nav.home">首页</a>
+        <a href="advantages.html" data-i18n="shared.nav.advantages">优势</a>
+        <a href="download.html" data-i18n="shared.nav.download">下载</a>
+        <a href="install.html" data-i18n="shared.nav.install">安装</a>
+        <a href="release-notes.html" data-i18n="shared.nav.release">版本历史</a>
+        <a href="privacy.html" data-i18n="shared.nav.privacy">隐私</a>
+        <a href="faq.html" data-i18n="shared.nav.faq">FAQ</a>
+        <a href="support.html" data-i18n="shared.nav.support">支持</a>
       </nav>
     </footer>
-    <script src="effects.js?v=20260517-4" defer></script>
+    <script src="lang.js?v=20260517-5" defer></script>
+    <script src="effects.js?v=20260517-5" defer></script>
   </body>
 </html>

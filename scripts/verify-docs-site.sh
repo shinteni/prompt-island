@@ -8,6 +8,7 @@ CUSTOM_DOMAIN="${VIBELSLAND_CUSTOM_DOMAIN:-}"
 
 python3 - "$ROOT" "$DOCS_DIR" "$SITE_URL" "$CUSTOM_DOMAIN" <<'PY'
 import json
+import html
 import os
 import re
 import subprocess
@@ -24,6 +25,7 @@ custom_domain = sys.argv[4].strip()
 default_site_url = "https://shinteni.github.io/prompt-island/"
 site_host = urlparse(site_url).netloc
 docs_root = docs.resolve()
+verify_dist = os.environ.get("VIBELSLAND_VERIFY_DIST") == "1"
 errors = []
 
 
@@ -43,6 +45,7 @@ required = [
     docs / "site.webmanifest",
     docs / "sitemap.xml",
     docs / "llms.txt",
+    docs / "release.json",
     docs / "robots.txt",
 ]
 localized_files = [
@@ -64,6 +67,74 @@ for filename in localized_files:
 for path in required:
     if not path.exists():
         errors.append(f"Missing required docs file: {display(path)}")
+
+release_path = docs / "release.json"
+release = {}
+if release_path.exists():
+    try:
+        release = json.loads(release_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        errors.append(f"Invalid release.json: {exc}")
+
+
+def release_value(keys, expected_type=str):
+    current = release
+    for key in keys:
+        if not isinstance(current, dict) or key not in current:
+            errors.append(f"release.json missing {'.'.join(keys)}")
+            return "" if expected_type is str else 0
+        current = current[key]
+    if expected_type is not None and not isinstance(current, expected_type):
+        errors.append(f"release.json {'.'.join(keys)} should be {expected_type.__name__}")
+        return "" if expected_type is str else 0
+    return current
+
+
+release_version = release_value(["version"])
+release_tag = release_value(["tag"])
+release_label = f"v{release_version}" if release_version else ""
+release_repository = release_value(["repository"])
+release_url = release_value(["release_url"])
+release_api_url = release_value(["release_api_url"])
+release_notes_url = release_value(["release_notes_url"])
+release_source_ref = release_value(["source", "ref"])
+release_source_sha = release_value(["source", "sha"])
+release_app_name = release_value(["app", "bundle_name"])
+release_binary_name = release_value(["app", "binary_name"])
+release_bundle_id = release_value(["app", "bundle_identifier"])
+release_bundle_version = release_value(["app", "bundle_version"])
+release_archive_name = release_value(["archive", "name"])
+release_archive_size = release_value(["archive", "size_bytes"], int)
+release_archive_hash = release_value(["archive", "sha256"])
+release_archive_url = release_value(["archive", "download_url"])
+release_checksum_name = release_value(["checksum_file", "name"])
+release_checksum_size = release_value(["checksum_file", "size_bytes"], int)
+release_checksum_hash = release_value(["checksum_file", "sha256"])
+release_checksum_url = release_value(["checksum_file", "download_url"])
+
+if release:
+    if release_tag != release_label:
+        errors.append(f"release.json tag should match version: {release_tag} vs {release_label}")
+    for value, label in [
+        (release_repository, "repository"),
+        (release_url, "release_url"),
+        (release_api_url, "release_api_url"),
+        (release_notes_url, "release_notes_url"),
+        (release_archive_url, "archive.download_url"),
+        (release_checksum_url, "checksum_file.download_url"),
+    ]:
+        validate_target = value if isinstance(value, str) else ""
+        if validate_target:
+            parsed = urlparse(validate_target)
+            if parsed.scheme != "https":
+                errors.append(f"release.json {label} should use https: {validate_target}")
+    for value, label in [
+        (release_archive_hash, "archive.sha256"),
+        (release_checksum_hash, "checksum_file.sha256"),
+        (release_source_sha, "source.sha"),
+    ]:
+        if value and not re.fullmatch(r"[0-9a-f]{64}|[0-9a-f]{40}", value):
+            errors.append(f"release.json {label} has an unexpected hash format: {value}")
 
 blocked_copy = [
     "状态层",
@@ -339,7 +410,8 @@ if site_url != default_site_url:
 for path in [docs / "download.html", docs / "en" / "download.html", docs / "ja" / "download.html"]:
     if path.exists():
         parser = RefParser()
-        parser.feed(path.read_text(encoding="utf-8"))
+        page_text = path.read_text(encoding="utf-8")
+        parser.feed(page_text)
         json_ld_types = []
         for block in parser.json_ld:
             if not block:
@@ -349,8 +421,21 @@ for path in [docs / "download.html", docs / "en" / "download.html", docs / "ja" 
             except json.JSONDecodeError:
                 continue
             json_ld_types.append(payload.get("@type"))
+            if payload.get("@type") == "SoftwareApplication":
+                expected_payload = {
+                    "softwareVersion": release_version,
+                    "downloadUrl": release_archive_url,
+                    "sha256": release_archive_hash,
+                }
+                for key, expected_value in expected_payload.items():
+                    if expected_value and payload.get(key) != expected_value:
+                        errors.append(f"Download JSON-LD {key} does not match release.json in {display(path)}: {payload.get(key)}")
         if "SoftwareApplication" not in json_ld_types:
             errors.append(f"Download page missing SoftwareApplication JSON-LD: {display(path)}")
+        for phrase in [release_label, release_archive_name, release_archive_hash, release_archive_url, release_checksum_url, release_app_name]:
+            escaped_phrase = html.escape(phrase) if phrase else ""
+            if phrase and phrase not in page_text and escaped_phrase not in page_text:
+                errors.append(f"Download page missing release metadata value in {display(path)}: {phrase}")
 
 sitemap_path = docs / "sitemap.xml"
 if sitemap_path.exists():
@@ -405,9 +490,11 @@ if llms_path.exists():
     llms = llms_path.read_text(encoding="utf-8")
     for phrase in [
         "Vibelsland Free",
-        "v0.1.0",
-        "Vibelsland-Free-0.1.0-macos.zip",
-        "64c7c0a4eae81042bbc3896e24a07ab5d5573aeaafa846eada2e982f887ecf81",
+        release_label,
+        release_archive_name,
+        release_archive_hash,
+        release_archive_url,
+        f"{site_url}release.json",
         f"{site_url}install.html",
         f"{site_url}privacy.html",
         f"{site_url}.well-known/security.txt",
@@ -457,8 +544,27 @@ for md_path in [root / "README.md", root / "README.en.md", root / "PRIVACY.md"]:
         if not target.exists():
             errors.append(f"Missing markdown reference target in {md_path.name}: {value}")
 
-checksum_path = root / "dist" / "Vibelsland-Free-0.1.0-macos.zip.sha256"
-if checksum_path.exists():
+for script_path, expected_values in {
+    root / "scripts" / "build-app.sh": [release_app_name, release_bundle_id, release_version, release_bundle_version],
+    root / "scripts" / "package-release.sh": [release_app_name, release_version, release_archive_name, release_checksum_name],
+}.items():
+    if script_path.exists():
+        script_text = script_path.read_text(encoding="utf-8")
+        if "release.json" not in script_text:
+            errors.append(f"{script_path.name} should read docs/release.json")
+        for value in expected_values:
+            if value and value not in script_text and "release.json" not in script_text:
+                errors.append(f"{script_path.name} missing expected release metadata value: {value}")
+
+for path in [root / "README.md", root / "README.en.md"]:
+    if path.exists():
+        text = path.read_text(encoding="utf-8")
+        for phrase in [release_label, release_archive_name, release_archive_hash, release_archive_url, release_checksum_url, "docs/release.json"]:
+            if phrase and phrase not in text:
+                errors.append(f"{path.name} missing release metadata value: {phrase}")
+
+checksum_path = root / "dist" / release_checksum_name
+if verify_dist and checksum_path.exists():
     checksum = checksum_path.read_text(encoding="utf-8").strip()
     parts = checksum.split()
     if len(parts) != 2:
@@ -466,6 +572,23 @@ if checksum_path.exists():
     elif "/" in parts[1] or "\\" in parts[1]:
         errors.append(f"Release checksum should use a filename, not a path: {parts[1]}")
     else:
+        if parts[0] != release_archive_hash:
+            errors.append(f"Release checksum file hash does not match release.json: {parts[0]}")
+        if parts[1] != release_archive_name:
+            errors.append(f"Release checksum file archive does not match release.json: {parts[1]}")
+        checksum_file_hash = subprocess.run(
+            ["/usr/bin/shasum", "-a", "256", checksum_path.name],
+            cwd=checksum_path.parent,
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+        if checksum_file_hash.returncode != 0:
+            errors.append(f"Could not hash release checksum file: {checksum_file_hash.stderr.strip()}")
+        elif checksum_file_hash.stdout.split()[0] != release_checksum_hash:
+            errors.append(f"Release checksum file digest does not match release.json: {checksum_file_hash.stdout.split()[0]}")
+        if checksum_path.stat().st_size != release_checksum_size:
+            errors.append(f"Release checksum file size does not match release.json: {checksum_path.stat().st_size}")
         for path in [
             docs / "download.html",
             docs / "en" / "download.html",
@@ -477,6 +600,8 @@ if checksum_path.exists():
                 errors.append(f"Download page checksum does not match dist checksum: {display(path)}")
         archive_path = checksum_path.with_suffix("")
         if archive_path.exists():
+            if archive_path.stat().st_size != release_archive_size:
+                errors.append(f"Release archive size does not match release.json: {archive_path.stat().st_size}")
             result = subprocess.run(
                 ["/usr/bin/shasum", "-a", "256", "-c", checksum_path.name],
                 cwd=checksum_path.parent,

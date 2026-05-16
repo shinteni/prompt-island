@@ -110,6 +110,8 @@ zsh scripts/build-docs-site.sh /tmp/vibelsland-docs-site
 
 The script writes `CNAME`, rewrites site URLs, and runs `scripts/verify-docs-site.sh` against multilingual canonical/hreflang, sitemap alternates, manifest, robots, security.txt, and release checksum data.
 
+The website and packaging scripts share [docs/release.json](docs/release.json) as the metadata source for the v0.1.0 package name, checksums, download URLs, and app bundle identity.
+
 Local release artifacts are generated at:
 
 ```text

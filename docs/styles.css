@@ -359,6 +359,28 @@ html[lang="zh-CN"] .cta-section h2 {
   margin-top: 28px;
 }
 
+.hero-assist-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  margin-top: 14px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.hero-assist-links a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: rgba(64, 113, 251, 0.38);
+  text-underline-offset: 4px;
+}
+
+.hero-assist-links a:hover {
+  color: var(--blue-strong);
+  text-decoration-color: currentColor;
+}
+
 .button {
   min-height: 44px;
   justify-content: center;
@@ -1401,6 +1423,11 @@ button:focus-visible {
     display: none;
   }
 
+  .nav-links a.active[data-i18n="shared.nav.home"],
+  .nav-links a.active[data-i18n="shared.nav.advantages"] {
+    display: inline-flex;
+  }
+
   .nav-links::-webkit-scrollbar {
     display: none;
   }
@@ -1555,7 +1582,14 @@ button:focus-visible {
   }
 
   .status-float {
-    display: none;
+    bottom: 8px;
+    max-width: calc(100% - 24px);
+    min-height: 30px;
+    padding: 0 10px;
+  }
+
+  .status-float strong {
+    font-size: 11px;
   }
 
   .spec-strip {
@@ -1686,6 +1720,12 @@ button:focus-visible {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   }
 
+  .hero-assist-links {
+    justify-content: center;
+    margin-top: 10px;
+    font-size: 12px;
+  }
+
   .download-lead .button {
     width: auto;
     padding: 0 12px;
@@ -1694,7 +1734,7 @@ button:focus-visible {
 
   .nav-links a {
     font-size: 10px;
-    min-width: 58px;
+    min-width: 52px;
   }
 
   .nav-links a[data-mobile-label] {
