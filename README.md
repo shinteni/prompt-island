@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <strong>面向 macOS 的本地优先 AI coding 状态层。</strong>
+  <strong>面向 macOS 的本地优先 AI coding 状态显示。</strong>
 </p>
 
 <p align="center">
@@ -32,7 +32,7 @@
 
 Vibelsland Free 是给重度 AI 编程用户的 macOS 原生工具。它把 Claude Code、Codex CLI 和 Codex Desktop 的本机会话状态、工具调用、token 摘要和审批请求集中到屏幕顶部的浮岛里。
 
-它不是替代终端或桌面客户端，而是在你工作时把最重要的 AI 编程状态留在视线范围内。空闲时它安静收起，任务进行时变成紧凑药丸，遇到审批或重要状态时展开为面板。
+它在你工作时把最重要的 AI 编程状态留在视线范围内。空闲时安静收起，任务进行时变成紧凑药丸，遇到审批或重要状态时展开为面板。
 
 ## 产品亮点
 
@@ -53,7 +53,7 @@ Vibelsland Free 是给重度 AI 编程用户的 macOS 原生工具。它把 Clau
 
 ## 下载与安装
 
-v0.1.0 可以直接下载：
+v0.1.0 可从 GitHub Releases 下载。当前发布包使用 ad-hoc 签名，首次打开前请阅读下方说明：
 
 [Download v0.1.0](https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip)
 
@@ -64,7 +64,7 @@ v0.1.0 可以直接下载：
 3. 打开应用，在菜单栏或设置页安装 Hooks。
 4. 按需开启自动启动、声音、勿扰和显示位置。
 
-说明：当前发布包使用 ad-hoc codesign。面向更大范围分发时，建议使用 Developer ID 签名和 notarization，以获得更顺滑的首次打开体验。
+说明：当前免费发布包使用 ad-hoc codesign，首次打开需要按上面的 Gatekeeper 说明手动确认。若作为正式公开分发版本，Developer ID 签名和 notarization 是上线前必须完成的发布项。
 
 ## 隐私
 
@@ -90,7 +90,7 @@ dist/Vibelsland-Free-0.1.0-macos.zip.sha256
 
 ## 项目状态
 
-Vibelsland Free v0.1.0 已经具备可下载的本机版本，包含浮岛展示、设置页、Hook 安装、审批窗口、运行状态检查、单实例保护、重启恢复和发布打包脚本。当前发布包使用 ad-hoc 签名；Developer ID 签名和 notarization 是后续提升首次打开体验的分发改进。
+Vibelsland Free v0.1.0 已经具备可下载的本机版本，包含浮岛展示、设置页、Hook 安装、审批窗口、运行状态检查、单实例保护、重启恢复和发布打包脚本。当前免费发布包使用 ad-hoc 签名；正式公开分发前需要完成 Developer ID 签名和 notarization。
 
 ## 许可证
 

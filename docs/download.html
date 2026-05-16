@@ -10,12 +10,12 @@
     >
     <meta property="og:type" content="website">
     <meta property="og:title" content="下载 Vibelsland Free">
-    <meta property="og:description" content="macOS 14+ 本地优先 AI coding 状态层，源码、校验和隐私边界公开。">
+    <meta property="og:description" content="macOS 14+ 本地优先 AI coding 状态显示，源码、校验和隐私边界公开。">
     <meta property="og:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
     <meta property="og:url" content="https://shinteni.github.io/prompt-island/download.html">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="下载 Vibelsland Free">
-    <meta name="twitter:description" content="macOS 14+ 本地优先 AI coding 状态层，源码、校验和隐私边界公开。">
+    <meta name="twitter:description" content="macOS 14+ 本地优先 AI coding 状态显示，源码、校验和隐私边界公开。">
     <meta name="twitter:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
     <meta name="theme-color" content="#070706">
     <link rel="canonical" href="https://shinteni.github.io/prompt-island/download.html">
@@ -38,7 +38,7 @@
       <nav class="nav-links" aria-label="页面导航">
         <a href="index.html" data-i18n="shared.nav.home">首页</a>
         <a href="advantages.html" data-i18n="shared.nav.advantages">优势</a>
-        <a class="active" href="download.html" data-i18n="shared.nav.download">下载</a>
+        <a class="active" aria-current="page" href="download.html" data-i18n="shared.nav.download">下载</a>
         <a href="privacy.html" data-i18n="shared.nav.privacy">隐私</a>
       </nav>
       <div class="header-tools">
@@ -57,7 +57,7 @@
           <p class="eyebrow" data-i18n="download.hero.eyebrow">下载</p>
           <h1 id="download-title" data-i18n="download.hero.title">下载 macOS 版</h1>
           <p data-i18n="download.hero.copy">
-            适用于 macOS 14+。安装包通过 GitHub Releases 分发，源码、隐私说明和 SHA-256 校验全部公开。
+            当前版本 v0.1.0，适用于 macOS 14+。安装包通过 GitHub Releases 分发，源码、隐私说明和 SHA-256 校验全部公开。
           </p>
           <div class="hero-actions">
             <a class="button primary" href="https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip">
@@ -69,28 +69,39 @@
             <a class="button secondary" href="https://github.com/shinteni/prompt-island" data-i18n="download.hero.secondary">查看源码</a>
           </div>
         </div>
-        <aside class="release-card" aria-label="版本信息" data-reveal>
-          <span data-i18n="download.card.label">当前版本</span>
-          <strong data-i18n="download.card.version">v0.1.0</strong>
-          <dl>
-            <div>
-              <dt data-i18n="download.card.system.label">系统要求</dt>
-              <dd data-i18n="download.card.system.value">macOS 14+</dd>
-            </div>
-            <div>
-              <dt data-i18n="download.card.package.label">安装包</dt>
-              <dd data-i18n="download.card.package.value">Vibelsland-Free-0.1.0-macos.zip</dd>
-            </div>
-            <div>
-              <dt data-i18n="download.card.size.label">大小</dt>
-              <dd data-i18n="download.card.size.value">约 2.3 MB</dd>
-            </div>
-            <div>
-              <dt data-i18n="download.card.signing.label">签名状态</dt>
-              <dd data-i18n="download.card.signing.value">ad-hoc 签名</dd>
-            </div>
-          </dl>
-        </aside>
+        <div class="download-side" data-reveal>
+          <div class="download-media">
+            <img
+              src="assets/readme/hero-island-light.jpg"
+              alt="Vibelsland Free 在桌面顶部展示 AI 编程状态"
+              width="1672"
+              height="941"
+              decoding="async"
+            >
+          </div>
+          <aside class="release-card" aria-label="版本信息">
+            <span data-i18n="download.card.label">当前版本</span>
+            <strong data-i18n="download.card.version">v0.1.0</strong>
+            <dl>
+              <div>
+                <dt data-i18n="download.card.system.label">系统要求</dt>
+                <dd data-i18n="download.card.system.value">macOS 14+</dd>
+              </div>
+              <div>
+                <dt data-i18n="download.card.package.label">安装包</dt>
+                <dd data-i18n="download.card.package.value">Vibelsland-Free-0.1.0-macos.zip</dd>
+              </div>
+              <div>
+                <dt data-i18n="download.card.size.label">大小</dt>
+                <dd data-i18n="download.card.size.value">约 2.3 MB</dd>
+              </div>
+              <div>
+                <dt data-i18n="download.card.signing.label">签名状态</dt>
+                <dd data-i18n="download.card.signing.value">ad-hoc 签名</dd>
+              </div>
+            </dl>
+          </aside>
+        </div>
       </section>
 
       <section class="section install-section" aria-labelledby="install-title">
@@ -107,7 +118,7 @@
           <li data-reveal>
             <span>02</span>
             <strong data-i18n="download.install.step2.title">拖入 Applications</strong>
-            <p data-i18n="download.install.step2.copy">解压后把应用拖到 Applications，再像普通 macOS 应用一样启动。</p>
+            <p data-i18n="download.install.step2.copy">解压后把应用拖到 Applications，再按首次打开说明启动。</p>
           </li>
           <li data-reveal>
             <span>03</span>
@@ -127,7 +138,7 @@
         </div>
         <div class="checksum-card" data-reveal>
           <span data-i18n="download.security.hash.label">SHA-256</span>
-          <code>dc80855d32b7201fcd2e9a5634088ff1443b21d3aabb46af8fba30982fb8b6ca</code>
+          <code>64c7c0a4eae81042bbc3896e24a07ab5d5573aeaafa846eada2e982f887ecf81</code>
         </div>
       </section>
 
@@ -159,7 +170,7 @@
     <footer class="site-footer">
       <div>
         <strong>Vibelsland Free</strong>
-        <p data-i18n="shared.footer.tagline">面向 macOS 的本地优先 AI coding 状态层。</p>
+        <p data-i18n="shared.footer.tagline">面向 macOS 的本地优先 AI coding 状态显示。</p>
       </div>
       <nav aria-label="页脚导航">
         <a href="index.html" data-i18n="shared.nav.home">首页</a>

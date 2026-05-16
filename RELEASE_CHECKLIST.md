@@ -7,6 +7,8 @@
 - [ ] 运行隔离窗口验证前，确认日常 >_ - island 实例已经退出；若确实需要同时显示临时测试窗口，显式设置 `VIBELSLAND_ALLOW_VISIBLE_TEST_WINDOWS=1`。
 - [ ] 运行 `zsh scripts/verify-app.sh` 并确认通过。
 - [ ] 运行 `zsh scripts/package-release.sh` 并确认生成 zip 与 sha256。
+- [ ] 运行 `zsh scripts/verify-docs-site.sh`，确认官网本地链接、manifest 图标、sitemap、robots、canonical/hreflang、发布文案和 sha256 文件格式通过。
+- [ ] 若绑定正式域名，设置 `VIBELSLAND_SITE_URL=https://你的域名/ zsh scripts/verify-docs-site.sh` 并同步更新 GitHub Pages 自定义域名配置。
 - [ ] 运行 `zsh scripts/verify-runtime.sh`，确认应用启动后无新错误、Bridge/socket 已刷新、CPU 和 RSS 内存在阈值内。
 - [ ] 运行 `zsh scripts/verify-idle-window.sh`，确认隔离冷启动后 Bridge/socket/log 正常，且无任务状态保持小圆窗口尺寸。
 - [ ] 运行 `zsh scripts/verify-single-instance.sh`，确认通过系统重复打开同一个 `.app` 时只保留旧实例，新实例不会再创建第二套浮岛。

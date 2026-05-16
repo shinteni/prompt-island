@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <strong>A local-first AI coding status layer for macOS.</strong>
+  <strong>A local-first AI coding status display for macOS.</strong>
 </p>
 
 <p align="center">
@@ -32,7 +32,7 @@
 
 Vibelsland Free is a native macOS utility for developers who work with AI coding tools every day. It brings local Claude Code, Codex CLI, and Codex Desktop session status, tool activity, token summaries, and approval requests into one floating island at the top of your screen.
 
-It does not replace your terminal or desktop client. It keeps the most important AI coding state visible while you work. When idle, it stays quiet. During a task, it becomes a compact pill. When an approval request or important update needs attention, it expands into a panel.
+It keeps the most important AI coding state visible while you work. When idle, it stays quiet. During a task, it becomes a compact pill. When an approval request or important update needs attention, it expands into a panel.
 
 ## Highlights
 
@@ -53,7 +53,7 @@ It does not replace your terminal or desktop client. It keeps the most important
 
 ## Download And Install
 
-Download v0.1.0 directly:
+Download v0.1.0 from GitHub Releases. This release uses ad-hoc signing, so read the first-launch note below:
 
 [Download v0.1.0](https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip)
 
@@ -64,7 +64,7 @@ Install:
 3. Open the app and install Hooks from the menu bar or settings window.
 4. Configure launch at login, sound, Do Not Disturb, and display position as needed.
 
-Note: the current release uses ad-hoc codesign. For broader public distribution, Developer ID signing and notarization are recommended for the smoothest first-run experience.
+Note: the current free release uses ad-hoc codesign, so first launch requires the Gatekeeper confirmation above. For formal public distribution, Developer ID signing and notarization are required release items.
 
 ## Privacy
 
@@ -90,7 +90,7 @@ dist/Vibelsland-Free-0.1.0-macos.zip.sha256
 
 ## Project Status
 
-Vibelsland Free v0.1.0 already includes the downloadable local app experience: floating island UI, settings, hook installation, approval UI, runtime health checks, single-instance protection, restart recovery, and release packaging scripts. The current release uses ad-hoc signing; Developer ID signing and notarization remain future distribution improvements for a smoother first launch.
+Vibelsland Free v0.1.0 already includes the downloadable local app experience: floating island UI, settings, hook installation, approval UI, runtime health checks, single-instance protection, restart recovery, and release packaging scripts. The current free release uses ad-hoc signing; Developer ID signing and notarization are required before formal public distribution.
 
 ## License
 
