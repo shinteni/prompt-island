@@ -32,6 +32,12 @@ required = [
     docs / "support.html",
     docs / "en" / "support.html",
     docs / "ja" / "support.html",
+    docs / "install.html",
+    docs / "en" / "install.html",
+    docs / "ja" / "install.html",
+    docs / "release-notes.html",
+    docs / "en" / "release-notes.html",
+    docs / "ja" / "release-notes.html",
     docs / "site.webmanifest",
     docs / "sitemap.xml",
     docs / "robots.txt",
@@ -164,6 +170,26 @@ if manifest_path.exists():
         src = icon.get("src")
         if src and not (docs / src).exists():
             errors.append(f"Manifest icon is missing: {src}")
+    for screenshot in manifest.get("screenshots", []):
+        src = screenshot.get("src")
+        if src and not (docs / src).exists():
+            errors.append(f"Manifest screenshot is missing: {src}")
+
+for path in [docs / "download.html", docs / "en" / "download.html", docs / "ja" / "download.html"]:
+    if path.exists():
+        parser = RefParser()
+        parser.feed(path.read_text(encoding="utf-8"))
+        json_ld_types = []
+        for block in parser.json_ld:
+            if not block:
+                continue
+            try:
+                payload = json.loads(block)
+            except json.JSONDecodeError:
+                continue
+            json_ld_types.append(payload.get("@type"))
+        if "SoftwareApplication" not in json_ld_types:
+            errors.append(f"Download page missing SoftwareApplication JSON-LD: {path.relative_to(root)}")
 
 sitemap_path = docs / "sitemap.xml"
 if sitemap_path.exists():

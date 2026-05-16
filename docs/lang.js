@@ -84,6 +84,18 @@
           description: "Vibelsland Free 支持与排障：处理 macOS 首次打开确认、SHA-256 校验、本地数据位置、卸载、报告问题以及工具状态不显示。",
           ogTitle: "Vibelsland Free 支持与排障",
           ogDescription: "安装、校验、本地数据、卸载和状态显示问题的排障说明。"
+        },
+        install: {
+          title: "安装与信任 | Vibelsland Free",
+          description: "Vibelsland Free 下载后的第一步：了解 Gatekeeper 首次打开、ad-hoc 签名、SHA-256 校验、源码与 Release 对照、本地权限和数据边界。",
+          ogTitle: "Vibelsland Free 安装与信任",
+          ogDescription: "下载后先确认首次打开、签名、校验、源码、Release 和本地数据边界。"
+        },
+        "release-notes": {
+          title: "版本历史 | Vibelsland Free",
+          description: "Vibelsland Free 版本历史：v0.1.0 的下载、SHA-256 校验、主要功能、安装说明、产品边界和相关支持入口。",
+          ogTitle: "Vibelsland Free 版本历史",
+          ogDescription: "查看 Vibelsland Free v0.1.0 的发布内容、下载包、校验文件、安装说明和产品边界。"
         }
       },
       strings: {
@@ -94,6 +106,8 @@
         "shared.nav.privacy": "隐私",
         "shared.nav.faq": "FAQ",
         "shared.nav.support": "支持",
+        "shared.nav.install": "安装",
+        "shared.nav.release": "版本历史",
         "shared.cta": "下载 macOS 版",
         "shared.footer.tagline": "面向 macOS 的本地优先 AI coding 状态显示。",
 
@@ -212,6 +226,9 @@
         "download.links.release.label": "Release",
         "download.links.release.title": "查看 v0.1.0 发布页",
         "download.links.release.copy": "获取 macOS zip 安装包、SHA-256 文件和发布说明。",
+        "download.links.install.label": "Install",
+        "download.links.install.title": "阅读安装与信任说明",
+        "download.links.install.copy": "确认 Gatekeeper 首次打开、校验方式、签名状态和本地数据边界。",
         "download.links.source.label": "Source",
         "download.links.source.title": "查看源码",
         "download.links.source.copy": "确认实现、构建脚本和发布产物。",
@@ -294,6 +311,18 @@
           description: "Support and troubleshooting for Vibelsland Free: first-launch confirmation, SHA-256 verification, local data locations, uninstalling, issue reports, and missing tool status.",
           ogTitle: "Vibelsland Free Support and Troubleshooting",
           ogDescription: "Troubleshoot install, checksum, local data, uninstall, and missing status display issues."
+        },
+        install: {
+          title: "Install & Trust | Vibelsland Free",
+          description: "The first step after downloading Vibelsland Free: Gatekeeper first launch, ad-hoc signing, SHA-256 verification, source and Release checks, local permissions, and data boundaries.",
+          ogTitle: "Vibelsland Free Install & Trust",
+          ogDescription: "Confirm first launch, signing, checksum, source, Release, and local data boundaries after download."
+        },
+        "release-notes": {
+          title: "Release Notes | Vibelsland Free",
+          description: "Vibelsland Free release notes for v0.1.0, including downloads, SHA-256 verification, key features, install guidance, product boundaries, and support links.",
+          ogTitle: "Vibelsland Free Release Notes",
+          ogDescription: "Review Vibelsland Free v0.1.0 features, download assets, checksum file, install guidance, and product boundaries."
         }
       },
       strings: {
@@ -304,6 +333,8 @@
         "shared.nav.privacy": "Privacy",
         "shared.nav.faq": "FAQ",
         "shared.nav.support": "Support",
+        "shared.nav.install": "Install",
+        "shared.nav.release": "Release Notes",
         "shared.cta": "Download for macOS",
         "shared.footer.tagline": "A local-first AI coding status display for macOS.",
 
@@ -422,6 +453,9 @@
         "download.links.release.label": "Release",
         "download.links.release.title": "View v0.1.0 release",
         "download.links.release.copy": "Get the macOS zip package, SHA-256 file, and release notes.",
+        "download.links.install.label": "Install",
+        "download.links.install.title": "Read install and trust guidance",
+        "download.links.install.copy": "Confirm Gatekeeper first launch, verification, signing status, and local data boundaries.",
         "download.links.source.label": "Source",
         "download.links.source.title": "View source",
         "download.links.source.copy": "Review implementation, build scripts, and packaged output.",
@@ -504,6 +538,18 @@
           description: "Vibelsland Free のサポートとトラブルシューティング。macOS の初回起動確認、SHA-256 確認、ローカルデータの場所、アンインストール、問題報告、ツール状態が出ない場合を確認できます。",
           ogTitle: "Vibelsland Free サポートとトラブルシューティング",
           ogDescription: "インストール、チェックサム、ローカルデータ、アンインストール、状態表示の問題を確認できます。"
+        },
+        install: {
+          title: "インストールと信頼 | Vibelsland Free",
+          description: "Vibelsland Free をダウンロードした後の最初の手順。Gatekeeper 初回起動、ad-hoc 署名、SHA-256、ソースと Release、ローカル権限、データ境界を確認できます。",
+          ogTitle: "Vibelsland Free インストールと信頼",
+          ogDescription: "ダウンロード後に初回起動、署名、チェックサム、ソース、Release、ローカルデータ境界を確認します。"
+        },
+        "release-notes": {
+          title: "リリースノート | Vibelsland Free",
+          description: "Vibelsland Free v0.1.0 のリリースノート。ダウンロード、SHA-256 確認、主要機能、インストール、製品範囲、サポートリンクを確認できます。",
+          ogTitle: "Vibelsland Free リリースノート",
+          ogDescription: "Vibelsland Free v0.1.0 の機能、ダウンロード、チェックサム、インストール、製品範囲を確認できます。"
         }
       },
       strings: {
@@ -514,6 +560,8 @@
         "shared.nav.privacy": "プライバシー",
         "shared.nav.faq": "FAQ",
         "shared.nav.support": "サポート",
+        "shared.nav.install": "インストール",
+        "shared.nav.release": "リリースノート",
         "shared.cta": "macOS 版をダウンロード",
         "shared.footer.tagline": "macOS 向けローカルファースト AI coding 状態表示。",
 
@@ -632,6 +680,9 @@
         "download.links.release.label": "Release",
         "download.links.release.title": "v0.1.0 リリースを見る",
         "download.links.release.copy": "macOS zip パッケージ、SHA-256 ファイル、リリースノートを確認できます。",
+        "download.links.install.label": "Install",
+        "download.links.install.title": "インストールと信頼を確認",
+        "download.links.install.copy": "Gatekeeper の初回起動、確認方法、署名状態、ローカルデータ境界を確認できます。",
         "download.links.source.label": "Source",
         "download.links.source.title": "ソースを見る",
         "download.links.source.copy": "実装、ビルドスクリプト、配布物を確認できます。",

@@ -2,13 +2,18 @@
   "name": "Vibelsland Free",
   "short_name": "Vibelsland Free",
   "description": "Local-first macOS AI coding status display for Claude Code, Codex CLI, and Codex Desktop.",
+  "id": "https://shinteni.github.io/prompt-island/",
   "lang": "zh-CN",
+  "dir": "ltr",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
+  "display_override": ["standalone", "browser"],
   "background_color": "#070706",
   "theme_color": "#070706",
   "orientation": "any",
+  "categories": ["developer tools", "productivity", "utilities"],
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "assets/readme/app-icon-192.png",
@@ -29,14 +34,52 @@
       "purpose": "any"
     }
   ],
+  "screenshots": [
+    {
+      "src": "assets/readme/hero-island-light.jpg",
+      "sizes": "1672x941",
+      "type": "image/jpeg",
+      "form_factor": "wide",
+      "label": "Vibelsland Free hero and download experience"
+    },
+    {
+      "src": "assets/readme/ui-island-light.jpg",
+      "sizes": "1040x860",
+      "type": "image/jpeg",
+      "form_factor": "narrow",
+      "label": "Vibelsland Free local AI coding status interface"
+    }
+  ],
   "shortcuts": [
     {
       "name": "Download",
+      "description": "Download the latest macOS package.",
       "url": "./download.html"
     },
     {
+      "name": "Install & Trust",
+      "description": "Read first-launch and checksum guidance.",
+      "url": "./install.html"
+    },
+    {
       "name": "Privacy",
+      "description": "Review local data and privacy boundaries.",
       "url": "./privacy.html"
+    },
+    {
+      "name": "FAQ",
+      "description": "Read install, checksum, and tool support answers.",
+      "url": "./faq.html"
+    },
+    {
+      "name": "Release Notes",
+      "description": "Review version history and release files.",
+      "url": "./release-notes.html"
+    },
+    {
+      "name": "Support",
+      "description": "Open troubleshooting and issue reporting guidance.",
+      "url": "./support.html"
     }
   ]
 }
