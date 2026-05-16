@@ -8,6 +8,7 @@ python3 - "$ROOT" "$SITE_URL" <<'PY'
 import json
 import os
 import re
+import subprocess
 import sys
 from html.parser import HTMLParser
 from pathlib import Path
@@ -82,6 +83,9 @@ class RefParser(HTMLParser):
         self.html_lang = ""
         self.h1_count = 0
         self.images_missing_alt = []
+        self.meta = {}
+        self.canonical = ""
+        self.alternates = {}
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
@@ -100,10 +104,16 @@ class RefParser(HTMLParser):
             self.images_missing_alt.append(attrs.get("src", "<missing src>"))
         if tag == "meta" and attrs.get("content"):
             key = attrs.get("property") or attrs.get("name") or ""
+            if key:
+                self.meta[key] = attrs["content"]
             if key in {"og:url", "og:image", "twitter:image"}:
                 self.absolute_site_urls.append(attrs["content"])
         if tag == "link" and attrs.get("rel") in {"canonical", "alternate"} and attrs.get("href"):
             self.absolute_site_urls.append(attrs["href"])
+            if attrs.get("rel") == "canonical":
+                self.canonical = attrs["href"]
+            elif attrs.get("rel") == "alternate" and attrs.get("hreflang"):
+                self.alternates[attrs["hreflang"]] = attrs["href"]
         if (
             tag == "a"
             and attrs.get("class")
@@ -130,6 +140,38 @@ def is_external(value):
     return parsed.scheme in {"http", "https", "mailto", "tel"} or value.startswith("#")
 
 
+def page_file(language, filename):
+    if language == "zh-CN":
+        return docs / filename
+    prefix = "en" if language == "en" else "ja"
+    return docs / prefix / filename
+
+
+def page_url(language, filename):
+    if filename == "index.html":
+        if language == "zh-CN":
+            return site_url
+        return f"{site_url}{language}/" if language in {"en", "ja"} else site_url
+    if language == "zh-CN":
+        return f"{site_url}{filename}"
+    return f"{site_url}{language}/{filename}"
+
+
+expected_routes = {}
+for filename in localized_files:
+    expected_alternates = {
+        "zh-CN": page_url("zh-CN", filename),
+        "en": page_url("en", filename),
+        "ja": page_url("ja", filename),
+        "x-default": page_url("zh-CN", filename),
+    }
+    for language in ["zh-CN", "en", "ja"]:
+        expected_routes[page_file(language, filename)] = {
+            "canonical": page_url(language, filename),
+            "alternates": expected_alternates,
+        }
+
+
 html_files = sorted(docs.glob("**/*.html"))
 versioned_assets = {"styles.css", "lang.js", "effects.js"}
 for path in html_files:
@@ -147,6 +189,45 @@ for path in html_files:
         errors.append(f"Expected exactly one h1 in {rel}, found {parser.h1_count}")
     for src in parser.images_missing_alt:
         errors.append(f"Image missing alt attribute in {rel}: {src}")
+    expected_route = expected_routes.get(path)
+    if expected_route:
+        expected_canonical = expected_route["canonical"]
+        if parser.canonical != expected_canonical:
+            errors.append(f"Unexpected canonical in {rel}: {parser.canonical or '<missing>'}")
+        if parser.meta.get("og:url") != expected_canonical:
+            errors.append(f"og:url should match canonical in {rel}: {parser.meta.get('og:url')}")
+        for hreflang, expected_href in expected_route["alternates"].items():
+            actual_href = parser.alternates.get(hreflang)
+            if actual_href != expected_href:
+                errors.append(f"Unexpected hreflang {hreflang} in {rel}: {actual_href or '<missing>'}")
+        extra_hreflangs = sorted(set(parser.alternates) - set(expected_route["alternates"]))
+        for hreflang in extra_hreflangs:
+            errors.append(f"Unexpected extra hreflang {hreflang} in {rel}: {parser.alternates[hreflang]}")
+    expected_locale = {"zh-CN": "zh_CN", "en": "en_US", "ja": "ja_JP"}.get(parser.html_lang)
+    expected_social = {
+        "og:site_name": "Vibelsland Free",
+        "og:locale": expected_locale,
+        "og:image:alt": None,
+        "twitter:image:alt": None,
+    }
+    for key, expected_value in expected_social.items():
+        value = parser.meta.get(key, "")
+        if not value:
+            errors.append(f"Missing social meta {key} in {rel}")
+        elif expected_value and value != expected_value:
+            errors.append(f"Unexpected social meta {key} in {rel}: {value}")
+    og_image = parser.meta.get("og:image", "")
+    expected_dimensions = None
+    if og_image.endswith("/hero-island-light.jpg"):
+        expected_dimensions = ("1672", "941")
+    elif og_image.endswith("/ui-island-light.jpg"):
+        expected_dimensions = ("1040", "860")
+    if expected_dimensions:
+        width, height = expected_dimensions
+        if parser.meta.get("og:image:width") != width:
+            errors.append(f"Unexpected og:image:width in {rel}: {parser.meta.get('og:image:width')}")
+        if parser.meta.get("og:image:height") != height:
+            errors.append(f"Unexpected og:image:height in {rel}: {parser.meta.get('og:image:height')}")
     for current in parser.active_nav_without_current:
         errors.append(f"Active navigation missing aria-current in {rel}: {current}")
 
@@ -222,6 +303,17 @@ if sitemap_path.exists():
     for loc in locs:
         if not loc.startswith(site_url):
             errors.append(f"Sitemap loc does not match site URL {site_url}: {loc}")
+            continue
+        parsed = urlparse(loc)
+        rel_url = loc[len(site_url):].split("#", 1)[0].split("?", 1)[0]
+        if not rel_url:
+            target = docs / "index.html"
+        elif rel_url.endswith("/"):
+            target = docs / rel_url / "index.html"
+        else:
+            target = docs / rel_url
+        if not target.exists():
+            errors.append(f"Sitemap loc has no local target: {loc}")
 
 robots_path = docs / "robots.txt"
 if robots_path.exists():
@@ -287,9 +379,26 @@ if checksum_path.exists():
     elif "/" in parts[1] or "\\" in parts[1]:
         errors.append(f"Release checksum should use a filename, not a path: {parts[1]}")
     else:
-        for path in [docs / "download.html", docs / "en" / "download.html", docs / "ja" / "download.html"]:
+        for path in [
+            docs / "download.html",
+            docs / "en" / "download.html",
+            docs / "ja" / "download.html",
+            root / "README.md",
+            root / "README.en.md",
+        ]:
             if path.exists() and parts[0] not in path.read_text(encoding="utf-8"):
                 errors.append(f"Download page checksum does not match dist checksum: {path.relative_to(root)}")
+        archive_path = checksum_path.with_suffix("")
+        if archive_path.exists():
+            result = subprocess.run(
+                ["/usr/bin/shasum", "-a", "256", "-c", checksum_path.name],
+                cwd=checksum_path.parent,
+                text=True,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.PIPE,
+            )
+            if result.returncode != 0:
+                errors.append(f"Release checksum verification failed: {result.stderr.strip()}")
 
 if errors:
     print("Docs site verification failed:")
