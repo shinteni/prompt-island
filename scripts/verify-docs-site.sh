@@ -78,9 +78,16 @@ class RefParser(HTMLParser):
         self.script_type = ""
         self.script_text = []
         self.json_ld = []
+        self.html_lang = ""
+        self.h1_count = 0
+        self.images_missing_alt = []
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
+        if tag == "html":
+            self.html_lang = attrs.get("lang", "")
+        if tag == "h1":
+            self.h1_count += 1
         if tag == "script":
             self.script_type = attrs.get("type", "")
             self.script_text = []
@@ -88,6 +95,8 @@ class RefParser(HTMLParser):
             self.refs.append(("href", attrs["href"]))
         if tag in {"img", "script", "source"} and attrs.get("src"):
             self.refs.append(("src", attrs["src"]))
+        if tag == "img" and "alt" not in attrs:
+            self.images_missing_alt.append(attrs.get("src", "<missing src>"))
         if tag == "meta" and attrs.get("content"):
             key = attrs.get("property") or attrs.get("name") or ""
             if key in {"og:url", "og:image", "twitter:image"}:
@@ -131,6 +140,12 @@ for path in html_files:
 
     parser = RefParser()
     parser.feed(text)
+    if not parser.html_lang:
+        errors.append(f"Missing html lang in {rel}")
+    if parser.h1_count != 1:
+        errors.append(f"Expected exactly one h1 in {rel}, found {parser.h1_count}")
+    for src in parser.images_missing_alt:
+        errors.append(f"Image missing alt attribute in {rel}: {src}")
     for current in parser.active_nav_without_current:
         errors.append(f"Active navigation missing aria-current in {rel}: {current}")
 
