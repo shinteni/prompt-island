@@ -61,6 +61,20 @@ Download v0.1.0 from GitHub Releases. This release uses ad-hoc signing, so read 
 
 [Install & Trust](https://shinteni.github.io/prompt-island/en/install.html)
 
+Verify the download:
+
+```sh
+curl -LO https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip
+curl -LO https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip.sha256
+shasum -a 256 -c Vibelsland-Free-0.1.0-macos.zip.sha256
+```
+
+Current SHA-256:
+
+```text
+64c7c0a4eae81042bbc3896e24a07ab5d5573aeaafa846eada2e982f887ecf81
+```
+
 Install:
 
 1. Download `Vibelsland-Free-0.1.0-macos.zip`.

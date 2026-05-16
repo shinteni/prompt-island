@@ -4,6 +4,9 @@
   const requested = params.get("lang");
   const pathSegments = window.location.pathname.split("/").filter(Boolean);
   const pathLang = pathSegments.find((segment) => supported.includes(segment));
+  const file = window.location.pathname.split("/").pop() || "index.html";
+  const page = file.replace(".html", "") || "index";
+  const isRootEntry = !pathLang && page === "index";
   let stored = "";
   try {
     stored = window.localStorage.getItem("vibelsland-lang") || "";
@@ -14,11 +17,9 @@
     ? requested
     : supported.includes(pathLang)
       ? pathLang
-      : supported.includes(stored)
+      : isRootEntry && supported.includes(stored)
         ? stored
         : "zh";
-  const file = window.location.pathname.split("/").pop() || "index.html";
-  const page = file.replace(".html", "") || "index";
   const rootPrefix = pathLang && pathLang !== "zh" ? "../" : "";
   const pathLanguage = supported.includes(pathLang) ? pathLang : "zh";
 
@@ -34,7 +35,7 @@
     return;
   }
 
-  if (!supported.includes(requested) && !supported.includes(pathLang) && supported.includes(stored) && stored !== "zh") {
+  if (!supported.includes(requested) && isRootEntry && supported.includes(stored) && stored !== "zh") {
     window.location.replace(routeFor(stored, file, window.location.hash));
     return;
   }
@@ -108,6 +109,11 @@
         "shared.nav.support": "支持",
         "shared.nav.install": "安装",
         "shared.nav.release": "版本历史",
+        "shared.nav.home.short": "首页",
+        "shared.nav.advantages.short": "优势",
+        "shared.nav.download.short": "下载",
+        "shared.nav.privacy.short": "隐私",
+        "shared.nav.faq.short": "FAQ",
         "shared.cta": "下载 macOS 版",
         "shared.footer.tagline": "面向 macOS 的本地优先 AI coding 状态显示。",
 
@@ -335,6 +341,11 @@
         "shared.nav.support": "Support",
         "shared.nav.install": "Install",
         "shared.nav.release": "Release Notes",
+        "shared.nav.home.short": "Home",
+        "shared.nav.advantages.short": "Value",
+        "shared.nav.download.short": "Get",
+        "shared.nav.privacy.short": "Privacy",
+        "shared.nav.faq.short": "FAQ",
         "shared.cta": "Download for macOS",
         "shared.footer.tagline": "A local-first AI coding status display for macOS.",
 
@@ -562,6 +573,11 @@
         "shared.nav.support": "サポート",
         "shared.nav.install": "インストール",
         "shared.nav.release": "リリースノート",
+        "shared.nav.home.short": "ホーム",
+        "shared.nav.advantages.short": "強み",
+        "shared.nav.download.short": "DL",
+        "shared.nav.privacy.short": "プライバシー",
+        "shared.nav.faq.short": "FAQ",
         "shared.cta": "macOS 版をダウンロード",
         "shared.footer.tagline": "macOS 向けローカルファースト AI coding 状態表示。",
 
@@ -731,6 +747,23 @@
 
   const activeCopy = copy[lang] || copy.zh;
   const meta = activeCopy.meta[page];
+  const socialMeta = {
+    zh: {
+      locale: "zh_CN",
+      imageAlt: "Vibelsland Free macOS AI 编程状态界面"
+    },
+    en: {
+      locale: "en_US",
+      imageAlt: "Vibelsland Free macOS AI coding status interface"
+    },
+    ja: {
+      locale: "ja_JP",
+      imageAlt: "Vibelsland Free macOS AI コーディング状態インターフェイス"
+    }
+  }[lang] || {
+    locale: "zh_CN",
+    imageAlt: "Vibelsland Free macOS AI 编程状态界面"
+  };
 
   document.documentElement.lang = activeCopy.htmlLang;
 
@@ -739,12 +772,17 @@
     document.querySelector('meta[name="description"]')?.setAttribute("content", meta.description);
     document.querySelector('meta[property="og:title"]')?.setAttribute("content", meta.ogTitle);
     document.querySelector('meta[property="og:description"]')?.setAttribute("content", meta.ogDescription);
+    document.querySelector('meta[property="og:locale"]')?.setAttribute("content", socialMeta.locale);
+    document.querySelector('meta[property="og:image:alt"]')?.setAttribute("content", socialMeta.imageAlt);
+    document.querySelector('meta[name="twitter:image:alt"]')?.setAttribute("content", socialMeta.imageAlt);
   }
 
   document.querySelectorAll("[data-i18n]").forEach((node) => {
     const key = node.getAttribute("data-i18n");
     const value = activeCopy.strings[key];
     if (value) node.textContent = value;
+    const mobileValue = activeCopy.strings[`${key}.short`];
+    if (mobileValue) node.setAttribute("data-mobile-label", mobileValue);
   });
 
   document.querySelectorAll(".nav-links a").forEach((link) => {
