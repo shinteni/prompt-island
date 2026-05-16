@@ -7,6 +7,7 @@ SITE_URL="${VIBELSLAND_SITE_URL:-https://shinteni.github.io/prompt-island/}"
 python3 - "$ROOT" "$SITE_URL" <<'PY'
 import json
 import os
+import re
 import sys
 from html.parser import HTMLParser
 from pathlib import Path
@@ -255,6 +256,27 @@ if security_path.exists():
     for line in expected_security_lines:
         if line not in security:
             errors.append(f"security.txt missing expected line: {line}")
+
+markdown_ref_pattern = re.compile(r"!\[[^\]]*\]\(([^)]+)\)|\[[^\]]+\]\(([^)]+)\)|<img[^>]+src=\"([^\"]+)\"", re.I)
+for md_path in [root / "README.md", root / "README.en.md", root / "PRIVACY.md"]:
+    if not md_path.exists():
+        continue
+    markdown = md_path.read_text(encoding="utf-8")
+    for match in markdown_ref_pattern.finditer(markdown):
+        value = next((group for group in match.groups() if group), "")
+        if not value or is_external(value):
+            continue
+        clean = value.split("#", 1)[0].split("?", 1)[0]
+        if not clean:
+            continue
+        target = (md_path.parent / clean).resolve()
+        try:
+            target.relative_to(root.resolve())
+        except ValueError:
+            errors.append(f"Markdown reference escapes repository in {md_path.name}: {value}")
+            continue
+        if not target.exists():
+            errors.append(f"Missing markdown reference target in {md_path.name}: {value}")
 
 checksum_path = root / "dist" / "Vibelsland-Free-0.1.0-macos.zip.sha256"
 if checksum_path.exists():
