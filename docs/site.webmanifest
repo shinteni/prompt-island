@@ -1,13 +1,13 @@
 {
-  "name": ">_ - island",
-  "short_name": ">_ - island",
-  "description": "Local-first macOS AI coding island for Claude Code, Codex CLI, and Codex Desktop.",
+  "name": "Vibelsland Free",
+  "short_name": "Vibelsland",
+  "description": "Local-first macOS AI coding status layer for Claude Code, Codex CLI, and Codex Desktop.",
   "lang": "en",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#f5f5f7",
-  "theme_color": "#f5f5f7",
+  "background_color": "#070706",
+  "theme_color": "#070706",
   "orientation": "any",
   "icons": [
     {

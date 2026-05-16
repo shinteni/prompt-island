@@ -1,4 +1,4 @@
-# &gt;_ - island Release Checklist
+# Vibelsland Free Release Checklist
 
 售卖或对外分发前，必须同时完成自动验证和真实人工回归。本清单记录自动脚本不能可靠覆盖的发布阻塞项。
 
@@ -30,7 +30,7 @@
 - [ ] 运行 `zsh scripts/verify-bridge-events.sh`，确认 Claude / Codex 测试事件能通过真实 Bridge helper 进入应用。
 - [ ] 运行 `zsh scripts/verify-release-readiness.sh`，确认公开售卖门禁明确列出未完成的人工回归和正式签名阻塞项；如果日常实例正在运行，应先提示退出而不是制造第二个浮岛；所有人工项完成后再要求该脚本通过。
 - [ ] 确认产物位于 `dist/>_ - island.app`。
-- [ ] 确认下载包位于 `dist/prompt-island-0.1.0-macos.zip`。
+- [ ] 确认下载包位于 `dist/Vibelsland-Free-0.1.0-macos.zip`。
 - [ ] 确认本地构建仍是 ad-hoc 签名；如果要对外分发，需要另行完成 Developer ID 签名和 notarization。
 
 ## 人工回归
