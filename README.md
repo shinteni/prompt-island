@@ -1,7 +1,7 @@
-# &gt;_ - island
+# Vibelsland Free
 
 <p align="center">
-  <img src="docs/assets/readme/app-icon.png" alt="&gt;_ - island app icon" width="128">
+  <img src="docs/assets/readme/app-icon.png" alt="Vibelsland Free app icon" width="128">
 </p>
 
 <p align="center">
@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <strong>面向 macOS 的本地 AI 编程浮岛。</strong>
+  <strong>面向 macOS 的本地优先 AI coding 状态层。</strong>
 </p>
 
 <p align="center">
@@ -23,14 +23,14 @@
 </p>
 
 <p align="center">
-  <img src="docs/assets/readme/hero-island.png" alt="&gt;_ - island floating island interface" width="960">
+  <img src="docs/assets/readme/hero-island.png" alt="Vibelsland Free floating island interface" width="960">
 </p>
 
 `macOS 14+` `Swift` `Local-first` `No telemetry` `Claude Code` `Codex CLI` `Codex Desktop`
 
 ## 一眼看清 AI 编程现场
 
-&gt;_ - island 是给重度 AI 编程用户的 macOS 原生工具。它把 Claude Code、Codex CLI 和 Codex Desktop 的本机会话状态、工具调用、token 摘要和审批请求集中到屏幕顶部的浮岛里。
+Vibelsland Free 是给重度 AI 编程用户的 macOS 原生工具。它把 Claude Code、Codex CLI 和 Codex Desktop 的本机会话状态、工具调用、token 摘要和审批请求集中到屏幕顶部的浮岛里。
 
 它不是替代终端或桌面客户端，而是在你工作时把最重要的 AI 编程状态留在视线范围内。空闲时它安静收起，任务进行时变成紧凑药丸，遇到审批或重要状态时展开为面板。
 
@@ -68,7 +68,7 @@ v0.1.0 可以直接下载：
 
 ## 隐私
 
-&gt;_ - island 是本机工具，不创建账号，不上传遥测，不同步远程服务器。它只读取 Claude Code、Codex CLI 和 Codex Desktop 在本机留下的状态、会话和审批信息，用于展示浮岛状态。
+Vibelsland Free 是本机工具，不创建账号，不上传遥测，不同步远程服务器。它只读取 Claude Code、Codex CLI 和 Codex Desktop 在本机留下的状态、会话和审批信息，用于展示浮岛状态。
 
 更多细节见 [PRIVACY.md](PRIVACY.md)。
 
@@ -90,12 +90,12 @@ dist/Vibelsland-Free-0.1.0-macos.zip.sha256
 
 ## 项目状态
 
-&gt;_ - island v0.1.0 已经具备可下载的本机版本，包含浮岛展示、设置页、Hook 安装、审批窗口、运行状态检查、单实例保护、重启恢复和发布打包脚本。当前发布包使用 ad-hoc 签名；Developer ID 签名和 notarization 是后续提升首次打开体验的分发改进。
+Vibelsland Free v0.1.0 已经具备可下载的本机版本，包含浮岛展示、设置页、Hook 安装、审批窗口、运行状态检查、单实例保护、重启恢复和发布打包脚本。当前发布包使用 ad-hoc 签名；Developer ID 签名和 notarization 是后续提升首次打开体验的分发改进。
 
 ## 许可证
 
-&gt;_ - island 使用 [MIT License](LICENSE) 开源。
+Vibelsland Free 使用 [MIT License](LICENSE) 开源。
 
 ## 独立声明
 
-&gt;_ - island 是独立工具，不隶属于 Anthropic、OpenAI、Claude 或 Codex。相关产品名仅用于说明本地兼容性。
+Vibelsland Free 是独立工具，不隶属于 Anthropic、OpenAI、Claude 或 Codex。相关产品名仅用于说明本地兼容性。

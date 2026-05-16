@@ -1,7 +1,7 @@
-# &gt;_ - island
+# Vibelsland Free
 
 <p align="center">
-  <img src="docs/assets/readme/app-icon.png" alt="&gt;_ - island app icon" width="128">
+  <img src="docs/assets/readme/app-icon.png" alt="Vibelsland Free app icon" width="128">
 </p>
 
 <p align="center">
@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <strong>Local AI coding island for macOS.</strong>
+  <strong>A local-first AI coding status layer for macOS.</strong>
 </p>
 
 <p align="center">
@@ -23,14 +23,14 @@
 </p>
 
 <p align="center">
-  <img src="docs/assets/readme/hero-island.png" alt="&gt;_ - island floating island interface" width="960">
+  <img src="docs/assets/readme/hero-island.png" alt="Vibelsland Free floating island interface" width="960">
 </p>
 
 `macOS 14+` `Swift` `Local-first` `No telemetry` `Claude Code` `Codex CLI` `Codex Desktop`
 
 ## See AI Coding Work At A Glance
 
-&gt;_ - island is a native macOS utility for developers who work with AI coding tools every day. It brings local Claude Code, Codex CLI, and Codex Desktop session status, tool activity, token summaries, and approval requests into one floating island at the top of your screen.
+Vibelsland Free is a native macOS utility for developers who work with AI coding tools every day. It brings local Claude Code, Codex CLI, and Codex Desktop session status, tool activity, token summaries, and approval requests into one floating island at the top of your screen.
 
 It does not replace your terminal or desktop client. It keeps the most important AI coding state visible while you work. When idle, it stays quiet. During a task, it becomes a compact pill. When an approval request or important update needs attention, it expands into a panel.
 
@@ -68,7 +68,7 @@ Note: the current release uses ad-hoc codesign. For broader public distribution,
 
 ## Privacy
 
-&gt;_ - island is local-first. It does not create an account, upload telemetry, or sync data to a remote server. It reads local Claude Code, Codex CLI, and Codex Desktop state only to display session status, tool activity, token summaries, and approval requests.
+Vibelsland Free is local-first. It does not create an account, upload telemetry, or sync data to a remote server. It reads local Claude Code, Codex CLI, and Codex Desktop state only to display session status, tool activity, token summaries, and approval requests.
 
 Read the full privacy note in [PRIVACY.md](PRIVACY.md).
 
@@ -90,12 +90,12 @@ dist/Vibelsland-Free-0.1.0-macos.zip.sha256
 
 ## Project Status
 
-&gt;_ - island v0.1.0 already includes the downloadable local app experience: floating island UI, settings, hook installation, approval UI, runtime health checks, single-instance protection, restart recovery, and release packaging scripts. The current release uses ad-hoc signing; Developer ID signing and notarization remain future distribution improvements for a smoother first launch.
+Vibelsland Free v0.1.0 already includes the downloadable local app experience: floating island UI, settings, hook installation, approval UI, runtime health checks, single-instance protection, restart recovery, and release packaging scripts. The current release uses ad-hoc signing; Developer ID signing and notarization remain future distribution improvements for a smoother first launch.
 
 ## License
 
-&gt;_ - island is open source under the [MIT License](LICENSE).
+Vibelsland Free is open source under the [MIT License](LICENSE).
 
 ## Independence
 
-&gt;_ - island is an independent utility. It is not affiliated with Anthropic, OpenAI, Claude, or Codex. Product names are used only to describe local compatibility.
+Vibelsland Free is an independent utility. It is not affiliated with Anthropic, OpenAI, Claude, or Codex. Product names are used only to describe local compatibility.

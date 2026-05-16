@@ -34,26 +34,4 @@
     }
   }
 
-  const isModifiedClick = (event) =>
-    event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0;
-
-  document.addEventListener("click", (event) => {
-    if (reduceMotion || isModifiedClick(event)) return;
-
-    const link = event.target.closest("a[href]");
-    if (!link || link.target || link.hasAttribute("download")) return;
-
-    const url = new URL(link.getAttribute("href"), window.location.href);
-    const sameHost = url.protocol === window.location.protocol && url.host === window.location.host;
-    const isPage = url.pathname.endsWith(".html") || url.pathname.endsWith("/");
-    const isSameHash = url.pathname === window.location.pathname && url.hash;
-
-    if (!sameHost || !isPage || isSameHash) return;
-
-    event.preventDefault();
-    root.classList.add("page-leaving");
-    window.setTimeout(() => {
-      window.location.href = url.href;
-    }, 120);
-  });
 })();
