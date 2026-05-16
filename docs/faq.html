@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>常见问题 | Vibelsland Free</title>
+    <meta
+      name="description"
+      content="了解 Vibelsland Free 的免费分发、macOS 首次打开、SHA-256 校验、本地数据、支持工具和卸载方式。"
+    >
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Vibelsland Free 常见问题">
+    <meta property="og:description" content="免费、安装、隐私、校验和支持工具的常见问题。">
+    <meta property="og:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
+    <meta property="og:url" content="https://shinteni.github.io/prompt-island/faq.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Vibelsland Free 常见问题">
+    <meta name="twitter:description" content="免费、安装、隐私、校验和支持工具的常见问题。">
+    <meta name="twitter:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
+    <meta name="theme-color" content="#070706">
+    <link rel="canonical" href="https://shinteni.github.io/prompt-island/faq.html">
+    <link rel="alternate" hreflang="zh-CN" href="https://shinteni.github.io/prompt-island/faq.html">
+    <link rel="alternate" hreflang="en" href="https://shinteni.github.io/prompt-island/en/faq.html">
+    <link rel="alternate" hreflang="ja" href="https://shinteni.github.io/prompt-island/ja/faq.html">
+    <link rel="alternate" hreflang="x-default" href="https://shinteni.github.io/prompt-island/faq.html">
+    <link rel="icon" href="assets/readme/app-icon.png">
+    <link rel="apple-touch-icon" href="assets/readme/app-icon.png">
+    <link rel="manifest" href="site.webmanifest">
+    <link rel="stylesheet" href="styles.css">
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "inLanguage": "zh-CN",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Vibelsland Free 是免费的吗？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "v0.1.0 免费下载，源码公开。下载包通过 GitHub Releases 分发。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "首次打开为什么需要额外确认？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "v0.1.0 采用 ad-hoc 签名，因此首次打开时 macOS 可能要求额外确认。可以按住 Control 点按应用并选择 Open。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "如何确认下载包没有被替换？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "下载 zip 和同名 .sha256 文件后，在同一目录运行 shasum -a 256 -c Vibelsland-Free-0.1.0-macos.zip.sha256。官网展示的 SHA-256 与 GitHub Release 文件一致。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "支持哪些 AI 编程工具？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "v0.1.0 支持 Claude Code、Codex CLI 和 Codex Desktop 的本地状态展示、工具调用摘要和审批请求处理。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "核心功能需要互联网连接吗？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "不需要。Vibelsland Free 的状态显示、来源控制和本地审批桥接都在本机完成。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "如何停止或卸载 hooks？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "在设置页可以按来源启用、修复或卸载 hooks。应用只会在你选择安装、修复或卸载时修改对应配置。"
+            }
+          }
+        ]
+      }
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main" data-i18n="shared.skip">跳到正文</a>
+    <header class="site-header" aria-label="主导航">
+      <a class="brand" href="index.html" aria-label="Vibelsland Free 首页">
+        <img src="assets/readme/app-icon.png" alt="" width="28" height="28">
+        <span>Vibelsland Free</span>
+      </a>
+      <nav class="nav-links" aria-label="页面导航">
+        <a href="index.html" data-i18n="shared.nav.home">首页</a>
+        <a href="advantages.html" data-i18n="shared.nav.advantages">优势</a>
+        <a href="download.html" data-i18n="shared.nav.download">下载</a>
+        <a href="privacy.html" data-i18n="shared.nav.privacy">隐私</a>
+      <a class="active" aria-current="page" href="faq.html" data-i18n="shared.nav.faq">FAQ</a>
+      </nav>
+      <div class="header-tools">
+        <nav class="lang-switch" aria-label="语言切换">
+          <a data-lang-option="zh" href="faq.html" class="active" aria-current="true">中文</a>
+          <a data-lang-option="en" href="en/faq.html" aria-current="false">EN</a>
+          <a data-lang-option="ja" href="ja/faq.html" aria-current="false">日本語</a>
+        </nav>
+        <a class="nav-cta" href="download.html" data-i18n="shared.cta">下载 macOS 版</a>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="subpage-hero faq-hero" aria-labelledby="faq-title">
+        <div class="subpage-copy" data-reveal>
+          <p class="eyebrow">FAQ</p>
+          <h1 id="faq-title">常见问题。</h1>
+          <p>
+            把安装、校验、隐私和支持范围提前说清楚。Vibelsland Free 专注于本地状态显示，不包含云同步或完整 IDE 功能。
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="download.html">下载 v0.1.0</a>
+            <a class="button secondary" href="privacy.html">查看隐私边界</a>
+          </div>
+        </div>
+        <div class="privacy-summary" aria-label="FAQ 摘要" data-reveal>
+          <div>
+            <span>价格</span>
+            <strong>免费下载</strong>
+          </div>
+          <div>
+            <span>数据</span>
+            <strong>不上传遥测</strong>
+          </div>
+          <div>
+            <span>系统</span>
+            <strong>macOS 14+</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="section faq-section" aria-labelledby="install-faq-title">
+        <div class="section-heading align-left" data-reveal>
+          <p class="eyebrow">安装与信任</p>
+          <h2 id="install-faq-title">下载前最该确认的事。</h2>
+        </div>
+        <div class="faq-list">
+          <article data-reveal>
+            <h3>Vibelsland Free 是免费的吗？</h3>
+            <p>v0.1.0 免费下载，源码公开。下载包通过 GitHub Releases 分发，官网、GitHub Release 文件和 SHA-256 校验值保持一致。</p>
+          </article>
+          <article data-reveal>
+            <h3>首次打开为什么需要额外确认？</h3>
+            <p>v0.1.0 采用 ad-hoc 签名，因此首次打开时 macOS 可能要求额外确认。请按住 Control 点按应用并选择 Open。</p>
+          </article>
+          <article data-reveal>
+            <h3>如何确认下载包没有被替换？</h3>
+            <p>下载 zip 和同名 <code>.sha256</code> 文件后，在同一目录运行 <code>shasum -a 256 -c Vibelsland-Free-0.1.0-macos.zip.sha256</code>。官网展示的 SHA-256 与 GitHub Release 文件一致。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section faq-section surface-section" aria-labelledby="usage-faq-title">
+        <div class="section-heading align-left" data-reveal>
+          <p class="eyebrow">使用范围</p>
+          <h2 id="usage-faq-title">它会读取什么，支持哪些工具。</h2>
+        </div>
+        <div class="faq-list">
+          <article data-reveal>
+            <h3>支持哪些 AI 编程工具？</h3>
+            <p>v0.1.0 支持 Claude Code、Codex CLI 和 Codex Desktop 的本地状态展示、工具调用摘要和审批请求处理。</p>
+          </article>
+          <article data-reveal>
+            <h3>核心功能需要互联网连接吗？</h3>
+            <p>不需要。Vibelsland Free 的状态显示、来源控制和本地审批桥接都在本机完成。Claude Code、Codex CLI 和 Codex Desktop 可能有各自的网络连接，但它们独立于本应用。</p>
+          </article>
+          <article data-reveal>
+            <h3>如何停止或卸载 hooks？</h3>
+            <p>在设置页可以按来源启用、修复或卸载 hooks。应用只会在你选择安装、修复或卸载时修改对应配置。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section cta-section" aria-labelledby="faq-cta-title">
+        <div data-reveal>
+          <p class="eyebrow">下一步</p>
+          <h2 id="faq-cta-title">确认边界后再下载。</h2>
+          <p>阅读首次打开说明后，可以下载 macOS 版；想了解数据边界，可以先查看隐私页。</p>
+          <div class="hero-actions">
+            <a class="button primary" href="download.html">下载 macOS 版</a>
+            <a class="button secondary" href="privacy.html">查看隐私边界</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div>
+        <strong>Vibelsland Free</strong>
+        <p data-i18n="shared.footer.tagline">面向 macOS 的本地优先 AI coding 状态显示。</p>
+      </div>
+      <nav aria-label="页脚导航">
+        <a href="advantages.html" data-i18n="shared.nav.advantages">优势</a>
+        <a href="download.html" data-i18n="shared.nav.download">下载</a>
+        <a href="privacy.html" data-i18n="shared.nav.privacy">隐私</a>
+        <a href="faq.html" data-i18n="shared.nav.faq">FAQ</a>
+        <a href="support.html" data-i18n="shared.nav.support">支持</a>
+        <a href="https://github.com/shinteni/prompt-island">GitHub</a>
+      </nav>
+    </footer>
+    <script src="lang.js" defer></script>
+    <script src="effects.js" defer></script>
+  </body>
+</html>

@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>サポートとトラブルシューティング | Vibelsland Free</title>
+    <meta
+      name="description"
+      content="Vibelsland Free のサポートとトラブルシューティング。macOS の初回起動確認、SHA-256 確認、ローカルデータの場所、アンインストール、問題報告、ツール状態が出ない場合を確認できます。"
+    >
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Vibelsland Free サポートとトラブルシューティング">
+    <meta property="og:description" content="インストール、チェックサム、ローカルデータ、アンインストール、状態表示の問題を確認できます。">
+    <meta property="og:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
+    <meta property="og:url" content="https://shinteni.github.io/prompt-island/ja/support.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Vibelsland Free サポートとトラブルシューティング">
+    <meta name="twitter:description" content="インストール、チェックサム、ローカルデータ、アンインストール、状態表示の問題を確認できます。">
+    <meta name="twitter:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
+    <meta name="theme-color" content="#070706">
+    <link rel="canonical" href="https://shinteni.github.io/prompt-island/ja/support.html">
+    <link rel="alternate" hreflang="zh-CN" href="https://shinteni.github.io/prompt-island/support.html">
+    <link rel="alternate" hreflang="en" href="https://shinteni.github.io/prompt-island/en/support.html">
+    <link rel="alternate" hreflang="ja" href="https://shinteni.github.io/prompt-island/ja/support.html">
+    <link rel="alternate" hreflang="x-default" href="https://shinteni.github.io/prompt-island/support.html">
+    <link rel="icon" href="../assets/readme/app-icon.png">
+    <link rel="apple-touch-icon" href="../assets/readme/app-icon.png">
+    <link rel="manifest" href="../site.webmanifest">
+    <link rel="stylesheet" href="../styles.css">
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "TechArticle",
+        "headline": "Vibelsland Free サポートとトラブルシューティング",
+        "description": "Vibelsland Free のインストール、SHA-256 確認、ローカルデータ、アンインストール、問題報告、ツール状態が出ない場合のトラブルシューティング。",
+        "inLanguage": "ja",
+        "about": {
+          "@type": "SoftwareApplication",
+          "name": "Vibelsland Free",
+          "operatingSystem": "macOS 14+"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main" data-i18n="shared.skip">本文へ移動</a>
+    <header class="site-header" aria-label="メインナビゲーション">
+      <a class="brand" href="index.html" aria-label="Vibelsland Free ホーム">
+        <img src="../assets/readme/app-icon.png" alt="" width="28" height="28">
+        <span>Vibelsland Free</span>
+      </a>
+      <nav class="nav-links" aria-label="ページナビゲーション">
+        <a href="index.html" data-i18n="shared.nav.home">ホーム</a>
+        <a href="advantages.html" data-i18n="shared.nav.advantages">強み</a>
+        <a href="download.html" data-i18n="shared.nav.download">ダウンロード</a>
+        <a href="privacy.html" data-i18n="shared.nav.privacy">プライバシー</a>
+        <a href="faq.html" data-i18n="shared.nav.faq">FAQ</a>
+      </nav>
+      <div class="header-tools">
+        <nav class="lang-switch" aria-label="言語切替">
+          <a data-lang-option="zh" href="../support.html" aria-current="false">中文</a>
+          <a data-lang-option="en" href="../en/support.html" aria-current="false">EN</a>
+          <a data-lang-option="ja" href="support.html" class="active" aria-current="true">日本語</a>
+        </nav>
+        <a class="nav-cta" href="download.html" data-i18n="shared.cta">macOS 版をダウンロード</a>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="subpage-hero" aria-labelledby="support-title">
+        <div class="subpage-copy" data-reveal>
+          <p class="eyebrow">Support</p>
+          <h1 id="support-title">サポート。</h1>
+          <p>
+            初回起動確認、SHA-256、ローカルデータ、アンインストール、ツール状態の確認方法をまとめています。
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="download.html">ダウンロード説明を見る</a>
+            <a class="button secondary" href="https://github.com/shinteni/prompt-island/issues">問題を報告</a>
+          </div>
+        </div>
+        <div class="privacy-summary" aria-label="サポート概要" data-reveal>
+          <div>
+            <span>インストール</span>
+            <strong>Gatekeeper とチェックサム</strong>
+          </div>
+          <div>
+            <span>状態</span>
+            <strong>Hooks とローカルソース</strong>
+          </div>
+          <div>
+            <span>データ</span>
+            <strong>Mac 内で確認</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="section install-section" aria-labelledby="first-checks-title">
+        <div class="section-heading align-left" data-reveal>
+          <p class="eyebrow">最初に確認</p>
+          <h2 id="first-checks-title">まず三つの点を確認します。</h2>
+        </div>
+        <ol class="large-steps">
+          <li data-reveal>
+            <span>01</span>
+            <strong>macOS が初回起動の追加確認を求める</strong>
+            <p>v0.1.0 は ad-hoc 署名を採用しているため、初回起動時に macOS が追加確認を求める場合があります。GitHub Releases から入手したことを確認し、アプリを Applications に移動してから、Control キーを押しながらアプリをクリックし、Open を選びます。</p>
+          </li>
+          <li data-reveal>
+            <span>02</span>
+            <strong>SHA-256 を確認する</strong>
+            <p>ダウンロードした場所で <code>shasum -a 256 -c Vibelsland-Free-0.1.0-macos.zip.sha256</code> を実行します。手動で確認する場合は zip の SHA-256 が <code>64c7c0a4eae81042bbc3896e24a07ab5d5573aeaafa846eada2e982f887ecf81</code> と一致することを確認します。</p>
+          </li>
+          <li data-reveal>
+            <span>03</span>
+            <strong>ツール状態が表示されない</strong>
+            <p>設定画面で対象ソースが有効か確認します。Claude Code と Codex CLI は Install Hooks または Repair Hooks を実行し、その後に新しいセッションを開始してください。既存セッションの過去 hook イベントは再送されない場合があります。</p>
+          </li>
+        </ol>
+      </section>
+
+      <section class="section data-section" aria-labelledby="status-title">
+        <div class="section-heading align-left" data-reveal>
+          <p class="eyebrow">状態表示</p>
+          <h2 id="status-title">Claude や Codex の状態が出ない場合。</h2>
+        </div>
+        <div class="data-grid">
+          <article data-reveal>
+            <h3>Claude Code / Codex CLI</h3>
+            <ul>
+              <li>設定画面で対象ソースを有効にし、メニューバーまたは設定画面から Install Hooks / Repair Hooks を実行します。</li>
+              <li>ローカルブリッジが存在するか確認します: <code>~/.vibelsland-free/bin/vibelsland-bridge</code>。</li>
+              <li>新しい Claude Code または Codex CLI セッションを開始し、アイランドとパネルを再確認します。</li>
+            </ul>
+          </article>
+          <article data-reveal>
+            <h3>Codex Desktop</h3>
+            <ul>
+              <li>Codex Desktop がインストール済みで正常に起動できることを確認します。</li>
+              <li>Vibelsland Free の設定画面で Codex Desktop ソースを有効にします。</li>
+              <li>ヘルスチェックが接続不可を示す場合は、Codex Desktop を開いてタスクを開始してから Vibelsland Free のパネルに戻ります。</li>
+            </ul>
+          </article>
+          <article data-reveal>
+            <h3>承認やツール実行が更新されない</h3>
+            <ul>
+              <li>Hooks を入れた後も Vibelsland Free を起動したままにします。</li>
+              <li>メニューバーの Open Logs を使い、最近の hook、bridge、socket エラーを確認します。</li>
+              <li>Claude や Codex の設定を手動編集した場合は、Repair Hooks でブリッジ設定を再度マージします。</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="section split-section surface-section" aria-labelledby="data-title">
+        <div class="split-copy" data-reveal>
+          <p class="eyebrow">ローカルデータ</p>
+          <h2 id="data-title">トラブルシューティングで使う場所。</h2>
+          <p>
+            Vibelsland Free はローカルツールです。確認するのは主に設定、ログ、ブリッジの実行ディレクトリ、Claude と Codex の hook 設定です。ログを共有する前に、機密性のあるパス、プロンプト、トークン、セッション内容を削除してください。
+          </p>
+        </div>
+        <div class="checksum-card" data-reveal>
+          <span>主なパス</span>
+          <code>~/Library/Application Support/VibelslandFree/config.json</code>
+          <code>~/Library/Logs/VibelslandFree/app.log</code>
+          <code>~/.vibelsland-free</code>
+          <code>~/.claude/settings.json</code>
+          <code>~/.codex/hooks.json</code>
+          <code>~/.codex/config.toml</code>
+        </div>
+      </section>
+
+      <section class="section install-section" aria-labelledby="uninstall-title">
+        <div class="section-heading align-left" data-reveal>
+          <p class="eyebrow">アンインストール</p>
+          <h2 id="uninstall-title">アプリを削除する前に hooks を外します。</h2>
+        </div>
+        <ol class="large-steps">
+          <li data-reveal>
+            <span>01</span>
+            <strong>Hooks をアンインストール</strong>
+            <p>アプリの設定画面またはメニューバーから Uninstall Hooks を実行します。Claude と Codex の hook 設定から Vibelsland のブリッジ項目を削除します。</p>
+          </li>
+          <li data-reveal>
+            <span>02</span>
+            <strong>終了してアプリを削除</strong>
+            <p>メニューバーから Vibelsland Free を終了し、Applications の <code>&gt;_ - island.app</code>、または Applications に移動したアプリのコピーを削除します。</p>
+          </li>
+          <li data-reveal>
+            <span>03</span>
+            <strong>必要ならローカルデータも削除</strong>
+            <p>設定やログが不要な場合は、<code>~/Library/Application Support/VibelslandFree</code>、<code>~/Library/Logs/VibelslandFree</code>、<code>~/.vibelsland-free</code> を削除できます。</p>
+          </li>
+        </ol>
+      </section>
+
+      <section class="section note-section" aria-labelledby="report-title">
+        <div class="section-heading" data-reveal>
+          <p class="eyebrow">問題報告</p>
+          <h2 id="report-title">再現できる情報を添えてください。</h2>
+        </div>
+        <div class="link-grid compact">
+          <a class="link-panel" href="https://github.com/shinteni/prompt-island/issues" data-reveal>
+            <span>Issues</span>
+            <strong>GitHub で報告</strong>
+            <p>Vibelsland Free のバージョン、macOS バージョン、影響を受けるソース、再現手順、伏せ字にしたログ抜粋を含めてください。</p>
+          </a>
+          <a class="link-panel" href="https://github.com/shinteni/prompt-island/releases/tag/v0.1.0" data-reveal>
+            <span>Release</span>
+            <strong>リリース資産を確認</strong>
+            <p>zip と SHA-256 ファイルを再取得し、パッケージ、チェックサム、リリースノートが同じバージョンのものか確認します。</p>
+          </a>
+          <a class="link-panel" href="privacy.html" data-reveal>
+            <span>Privacy</span>
+            <strong>プライバシー境界を見る</strong>
+            <p>アプリが読み取り、書き込み、送信しない内容を確認してから、共有するトラブルシューティング情報を決めてください。</p>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div>
+        <strong>Vibelsland Free</strong>
+        <p data-i18n="shared.footer.tagline">macOS 向けローカルファースト AI coding 状態表示。</p>
+      </div>
+      <nav aria-label="フッターナビゲーション">
+        <a href="index.html" data-i18n="shared.nav.home">ホーム</a>
+        <a href="advantages.html" data-i18n="shared.nav.advantages">強み</a>
+        <a href="download.html" data-i18n="shared.nav.download">ダウンロード</a>
+        <a href="privacy.html" data-i18n="shared.nav.privacy">プライバシー</a>
+        <a href="faq.html" data-i18n="shared.nav.faq">FAQ</a>
+        <a href="support.html" data-i18n="shared.nav.support">サポート</a>
+        <a href="https://github.com/shinteni/prompt-island">GitHub</a>
+      </nav>
+    </footer>
+    <script src="../lang.js" defer></script>
+    <script src="../effects.js" defer></script>
+  </body>
+</html>

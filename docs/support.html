@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>支持与排障 | Vibelsland Free</title>
+    <meta
+      name="description"
+      content="Vibelsland Free 支持与排障：处理 macOS 首次打开确认、SHA-256 校验、本地数据位置、卸载、报告问题以及工具状态不显示。"
+    >
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Vibelsland Free 支持与排障">
+    <meta property="og:description" content="安装、校验、本地数据、卸载和状态显示问题的排障说明。">
+    <meta property="og:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
+    <meta property="og:url" content="https://shinteni.github.io/prompt-island/support.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Vibelsland Free 支持与排障">
+    <meta name="twitter:description" content="安装、校验、本地数据、卸载和状态显示问题的排障说明。">
+    <meta name="twitter:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
+    <meta name="theme-color" content="#070706">
+    <link rel="canonical" href="https://shinteni.github.io/prompt-island/support.html">
+    <link rel="alternate" hreflang="zh-CN" href="https://shinteni.github.io/prompt-island/support.html">
+    <link rel="alternate" hreflang="en" href="https://shinteni.github.io/prompt-island/en/support.html">
+    <link rel="alternate" hreflang="ja" href="https://shinteni.github.io/prompt-island/ja/support.html">
+    <link rel="alternate" hreflang="x-default" href="https://shinteni.github.io/prompt-island/support.html">
+    <link rel="icon" href="assets/readme/app-icon.png">
+    <link rel="apple-touch-icon" href="assets/readme/app-icon.png">
+    <link rel="manifest" href="site.webmanifest">
+    <link rel="stylesheet" href="styles.css">
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "TechArticle",
+        "headline": "Vibelsland Free 支持与排障",
+        "description": "处理 Vibelsland Free 安装、SHA-256 校验、本地数据、卸载、报告问题和工具状态不显示的排障说明。",
+        "inLanguage": "zh-CN",
+        "about": {
+          "@type": "SoftwareApplication",
+          "name": "Vibelsland Free",
+          "operatingSystem": "macOS 14+"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main" data-i18n="shared.skip">跳到正文</a>
+    <header class="site-header" aria-label="主导航">
+      <a class="brand" href="index.html" aria-label="Vibelsland Free 首页">
+        <img src="assets/readme/app-icon.png" alt="" width="28" height="28">
+        <span>Vibelsland Free</span>
+      </a>
+      <nav class="nav-links" aria-label="页面导航">
+        <a href="index.html" data-i18n="shared.nav.home">首页</a>
+        <a href="advantages.html" data-i18n="shared.nav.advantages">优势</a>
+        <a href="download.html" data-i18n="shared.nav.download">下载</a>
+        <a href="privacy.html" data-i18n="shared.nav.privacy">隐私</a>
+        <a href="faq.html" data-i18n="shared.nav.faq">FAQ</a>
+      </nav>
+      <div class="header-tools">
+        <nav class="lang-switch" aria-label="语言切换">
+          <a data-lang-option="zh" href="support.html" class="active" aria-current="true">中文</a>
+          <a data-lang-option="en" href="en/support.html" aria-current="false">EN</a>
+          <a data-lang-option="ja" href="ja/support.html" aria-current="false">日本語</a>
+        </nav>
+        <a class="nav-cta" href="download.html" data-i18n="shared.cta">下载 macOS 版</a>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="subpage-hero" aria-labelledby="support-title">
+        <div class="subpage-copy" data-reveal>
+          <p class="eyebrow">Support</p>
+          <h1 id="support-title">支持。</h1>
+          <p>
+            快速处理首次打开确认、SHA-256 校验、本地数据、卸载和工具状态不显示的问题。
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="download.html">查看下载说明</a>
+            <a class="button secondary" href="https://github.com/shinteni/prompt-island/issues">报告问题</a>
+          </div>
+        </div>
+        <div class="privacy-summary" aria-label="支持摘要" data-reveal>
+          <div>
+            <span>安装</span>
+            <strong>Gatekeeper 与校验</strong>
+          </div>
+          <div>
+            <span>状态</span>
+            <strong>Hooks 与本地来源</strong>
+          </div>
+          <div>
+            <span>数据</span>
+            <strong>只在本机排查</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="section install-section" aria-labelledby="first-checks-title">
+        <div class="section-heading align-left" data-reveal>
+          <p class="eyebrow">快速排查</p>
+          <h2 id="first-checks-title">先确认这三件事。</h2>
+        </div>
+        <ol class="large-steps">
+          <li data-reveal>
+            <span>01</span>
+            <strong>macOS 要求额外确认</strong>
+            <p>v0.1.0 采用 ad-hoc 签名，因此首次打开时 macOS 可能要求额外确认。请确认下载来源是 GitHub Releases，把应用放入 Applications 后，按住 Control 点按应用并选择 Open。</p>
+          </li>
+          <li data-reveal>
+            <span>02</span>
+            <strong>校验 SHA-256</strong>
+            <p>在下载目录运行 <code>shasum -a 256 -c Vibelsland-Free-0.1.0-macos.zip.sha256</code>，或手动比较 zip 的 SHA-256 是否为 <code>64c7c0a4eae81042bbc3896e24a07ab5d5573aeaafa846eada2e982f887ecf81</code>。</p>
+          </li>
+          <li data-reveal>
+            <span>03</span>
+            <strong>工具状态不显示</strong>
+            <p>打开设置页，确认对应来源已启用；对 Claude Code 和 Codex CLI 执行 Install 或 Repair Hooks，然后重新开始一个新会话。已有会话可能不会补发历史 hook 事件。</p>
+          </li>
+        </ol>
+      </section>
+
+      <section class="section data-section" aria-labelledby="status-title">
+        <div class="section-heading align-left" data-reveal>
+          <p class="eyebrow">状态显示</p>
+          <h2 id="status-title">Claude、Codex 状态没有出现时。</h2>
+        </div>
+        <div class="data-grid">
+          <article data-reveal>
+            <h3>Claude Code / Codex CLI</h3>
+            <ul>
+              <li>在设置页启用对应来源，并使用菜单栏或设置页的 Install Hooks / Repair Hooks。</li>
+              <li>确认本地桥接文件存在：<code>~/.vibelsland-free/bin/vibelsland-bridge</code>。</li>
+              <li>重新启动一个 Claude Code 或 Codex CLI 会话，再观察浮岛和面板状态。</li>
+            </ul>
+          </article>
+          <article data-reveal>
+            <h3>Codex Desktop</h3>
+            <ul>
+              <li>确认 Codex Desktop 已安装并能正常运行。</li>
+              <li>在 Vibelsland Free 设置页启用 Codex Desktop 来源。</li>
+              <li>如果健康检查显示连接不可用，请先打开 Codex Desktop 并启动一个任务，再回到 Vibelsland Free 面板查看。</li>
+            </ul>
+          </article>
+          <article data-reveal>
+            <h3>审批或工具调用不更新</h3>
+            <ul>
+              <li>保持 Vibelsland Free 运行，避免只安装 hooks 后退出应用。</li>
+              <li>打开菜单栏中的 Open Logs，查看最近是否有 hook、bridge 或 socket 错误。</li>
+              <li>如果曾手动编辑 Claude 或 Codex 配置，优先使用 Repair Hooks 重新合并配置。</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="section split-section surface-section" aria-labelledby="data-title">
+        <div class="split-copy" data-reveal>
+          <p class="eyebrow">本地数据</p>
+          <h2 id="data-title">排障时常用的位置。</h2>
+          <p>
+            Vibelsland Free 是本地工具。排障通常只需要确认配置、日志、桥接运行目录，以及 Claude 与 Codex 的 hook 配置文件。分享日志前请删除敏感路径、提示词、令牌和会话内容。
+          </p>
+        </div>
+        <div class="checksum-card" data-reveal>
+          <span>常用路径</span>
+          <code>~/Library/Application Support/VibelslandFree/config.json</code>
+          <code>~/Library/Logs/VibelslandFree/app.log</code>
+          <code>~/.vibelsland-free</code>
+          <code>~/.claude/settings.json</code>
+          <code>~/.codex/hooks.json</code>
+          <code>~/.codex/config.toml</code>
+        </div>
+      </section>
+
+      <section class="section install-section" aria-labelledby="uninstall-title">
+        <div class="section-heading align-left" data-reveal>
+          <p class="eyebrow">卸载</p>
+          <h2 id="uninstall-title">完全移除前，先卸载 hooks。</h2>
+        </div>
+        <ol class="large-steps">
+          <li data-reveal>
+            <span>01</span>
+            <strong>卸载 hooks</strong>
+            <p>在应用的设置页或菜单栏执行 Uninstall Hooks。它会从 Claude 和 Codex hook 配置中移除 Vibelsland 的桥接项。</p>
+          </li>
+          <li data-reveal>
+            <span>02</span>
+            <strong>退出并删除应用</strong>
+            <p>从菜单栏退出 Vibelsland Free，然后删除 Applications 中的 <code>&gt;_ - island.app</code>，或删除你手动放入 Applications 的应用副本。</p>
+          </li>
+          <li data-reveal>
+            <span>03</span>
+            <strong>按需删除本地数据</strong>
+            <p>如果不再需要历史配置和日志，可以删除 <code>~/Library/Application Support/VibelslandFree</code>、<code>~/Library/Logs/VibelslandFree</code> 和 <code>~/.vibelsland-free</code>。</p>
+          </li>
+        </ol>
+      </section>
+
+      <section class="section note-section" aria-labelledby="report-title">
+        <div class="section-heading" data-reveal>
+          <p class="eyebrow">报告问题</p>
+          <h2 id="report-title">提交问题时，请带上可复现信息。</h2>
+        </div>
+        <div class="link-grid compact">
+          <a class="link-panel" href="https://github.com/shinteni/prompt-island/issues" data-reveal>
+            <span>Issues</span>
+            <strong>在 GitHub 报告问题</strong>
+            <p>请包含 Vibelsland Free 版本、macOS 版本、受影响来源、复现步骤，以及脱敏后的日志片段。</p>
+          </a>
+          <a class="link-panel" href="https://github.com/shinteni/prompt-island/releases/tag/v0.1.0" data-reveal>
+            <span>Release</span>
+            <strong>核对发布资产</strong>
+            <p>重新下载 zip 和 SHA-256 文件，确认安装包、校验值和发布说明来自同一个版本。</p>
+          </a>
+          <a class="link-panel" href="privacy.html" data-reveal>
+            <span>Privacy</span>
+            <strong>确认隐私边界</strong>
+            <p>了解应用读取、写入和不会上传的内容，再决定哪些排障信息适合分享。</p>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div>
+        <strong>Vibelsland Free</strong>
+        <p data-i18n="shared.footer.tagline">面向 macOS 的本地优先 AI coding 状态显示。</p>
+      </div>
+      <nav aria-label="页脚导航">
+        <a href="index.html" data-i18n="shared.nav.home">首页</a>
+        <a href="advantages.html" data-i18n="shared.nav.advantages">优势</a>
+        <a href="download.html" data-i18n="shared.nav.download">下载</a>
+        <a href="privacy.html" data-i18n="shared.nav.privacy">隐私</a>
+        <a href="faq.html" data-i18n="shared.nav.faq">FAQ</a>
+        <a href="support.html" data-i18n="shared.nav.support">支持</a>
+        <a href="https://github.com/shinteni/prompt-island">GitHub</a>
+      </nav>
+    </footer>
+    <script src="lang.js" defer></script>
+    <script src="effects.js" defer></script>
+  </body>
+</html>
