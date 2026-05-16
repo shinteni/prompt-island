@@ -17,13 +17,15 @@
   ·
   <a href="https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip">下载 v0.1.0</a>
   ·
+  <a href="https://shinteni.github.io/prompt-island/install.html">安装与信任</a>
+  ·
   <a href="PRIVACY.md">隐私说明</a>
   ·
   <a href="#从源码构建">从源码构建</a>
 </p>
 
 <p align="center">
-  <img src="docs/assets/readme/hero-island.png" alt="Vibelsland Free floating island interface" width="960">
+  <img src="docs/assets/readme/hero-island-light.jpg" alt="Vibelsland Free floating island interface" width="960">
 </p>
 
 `macOS 14+` `Swift` `Local-first` `No telemetry` `Claude Code` `Codex CLI` `Codex Desktop`
@@ -53,9 +55,11 @@ Vibelsland Free 是给重度 AI 编程用户的 macOS 原生工具。它把 Clau
 
 ## 下载与安装
 
-v0.1.0 可从 GitHub Releases 下载。当前发布包使用 ad-hoc 签名，首次打开前请阅读下方说明：
+v0.1.0 可从 GitHub Releases 下载。当前发布包使用 ad-hoc 签名，首次打开前请阅读安装与信任说明：
 
 [Download v0.1.0](https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip)
+
+[安装与信任说明](https://shinteni.github.io/prompt-island/install.html)
 
 安装方式：
 
@@ -64,7 +68,7 @@ v0.1.0 可从 GitHub Releases 下载。当前发布包使用 ad-hoc 签名，首
 3. 打开应用，在菜单栏或设置页安装 Hooks。
 4. 按需开启自动启动、声音、勿扰和显示位置。
 
-说明：当前免费发布包使用 ad-hoc codesign，首次打开需要按上面的 Gatekeeper 说明手动确认。若作为正式公开分发版本，Developer ID 签名和 notarization 是上线前必须完成的发布项。
+说明：当前免费发布包使用 ad-hoc codesign，首次打开需要按 Gatekeeper 说明手动确认。Developer ID 签名和 notarization 可以作为后续降低首次打开摩擦的分发改进，但当前 v0.1.0 下载、校验、源码和安装说明已经公开。
 
 ## 隐私
 
@@ -90,7 +94,7 @@ dist/Vibelsland-Free-0.1.0-macos.zip.sha256
 
 ## 项目状态
 
-Vibelsland Free v0.1.0 已经具备可下载的本机版本，包含浮岛展示、设置页、Hook 安装、审批窗口、运行状态检查、单实例保护、重启恢复和发布打包脚本。当前免费发布包使用 ad-hoc 签名；正式公开分发前需要完成 Developer ID 签名和 notarization。
+Vibelsland Free v0.1.0 已经具备可下载的本机版本，包含浮岛展示、设置页、Hook 安装、审批窗口、运行状态检查、单实例保护、重启恢复和发布打包脚本。当前免费发布包使用 ad-hoc 签名，并提供公开下载、SHA-256 校验、源码、安装说明和支持入口。
 
 ## 许可证
 
