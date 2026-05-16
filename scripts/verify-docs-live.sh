@@ -4,9 +4,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 SITE_URL="${VIBELSLAND_SITE_URL:-https://shinteni.github.io/prompt-island/}"
 SITE_URL="${SITE_URL%/}/"
-RELEASE_BASE="${VIBELSLAND_RELEASE_BASE:-https://github.com/shinteni/prompt-island/releases/download/v0.1.0}"
-ARCHIVE="Vibelsland-Free-0.1.0-macos.zip"
-CHECKSUM="$ARCHIVE.sha256"
+VERIFY_DIST="${VIBELSLAND_VERIFY_DIST:-0}"
 TMP_DIR="$(mktemp -d)"
 
 cleanup() {
@@ -41,6 +39,7 @@ pages=(
   "ja/support.html"
   ".well-known/security.txt"
   "llms.txt"
+  "release.json"
   "sitemap.xml"
   "site.webmanifest"
 )
@@ -50,6 +49,68 @@ for page in "${pages[@]}"; do
   [[ -z "$safe_name" ]] && safe_name="index.html"
   require_status "${SITE_URL}${page}" "$TMP_DIR/$safe_name"
 done
+
+python3 - "$TMP_DIR/release.json" > "$TMP_DIR/release-vars.txt" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+metadata = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+required = [
+    ("version", metadata.get("version")),
+    ("tag", metadata.get("tag")),
+    ("release_url", metadata.get("release_url")),
+    ("release_api_url", metadata.get("release_api_url")),
+    ("archive.name", metadata.get("archive", {}).get("name")),
+    ("archive.sha256", metadata.get("archive", {}).get("sha256")),
+    ("archive.download_url", metadata.get("archive", {}).get("download_url")),
+    ("checksum_file.name", metadata.get("checksum_file", {}).get("name")),
+    ("checksum_file.sha256", metadata.get("checksum_file", {}).get("sha256")),
+    ("checksum_file.download_url", metadata.get("checksum_file", {}).get("download_url")),
+    ("app.bundle_name", metadata.get("app", {}).get("bundle_name")),
+    ("app.binary_name", metadata.get("app", {}).get("binary_name")),
+    ("app.bundle_identifier", metadata.get("app", {}).get("bundle_identifier")),
+    ("app.bundle_version", metadata.get("app", {}).get("bundle_version")),
+]
+for label, value in required:
+    if not value:
+        raise SystemExit(f"Live check failed: release.json missing {label}")
+if metadata["tag"] != f"v{metadata['version']}":
+    raise SystemExit("Live check failed: release.json tag does not match version.")
+print(metadata["archive"]["name"])
+print(metadata["checksum_file"]["name"])
+print(metadata["archive"]["sha256"])
+print(metadata["archive"]["download_url"])
+print(metadata["checksum_file"]["download_url"])
+print(metadata["release_api_url"])
+print(metadata["tag"])
+print(str(metadata["archive"]["size_bytes"]))
+print(str(metadata["checksum_file"]["size_bytes"]))
+print(metadata["checksum_file"]["sha256"])
+print(metadata["app"]["bundle_name"])
+print(metadata["app"]["binary_name"])
+print(metadata["app"]["bundle_identifier"])
+print(metadata["version"])
+print(metadata["app"]["bundle_version"])
+PY
+
+{
+  read -r ARCHIVE
+  read -r CHECKSUM
+  read -r EXPECTED_ARCHIVE_HASH
+  read -r ARCHIVE_URL
+  read -r CHECKSUM_URL
+  read -r RELEASE_API_URL
+  read -r RELEASE_TAG
+  read -r EXPECTED_ARCHIVE_SIZE
+  read -r EXPECTED_CHECKSUM_SIZE
+  read -r EXPECTED_CHECKSUM_HASH
+  read -r APP_BUNDLE_NAME
+  read -r APP_BINARY_NAME
+  read -r APP_BUNDLE_ID
+  read -r APP_VERSION
+  read -r APP_BUILD_NUMBER
+} < "$TMP_DIR/release-vars.txt"
 
 python3 - "$TMP_DIR/sitemap.xml" "$SITE_URL" > "$TMP_DIR/sitemap-urls.txt" <<'PY'
 import sys
@@ -229,12 +290,63 @@ if ! grep -q "security.txt" "$TMP_DIR/support.html"; then
   exit 1
 fi
 
-require_status "$RELEASE_BASE/$CHECKSUM" "$TMP_DIR/$CHECKSUM"
-require_status "$RELEASE_BASE/$ARCHIVE" "$TMP_DIR/$ARCHIVE"
+require_status "$RELEASE_API_URL" "$TMP_DIR/release-api.json"
+python3 - "$TMP_DIR/release.json" "$TMP_DIR/release-api.json" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+metadata = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+release = json.loads(Path(sys.argv[2]).read_text(encoding="utf-8"))
+if release.get("tag_name") != metadata["tag"]:
+    raise SystemExit(f"Live check failed: release tag mismatch: {release.get('tag_name')}")
+if release.get("draft") or release.get("prerelease"):
+    raise SystemExit("Live check failed: release should not be draft or prerelease.")
+assets = {asset.get("name"): asset for asset in release.get("assets", [])}
+expected_names = {metadata["archive"]["name"], metadata["checksum_file"]["name"]}
+actual_names = set(assets)
+if actual_names != expected_names:
+    raise SystemExit(f"Live check failed: release assets mismatch: {sorted(actual_names)}")
+for key, section in [("archive", metadata["archive"]), ("checksum_file", metadata["checksum_file"])]:
+    asset = assets.get(section["name"])
+    if not asset:
+        raise SystemExit(f"Live check failed: missing release asset {section['name']}")
+    expected_digest = f"sha256:{section['sha256']}"
+    if asset.get("digest") != expected_digest:
+        raise SystemExit(f"Live check failed: {section['name']} digest mismatch: {asset.get('digest')}")
+    if asset.get("size") != section["size_bytes"]:
+        raise SystemExit(f"Live check failed: {section['name']} size mismatch: {asset.get('size')}")
+    if asset.get("browser_download_url") != section["download_url"]:
+        raise SystemExit(f"Live check failed: {section['name']} download URL mismatch.")
+PY
+
+require_status "$CHECKSUM_URL" "$TMP_DIR/$CHECKSUM"
+require_status "$ARCHIVE_URL" "$TMP_DIR/$ARCHIVE"
+actual_checksum_size="$(/usr/bin/stat -f %z "$TMP_DIR/$CHECKSUM")"
+if [[ "$actual_checksum_size" != "$EXPECTED_CHECKSUM_SIZE" ]]; then
+  echo "Live check failed: checksum file size mismatch: $actual_checksum_size" >&2
+  exit 1
+fi
+actual_checksum_hash="$(/usr/bin/shasum -a 256 "$TMP_DIR/$CHECKSUM" | awk '{print $1}')"
+if [[ "$actual_checksum_hash" != "$EXPECTED_CHECKSUM_HASH" ]]; then
+  echo "Live check failed: checksum file digest mismatch: $actual_checksum_hash" >&2
+  exit 1
+fi
+live_hash="$(awk '{print $1}' "$TMP_DIR/$CHECKSUM")"
+if [[ "$live_hash" != "$EXPECTED_ARCHIVE_HASH" ]]; then
+  echo "Live check failed: release checksum does not match release.json." >&2
+  echo "expected: $EXPECTED_ARCHIVE_HASH" >&2
+  echo "live:     $live_hash" >&2
+  exit 1
+fi
+actual_archive_size="$(/usr/bin/stat -f %z "$TMP_DIR/$ARCHIVE")"
+if [[ "$actual_archive_size" != "$EXPECTED_ARCHIVE_SIZE" ]]; then
+  echo "Live check failed: release archive size mismatch: $actual_archive_size" >&2
+  exit 1
+fi
 local_checksum_path="$ROOT/dist/$CHECKSUM"
-if [[ -f "$local_checksum_path" ]]; then
+if [[ "$VERIFY_DIST" == "1" && -f "$local_checksum_path" ]]; then
   local_hash="$(awk '{print $1}' "$local_checksum_path")"
-  live_hash="$(awk '{print $1}' "$TMP_DIR/$CHECKSUM")"
   if [[ "$local_hash" != "$live_hash" ]]; then
     echo "Live check failed: release checksum mismatch." >&2
     echo "local: $local_hash" >&2
@@ -246,5 +358,26 @@ fi
   cd "$TMP_DIR"
   /usr/bin/shasum -a 256 -c "$CHECKSUM" >/dev/null
 )
+
+UNZIP_DIR="$TMP_DIR/unpacked"
+mkdir -p "$UNZIP_DIR"
+/usr/bin/ditto -x -k "$TMP_DIR/$ARCHIVE" "$UNZIP_DIR"
+app_count="$(find "$UNZIP_DIR" -maxdepth 1 -name "*.app" -type d | wc -l | tr -d ' ')"
+if [[ "$app_count" != "1" ]]; then
+  echo "Live check failed: release archive should contain exactly one .app, found $app_count" >&2
+  exit 1
+fi
+APP_PATH="$UNZIP_DIR/$APP_BUNDLE_NAME"
+INFO="$APP_PATH/Contents/Info.plist"
+EXECUTABLE="$APP_PATH/Contents/MacOS/$APP_BINARY_NAME"
+if [[ ! -d "$APP_PATH" || ! -f "$INFO" || ! -x "$EXECUTABLE" ]]; then
+  echo "Live check failed: release archive app layout is incomplete." >&2
+  exit 1
+fi
+/usr/bin/codesign --verify --deep --strict "$APP_PATH" >/dev/null 2>&1
+[[ "$(/usr/bin/plutil -extract CFBundleIdentifier raw -o - "$INFO")" == "$APP_BUNDLE_ID" ]]
+[[ "$(/usr/bin/plutil -extract CFBundleShortVersionString raw -o - "$INFO")" == "$APP_VERSION" ]]
+[[ "$(/usr/bin/plutil -extract CFBundleVersion raw -o - "$INFO")" == "$APP_BUILD_NUMBER" ]]
+[[ "$(/usr/bin/plutil -extract CFBundleExecutable raw -o - "$INFO")" == "$APP_BINARY_NAME" ]]
 
 echo "Live docs verification passed for $SITE_URL"

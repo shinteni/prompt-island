@@ -2,13 +2,27 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-APP_NAME=">_ - island"
-BUNDLE_ID="free.vibelsland.macos"
-APP_VERSION="0.1.0"
-BUILD_NUMBER="1"
+RELEASE_METADATA="$ROOT/docs/release.json"
+metadata=("${(@f)$(python3 - "$RELEASE_METADATA" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+metadata = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+print(metadata["app"]["bundle_name"])
+print(metadata["app"]["bundle_identifier"])
+print(metadata["version"])
+print(metadata["app"]["bundle_version"])
+PY
+)}")
+APP_BUNDLE_NAME="$metadata[1]"
+APP_NAME="${APP_BUNDLE_NAME%.app}"
+BUNDLE_ID="$metadata[2]"
+APP_VERSION="$metadata[3]"
+BUILD_NUMBER="$metadata[4]"
 BUILD_DIR="$ROOT/.build/release"
 DIST_DIR="$ROOT/dist"
-APP_DIR="$DIST_DIR/$APP_NAME.app"
+APP_DIR="$DIST_DIR/$APP_BUNDLE_NAME"
 CONTENTS="$APP_DIR/Contents"
 MACOS="$CONTENTS/MacOS"
 RESOURCES="$CONTENTS/Resources"

@@ -5,38 +5,30 @@
   const pathSegments = window.location.pathname.split("/").filter(Boolean);
   const pathLang = pathSegments.find((segment) => supported.includes(segment));
   const file = window.location.pathname.split("/").pop() || "index.html";
-  const page = file.replace(".html", "") || "index";
-  const isRootEntry = !pathLang && page === "index";
-  let stored = "";
-  try {
-    stored = window.localStorage.getItem("vibelsland-lang") || "";
-  } catch (error) {
-    stored = "";
-  }
+  const explicitPage = document.body?.dataset.page || "";
+  const page = explicitPage || file.replace(".html", "") || "index";
+  const singleFilePage = page === "404";
   const lang = supported.includes(requested)
     ? requested
     : supported.includes(pathLang)
       ? pathLang
-      : isRootEntry && supported.includes(stored)
-        ? stored
-        : "zh";
+      : "zh";
   const rootPrefix = pathLang && pathLang !== "zh" ? "../" : "";
   const pathLanguage = supported.includes(pathLang) ? pathLang : "zh";
 
   const routeFor = (targetLang, targetFile = file, hash = "") => {
+    if (singleFilePage && targetFile === file) {
+      const query = targetLang === "zh" ? "" : `?lang=${targetLang}`;
+      return `${rootPrefix}404.html${query}${hash}`;
+    }
     const normalizedFile = targetFile || "index.html";
     if (targetLang === "zh") return `${rootPrefix}${normalizedFile}${hash}`;
     if (pathLang === targetLang) return `${normalizedFile}${hash}`;
     return `${rootPrefix}${targetLang}/${normalizedFile}${hash}`;
   };
 
-  if (supported.includes(requested) && requested !== pathLanguage) {
+  if (!singleFilePage && supported.includes(requested) && requested !== pathLanguage) {
     window.location.replace(routeFor(requested, file, window.location.hash));
-    return;
-  }
-
-  if (!supported.includes(requested) && isRootEntry && supported.includes(stored) && stored !== "zh") {
-    window.location.replace(routeFor(stored, file, window.location.hash));
     return;
   }
 
@@ -97,6 +89,12 @@
           description: "Vibelsland Free 版本历史：v0.1.0 的下载、SHA-256 校验、主要功能、安装说明、产品边界和相关支持入口。",
           ogTitle: "Vibelsland Free 版本历史",
           ogDescription: "查看 Vibelsland Free v0.1.0 的发布内容、下载包、校验文件、安装说明和产品边界。"
+        },
+        404: {
+          title: "页面未找到 | Vibelsland Free",
+          description: "这个页面不存在或已经移动。返回 Vibelsland Free 首页、产品优势、下载或隐私说明。",
+          ogTitle: "页面未找到 | Vibelsland Free",
+          ogDescription: "返回 Vibelsland Free 官网继续了解这个 macOS AI 编程浮岛。"
         }
       },
       strings: {
@@ -224,15 +222,16 @@
         "download.install.step1.title": "下载压缩包",
         "download.install.step1.copy": "从 GitHub Releases 下载 Vibelsland-Free-0.1.0-macos.zip。",
         "download.install.step2.title": "拖入 Applications",
-        "download.install.step2.copy": "解压后把应用拖到 Applications。安装后的应用名显示为 >_ - island.app，请按首次打开说明启动。",
+        "download.install.step2.copy": "解压后把应用拖到 Applications。安装后的应用名显示为 <code>&gt;_ - island.app</code>，请按首次打开说明启动。",
         "download.install.step3.title": "启用本地来源",
         "download.install.step3.copy": "打开设置页，按需启用 Claude Code、Codex CLI 和 Codex Desktop 的本地状态来源。",
         "download.security.eyebrow": "签名与校验",
         "download.security.title": "安装前需要知道的事项。",
-        "download.security.copy": "v0.1.0 采用 ad-hoc 签名，因此首次打开时 macOS 可能要求额外确认。请按住 Control 点按应用并选择 Open。下载包提供 SHA-256 校验，源码可在 GitHub 查看。",
+        "download.security.copy": "v0.1.0 采用 ad-hoc 签名，因此首次打开时 macOS 可能要求额外确认。请按住 Control 点按应用并选择“打开（Open）”。下载包提供 SHA-256 校验，源码可在 GitHub 查看。",
         "download.security.hash.label": "SHA-256",
         "download.security.zip": "下载 zip",
         "download.security.sha": "下载 .sha256 文件",
+        "download.security.verify": "查看校验命令",
         "download.links.eyebrow": "开源透明",
         "download.links.title": "下载、源码、隐私边界放在同一条信任链里。",
         "download.links.release.label": "Release",
@@ -282,7 +281,24 @@
         "privacy.control.copy": "应用只会在你安装、修复或卸载 hooks 时修改对应配置。Hook payload 会先过滤，只保留会话 ID、事件类型、工作区、审批 ID、工具名、路径和命令等必要元数据。",
         "privacy.network.eyebrow": "网络边界",
         "privacy.network.title": "核心功能不需要互联网连接。",
-        "privacy.network.copy": "Vibelsland Free 的状态显示、来源控制和本地审批桥接都在本机完成。Claude Code、Codex CLI 和 Codex Desktop 可能有各自的网络连接，但它们独立于本应用。"
+        "privacy.network.copy": "Vibelsland Free 的状态显示、来源控制和本地审批桥接都在本机完成。Claude Code、Codex CLI 和 Codex Desktop 可能有各自的网络连接，但它们独立于本应用。",
+
+        "notFound.hero.eyebrow": "404",
+        "notFound.hero.title": "这个页面暂时不存在",
+        "notFound.hero.copy": "链接可能已经移动，或者输入的地址有误。可以回到首页，继续了解 Vibelsland Free 的功能、下载方式和隐私边界。",
+        "notFound.hero.primary": "返回首页",
+        "notFound.hero.secondary": "下载 macOS 版",
+        "notFound.card.label": "可访问页面",
+        "notFound.card.product.title": "产品介绍",
+        "notFound.card.product.link": "优势",
+        "notFound.card.download.title": "获取应用",
+        "notFound.card.download.link": "下载",
+        "notFound.card.install.title": "安装信任",
+        "notFound.card.install.link": "安装",
+        "notFound.card.release.title": "版本记录",
+        "notFound.card.release.link": "版本历史",
+        "notFound.card.privacy.title": "数据边界",
+        "notFound.card.privacy.link": "隐私"
       }
     },
     en: {
@@ -335,6 +351,12 @@
           description: "Vibelsland Free release notes for v0.1.0, including downloads, SHA-256 verification, key features, install guidance, product boundaries, and support links.",
           ogTitle: "Vibelsland Free Release Notes",
           ogDescription: "Review Vibelsland Free v0.1.0 features, download assets, checksum file, install guidance, and product boundaries."
+        },
+        404: {
+          title: "Page Not Found | Vibelsland Free",
+          description: "This page does not exist or has moved. Return to Vibelsland Free overview, advantages, download, or privacy pages.",
+          ogTitle: "Page Not Found | Vibelsland Free",
+          ogDescription: "Return to the Vibelsland Free website to continue exploring this macOS AI coding island."
         }
       },
       strings: {
@@ -462,7 +484,7 @@
         "download.install.step1.title": "Download the zip",
         "download.install.step1.copy": "Download Vibelsland-Free-0.1.0-macos.zip from GitHub Releases.",
         "download.install.step2.title": "Move to Applications",
-        "download.install.step2.copy": "Unzip it and drag the app into Applications. The installed app appears as >_ - island.app, then follow the first-launch note below.",
+        "download.install.step2.copy": "Unzip it and drag the app into Applications. The installed app appears as <code>&gt;_ - island.app</code>, then follow the first-launch note below.",
         "download.install.step3.title": "Enable local sources",
         "download.install.step3.copy": "Open Settings and enable the Claude Code, Codex CLI, and Codex Desktop sources you need.",
         "download.security.eyebrow": "Signing and checksum",
@@ -471,6 +493,7 @@
         "download.security.hash.label": "SHA-256",
         "download.security.zip": "Download zip",
         "download.security.sha": "Download .sha256",
+        "download.security.verify": "Show verify command",
         "download.links.eyebrow": "Open source",
         "download.links.title": "Download, source, and privacy stay in one trust chain.",
         "download.links.release.label": "Release",
@@ -520,7 +543,24 @@
         "privacy.control.copy": "The app modifies hook configuration only when you install, repair, or uninstall hooks. Hook payloads are filtered first and keep only necessary metadata such as session id, event type, workspace, approval id, tool name, path, and command.",
         "privacy.network.eyebrow": "Network",
         "privacy.network.title": "Core features do not require internet access.",
-        "privacy.network.copy": "Vibelsland Free status display, source controls, and the local approval bridge work on your Mac. Claude Code, Codex CLI, and Codex Desktop may have their own network connections independently of this app."
+        "privacy.network.copy": "Vibelsland Free status display, source controls, and the local approval bridge work on your Mac. Claude Code, Codex CLI, and Codex Desktop may have their own network connections independently of this app.",
+
+        "notFound.hero.eyebrow": "404",
+        "notFound.hero.title": "This page is not available",
+        "notFound.hero.copy": "The link may have moved, or the address may be incorrect. Return to the overview to continue exploring Vibelsland Free features, download options, and privacy boundaries.",
+        "notFound.hero.primary": "Return home",
+        "notFound.hero.secondary": "Download for macOS",
+        "notFound.card.label": "Available pages",
+        "notFound.card.product.title": "Product overview",
+        "notFound.card.product.link": "Advantages",
+        "notFound.card.download.title": "Get the app",
+        "notFound.card.download.link": "Download",
+        "notFound.card.install.title": "Install trust",
+        "notFound.card.install.link": "Install",
+        "notFound.card.release.title": "Release history",
+        "notFound.card.release.link": "Release notes",
+        "notFound.card.privacy.title": "Data boundary",
+        "notFound.card.privacy.link": "Privacy"
       }
     },
     ja: {
@@ -573,6 +613,12 @@
           description: "Vibelsland Free v0.1.0 のリリースノート。ダウンロード、SHA-256 確認、主要機能、インストール、製品範囲、サポートリンクを確認できます。",
           ogTitle: "Vibelsland Free リリースノート",
           ogDescription: "Vibelsland Free v0.1.0 の機能、ダウンロード、チェックサム、インストール、製品範囲を確認できます。"
+        },
+        404: {
+          title: "ページが見つかりません | Vibelsland Free",
+          description: "このページは存在しないか移動しました。Vibelsland Free のホーム、強み、ダウンロード、プライバシーへ戻れます。",
+          ogTitle: "ページが見つかりません | Vibelsland Free",
+          ogDescription: "Vibelsland Free のサイトへ戻り、この macOS AI コーディングアイランドを確認できます。"
         }
       },
       strings: {
@@ -700,15 +746,16 @@
         "download.install.step1.title": "zip をダウンロード",
         "download.install.step1.copy": "GitHub Releases から Vibelsland-Free-0.1.0-macos.zip をダウンロードします。",
         "download.install.step2.title": "Applications へ移動",
-        "download.install.step2.copy": "解凍してアプリを Applications に移動します。インストール後のアプリ名は >_ - island.app と表示され、下の初回起動メモに沿って起動します。",
+        "download.install.step2.copy": "解凍してアプリを Applications に移動します。インストール後のアプリ名は <code>&gt;_ - island.app</code> と表示され、下の初回起動メモに沿って起動します。",
         "download.install.step3.title": "ローカルソースを有効化",
         "download.install.step3.copy": "設定画面で必要な Claude Code、Codex CLI、Codex Desktop のソースを有効化します。",
         "download.security.eyebrow": "署名とチェックサム",
         "download.security.title": "インストール前に知っておくこと。",
-        "download.security.copy": "v0.1.0 は ad-hoc 署名を採用しているため、初回起動時に macOS が追加確認を求める場合があります。Control キーを押しながらアプリをクリックし、Open を選んでください。ダウンロードには SHA-256 チェックサムがあり、ソースは GitHub で確認できます。",
+        "download.security.copy": "v0.1.0 は ad-hoc 署名を採用しているため、初回起動時に macOS が追加確認を求める場合があります。Control キーを押しながらアプリをクリックし、「開く（Open）」を選んでください。ダウンロードには SHA-256 チェックサムがあり、ソースは GitHub で確認できます。",
         "download.security.hash.label": "SHA-256",
         "download.security.zip": "zip をダウンロード",
         "download.security.sha": ".sha256 をダウンロード",
+        "download.security.verify": "確認コマンドを見る",
         "download.links.eyebrow": "オープンソース",
         "download.links.title": "ダウンロード、ソース、プライバシーを一つの信頼線に。",
         "download.links.release.label": "Release",
@@ -758,7 +805,24 @@
         "privacy.control.copy": "アプリは hooks のインストール、修復、アンインストール時だけ設定を変更します。Hook payload は先にフィルタリングされ、セッション ID、イベント種別、ワークスペース、承認 ID、ツール名、パス、コマンドなど必要なメタデータだけを保持します。",
         "privacy.network.eyebrow": "ネットワーク境界",
         "privacy.network.title": "主要機能にインターネット接続は不要です。",
-        "privacy.network.copy": "Vibelsland Free のステータス表示、ソース制御、ローカル承認ブリッジは Mac 内で動作します。Claude Code、Codex CLI、Codex Desktop はそれぞれ独自にネットワーク接続を使う場合があります。"
+        "privacy.network.copy": "Vibelsland Free のステータス表示、ソース制御、ローカル承認ブリッジは Mac 内で動作します。Claude Code、Codex CLI、Codex Desktop はそれぞれ独自にネットワーク接続を使う場合があります。",
+
+        "notFound.hero.eyebrow": "404",
+        "notFound.hero.title": "このページはありません",
+        "notFound.hero.copy": "リンクが移動したか、入力したアドレスが正しくない可能性があります。ホームに戻り、Vibelsland Free の機能、ダウンロード、プライバシー境界を確認できます。",
+        "notFound.hero.primary": "ホームへ戻る",
+        "notFound.hero.secondary": "macOS 版をダウンロード",
+        "notFound.card.label": "利用できるページ",
+        "notFound.card.product.title": "製品紹介",
+        "notFound.card.product.link": "強み",
+        "notFound.card.download.title": "アプリ入手",
+        "notFound.card.download.link": "ダウンロード",
+        "notFound.card.install.title": "インストール信頼",
+        "notFound.card.install.link": "インストール",
+        "notFound.card.release.title": "バージョン履歴",
+        "notFound.card.release.link": "リリースノート",
+        "notFound.card.privacy.title": "データ境界",
+        "notFound.card.privacy.link": "プライバシー"
       }
     }
   };
@@ -798,7 +862,11 @@
   document.querySelectorAll("[data-i18n]").forEach((node) => {
     const key = node.getAttribute("data-i18n");
     const value = activeCopy.strings[key];
-    if (value) node.textContent = value;
+    if (value && node.hasAttribute("data-i18n-html")) {
+      node.innerHTML = value;
+    } else if (value) {
+      node.textContent = value;
+    }
     const mobileValue = activeCopy.strings[`${key}.short`];
     if (mobileValue) node.setAttribute("data-mobile-label", mobileValue);
   });

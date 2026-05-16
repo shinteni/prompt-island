@@ -15,6 +15,7 @@ Vibelsland Free keeps local AI coding session status, tool activity, token summa
 - Signing: ad-hoc signed; first launch may require Gatekeeper confirmation
 - Source: https://github.com/shinteni/prompt-island
 - Download: https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip
+- Release metadata: https://shinteni.github.io/prompt-island/release.json
 - Release notes: https://shinteni.github.io/prompt-island/release-notes.html
 
 ## Pages
