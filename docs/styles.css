@@ -1161,6 +1161,10 @@ button:focus-visible {
     --header-height: 56px;
   }
 
+  main {
+    padding-bottom: calc(78px + env(safe-area-inset-bottom));
+  }
+
   .site-header {
     position: fixed;
     grid-template-columns: minmax(0, 1fr) auto;
@@ -1225,11 +1229,13 @@ button:focus-visible {
   .subpage-hero,
   .download-hero {
     padding-top: 118px;
+    padding-bottom: calc(78px + env(safe-area-inset-bottom));
     min-height: auto;
   }
 
   .home-hero {
-    gap: 34px;
+    align-content: start;
+    gap: 28px;
   }
 
   .hero h1 {
@@ -1244,8 +1250,33 @@ button:focus-visible {
   }
 
   .product-stage {
+    width: min(340px, 100%);
     padding: 12px;
     border-radius: 22px;
+  }
+
+  .download-hero {
+    align-content: start;
+    gap: 28px;
+  }
+
+  .download-side {
+    width: min(560px, 100%);
+    margin: 0 auto;
+  }
+
+  .download-media {
+    padding: 12px;
+    border-radius: 24px;
+  }
+
+  .download-media img {
+    aspect-ratio: 1.55 / 1;
+    object-position: center 28%;
+  }
+
+  .release-card {
+    margin-bottom: calc(72px + env(safe-area-inset-bottom));
   }
 
   .status-float {
@@ -1358,8 +1389,35 @@ button:focus-visible {
     width: 100%;
   }
 
+  .download-lead .hero-actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .download-lead .button {
+    width: auto;
+    padding: 0 12px;
+    font-size: 15px;
+  }
+
   .product-stage img {
-    aspect-ratio: 1 / 0.9;
+    aspect-ratio: 1.42 / 1;
+  }
+
+  .download-media img {
+    aspect-ratio: 2.3 / 1;
+  }
+
+  .download-hero {
+    padding-top: 104px;
+  }
+
+  .download-lead p {
+    margin-top: 14px;
+  }
+
+  .download-lead .hero-actions {
+    margin-top: 18px;
   }
 
   .section-heading {
