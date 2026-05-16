@@ -120,6 +120,7 @@ def is_external(value):
 
 
 html_files = sorted(docs.glob("**/*.html"))
+versioned_assets = {"styles.css", "lang.js", "effects.js"}
 for path in html_files:
     text = path.read_text(encoding="utf-8")
     rel = path.relative_to(root)
@@ -154,6 +155,8 @@ for path in html_files:
             continue
         if not target.exists():
             errors.append(f"Missing local {kind} target in {rel}: {value}")
+        if target.name in versioned_assets and "?v=" not in value:
+            errors.append(f"Version query missing for local asset in {rel}: {value}")
 
     for value in parser.absolute_site_urls:
         parsed = urlparse(value)
