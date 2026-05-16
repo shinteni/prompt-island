@@ -28,7 +28,7 @@
     <link rel="icon" href="../assets/readme/app-icon.png">
     <link rel="apple-touch-icon" href="../assets/readme/app-icon.png">
     <link rel="manifest" href="../site.webmanifest">
-    <link rel="stylesheet" href="../styles.css?v=20260517-3">
+    <link rel="stylesheet" href="../styles.css?v=20260517-4">
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -67,8 +67,10 @@
         <a href="index.html" data-i18n="shared.nav.home">ホーム</a>
         <a href="advantages.html" data-i18n="shared.nav.advantages">強み</a>
         <a class="active" aria-current="page" href="download.html" data-i18n="shared.nav.download">ダウンロード</a>
+        <a href="install.html" data-i18n="shared.nav.install">インストール</a>
         <a href="privacy.html" data-i18n="shared.nav.privacy">プライバシー</a>
-      <a href="faq.html" data-i18n="shared.nav.faq">FAQ</a>
+        <a href="faq.html" data-i18n="shared.nav.faq">FAQ</a>
+        <a href="support.html" data-i18n="shared.nav.support">サポート</a>
       </nav>
       <div class="header-tools">
         <nav class="lang-switch" aria-label="言語切替">
@@ -98,6 +100,7 @@
           <div class="download-meta-strip" aria-label="ダウンロード概要" data-reveal="">
             <span><strong data-i18n="download.card.version">v0.1.0</strong></span>
             <span data-i18n="download.card.system.value">macOS 14+</span>
+            <span data-i18n="download.card.app.value">&gt;_ - island.app</span>
             <span data-i18n="download.card.size.value">約 2.3 MB</span>
             <span data-i18n="download.card.signing.value">ad-hoc 署名</span>
           </div>
@@ -117,6 +120,10 @@
               <div>
                 <dt data-i18n="download.card.package.label">パッケージ</dt>
                 <dd data-i18n="download.card.package.value">Vibelsland-Free-0.1.0-macos.zip</dd>
+              </div>
+              <div>
+                <dt data-i18n="download.card.app.label">アプリ名</dt>
+                <dd data-i18n="download.card.app.value">&gt;_ - island.app</dd>
               </div>
               <div>
                 <dt data-i18n="download.card.size.label">サイズ</dt>
@@ -145,7 +152,7 @@
           <li data-reveal="">
             <span>02</span>
             <strong data-i18n="download.install.step2.title">Applications へ移動</strong>
-            <p data-i18n="download.install.step2.copy">解凍してアプリを Applications に移動し、下の初回起動メモに沿って起動します。</p>
+            <p data-i18n="download.install.step2.copy">解凍してアプリを Applications に移動します。インストール後のアプリ名は <code>&gt;_ - island.app</code> と表示され、下の初回起動メモに沿って起動します。</p>
           </li>
           <li data-reveal="">
             <span>03</span>
@@ -166,7 +173,10 @@
           <span data-i18n="download.security.hash.label">SHA-256</span>
           <code>64c7c0a4eae81042bbc3896e24a07ab5d5573aeaafa846eada2e982f887ecf81</code>
           <code>shasum -a 256 -c Vibelsland-Free-0.1.0-macos.zip.sha256</code>
-          <a class="text-link" href="https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip.sha256">.sha256 ファイルをダウンロード</a>
+          <div class="checksum-actions">
+            <a class="text-link" href="https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip" data-i18n="download.security.zip">zip をダウンロード</a>
+            <a class="text-link" href="https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip.sha256" data-i18n="download.security.sha">.sha256 をダウンロード</a>
+          </div>
         </div>
       </section>
 
@@ -216,8 +226,8 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="../lang.js?v=20260517-3" defer=""></script>
-    <script src="../effects.js?v=20260517-3" defer=""></script>
+    <script src="../lang.js?v=20260517-4" defer=""></script>
+    <script src="../effects.js?v=20260517-4" defer=""></script>
 
 
 </body></html>

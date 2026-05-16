@@ -2,7 +2,7 @@
   "name": "Vibelsland Free",
   "short_name": "Vibelsland Free",
   "description": "Local-first macOS AI coding status display for Claude Code, Codex CLI, and Codex Desktop.",
-  "id": "https://shinteni.github.io/prompt-island/",
+  "id": "./",
   "lang": "zh-CN",
   "dir": "ltr",
   "start_url": "./index.html",

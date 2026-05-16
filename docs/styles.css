@@ -11,6 +11,10 @@
   --blue: #d8b46b;
   --blue-hover: #efcc7c;
   --green: #77d992;
+  --cyan: #72d6ff;
+  --approval: #ffb45f;
+  --privacy: #77d992;
+  --warning: #f7d36b;
   --amber: #d8b46b;
   --red: #ff3b30;
   --black: #050506;
@@ -171,7 +175,7 @@ code {
 
 .nav-links {
   justify-self: center;
-  gap: clamp(18px, 3vw, 34px);
+  gap: clamp(8px, 1.8vw, 24px);
   color: var(--muted);
   font-size: 12px;
   font-weight: 600;
@@ -475,8 +479,25 @@ button:focus-visible {
   width: 9px;
   height: 9px;
   border-radius: 50%;
-  background: var(--green);
-  box-shadow: 0 0 16px var(--green);
+  background: var(--cyan);
+  box-shadow: 0 0 16px var(--cyan);
+}
+
+.product-stage[data-demo-state="approval"] .status-float {
+  border-color: rgba(255, 180, 95, 0.42);
+  box-shadow:
+    0 0 26px rgba(255, 180, 95, 0.24),
+    0 14px 42px rgba(0, 0, 0, 0.24);
+}
+
+.product-stage[data-demo-state="approval"] .status-float span {
+  background: var(--approval);
+  box-shadow: 0 0 16px var(--approval);
+}
+
+.product-stage[data-demo-state="idle"] .status-float span {
+  background: var(--privacy);
+  box-shadow: 0 0 16px var(--privacy);
 }
 
 .status-float strong {
@@ -889,6 +910,14 @@ button:focus-visible {
   color: var(--ink-soft);
 }
 
+.download-meta-strip span:nth-child(2) {
+  border-color: rgba(114, 214, 255, 0.26);
+}
+
+.download-meta-strip span:nth-child(4) {
+  border-color: rgba(255, 180, 95, 0.3);
+}
+
 .download-meta-strip strong {
   color: var(--ink);
 }
@@ -912,6 +941,22 @@ button:focus-visible {
   border-color: var(--line-strong);
   background: rgba(216, 180, 107, 0.08);
   transform: translateY(-2px);
+}
+
+.support-shortcuts a:nth-child(1) {
+  border-color: rgba(247, 211, 107, 0.26);
+}
+
+.support-shortcuts a:nth-child(2) {
+  border-color: rgba(114, 214, 255, 0.25);
+}
+
+.support-shortcuts a:nth-child(3) {
+  border-color: rgba(119, 217, 146, 0.25);
+}
+
+.support-shortcuts a:nth-child(4) {
+  border-color: rgba(255, 180, 95, 0.25);
 }
 
 .support-shortcuts strong {
@@ -1073,6 +1118,17 @@ button:focus-visible {
 
 .checksum-card .text-link {
   margin-top: 18px;
+}
+
+.checksum-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 18px;
+  margin-top: 18px;
+}
+
+.checksum-actions .text-link {
+  margin-top: 0;
 }
 
 .data-grid {
@@ -1340,6 +1396,11 @@ button:focus-visible {
     background: var(--blue);
   }
 
+  .nav-links a[data-i18n="shared.nav.home"],
+  .nav-links a[data-i18n="shared.nav.advantages"] {
+    display: none;
+  }
+
   .nav-links::-webkit-scrollbar {
     display: none;
   }
@@ -1417,6 +1478,7 @@ button:focus-visible {
   .download-side {
     width: min(560px, 100%);
     margin: 0 auto;
+    gap: 12px;
   }
 
   .download-media {
@@ -1654,7 +1716,8 @@ button:focus-visible {
 
   .download-hero {
     padding-top: 104px;
-    min-height: 100svh;
+    padding-bottom: calc(46px + env(safe-area-inset-bottom));
+    min-height: auto;
   }
 
   .download-lead p {
@@ -1676,9 +1739,45 @@ button:focus-visible {
     font-size: 11px;
   }
 
-  .download-media,
+  .download-media {
+    display: block;
+    width: min(310px, 100%);
+    margin: 0 auto;
+    padding: 8px;
+    border-radius: 18px;
+  }
+
   .download-side .release-card {
-    display: none;
+    display: block;
+    width: min(310px, 100%);
+    margin: 0 auto;
+    padding: 14px;
+    border-radius: 14px;
+  }
+
+  .download-side .release-card > span {
+    margin-bottom: 4px;
+    font-size: 10px;
+  }
+
+  .download-side .release-card strong {
+    margin-bottom: 8px;
+    font-size: 24px;
+  }
+
+  .download-side .release-card dl {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 12px;
+  }
+
+  .download-side .release-card dl div {
+    padding: 6px 0;
+  }
+
+  .download-side .release-card dt,
+  .download-side .release-card dd {
+    font-size: 11px;
+    line-height: 1.32;
   }
 
   .support-shortcuts {

@@ -28,7 +28,7 @@
     <link rel="icon" href="../assets/readme/app-icon.png">
     <link rel="apple-touch-icon" href="../assets/readme/app-icon.png">
     <link rel="manifest" href="../site.webmanifest">
-    <link rel="stylesheet" href="../styles.css?v=20260517-3">
+    <link rel="stylesheet" href="../styles.css?v=20260517-4">
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -67,8 +67,10 @@
         <a href="index.html" data-i18n="shared.nav.home">Home</a>
         <a href="advantages.html" data-i18n="shared.nav.advantages">Advantages</a>
         <a class="active" aria-current="page" href="download.html" data-i18n="shared.nav.download">Download</a>
+        <a href="install.html" data-i18n="shared.nav.install">Install</a>
         <a href="privacy.html" data-i18n="shared.nav.privacy">Privacy</a>
-      <a href="faq.html" data-i18n="shared.nav.faq">FAQ</a>
+        <a href="faq.html" data-i18n="shared.nav.faq">FAQ</a>
+        <a href="support.html" data-i18n="shared.nav.support">Support</a>
       </nav>
       <div class="header-tools">
         <nav class="lang-switch" aria-label="Language switch">
@@ -98,6 +100,7 @@
           <div class="download-meta-strip" aria-label="Download summary" data-reveal="">
             <span><strong data-i18n="download.card.version">v0.1.0</strong></span>
             <span data-i18n="download.card.system.value">macOS 14+</span>
+            <span data-i18n="download.card.app.value">&gt;_ - island.app</span>
             <span data-i18n="download.card.size.value">About 2.3 MB</span>
             <span data-i18n="download.card.signing.value">ad-hoc signed</span>
           </div>
@@ -117,6 +120,10 @@
               <div>
                 <dt data-i18n="download.card.package.label">Package</dt>
                 <dd data-i18n="download.card.package.value">Vibelsland-Free-0.1.0-macos.zip</dd>
+              </div>
+              <div>
+                <dt data-i18n="download.card.app.label">App name</dt>
+                <dd data-i18n="download.card.app.value">&gt;_ - island.app</dd>
               </div>
               <div>
                 <dt data-i18n="download.card.size.label">Size</dt>
@@ -145,7 +152,7 @@
           <li data-reveal="">
             <span>02</span>
             <strong data-i18n="download.install.step2.title">Move to Applications</strong>
-            <p data-i18n="download.install.step2.copy">Unzip it, drag the app into Applications, then follow the first-launch note below.</p>
+            <p data-i18n="download.install.step2.copy">Unzip it and drag the app into Applications. The installed app appears as <code>&gt;_ - island.app</code>, then follow the first-launch note below.</p>
           </li>
           <li data-reveal="">
             <span>03</span>
@@ -166,7 +173,10 @@
           <span data-i18n="download.security.hash.label">SHA-256</span>
           <code>64c7c0a4eae81042bbc3896e24a07ab5d5573aeaafa846eada2e982f887ecf81</code>
           <code>shasum -a 256 -c Vibelsland-Free-0.1.0-macos.zip.sha256</code>
-          <a class="text-link" href="https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip.sha256">Download .sha256 file</a>
+          <div class="checksum-actions">
+            <a class="text-link" href="https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip" data-i18n="download.security.zip">Download zip</a>
+            <a class="text-link" href="https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip.sha256" data-i18n="download.security.sha">Download .sha256</a>
+          </div>
         </div>
       </section>
 
@@ -216,8 +226,8 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="../lang.js?v=20260517-3" defer=""></script>
-    <script src="../effects.js?v=20260517-3" defer=""></script>
+    <script src="../lang.js?v=20260517-4" defer=""></script>
+    <script src="../effects.js?v=20260517-4" defer=""></script>
 
 
 </body></html>
