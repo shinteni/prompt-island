@@ -25,6 +25,7 @@ required = [
     docs / "404.html",
     docs / "site.webmanifest",
     docs / "sitemap.xml",
+    docs / "llms.txt",
     docs / "robots.txt",
 ]
 localized_files = [
@@ -212,6 +213,21 @@ if robots_path.exists():
     expected_sitemap = f"Sitemap: {site_url}sitemap.xml"
     if expected_sitemap not in robots:
         errors.append(f"robots.txt missing expected sitemap line: {expected_sitemap}")
+
+llms_path = docs / "llms.txt"
+if llms_path.exists():
+    llms = llms_path.read_text(encoding="utf-8")
+    for phrase in [
+        "Vibelsland Free",
+        "v0.1.0",
+        "Vibelsland-Free-0.1.0-macos.zip",
+        "64c7c0a4eae81042bbc3896e24a07ab5d5573aeaafa846eada2e982f887ecf81",
+        f"{site_url}install.html",
+        f"{site_url}privacy.html",
+        f"{site_url}.well-known/security.txt",
+    ]:
+        if phrase not in llms:
+            errors.append(f"llms.txt missing expected product fact: {phrase}")
 
 security_path = docs / ".well-known" / "security.txt"
 if security_path.exists():

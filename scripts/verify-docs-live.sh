@@ -40,6 +40,7 @@ pages=(
   "en/support.html"
   "ja/support.html"
   ".well-known/security.txt"
+  "llms.txt"
   "sitemap.xml"
   "site.webmanifest"
 )

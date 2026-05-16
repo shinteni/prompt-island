@@ -1,0 +1,42 @@
+# Vibelsland Free
+
+> Local-first macOS AI coding status display for Claude Code, Codex CLI, and Codex Desktop.
+
+Vibelsland Free keeps local AI coding session status, tool activity, token summaries, and approval requests visible at the top of macOS. It creates no account, uploads no telemetry, and does not sync session content to a remote server.
+
+## Product Facts
+
+- Product: Vibelsland Free
+- Current version: v0.1.0
+- Platform: macOS 14+
+- Distribution: GitHub Releases
+- Package: Vibelsland-Free-0.1.0-macos.zip
+- SHA-256: 64c7c0a4eae81042bbc3896e24a07ab5d5573aeaafa846eada2e982f887ecf81
+- Signing: ad-hoc signed; first launch may require Gatekeeper confirmation
+- Source: https://github.com/shinteni/prompt-island
+- Download: https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip
+- Release notes: https://shinteni.github.io/prompt-island/release-notes.html
+
+## Pages
+
+- Overview: https://shinteni.github.io/prompt-island/
+- Advantages: https://shinteni.github.io/prompt-island/advantages.html
+- Download: https://shinteni.github.io/prompt-island/download.html
+- Install and trust: https://shinteni.github.io/prompt-island/install.html
+- Privacy: https://shinteni.github.io/prompt-island/privacy.html
+- FAQ: https://shinteni.github.io/prompt-island/faq.html
+- Support: https://shinteni.github.io/prompt-island/support.html
+- Security reporting metadata: https://shinteni.github.io/prompt-island/.well-known/security.txt
+
+## Language Versions
+
+- English: https://shinteni.github.io/prompt-island/en/
+- Japanese: https://shinteni.github.io/prompt-island/ja/
+- Default: https://shinteni.github.io/prompt-island/
+
+## Boundaries
+
+- Vibelsland Free reads local Claude Code, Codex CLI, and Codex Desktop state for display.
+- It writes local configuration, logs, and bridge runtime files on the user's Mac.
+- Core status display, source control, and approval bridge behavior are local-first.
+- Claude Code, Codex CLI, and Codex Desktop may have their own account, network, and session behavior independent of Vibelsland Free.
