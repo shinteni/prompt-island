@@ -13,7 +13,9 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/shinteni/prompt-island/releases/latest">下载最新版</a>
+  <a href="https://shinteni.github.io/prompt-island/">官网</a>
+  ·
+  <a href="https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip">下载 v0.1.0</a>
   ·
   <a href="PRIVACY.md">隐私说明</a>
   ·
@@ -21,7 +23,7 @@
 </p>
 
 <p align="center">
-  <img src="docs/assets/readme/hero-island.png" alt="&gt;_ - island floating island preview" width="960">
+  <img src="docs/assets/readme/hero-island.png" alt="&gt;_ - island floating island interface" width="960">
 </p>
 
 `macOS 14+` `Swift` `Local-first` `No telemetry` `Claude Code` `Codex CLI` `Codex Desktop`
@@ -51,13 +53,13 @@
 
 ## 下载与安装
 
-最新版可以在 GitHub Releases 下载：
+v0.1.0 可以直接下载：
 
-[Download latest release](https://github.com/shinteni/prompt-island/releases/latest)
+[Download v0.1.0](https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip)
 
 安装方式：
 
-1. 下载 `prompt-island-0.1.0-macos.zip`。
+1. 下载 `Vibelsland-Free-0.1.0-macos.zip`。
 2. 解压后将 `>_ - island.app` 拖到 `Applications`。
 3. 打开应用，在菜单栏或设置页安装 Hooks。
 4. 按需开启自动启动、声音、勿扰和显示位置。
@@ -82,13 +84,13 @@ zsh scripts/package-release.sh
 
 ```text
 dist/>_ - island.app
-dist/prompt-island-0.1.0-macos.zip
-dist/prompt-island-0.1.0-macos.zip.sha256
+dist/Vibelsland-Free-0.1.0-macos.zip
+dist/Vibelsland-Free-0.1.0-macos.zip.sha256
 ```
 
 ## 项目状态
 
-&gt;_ - island 已经具备可运行的本机版本，包含浮岛展示、设置页、Hook 安装、审批窗口、运行状态检查、单实例保护、重启恢复和发布打包脚本。公开分发前仍建议完成真实设备回归、正式签名和 notarization。
+&gt;_ - island v0.1.0 已经具备可下载的本机版本，包含浮岛展示、设置页、Hook 安装、审批窗口、运行状态检查、单实例保护、重启恢复和发布打包脚本。当前发布包使用 ad-hoc 签名；Developer ID 签名和 notarization 是后续提升首次打开体验的分发改进。
 
 ## 许可证
 

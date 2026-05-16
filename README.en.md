@@ -13,7 +13,9 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/shinteni/prompt-island/releases/latest">Download latest release</a>
+  <a href="https://shinteni.github.io/prompt-island/">Website</a>
+  ·
+  <a href="https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip">Download v0.1.0</a>
   ·
   <a href="PRIVACY.md">Privacy</a>
   ·
@@ -21,7 +23,7 @@
 </p>
 
 <p align="center">
-  <img src="docs/assets/readme/hero-island.png" alt="&gt;_ - island floating island preview" width="960">
+  <img src="docs/assets/readme/hero-island.png" alt="&gt;_ - island floating island interface" width="960">
 </p>
 
 `macOS 14+` `Swift` `Local-first` `No telemetry` `Claude Code` `Codex CLI` `Codex Desktop`
@@ -51,13 +53,13 @@ It does not replace your terminal or desktop client. It keeps the most important
 
 ## Download And Install
 
-Download the latest build from GitHub Releases:
+Download v0.1.0 directly:
 
-[Download latest release](https://github.com/shinteni/prompt-island/releases/latest)
+[Download v0.1.0](https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip)
 
 Install:
 
-1. Download `prompt-island-0.1.0-macos.zip`.
+1. Download `Vibelsland-Free-0.1.0-macos.zip`.
 2. Unzip it and move `>_ - island.app` to `Applications`.
 3. Open the app and install Hooks from the menu bar or settings window.
 4. Configure launch at login, sound, Do Not Disturb, and display position as needed.
@@ -82,13 +84,13 @@ Local release artifacts are generated at:
 
 ```text
 dist/>_ - island.app
-dist/prompt-island-0.1.0-macos.zip
-dist/prompt-island-0.1.0-macos.zip.sha256
+dist/Vibelsland-Free-0.1.0-macos.zip
+dist/Vibelsland-Free-0.1.0-macos.zip.sha256
 ```
 
 ## Project Status
 
-&gt;_ - island already includes the core local app experience: floating island UI, settings, hook installation, approval UI, runtime health checks, single-instance protection, restart recovery, and release packaging scripts. Before broad public distribution, real-device regression testing, Developer ID signing, and notarization are still recommended.
+&gt;_ - island v0.1.0 already includes the downloadable local app experience: floating island UI, settings, hook installation, approval UI, runtime health checks, single-instance protection, restart recovery, and release packaging scripts. The current release uses ad-hoc signing; Developer ID signing and notarization remain future distribution improvements for a smoother first launch.
 
 ## License
 

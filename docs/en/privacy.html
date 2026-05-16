@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en"><head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Privacy and Local Data | &gt;_ - island</title>
+    <meta name="description" content="&gt;_ - island creates no account, uploads no telemetry, and reads only local Claude Code, Codex CLI, and Codex Desktop state to render the island.">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="&gt;_ - island Privacy and Local Data">
+    <meta property="og:description" content="Local-first. No account. No telemetry. No remote session sync.">
+    <meta property="og:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
+    <meta property="og:url" content="https://shinteni.github.io/prompt-island/en/privacy.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="&gt;_ - island Privacy and Local Data">
+    <meta name="twitter:description" content="Local-first. No account. No telemetry. No remote session sync.">
+    <meta name="twitter:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
+    <meta name="theme-color" content="#f5f5f7">
+    <link rel="canonical" href="https://shinteni.github.io/prompt-island/en/privacy.html">
+    <link rel="alternate" hreflang="zh-CN" href="https://shinteni.github.io/prompt-island/privacy.html">
+    <link rel="alternate" hreflang="en" href="https://shinteni.github.io/prompt-island/en/privacy.html">
+    <link rel="alternate" hreflang="ja" href="https://shinteni.github.io/prompt-island/ja/privacy.html">
+    <link rel="alternate" hreflang="x-default" href="https://shinteni.github.io/prompt-island/privacy.html">
+    <link rel="icon" href="../assets/readme/app-icon.png">
+    <link rel="apple-touch-icon" href="../assets/readme/app-icon.png">
+    <link rel="manifest" href="../site.webmanifest">
+    <link rel="stylesheet" href="../styles.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#main" data-i18n="shared.skip">Skip to content</a>
+    <header class="site-header" aria-label="Main navigation">
+      <a class="brand" href="index.html" aria-label=">_ - island home">
+        <img src="../assets/readme/app-icon.png" alt="" width="28" height="28">
+        <span>&gt;_ - island</span>
+      </a>
+      <nav class="nav-links" aria-label="Page navigation">
+        <a href="index.html" data-i18n="shared.nav.home">Home</a>
+        <a href="advantages.html" data-i18n="shared.nav.advantages">Advantages</a>
+        <a href="download.html" data-i18n="shared.nav.download">Download</a>
+        <a class="active" href="privacy.html" data-i18n="shared.nav.privacy">Privacy</a>
+      </nav>
+      <div class="header-tools">
+        <nav class="lang-switch" aria-label="Language switch">
+          <a data-lang-option="zh" href="../privacy.html" aria-current="false">中文</a>
+          <a data-lang-option="en" href="privacy.html" class="active" aria-current="true">EN</a>
+          <a data-lang-option="ja" href="../ja/privacy.html" aria-current="false">日本語</a>
+        </nav>
+        <a class="nav-cta" href="download.html" data-i18n="shared.cta">Download for macOS</a>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="subpage-hero privacy-hero" aria-labelledby="privacy-title">
+        <div class="subpage-copy" data-reveal="">
+          <p class="eyebrow" data-i18n="privacy.hero.eyebrow">Local-first</p>
+          <h1 id="privacy-title" data-i18n="privacy.hero.title">Local by default.</h1>
+          <p data-i18n="privacy.hero.copy">&gt;_ - island reads local Claude Code, Codex CLI, and Codex Desktop state only to render the island and handle approvals. It creates no account, uploads no telemetry, and does not sync session content to a remote server.</p>
+          <div class="hero-actions">
+            <a class="button primary" href="download.html" data-i18n="privacy.hero.primary">Read install notes</a>
+            <a class="button secondary" href="https://github.com/shinteni/prompt-island/blob/main/PRIVACY.md" data-i18n="privacy.hero.secondary">View privacy file in source</a>
+          </div>
+        </div>
+        <div class="privacy-summary" aria-label="Privacy summary" data-reveal="">
+          <div>
+            <span data-i18n="privacy.summary.account.label">Account</span>
+            <strong data-i18n="privacy.summary.account.value">Not required</strong>
+          </div>
+          <div>
+            <span data-i18n="privacy.summary.telemetry.label">Telemetry</span>
+            <strong data-i18n="privacy.summary.telemetry.value">Not uploaded</strong>
+          </div>
+          <div>
+            <span data-i18n="privacy.summary.sync.label">Sync</span>
+            <strong data-i18n="privacy.summary.sync.value">No cloud dependency</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="section data-section" aria-labelledby="data-title">
+        <div class="section-heading align-left" data-reveal="">
+          <p class="eyebrow" data-i18n="privacy.data.eyebrow">Data boundary</p>
+          <h2 id="data-title" data-i18n="privacy.data.title">What it reads and writes.</h2>
+        </div>
+        <div class="data-grid">
+          <article data-reveal="">
+            <h3 data-i18n="privacy.data.read.title">It reads</h3>
+            <ul>
+              <li data-i18n="privacy.data.read.item1">Local Claude Code, Codex CLI, and Codex Desktop state.</li>
+              <li data-i18n="privacy.data.read.item2">Local session information used to show activity, tool calls, token summaries, and approvals.</li>
+              <li data-i18n="privacy.data.read.item3">Local hook configuration, session file paths, and local runtime state for Claude and Codex.</li>
+            </ul>
+          </article>
+          <article data-reveal="">
+            <h3 data-i18n="privacy.data.write.title">It writes</h3>
+            <ul>
+              <li data-i18n="privacy.data.write.item1">App config: ~/Library/Application Support/VibelslandFree/config.json.</li>
+              <li data-i18n="privacy.data.write.item2">App logs: ~/Library/Logs/VibelslandFree/app.log.</li>
+              <li data-i18n="privacy.data.write.item3">Local bridge runtime files: ~/.vibelsland-free.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="section no-section" aria-labelledby="no-title">
+        <div class="section-heading" data-reveal="">
+          <p class="eyebrow" data-i18n="privacy.no.eyebrow">No telemetry</p>
+          <h2 id="no-title" data-i18n="privacy.no.title">What it does not do.</h2>
+        </div>
+        <div class="boundary-grid large" data-reveal="">
+          <div>
+            <span data-i18n="privacy.no.item1.label">Account</span>
+            <strong data-i18n="privacy.no.item1.value">No online account and no login requirement.</strong>
+          </div>
+          <div>
+            <span data-i18n="privacy.no.item2.label">Upload</span>
+            <strong data-i18n="privacy.no.item2.value">No telemetry, analytics events, or remote session sync.</strong>
+          </div>
+          <div>
+            <span data-i18n="privacy.no.item3.label">Third party</span>
+            <strong data-i18n="privacy.no.item3.value">No AI coding content is sent to a new third-party service.</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="section split-section" aria-labelledby="control-title">
+        <div class="split-copy" data-reveal="">
+          <p class="eyebrow" data-i18n="privacy.control.eyebrow">Control</p>
+          <h2 id="control-title" data-i18n="privacy.control.title">Hooks change only when you choose.</h2>
+          <p data-i18n="privacy.control.copy">The app modifies hook configuration only when you install, repair, or uninstall hooks. Hook payloads are filtered first and keep only necessary metadata such as session id, event type, workspace, approval id, tool name, path, and command.</p>
+        </div>
+        <div class="device-card" data-reveal="">
+          <img src="../assets/readme/hero-island-light.jpg" alt=">_ - island settings page showing source controls" width="1672" height="941" loading="lazy" decoding="async">
+        </div>
+      </section>
+
+      <section class="section network-section" aria-labelledby="network-title">
+        <div class="section-heading align-left" data-reveal="">
+          <p class="eyebrow" data-i18n="privacy.network.eyebrow">Network</p>
+          <h2 id="network-title" data-i18n="privacy.network.title">Core features do not require internet access.</h2>
+          <p data-i18n="privacy.network.copy">&gt;_ - island status display, source controls, and the local approval bridge work on your Mac. Claude Code, Codex CLI, and Codex Desktop may have their own network connections independently of this app.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div>
+        <strong>&gt;_ - island</strong>
+        <p data-i18n="shared.footer.tagline">A local AI coding island for macOS.</p>
+      </div>
+      <nav aria-label="Footer navigation">
+        <a href="index.html" data-i18n="shared.nav.home">Home</a>
+        <a href="advantages.html" data-i18n="shared.nav.advantages">Advantages</a>
+        <a href="download.html" data-i18n="shared.nav.download">Download</a>
+        <a href="https://github.com/shinteni/prompt-island">GitHub</a>
+      </nav>
+    </footer>
+    <script src="../lang.js" defer=""></script>
+    <script src="../effects.js" defer=""></script>
+
+
+</body></html>

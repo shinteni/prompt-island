@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="ja"><head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>プライバシーとローカルデータ | &gt;_ - island</title>
+    <meta name="description" content="&gt;_ - island はアカウントを作成せず、テレメトリを送信せず、Mac 内の Claude Code、Codex CLI、Codex Desktop 状態だけを使います。">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="&gt;_ - island プライバシーとローカルデータ">
+    <meta property="og:description" content="ローカルファースト。アカウントなし。テレメトリなし。リモート同期なし。">
+    <meta property="og:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
+    <meta property="og:url" content="https://shinteni.github.io/prompt-island/ja/privacy.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="&gt;_ - island プライバシーとローカルデータ">
+    <meta name="twitter:description" content="ローカルファースト。アカウントなし。テレメトリなし。リモート同期なし。">
+    <meta name="twitter:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
+    <meta name="theme-color" content="#f5f5f7">
+    <link rel="canonical" href="https://shinteni.github.io/prompt-island/ja/privacy.html">
+    <link rel="alternate" hreflang="zh-CN" href="https://shinteni.github.io/prompt-island/privacy.html">
+    <link rel="alternate" hreflang="en" href="https://shinteni.github.io/prompt-island/en/privacy.html">
+    <link rel="alternate" hreflang="ja" href="https://shinteni.github.io/prompt-island/ja/privacy.html">
+    <link rel="alternate" hreflang="x-default" href="https://shinteni.github.io/prompt-island/privacy.html">
+    <link rel="icon" href="../assets/readme/app-icon.png">
+    <link rel="apple-touch-icon" href="../assets/readme/app-icon.png">
+    <link rel="manifest" href="../site.webmanifest">
+    <link rel="stylesheet" href="../styles.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#main" data-i18n="shared.skip">本文へ移動</a>
+    <header class="site-header" aria-label="メインナビゲーション">
+      <a class="brand" href="index.html" aria-label=">_ - island ホーム">
+        <img src="../assets/readme/app-icon.png" alt="" width="28" height="28">
+        <span>&gt;_ - island</span>
+      </a>
+      <nav class="nav-links" aria-label="ページナビゲーション">
+        <a href="index.html" data-i18n="shared.nav.home">ホーム</a>
+        <a href="advantages.html" data-i18n="shared.nav.advantages">強み</a>
+        <a href="download.html" data-i18n="shared.nav.download">ダウンロード</a>
+        <a class="active" href="privacy.html" data-i18n="shared.nav.privacy">プライバシー</a>
+      </nav>
+      <div class="header-tools">
+        <nav class="lang-switch" aria-label="言語切替">
+          <a data-lang-option="zh" href="../privacy.html" aria-current="false">中文</a>
+          <a data-lang-option="en" href="../en/privacy.html" aria-current="false">EN</a>
+          <a data-lang-option="ja" href="privacy.html" class="active" aria-current="true">日本語</a>
+        </nav>
+        <a class="nav-cta" href="download.html" data-i18n="shared.cta">macOS 版をダウンロード</a>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="subpage-hero privacy-hero" aria-labelledby="privacy-title">
+        <div class="subpage-copy" data-reveal="">
+          <p class="eyebrow" data-i18n="privacy.hero.eyebrow">ローカルファースト</p>
+          <h1 id="privacy-title" data-i18n="privacy.hero.title">標準で Mac 内に。</h1>
+          <p data-i18n="privacy.hero.copy">&gt;_ - island は Claude Code、Codex CLI、Codex Desktop の Mac 内の状態だけを読み取り、アイランド表示と承認処理に使います。アカウントを作らず、テレメトリを送らず、セッション内容をリモートサーバーへ同期しません。</p>
+          <div class="hero-actions">
+            <a class="button primary" href="download.html" data-i18n="privacy.hero.primary">インストール説明を見る</a>
+            <a class="button secondary" href="https://github.com/shinteni/prompt-island/blob/main/PRIVACY.md" data-i18n="privacy.hero.secondary">ソース内のプライバシーファイルを見る</a>
+          </div>
+        </div>
+        <div class="privacy-summary" aria-label="プライバシー概要" data-reveal="">
+          <div>
+            <span data-i18n="privacy.summary.account.label">アカウント</span>
+            <strong data-i18n="privacy.summary.account.value">不要</strong>
+          </div>
+          <div>
+            <span data-i18n="privacy.summary.telemetry.label">テレメトリ</span>
+            <strong data-i18n="privacy.summary.telemetry.value">送信しない</strong>
+          </div>
+          <div>
+            <span data-i18n="privacy.summary.sync.label">同期</span>
+            <strong data-i18n="privacy.summary.sync.value">クラウド非依存</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="section data-section" aria-labelledby="data-title">
+        <div class="section-heading align-left" data-reveal="">
+          <p class="eyebrow" data-i18n="privacy.data.eyebrow">データ境界</p>
+          <h2 id="data-title" data-i18n="privacy.data.title">読み取るもの、書き込むもの。</h2>
+        </div>
+        <div class="data-grid">
+          <article data-reveal="">
+            <h3 data-i18n="privacy.data.read.title">読み取るもの</h3>
+            <ul>
+              <li data-i18n="privacy.data.read.item1">Claude Code、Codex CLI、Codex Desktop の Mac 内の状態。</li>
+              <li data-i18n="privacy.data.read.item2">活動状態、ツール実行、token サマリー、承認を表示するためのローカルセッション情報。</li>
+              <li data-i18n="privacy.data.read.item3">Claude と Codex のローカル hook 設定、セッションファイルのパス、実行状態。</li>
+            </ul>
+          </article>
+          <article data-reveal="">
+            <h3 data-i18n="privacy.data.write.title">書き込むもの</h3>
+            <ul>
+              <li data-i18n="privacy.data.write.item1">アプリ設定: ~/Library/Application Support/VibelslandFree/config.json。</li>
+              <li data-i18n="privacy.data.write.item2">アプリログ: ~/Library/Logs/VibelslandFree/app.log。</li>
+              <li data-i18n="privacy.data.write.item3">ローカルブリッジ実行ファイル: ~/.vibelsland-free。</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="section no-section" aria-labelledby="no-title">
+        <div class="section-heading" data-reveal="">
+          <p class="eyebrow" data-i18n="privacy.no.eyebrow">テレメトリなし</p>
+          <h2 id="no-title" data-i18n="privacy.no.title">行わないこと。</h2>
+        </div>
+        <div class="boundary-grid large" data-reveal="">
+          <div>
+            <span data-i18n="privacy.no.item1.label">アカウント</span>
+            <strong data-i18n="privacy.no.item1.value">オンラインアカウントの作成やログイン要求はありません。</strong>
+          </div>
+          <div>
+            <span data-i18n="privacy.no.item2.label">アップロード</span>
+            <strong data-i18n="privacy.no.item2.value">テレメトリ、分析イベント、セッション内容のリモート同期はありません。</strong>
+          </div>
+          <div>
+            <span data-i18n="privacy.no.item3.label">第三者</span>
+            <strong data-i18n="privacy.no.item3.value">AI コーディング内容を新しい第三者サービスへ送信しません。</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="section split-section" aria-labelledby="control-title">
+        <div class="split-copy" data-reveal="">
+          <p class="eyebrow" data-i18n="privacy.control.eyebrow">ユーザー制御</p>
+          <h2 id="control-title" data-i18n="privacy.control.title">Hooks は選択したときだけ変更します。</h2>
+          <p data-i18n="privacy.control.copy">アプリは hooks のインストール、修復、アンインストール時だけ設定を変更します。Hook payload は先にフィルタリングされ、セッション ID、イベント種別、ワークスペース、承認 ID、ツール名、パス、コマンドなど必要なメタデータだけを保持します。</p>
+        </div>
+        <div class="device-card" data-reveal="">
+          <img src="../assets/readme/hero-island-light.jpg" alt="ソース制御を表示する >_ - island 設定画面" width="1672" height="941" loading="lazy" decoding="async">
+        </div>
+      </section>
+
+      <section class="section network-section" aria-labelledby="network-title">
+        <div class="section-heading align-left" data-reveal="">
+          <p class="eyebrow" data-i18n="privacy.network.eyebrow">ネットワーク境界</p>
+          <h2 id="network-title" data-i18n="privacy.network.title">主要機能にインターネット接続は不要です。</h2>
+          <p data-i18n="privacy.network.copy">&gt;_ - island のステータス表示、ソース制御、ローカル承認ブリッジは Mac 内で動作します。Claude Code、Codex CLI、Codex Desktop はそれぞれ独自にネットワーク接続を使う場合があります。</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div>
+        <strong>&gt;_ - island</strong>
+        <p data-i18n="shared.footer.tagline">macOS 向けローカル AI コーディングアイランド。</p>
+      </div>
+      <nav aria-label="フッターナビゲーション">
+        <a href="index.html" data-i18n="shared.nav.home">ホーム</a>
+        <a href="advantages.html" data-i18n="shared.nav.advantages">強み</a>
+        <a href="download.html" data-i18n="shared.nav.download">ダウンロード</a>
+        <a href="https://github.com/shinteni/prompt-island">GitHub</a>
+      </nav>
+    </footer>
+    <script src="../lang.js" defer=""></script>
+    <script src="../effects.js" defer=""></script>
+
+
+</body></html>

@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>隐私与本地数据 | &gt;_ - island</title>
+    <meta
+      name="description"
+      content=">_ - island 不创建账号，不上传遥测，只读取本机 Claude Code、Codex CLI 和 Codex Desktop 状态用于展示浮岛。"
+    >
+    <meta property="og:type" content="website">
+    <meta property="og:title" content=">_ - island 隐私与本地数据">
+    <meta property="og:description" content="本地优先，无账号，无遥测，无远程会话同步。">
+    <meta property="og:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
+    <meta property="og:url" content="https://shinteni.github.io/prompt-island/privacy.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content=">_ - island 隐私与本地数据">
+    <meta name="twitter:description" content="本地优先，无账号，无遥测，无远程会话同步。">
+    <meta name="twitter:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
+    <meta name="theme-color" content="#f5f5f7">
+    <link rel="canonical" href="https://shinteni.github.io/prompt-island/privacy.html">
+    <link rel="alternate" hreflang="zh-CN" href="https://shinteni.github.io/prompt-island/privacy.html">
+    <link rel="alternate" hreflang="en" href="https://shinteni.github.io/prompt-island/en/privacy.html">
+    <link rel="alternate" hreflang="ja" href="https://shinteni.github.io/prompt-island/ja/privacy.html">
+    <link rel="alternate" hreflang="x-default" href="https://shinteni.github.io/prompt-island/privacy.html">
+    <link rel="icon" href="assets/readme/app-icon.png">
+    <link rel="apple-touch-icon" href="assets/readme/app-icon.png">
+    <link rel="manifest" href="site.webmanifest">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#main" data-i18n="shared.skip">跳到正文</a>
+    <header class="site-header" aria-label="主导航">
+      <a class="brand" href="index.html" aria-label=">_ - island 首页">
+        <img src="assets/readme/app-icon.png" alt="" width="28" height="28">
+        <span>&gt;_ - island</span>
+      </a>
+      <nav class="nav-links" aria-label="页面导航">
+        <a href="index.html" data-i18n="shared.nav.home">首页</a>
+        <a href="advantages.html" data-i18n="shared.nav.advantages">优势</a>
+        <a href="download.html" data-i18n="shared.nav.download">下载</a>
+        <a class="active" href="privacy.html" data-i18n="shared.nav.privacy">隐私</a>
+      </nav>
+      <div class="header-tools">
+        <nav class="lang-switch" aria-label="语言切换">
+          <a data-lang-option="zh" href="privacy.html" class="active" aria-current="true">中文</a>
+          <a data-lang-option="en" href="en/privacy.html" aria-current="false">EN</a>
+          <a data-lang-option="ja" href="ja/privacy.html" aria-current="false">日本語</a>
+        </nav>
+        <a class="nav-cta" href="download.html" data-i18n="shared.cta">下载 macOS 版</a>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="subpage-hero privacy-hero" aria-labelledby="privacy-title">
+        <div class="subpage-copy" data-reveal>
+          <p class="eyebrow" data-i18n="privacy.hero.eyebrow">本地优先</p>
+          <h1 id="privacy-title" data-i18n="privacy.hero.title">默认留在本机。</h1>
+          <p data-i18n="privacy.hero.copy">
+            >_ - island 只读取本机已有的 Claude Code、Codex CLI 和 Codex Desktop 状态，用于展示浮岛和处理审批。它不创建账号，不上传遥测，不同步会话内容到远程服务器。
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="download.html" data-i18n="privacy.hero.primary">下载前查看安装说明</a>
+            <a class="button secondary" href="https://github.com/shinteni/prompt-island/blob/main/PRIVACY.md" data-i18n="privacy.hero.secondary">查看源码中的隐私文件</a>
+          </div>
+        </div>
+        <div class="privacy-summary" aria-label="隐私摘要" data-reveal>
+          <div>
+            <span data-i18n="privacy.summary.account.label">账号</span>
+            <strong data-i18n="privacy.summary.account.value">不需要</strong>
+          </div>
+          <div>
+            <span data-i18n="privacy.summary.telemetry.label">遥测</span>
+            <strong data-i18n="privacy.summary.telemetry.value">不上传</strong>
+          </div>
+          <div>
+            <span data-i18n="privacy.summary.sync.label">同步</span>
+            <strong data-i18n="privacy.summary.sync.value">不依赖云端</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="section data-section" aria-labelledby="data-title">
+        <div class="section-heading align-left" data-reveal>
+          <p class="eyebrow" data-i18n="privacy.data.eyebrow">数据边界</p>
+          <h2 id="data-title" data-i18n="privacy.data.title">读取什么，写入什么。</h2>
+        </div>
+        <div class="data-grid">
+          <article data-reveal>
+            <h3 data-i18n="privacy.data.read.title">会读取</h3>
+            <ul>
+              <li data-i18n="privacy.data.read.item1">Claude Code、Codex CLI 和 Codex Desktop 的本机状态。</li>
+              <li data-i18n="privacy.data.read.item2">用于展示活动状态、工具调用、token 摘要和审批请求的本机会话信息。</li>
+              <li data-i18n="privacy.data.read.item3">Claude 与 Codex 的本地 hook 配置、会话文件路径和本地运行状态。</li>
+            </ul>
+          </article>
+          <article data-reveal>
+            <h3 data-i18n="privacy.data.write.title">会写入</h3>
+            <ul>
+              <li data-i18n="privacy.data.write.item1">应用配置：~/Library/Application Support/VibelslandFree/config.json。</li>
+              <li data-i18n="privacy.data.write.item2">应用日志：~/Library/Logs/VibelslandFree/app.log。</li>
+              <li data-i18n="privacy.data.write.item3">本地桥接运行文件：~/.vibelsland-free。</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="section no-section" aria-labelledby="no-title">
+        <div class="section-heading" data-reveal>
+          <p class="eyebrow" data-i18n="privacy.no.eyebrow">无遥测</p>
+          <h2 id="no-title" data-i18n="privacy.no.title">不会做的事。</h2>
+        </div>
+        <div class="boundary-grid large" data-reveal>
+          <div>
+            <span data-i18n="privacy.no.item1.label">账号</span>
+            <strong data-i18n="privacy.no.item1.value">不创建线上账号，也不要求登录。</strong>
+          </div>
+          <div>
+            <span data-i18n="privacy.no.item2.label">上传</span>
+            <strong data-i18n="privacy.no.item2.value">不上传遥测、分析事件或远程同步会话内容。</strong>
+          </div>
+          <div>
+            <span data-i18n="privacy.no.item3.label">第三方</span>
+            <strong data-i18n="privacy.no.item3.value">不把你的 AI 编程内容发送到新的第三方服务。</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="section split-section" aria-labelledby="control-title">
+        <div class="split-copy" data-reveal>
+          <p class="eyebrow" data-i18n="privacy.control.eyebrow">用户控制</p>
+          <h2 id="control-title" data-i18n="privacy.control.title">Hook 只在你选择时修改。</h2>
+          <p data-i18n="privacy.control.copy">
+            应用只会在你安装、修复或卸载 hooks 时修改对应配置。Hook payload 会先过滤，只保留会话 ID、事件类型、工作区、审批 ID、工具名、路径和命令等必要元数据。
+          </p>
+        </div>
+        <div class="device-card" data-reveal>
+          <img
+            src="assets/readme/hero-island-light.jpg"
+            alt=">_ - island 设置页展示来源控制"
+            width="1672"
+            height="941"
+            loading="lazy"
+            decoding="async"
+          >
+        </div>
+      </section>
+
+      <section class="section network-section" aria-labelledby="network-title">
+        <div class="section-heading align-left" data-reveal>
+          <p class="eyebrow" data-i18n="privacy.network.eyebrow">网络边界</p>
+          <h2 id="network-title" data-i18n="privacy.network.title">核心功能不需要互联网连接。</h2>
+          <p data-i18n="privacy.network.copy">
+            >_ - island 的状态显示、来源控制和本地审批桥接都在本机完成。Claude Code、Codex CLI 和 Codex Desktop 可能有各自的网络连接，但它们独立于本应用。
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div>
+        <strong>&gt;_ - island</strong>
+        <p data-i18n="shared.footer.tagline">面向 macOS 的本地 AI 编程浮岛。</p>
+      </div>
+      <nav aria-label="页脚导航">
+        <a href="index.html" data-i18n="shared.nav.home">首页</a>
+        <a href="advantages.html" data-i18n="shared.nav.advantages">优势</a>
+        <a href="download.html" data-i18n="shared.nav.download">下载</a>
+        <a href="https://github.com/shinteni/prompt-island">GitHub</a>
+      </nav>
+    </footer>
+    <script src="lang.js" defer></script>
+    <script src="effects.js" defer></script>
+  </body>
+</html>
