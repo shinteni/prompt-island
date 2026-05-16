@@ -1301,6 +1301,10 @@ button:focus-visible {
     min-height: auto;
   }
 
+  .subpage-hero {
+    min-height: 100svh;
+  }
+
   .home-hero {
     align-content: start;
     gap: 28px;
@@ -1446,7 +1450,7 @@ button:focus-visible {
   }
 
   .section {
-    padding: 70px 18px;
+    padding: 36px 18px 70px;
   }
 
   .signal-list article {
