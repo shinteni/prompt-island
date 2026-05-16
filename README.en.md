@@ -17,13 +17,15 @@
   ·
   <a href="https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip">Download v0.1.0</a>
   ·
+  <a href="https://shinteni.github.io/prompt-island/en/install.html">Install &amp; Trust</a>
+  ·
   <a href="PRIVACY.md">Privacy</a>
   ·
   <a href="#build-from-source">Build from source</a>
 </p>
 
 <p align="center">
-  <img src="docs/assets/readme/hero-island.png" alt="Vibelsland Free floating island interface" width="960">
+  <img src="docs/assets/readme/hero-island-light.jpg" alt="Vibelsland Free floating island interface" width="960">
 </p>
 
 `macOS 14+` `Swift` `Local-first` `No telemetry` `Claude Code` `Codex CLI` `Codex Desktop`
@@ -53,9 +55,11 @@ It keeps the most important AI coding state visible while you work. When idle, i
 
 ## Download And Install
 
-Download v0.1.0 from GitHub Releases. This release uses ad-hoc signing, so read the first-launch note below:
+Download v0.1.0 from GitHub Releases. This release uses ad-hoc signing, so read the install and trust notes before first launch:
 
 [Download v0.1.0](https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip)
+
+[Install & Trust](https://shinteni.github.io/prompt-island/en/install.html)
 
 Install:
 
@@ -64,7 +68,7 @@ Install:
 3. Open the app and install Hooks from the menu bar or settings window.
 4. Configure launch at login, sound, Do Not Disturb, and display position as needed.
 
-Note: the current free release uses ad-hoc codesign, so first launch requires the Gatekeeper confirmation above. For formal public distribution, Developer ID signing and notarization are required release items.
+Note: the current free release uses ad-hoc codesign, so first launch requires the Gatekeeper confirmation above. Developer ID signing and notarization can reduce first-launch friction in a future distribution path, but the current v0.1.0 download, checksum, source, and install notes are public.
 
 ## Privacy
 
@@ -90,7 +94,7 @@ dist/Vibelsland-Free-0.1.0-macos.zip.sha256
 
 ## Project Status
 
-Vibelsland Free v0.1.0 already includes the downloadable local app experience: floating island UI, settings, hook installation, approval UI, runtime health checks, single-instance protection, restart recovery, and release packaging scripts. The current free release uses ad-hoc signing; Developer ID signing and notarization are required before formal public distribution.
+Vibelsland Free v0.1.0 already includes the downloadable local app experience: floating island UI, settings, hook installation, approval UI, runtime health checks, single-instance protection, restart recovery, and release packaging scripts. The current free release uses ad-hoc signing and provides public download, SHA-256 verification, source, install notes, and support entry points.
 
 ## License
 
