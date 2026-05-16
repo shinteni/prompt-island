@@ -53,13 +53,13 @@
           title: "产品优势 | Vibelsland Free",
           description: "了解 Vibelsland Free 如何让 Claude Code、Codex CLI 和 Codex Desktop 的会话状态、审批请求和工具调用保持可见。",
           ogTitle: "Vibelsland Free 产品优势",
-          ogDescription: "为重度 AI 编程工作流提供低干扰的本地状态层。"
+          ogDescription: "为重度 AI 编程工作流提供低干扰的本地状态显示。"
         },
         download: {
           title: "下载 macOS 版 | Vibelsland Free",
           description: "下载 Vibelsland Free v0.1.0，查看 macOS 14+ 系统要求、首次打开说明、SHA-256 校验、源码和隐私边界。",
           ogTitle: "下载 Vibelsland Free",
-          ogDescription: "macOS 14+ 本地优先 AI coding 状态层，源码、校验和隐私边界公开。"
+          ogDescription: "macOS 14+ 本地优先 AI coding 状态显示，源码、校验和隐私边界公开。"
         },
         privacy: {
           title: "隐私与本地数据 | Vibelsland Free",
@@ -75,11 +75,11 @@
         "shared.nav.download": "下载",
         "shared.nav.privacy": "隐私",
         "shared.cta": "下载 macOS 版",
-        "shared.footer.tagline": "面向 macOS 的本地优先 AI coding 状态层。",
+        "shared.footer.tagline": "面向 macOS 的本地优先 AI coding 状态显示。",
 
         "home.hero.eyebrow": "Vibelsland Free · macOS 14+ · 本地优先",
         "home.hero.title": "Vibelsland Free",
-        "home.hero.kicker": "本地优先的 AI coding 状态层。",
+        "home.hero.kicker": "本地优先的 AI coding 状态显示。",
         "home.hero.copy": "在一个低干扰浮岛里查看 Claude Code、Codex CLI 和 Codex Desktop 的会话进度、工具调用、token 摘要和审批请求。无需账号，不上传遥测。",
         "home.hero.primary": "下载 macOS 版",
         "home.hero.secondary": "查看隐私边界",
@@ -102,7 +102,7 @@
         "home.focus.item3.copy": "允许、拒绝、继续和取消集中在 macOS 原生窗口里，减少漏看和误点。",
         "home.surface.eyebrow": "浮岛形态",
         "home.surface.title": "常驻，但不抢屏。",
-        "home.surface.copy": "空闲时收成一个安静的小状态点，任务进行时变成紧凑药丸，遇到审批和关键状态时再展开。视觉节奏接近系统通知，而不是新的工作台。",
+        "home.surface.copy": "空闲时收成一个安静的小状态点，任务进行时变成紧凑药丸，遇到审批和关键状态时再展开。视觉节奏接近系统状态提示，日常使用保持低干扰。",
         "home.surface.link": "了解产品优势",
         "home.workflow.eyebrow": "工作流",
         "home.workflow.title": "为重度 AI 编程的日常节奏设计。",
@@ -129,7 +129,7 @@
 
         "advantages.hero.eyebrow": "产品优势",
         "advantages.hero.title": "状态可见，工作不断。",
-        "advantages.hero.copy": "Vibelsland Free 把会话进度、工具调用和审批请求压缩成可扫视的状态层。它停留在屏幕顶部，让你继续写代码，同时保留关键上下文。",
+        "advantages.hero.copy": "Vibelsland Free 把会话进度、工具调用和审批请求整理成可扫视的状态显示。它停留在屏幕顶部，让你继续写代码，同时保留关键上下文。",
         "advantages.hero.primary": "下载 macOS 版",
         "advantages.hero.secondary": "查看本地数据边界",
         "advantages.problems.eyebrow": "价值",
@@ -141,7 +141,7 @@
         "advantages.problems.item3.title": "多个 AI 工具谁在活动",
         "advantages.problems.item3.copy": "Claude Code、Codex CLI 和 Codex Desktop 的状态统一呈现，更适合多会话并行工作。",
         "advantages.compare.eyebrow": "定位",
-        "advantages.compare.title": "它补齐状态可见性，而不是改变你的工作流。",
+        "advantages.compare.title": "把状态可见性接入你的现有工作流。",
         "advantages.compare.before.title": "没有浮岛时",
         "advantages.compare.before.item1": "状态散在终端、桌面客户端和日志里。",
         "advantages.compare.before.item2": "长任务只能靠不断切窗口判断。",
@@ -180,7 +180,7 @@
         "download.install.step1.title": "下载压缩包",
         "download.install.step1.copy": "从 GitHub Releases 下载 Vibelsland-Free-0.1.0-macos.zip。",
         "download.install.step2.title": "拖入 Applications",
-        "download.install.step2.copy": "解压后把应用拖到 Applications，再像普通 macOS 应用一样启动。",
+        "download.install.step2.copy": "解压后把应用拖到 Applications，再按首次打开说明启动。",
         "download.install.step3.title": "启用本地来源",
         "download.install.step3.copy": "打开设置页，按需启用 Claude Code、Codex CLI 和 Codex Desktop 的本地状态来源。",
         "download.security.eyebrow": "签名与校验",
@@ -249,13 +249,13 @@
           title: "Advantages | Vibelsland Free",
           description: "See how Vibelsland Free keeps Claude Code, Codex CLI, and Codex Desktop sessions, approvals, and tool activity visible.",
           ogTitle: "Vibelsland Free Advantages",
-          ogDescription: "A low-interruption local status layer for intensive AI coding workflows."
+          ogDescription: "A low-interruption local status display for intensive AI coding workflows."
         },
         download: {
           title: "Download for macOS | Vibelsland Free",
           description: "Download Vibelsland Free v0.1.0 and review macOS 14+ requirements, first-launch notes, SHA-256 checksum, source code, and privacy boundaries.",
           ogTitle: "Download Vibelsland Free",
-          ogDescription: "A local-first macOS AI coding status layer with open source, checksum, and privacy boundaries."
+          ogDescription: "A local-first macOS AI coding status display with open source, checksum, and privacy boundaries."
         },
         privacy: {
           title: "Privacy and Local Data | Vibelsland Free",
@@ -271,11 +271,11 @@
         "shared.nav.download": "Download",
         "shared.nav.privacy": "Privacy",
         "shared.cta": "Download for macOS",
-        "shared.footer.tagline": "A local-first AI coding status layer for macOS.",
+        "shared.footer.tagline": "A local-first AI coding status display for macOS.",
 
         "home.hero.eyebrow": "Vibelsland Free · macOS 14+ · Local-first",
         "home.hero.title": "Vibelsland Free",
-        "home.hero.kicker": "A local-first status layer for AI coding.",
+        "home.hero.kicker": "A local-first status display for AI coding.",
         "home.hero.copy": "See Claude Code, Codex CLI, and Codex Desktop session progress, tool activity, token summaries, and approval requests in one low-interruption island. No account. No telemetry.",
         "home.hero.primary": "Download for macOS",
         "home.hero.secondary": "View privacy boundaries",
@@ -298,7 +298,7 @@
         "home.focus.item3.copy": "Allow, deny, continue, and cancel actions are handled in one native macOS surface to reduce missed prompts and mistakes.",
         "home.surface.eyebrow": "Surface",
         "home.surface.title": "Always present. Never loud.",
-        "home.surface.copy": "It rests as a quiet dot when idle, becomes a compact pill while work is running, and expands only for approvals or important state. The rhythm is closer to a system status surface than a new workspace.",
+        "home.surface.copy": "It rests as a quiet dot when idle, becomes a compact pill while work is running, and expands only for approvals or important state. Its rhythm feels closer to system status, keeping daily use low-interruption.",
         "home.surface.link": "Explore advantages",
         "home.workflow.eyebrow": "Workflow",
         "home.workflow.title": "Designed for the daily rhythm of intensive AI coding.",
@@ -319,13 +319,13 @@
         "home.trust.network.value": "Core features work offline",
         "home.cta.eyebrow": "Download",
         "home.cta.title": "Put AI coding status back in view.",
-        "home.cta.copy": "Download for macOS. Source, privacy boundaries, and install notes are public.",
+        "home.cta.copy": "Download the macOS version for free. Source, privacy boundaries, and install notes are public.",
         "home.cta.primary": "Download for macOS",
         "home.cta.secondary": "View source",
 
         "advantages.hero.eyebrow": "Product advantages",
         "advantages.hero.title": "Status visible. Work uninterrupted.",
-        "advantages.hero.copy": "Vibelsland Free compresses progress, tool activity, and approvals into a glanceable status layer. It stays at the top of the screen so you can keep coding without losing context.",
+        "advantages.hero.copy": "Vibelsland Free turns progress, tool activity, and approvals into a glanceable status display. It stays at the top of the screen so you can keep coding without losing context.",
         "advantages.hero.primary": "Download for macOS",
         "advantages.hero.secondary": "View local data boundary",
         "advantages.problems.eyebrow": "Why it matters",
@@ -337,7 +337,7 @@
         "advantages.problems.item3.title": "Which AI tool is active",
         "advantages.problems.item3.copy": "Claude Code, Codex CLI, and Codex Desktop status is presented together for parallel-session work.",
         "advantages.compare.eyebrow": "Positioning",
-        "advantages.compare.title": "It adds state visibility without changing your workflow.",
+        "advantages.compare.title": "Bring state visibility into your existing workflow.",
         "advantages.compare.before.title": "Without the island",
         "advantages.compare.before.item1": "Status is scattered across terminals, desktop clients, and logs.",
         "advantages.compare.before.item2": "Long tasks require repeated window switching.",
@@ -376,12 +376,12 @@
         "download.install.step1.title": "Download the zip",
         "download.install.step1.copy": "Download Vibelsland-Free-0.1.0-macos.zip from GitHub Releases.",
         "download.install.step2.title": "Move to Applications",
-        "download.install.step2.copy": "Unzip it, drag the app into Applications, then launch it like a normal macOS app.",
+        "download.install.step2.copy": "Unzip it, drag the app into Applications, then follow the first-launch note below.",
         "download.install.step3.title": "Enable local sources",
         "download.install.step3.copy": "Open Settings and enable the Claude Code, Codex CLI, and Codex Desktop sources you need.",
         "download.security.eyebrow": "Signing and checksum",
         "download.security.title": "What to know before installing.",
-        "download.security.copy": "v0.1.0 uses ad-hoc signing and is not yet Developer ID signed or Apple notarized. If macOS blocks first launch, right-click and choose Open. The download includes a SHA-256 checksum and the source is available on GitHub.",
+        "download.security.copy": "v0.1.0 uses ad-hoc signing and is not yet Developer ID signed or Apple notarized. If macOS blocks first launch, Control-click the app and choose Open. The download includes a SHA-256 checksum and the source is available on GitHub.",
         "download.security.hash.label": "SHA-256",
         "download.links.eyebrow": "Open source",
         "download.links.title": "Download, source, and privacy stay in one trust chain.",
@@ -445,13 +445,13 @@
           title: "強み | Vibelsland Free",
           description: "Vibelsland Free が Claude Code、Codex CLI、Codex Desktop のセッション状態、承認、ツール実行を見える場所に保つ方法を紹介します。",
           ogTitle: "Vibelsland Free の強み",
-          ogDescription: "AI コーディング向けの低干渉なローカルステータスレイヤー。"
+          ogDescription: "AI コーディング向けの低干渉なローカル状態表示。"
         },
         download: {
           title: "macOS 版ダウンロード | Vibelsland Free",
           description: "Vibelsland Free v0.1.0 をダウンロード。macOS 14+ 要件、初回起動、SHA-256、ソース、プライバシー境界を確認できます。",
           ogTitle: "Vibelsland Free をダウンロード",
-          ogDescription: "ソース、チェックサム、プライバシー境界を公開した macOS 向けローカルファースト AI coding ステータスレイヤー。"
+          ogDescription: "ソース、チェックサム、プライバシー境界を公開した macOS 向けローカルファースト AI coding 状態表示。"
         },
         privacy: {
           title: "プライバシーとローカルデータ | Vibelsland Free",
@@ -467,11 +467,11 @@
         "shared.nav.download": "ダウンロード",
         "shared.nav.privacy": "プライバシー",
         "shared.cta": "macOS 版をダウンロード",
-        "shared.footer.tagline": "macOS 向けローカルファースト AI coding ステータスレイヤー。",
+        "shared.footer.tagline": "macOS 向けローカルファースト AI coding 状態表示。",
 
         "home.hero.eyebrow": "Vibelsland Free · macOS 14+ · ローカルファースト",
         "home.hero.title": "Vibelsland Free",
-        "home.hero.kicker": "AI coding のためのローカルファーストなステータスレイヤー。",
+        "home.hero.kicker": "AI coding のためのローカルファーストな状態表示。",
         "home.hero.copy": "Claude Code、Codex CLI、Codex Desktop のセッション進行、ツール実行、token サマリー、承認リクエストを低干渉なアイランドで確認できます。アカウント不要、テレメトリなし。",
         "home.hero.primary": "macOS 版をダウンロード",
         "home.hero.secondary": "プライバシー境界を見る",
@@ -494,7 +494,7 @@
         "home.focus.item3.copy": "許可、拒否、続行、キャンセルを macOS ネイティブの画面にまとめ、見落としや誤操作を減らします。",
         "home.surface.eyebrow": "表示形態",
         "home.surface.title": "常駐しても、主張しすぎない。",
-        "home.surface.copy": "待機中は静かな点、実行中は小さなピル、承認や重要な状態のときだけ展開します。新しい作業台ではなく、システム状態表示に近いリズムです。",
+        "home.surface.copy": "待機中は静かな点、実行中は小さなピル、承認や重要な状態のときだけ展開します。システム状態表示に近いリズムで、日常の作業を邪魔しません。",
         "home.surface.link": "製品の強みを見る",
         "home.workflow.eyebrow": "ワークフロー",
         "home.workflow.title": "AI コーディングを多用する日常に合わせて設計。",
@@ -521,7 +521,7 @@
 
         "advantages.hero.eyebrow": "製品の強み",
         "advantages.hero.title": "状態は見えるまま、作業は止めない。",
-        "advantages.hero.copy": "Vibelsland Free は進行状況、ツール実行、承認リクエストを見やすいステータスレイヤーにまとめます。画面上部に残るため、文脈を失わずに作業を続けられます。",
+        "advantages.hero.copy": "Vibelsland Free は進行状況、ツール実行、承認リクエストを見やすい状態表示にまとめます。画面上部に残るため、文脈を保ったまま作業を続けられます。",
         "advantages.hero.primary": "macOS 版をダウンロード",
         "advantages.hero.secondary": "ローカルデータ境界を見る",
         "advantages.problems.eyebrow": "価値",
@@ -533,7 +533,7 @@
         "advantages.problems.item3.title": "どの AI ツールが動いているか",
         "advantages.problems.item3.copy": "Claude Code、Codex CLI、Codex Desktop の状態をまとめて表示し、複数セッションの並行作業に合います。",
         "advantages.compare.eyebrow": "位置づけ",
-        "advantages.compare.title": "作業流れは変えず、状態の見え方を補います。",
+        "advantages.compare.title": "既存のワークフローに状態の見え方を加えます。",
         "advantages.compare.before.title": "アイランドがない場合",
         "advantages.compare.before.item1": "状態がターミナル、デスクトップアプリ、ログに散らばります。",
         "advantages.compare.before.item2": "長いタスクは何度もウィンドウを切り替えて確認します。",
@@ -572,7 +572,7 @@
         "download.install.step1.title": "zip をダウンロード",
         "download.install.step1.copy": "GitHub Releases から Vibelsland-Free-0.1.0-macos.zip をダウンロードします。",
         "download.install.step2.title": "Applications へ移動",
-        "download.install.step2.copy": "解凍してアプリを Applications に移動し、通常の macOS アプリとして起動します。",
+        "download.install.step2.copy": "解凍してアプリを Applications に移動し、下の初回起動メモに沿って起動します。",
         "download.install.step3.title": "ローカルソースを有効化",
         "download.install.step3.copy": "設定画面で必要な Claude Code、Codex CLI、Codex Desktop のソースを有効化します。",
         "download.security.eyebrow": "署名とチェックサム",
@@ -611,7 +611,7 @@
         "privacy.data.write.title": "書き込むもの",
         "privacy.data.write.item1": "アプリ設定: ~/Library/Application Support/VibelslandFree/config.json。",
         "privacy.data.write.item2": "アプリログ: ~/Library/Logs/VibelslandFree/app.log。",
-        "privacy.data.write.item3": "ローカルブリッジ実行ファイル: ~/.vibelsland-free。",
+        "privacy.data.write.item3": "ローカルブリッジのランタイムファイル: ~/.vibelsland-free。",
         "privacy.no.eyebrow": "テレメトリなし",
         "privacy.no.title": "行わないこと。",
         "privacy.no.item1.label": "アカウント",
@@ -646,6 +646,14 @@
     const key = node.getAttribute("data-i18n");
     const value = activeCopy.strings[key];
     if (value) node.textContent = value;
+  });
+
+  document.querySelectorAll(".nav-links a").forEach((link) => {
+    if (link.classList.contains("active")) {
+      link.setAttribute("aria-current", "page");
+    } else {
+      link.removeAttribute("aria-current");
+    }
   });
 
   document.querySelectorAll("[data-lang-option]").forEach((link) => {

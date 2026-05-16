@@ -21,6 +21,9 @@ rm -f "$ARCHIVE" "$CHECKSUM" "$LEGACY_ARCHIVE" "$LEGACY_CHECKSUM"
     /usr/bin/ditto -c -k --norsrc --keepParent "$APP_NAME.app" "$ARCHIVE"
 )
 
-/usr/bin/shasum -a 256 "$ARCHIVE" > "$CHECKSUM"
+(
+    cd "$DIST_DIR"
+    /usr/bin/shasum -a 256 "$ARCHIVE_BASENAME.zip" > "$CHECKSUM"
+)
 echo "$ARCHIVE"
 echo "$CHECKSUM"

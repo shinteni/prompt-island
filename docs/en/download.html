@@ -6,12 +6,12 @@
     <meta name="description" content="Download Vibelsland Free v0.1.0 and review macOS 14+ requirements, first-launch notes, SHA-256 checksum, source code, and privacy boundaries.">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Download Vibelsland Free">
-    <meta property="og:description" content="A local-first macOS AI coding status layer with open source, checksum, and privacy boundaries.">
+    <meta property="og:description" content="A local-first macOS AI coding status display with open source, checksum, and privacy boundaries.">
     <meta property="og:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
     <meta property="og:url" content="https://shinteni.github.io/prompt-island/en/download.html">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Download Vibelsland Free">
-    <meta name="twitter:description" content="A local-first macOS AI coding status layer with open source, checksum, and privacy boundaries.">
+    <meta name="twitter:description" content="A local-first macOS AI coding status display with open source, checksum, and privacy boundaries.">
     <meta name="twitter:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
     <meta name="theme-color" content="#070706">
     <link rel="canonical" href="https://shinteni.github.io/prompt-island/en/download.html">
@@ -34,7 +34,7 @@
       <nav class="nav-links" aria-label="Page navigation">
         <a href="index.html" data-i18n="shared.nav.home">Home</a>
         <a href="advantages.html" data-i18n="shared.nav.advantages">Advantages</a>
-        <a class="active" href="download.html" data-i18n="shared.nav.download">Download</a>
+        <a class="active" aria-current="page" href="download.html" data-i18n="shared.nav.download">Download</a>
         <a href="privacy.html" data-i18n="shared.nav.privacy">Privacy</a>
       </nav>
       <div class="header-tools">
@@ -63,28 +63,33 @@
             <a class="button secondary" href="https://github.com/shinteni/prompt-island" data-i18n="download.hero.secondary">View source</a>
           </div>
         </div>
-        <aside class="release-card" aria-label="Release information" data-reveal="">
-          <span data-i18n="download.card.label">Current version</span>
-          <strong data-i18n="download.card.version">v0.1.0</strong>
-          <dl>
-            <div>
-              <dt data-i18n="download.card.system.label">System</dt>
-              <dd data-i18n="download.card.system.value">macOS 14+</dd>
-            </div>
-            <div>
-              <dt data-i18n="download.card.package.label">Package</dt>
-              <dd data-i18n="download.card.package.value">Vibelsland-Free-0.1.0-macos.zip</dd>
-            </div>
-            <div>
-              <dt data-i18n="download.card.size.label">Size</dt>
-              <dd data-i18n="download.card.size.value">About 2.3 MB</dd>
-            </div>
-            <div>
-              <dt data-i18n="download.card.signing.label">Signing</dt>
-              <dd data-i18n="download.card.signing.value">ad-hoc signed</dd>
-            </div>
-          </dl>
-        </aside>
+        <div class="download-side" data-reveal="">
+          <div class="download-media">
+            <img src="../assets/readme/hero-island-light.jpg" alt="Vibelsland Free showing AI coding status at the top of the desktop" width="1672" height="941" decoding="async">
+          </div>
+          <aside class="release-card" aria-label="Release information">
+            <span data-i18n="download.card.label">Current version</span>
+            <strong data-i18n="download.card.version">v0.1.0</strong>
+            <dl>
+              <div>
+                <dt data-i18n="download.card.system.label">System</dt>
+                <dd data-i18n="download.card.system.value">macOS 14+</dd>
+              </div>
+              <div>
+                <dt data-i18n="download.card.package.label">Package</dt>
+                <dd data-i18n="download.card.package.value">Vibelsland-Free-0.1.0-macos.zip</dd>
+              </div>
+              <div>
+                <dt data-i18n="download.card.size.label">Size</dt>
+                <dd data-i18n="download.card.size.value">About 2.3 MB</dd>
+              </div>
+              <div>
+                <dt data-i18n="download.card.signing.label">Signing</dt>
+                <dd data-i18n="download.card.signing.value">ad-hoc signed</dd>
+              </div>
+            </dl>
+          </aside>
+        </div>
       </section>
 
       <section class="section install-section" aria-labelledby="install-title">
@@ -101,7 +106,7 @@
           <li data-reveal="">
             <span>02</span>
             <strong data-i18n="download.install.step2.title">Move to Applications</strong>
-            <p data-i18n="download.install.step2.copy">Unzip it, drag the app into Applications, then launch it like a normal macOS app.</p>
+            <p data-i18n="download.install.step2.copy">Unzip it, drag the app into Applications, then follow the first-launch note below.</p>
           </li>
           <li data-reveal="">
             <span>03</span>
@@ -115,11 +120,11 @@
         <div class="split-copy" data-reveal="">
           <p class="eyebrow" data-i18n="download.security.eyebrow">Signing and checksum</p>
           <h2 id="security-title" data-i18n="download.security.title">What to know before installing.</h2>
-          <p data-i18n="download.security.copy">v0.1.0 uses ad-hoc signing and is not yet Developer ID signed or Apple notarized. If macOS blocks first launch, right-click and choose Open. The download includes a SHA-256 checksum and the source is available on GitHub.</p>
+          <p data-i18n="download.security.copy">v0.1.0 uses ad-hoc signing and is not yet Developer ID signed or Apple notarized. If macOS blocks first launch, Control-click the app and choose Open. The download includes a SHA-256 checksum and the source is available on GitHub.</p>
         </div>
         <div class="checksum-card" data-reveal="">
           <span data-i18n="download.security.hash.label">SHA-256</span>
-          <code>dc80855d32b7201fcd2e9a5634088ff1443b21d3aabb46af8fba30982fb8b6ca</code>
+          <code>64c7c0a4eae81042bbc3896e24a07ab5d5573aeaafa846eada2e982f887ecf81</code>
         </div>
       </section>
 
@@ -151,7 +156,7 @@
     <footer class="site-footer">
       <div>
         <strong>Vibelsland Free</strong>
-        <p data-i18n="shared.footer.tagline">A local-first AI coding status layer for macOS.</p>
+        <p data-i18n="shared.footer.tagline">A local-first AI coding status display for macOS.</p>
       </div>
       <nav aria-label="Footer navigation">
         <a href="index.html" data-i18n="shared.nav.home">Home</a>

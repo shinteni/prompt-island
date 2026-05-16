@@ -78,14 +78,16 @@ fi
 [[ -f "$ARCHIVE" ]]
 [[ -f "$CHECKSUM" ]]
 (
-    cd "$ROOT"
-    /usr/bin/shasum -a 256 -c "$CHECKSUM" >/dev/null
+    cd "$ROOT/dist"
+    /usr/bin/shasum -a 256 -c "$(basename "$CHECKSUM")" >/dev/null
 )
+
+zsh "$ROOT/scripts/verify-docs-site.sh"
 
 SIGNATURE_INFO="$(/usr/bin/codesign -dv --verbose=4 "$APP_DIR" 2>&1)"
 SIGNING_BLOCKER=""
 if [[ "$MODE" == "public" && "$SIGNATURE_INFO" == *"Signature=adhoc"* ]]; then
-    SIGNING_BLOCKER="- [ ] 正式签名：当前仍是 ad-hoc，本机自用可以，公开售卖必须完成 Developer ID 签名和 notarization。"
+    SIGNING_BLOCKER="- [ ] 正式签名：当前仍是 ad-hoc，本机自用可以，正式公开分发必须完成 Developer ID 签名和 notarization。"
 elif [[ "$MODE" == "local" && "$SIGNATURE_INFO" != *"Signature=adhoc"* ]]; then
     SIGNING_BLOCKER="- [ ] 本机构建签名：当前不再是 ad-hoc，请确认打包脚本是否被改成正式分发模式。"
 fi

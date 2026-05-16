@@ -5,7 +5,7 @@
   --ink: #f5efe4;
   --ink-soft: #d9ccb2;
   --muted: #a79b86;
-  --quiet: #7e7566;
+  --quiet: #b2a58f;
   --line: rgba(220, 184, 112, 0.18);
   --line-strong: rgba(220, 184, 112, 0.34);
   --blue: #d8b46b;
@@ -61,10 +61,10 @@ body::before {
   inset: 0;
   pointer-events: none;
   background:
-    linear-gradient(118deg, transparent 0 17%, rgba(226, 191, 112, 0.18) 17.08%, transparent 17.18% 44%, rgba(226, 191, 112, 0.11) 44.08%, transparent 44.18% 100%),
-    linear-gradient(62deg, transparent 0 31%, rgba(255, 239, 191, 0.08) 31.08%, transparent 31.2% 74%, rgba(226, 191, 112, 0.12) 74.08%, transparent 74.2% 100%),
-    repeating-linear-gradient(90deg, rgba(226, 191, 112, 0.055) 0 1px, transparent 1px 150px);
-  opacity: 0.72;
+    linear-gradient(118deg, transparent 0 17%, rgba(226, 191, 112, 0.11) 17.08%, transparent 17.18% 44%, rgba(226, 191, 112, 0.07) 44.08%, transparent 44.18% 100%),
+    linear-gradient(62deg, transparent 0 31%, rgba(255, 239, 191, 0.05) 31.08%, transparent 31.2% 74%, rgba(226, 191, 112, 0.07) 74.08%, transparent 74.2% 100%),
+    repeating-linear-gradient(90deg, rgba(226, 191, 112, 0.034) 0 1px, transparent 1px 150px);
+  opacity: 0.46;
   mask-image: linear-gradient(180deg, #000 0%, rgba(0, 0, 0, 0.92) 54%, transparent 100%);
 }
 
@@ -427,11 +427,13 @@ button:focus-visible {
 
 .product-stage img,
 .device-card img,
-.subpage-media img {
+.subpage-media img,
+.download-media img {
   width: 100%;
   height: auto;
   border-radius: 18px;
   box-shadow: 0 22px 70px rgba(0, 0, 0, 0.2);
+  filter: grayscale(0.18) sepia(0.22) saturate(0.62) brightness(0.82) contrast(1.06);
 }
 
 .product-stage img {
@@ -837,15 +839,33 @@ button:focus-visible {
 
 .subpage-media,
 .privacy-summary,
-.release-card {
+.release-card,
+.download-side {
   align-self: center;
 }
 
-.subpage-media {
+.subpage-media,
+.download-media {
   padding: 18px;
   border-radius: var(--radius-xl);
   background: rgba(10, 9, 7, 0.9);
   box-shadow: var(--shadow-soft);
+}
+
+.download-side {
+  display: grid;
+  gap: 16px;
+}
+
+.download-media {
+  position: relative;
+  overflow: hidden;
+}
+
+.download-media img {
+  aspect-ratio: 1672 / 941;
+  object-fit: cover;
+  object-position: center 30%;
 }
 
 .problem-grid,
@@ -1073,33 +1093,31 @@ button:focus-visible {
   justify-content: center;
 }
 
-.reveal-ready :is(.hero, .subpage-hero, .download-hero) [data-reveal],
-.reveal-ready .spec-strip[data-reveal],
-.reveal-ready .section-heading[data-reveal] {
+.reveal-ready [data-reveal] {
   opacity: 0;
-  transform: translate3d(0, 8px, 0);
+  transform: translate3d(0, 12px, 0);
   transition:
-    opacity 380ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 380ms cubic-bezier(0.22, 1, 0.36, 1);
+    opacity 420ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
   transition-delay: var(--reveal-delay, 0ms);
 }
 
-.reveal-ready :is(.hero, .subpage-hero, .download-hero) [data-reveal].is-visible,
-.reveal-ready .spec-strip[data-reveal].is-visible,
-.reveal-ready .section-heading[data-reveal].is-visible {
+.reveal-ready [data-reveal].is-visible {
   opacity: 1;
   transform: translate3d(0, 0, 0);
 }
 
 .reveal-ready :is(.hero, .subpage-hero, .download-hero) .product-stage[data-reveal],
 .reveal-ready :is(.hero, .subpage-hero, .download-hero) .subpage-media[data-reveal],
-.reveal-ready :is(.hero, .subpage-hero, .download-hero) .device-card[data-reveal] {
+.reveal-ready :is(.hero, .subpage-hero, .download-hero) .device-card[data-reveal],
+.reveal-ready :is(.hero, .subpage-hero, .download-hero) .download-side[data-reveal] {
   transform: translate3d(0, 16px, 0) scale(0.992);
 }
 
 .reveal-ready :is(.hero, .subpage-hero, .download-hero) .product-stage[data-reveal].is-visible,
 .reveal-ready :is(.hero, .subpage-hero, .download-hero) .subpage-media[data-reveal].is-visible,
-.reveal-ready :is(.hero, .subpage-hero, .download-hero) .device-card[data-reveal].is-visible {
+.reveal-ready :is(.hero, .subpage-hero, .download-hero) .device-card[data-reveal].is-visible,
+.reveal-ready :is(.hero, .subpage-hero, .download-hero) .download-side[data-reveal].is-visible {
   transform: translate3d(0, 0, 0) scale(1);
 }
 
@@ -1140,32 +1158,54 @@ button:focus-visible {
 
 @media (max-width: 860px) {
   :root {
-    --header-height: 52px;
+    --header-height: 56px;
   }
 
   .site-header {
+    position: fixed;
     grid-template-columns: minmax(0, 1fr) auto;
     gap: 12px;
     padding: 0 14px;
+    min-height: var(--header-height);
   }
 
   .nav-links {
-    order: 3;
-    grid-column: 1 / -1;
-    width: calc(100vw - 28px);
+    position: fixed;
+    z-index: 45;
+    top: calc(100svh - 62px - env(safe-area-inset-bottom));
+    left: 50%;
+    bottom: auto;
+    width: min(390px, calc(100vw - 24px));
+    min-height: 48px;
     justify-content: space-between;
-    gap: 8px;
-    padding: 9px 0 11px;
+    gap: 4px;
+    padding: 4px;
+    border: 1px solid rgba(226, 191, 112, 0.2);
+    border-radius: 999px;
+    background: rgba(8, 8, 7, 0.82);
+    box-shadow: 0 18px 54px rgba(0, 0, 0, 0.38);
+    transform: translateX(-50%);
+    backdrop-filter: saturate(180%) blur(18px);
     overflow-x: auto;
     scrollbar-width: none;
   }
 
-  .nav-links::-webkit-scrollbar {
-    display: none;
+  .nav-links a {
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 40px;
+    padding: 0 4px;
+    border-radius: 999px;
+    font-size: 12px;
   }
 
-  .site-header {
-    min-height: auto;
+  .nav-links a.active {
+    color: #080705;
+    background: var(--blue);
+  }
+
+  .nav-links::-webkit-scrollbar {
+    display: none;
   }
 
   .header-tools {
@@ -1184,7 +1224,7 @@ button:focus-visible {
   .hero,
   .subpage-hero,
   .download-hero {
-    padding-top: 154px;
+    padding-top: 118px;
     min-height: auto;
   }
 
@@ -1194,12 +1234,12 @@ button:focus-visible {
 
   .hero h1 {
     margin-inline: auto;
-    font-size: 56px;
+    font-size: 44px;
     line-height: 1.02;
   }
 
   .hero-kicker {
-    font-size: 28px;
+    font-size: 22px;
     line-height: 1.16;
   }
 
@@ -1271,6 +1311,7 @@ button:focus-visible {
 
   .site-footer {
     grid-template-columns: 1fr;
+    padding-bottom: calc(86px + env(safe-area-inset-bottom));
   }
 
   .site-footer nav {
@@ -1306,7 +1347,7 @@ button:focus-visible {
   .trust-copy p,
   .section-heading > p:not(.eyebrow),
   .cta-section p {
-    font-size: 18px;
+    font-size: 16px;
   }
 
   .button {
