@@ -21,27 +21,28 @@ errors = []
 
 required = [
     docs / ".nojekyll",
+    docs / ".well-known" / "security.txt",
     docs / "404.html",
-    docs / "index.html",
-    docs / "download.html",
-    docs / "advantages.html",
-    docs / "privacy.html",
-    docs / "faq.html",
-    docs / "en" / "faq.html",
-    docs / "ja" / "faq.html",
-    docs / "support.html",
-    docs / "en" / "support.html",
-    docs / "ja" / "support.html",
-    docs / "install.html",
-    docs / "en" / "install.html",
-    docs / "ja" / "install.html",
-    docs / "release-notes.html",
-    docs / "en" / "release-notes.html",
-    docs / "ja" / "release-notes.html",
     docs / "site.webmanifest",
     docs / "sitemap.xml",
     docs / "robots.txt",
 ]
+localized_files = [
+    "index.html",
+    "advantages.html",
+    "download.html",
+    "install.html",
+    "privacy.html",
+    "faq.html",
+    "support.html",
+    "release-notes.html",
+]
+for filename in localized_files:
+    required.extend([
+        docs / filename,
+        docs / "en" / filename,
+        docs / "ja" / filename,
+    ])
 for path in required:
     if not path.exists():
         errors.append(f"Missing required docs file: {path.relative_to(root)}")
@@ -208,6 +209,18 @@ if robots_path.exists():
     expected_sitemap = f"Sitemap: {site_url}sitemap.xml"
     if expected_sitemap not in robots:
         errors.append(f"robots.txt missing expected sitemap line: {expected_sitemap}")
+
+security_path = docs / ".well-known" / "security.txt"
+if security_path.exists():
+    security = security_path.read_text(encoding="utf-8")
+    expected_security_lines = [
+        "Contact: https://github.com/shinteni/prompt-island/issues",
+        f"Canonical: {site_url}.well-known/security.txt",
+        f"Policy: {site_url}support.html",
+    ]
+    for line in expected_security_lines:
+        if line not in security:
+            errors.append(f"security.txt missing expected line: {line}")
 
 checksum_path = root / "dist" / "Vibelsland-Free-0.1.0-macos.zip.sha256"
 if checksum_path.exists():
