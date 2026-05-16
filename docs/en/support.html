@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Support and Troubleshooting | Vibelsland Free</title>
+    <meta
+      name="description"
+      content="Support and troubleshooting for Vibelsland Free: first-launch confirmation, SHA-256 verification, local data locations, uninstalling, issue reports, and missing tool status."
+    >
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Vibelsland Free Support and Troubleshooting">
+    <meta property="og:description" content="Troubleshoot install, checksum, local data, uninstall, and missing status display issues.">
+    <meta property="og:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
+    <meta property="og:url" content="https://shinteni.github.io/prompt-island/en/support.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Vibelsland Free Support and Troubleshooting">
+    <meta name="twitter:description" content="Troubleshoot install, checksum, local data, uninstall, and missing status display issues.">
+    <meta name="twitter:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
+    <meta name="theme-color" content="#070706">
+    <link rel="canonical" href="https://shinteni.github.io/prompt-island/en/support.html">
+    <link rel="alternate" hreflang="zh-CN" href="https://shinteni.github.io/prompt-island/support.html">
+    <link rel="alternate" hreflang="en" href="https://shinteni.github.io/prompt-island/en/support.html">
+    <link rel="alternate" hreflang="ja" href="https://shinteni.github.io/prompt-island/ja/support.html">
+    <link rel="alternate" hreflang="x-default" href="https://shinteni.github.io/prompt-island/support.html">
+    <link rel="icon" href="../assets/readme/app-icon.png">
+    <link rel="apple-touch-icon" href="../assets/readme/app-icon.png">
+    <link rel="manifest" href="../site.webmanifest">
+    <link rel="stylesheet" href="../styles.css">
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "TechArticle",
+        "headline": "Vibelsland Free Support and Troubleshooting",
+        "description": "Troubleshooting notes for Vibelsland Free installation, SHA-256 verification, local data, uninstalling, issue reports, and missing tool status.",
+        "inLanguage": "en",
+        "about": {
+          "@type": "SoftwareApplication",
+          "name": "Vibelsland Free",
+          "operatingSystem": "macOS 14+"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main" data-i18n="shared.skip">Skip to content</a>
+    <header class="site-header" aria-label="Main navigation">
+      <a class="brand" href="index.html" aria-label="Vibelsland Free home">
+        <img src="../assets/readme/app-icon.png" alt="" width="28" height="28">
+        <span>Vibelsland Free</span>
+      </a>
+      <nav class="nav-links" aria-label="Page navigation">
+        <a href="index.html" data-i18n="shared.nav.home">Home</a>
+        <a href="advantages.html" data-i18n="shared.nav.advantages">Advantages</a>
+        <a href="download.html" data-i18n="shared.nav.download">Download</a>
+        <a href="privacy.html" data-i18n="shared.nav.privacy">Privacy</a>
+        <a href="faq.html" data-i18n="shared.nav.faq">FAQ</a>
+      </nav>
+      <div class="header-tools">
+        <nav class="lang-switch" aria-label="Language switch">
+          <a data-lang-option="zh" href="../support.html" aria-current="false">中文</a>
+          <a data-lang-option="en" href="support.html" class="active" aria-current="true">EN</a>
+          <a data-lang-option="ja" href="../ja/support.html" aria-current="false">日本語</a>
+        </nav>
+        <a class="nav-cta" href="download.html" data-i18n="shared.cta">Download for macOS</a>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="subpage-hero" aria-labelledby="support-title">
+        <div class="subpage-copy" data-reveal>
+          <p class="eyebrow">Support</p>
+          <h1 id="support-title">Support.</h1>
+          <p>
+            Resolve first-launch confirmation, SHA-256 verification, local data, uninstall, and missing tool status issues.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="download.html">Read download notes</a>
+            <a class="button secondary" href="https://github.com/shinteni/prompt-island/issues">Report an issue</a>
+          </div>
+        </div>
+        <div class="privacy-summary" aria-label="Support summary" data-reveal>
+          <div>
+            <span>Install</span>
+            <strong>Gatekeeper and checksum</strong>
+          </div>
+          <div>
+            <span>Status</span>
+            <strong>Hooks and local sources</strong>
+          </div>
+          <div>
+            <span>Data</span>
+            <strong>Local-only troubleshooting</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="section install-section" aria-labelledby="first-checks-title">
+        <div class="section-heading align-left" data-reveal>
+          <p class="eyebrow">First checks</p>
+          <h2 id="first-checks-title">Confirm these three things first.</h2>
+        </div>
+        <ol class="large-steps">
+          <li data-reveal>
+            <span>01</span>
+            <strong>macOS requires first-launch confirmation</strong>
+            <p>v0.1.0 uses ad-hoc signing, so macOS may require an extra confirmation on first launch. Confirm the download came from GitHub Releases, move the app into Applications, then Control-click the app and choose Open.</p>
+          </li>
+          <li data-reveal>
+            <span>02</span>
+            <strong>Verify SHA-256</strong>
+            <p>In the download directory, run <code>shasum -a 256 -c Vibelsland-Free-0.1.0-macos.zip.sha256</code>, or manually compare the zip hash with <code>64c7c0a4eae81042bbc3896e24a07ab5d5573aeaafa846eada2e982f887ecf81</code>.</p>
+          </li>
+          <li data-reveal>
+            <span>03</span>
+            <strong>Tool status does not appear</strong>
+            <p>Open Settings, make sure the matching source is enabled, run Install or Repair Hooks for Claude Code and Codex CLI, then start a new session. Existing sessions may not replay older hook events.</p>
+          </li>
+        </ol>
+      </section>
+
+      <section class="section data-section" aria-labelledby="status-title">
+        <div class="section-heading align-left" data-reveal>
+          <p class="eyebrow">Status display</p>
+          <h2 id="status-title">When Claude or Codex status is missing.</h2>
+        </div>
+        <div class="data-grid">
+          <article data-reveal>
+            <h3>Claude Code / Codex CLI</h3>
+            <ul>
+              <li>Enable the source in Settings, then use Install Hooks or Repair Hooks from the menu bar or Settings.</li>
+              <li>Confirm the local bridge exists: <code>~/.vibelsland-free/bin/vibelsland-bridge</code>.</li>
+              <li>Start a fresh Claude Code or Codex CLI session, then check the island and panel again.</li>
+            </ul>
+          </article>
+          <article data-reveal>
+            <h3>Codex Desktop</h3>
+            <ul>
+              <li>Confirm Codex Desktop is installed and can run normally.</li>
+              <li>Enable the Codex Desktop source in Vibelsland Free Settings.</li>
+              <li>If the health check says the connection is unavailable, open Codex Desktop, start a task, then return to the Vibelsland Free panel.</li>
+            </ul>
+          </article>
+          <article data-reveal>
+            <h3>Approvals or tool calls do not update</h3>
+            <ul>
+              <li>Keep Vibelsland Free running after hooks are installed.</li>
+              <li>Use Open Logs from the menu bar and look for recent hook, bridge, or socket errors.</li>
+              <li>If Claude or Codex config was edited manually, use Repair Hooks to merge the bridge entries again.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="section split-section surface-section" aria-labelledby="data-title">
+        <div class="split-copy" data-reveal>
+          <p class="eyebrow">Local data</p>
+          <h2 id="data-title">Locations used during troubleshooting.</h2>
+          <p>
+            Vibelsland Free is a local tool. Troubleshooting usually means checking config, logs, the bridge runtime directory, and Claude or Codex hook files. Before sharing logs, remove sensitive paths, prompts, tokens, and session content.
+          </p>
+        </div>
+        <div class="checksum-card" data-reveal>
+          <span>Common paths</span>
+          <code>~/Library/Application Support/VibelslandFree/config.json</code>
+          <code>~/Library/Logs/VibelslandFree/app.log</code>
+          <code>~/.vibelsland-free</code>
+          <code>~/.claude/settings.json</code>
+          <code>~/.codex/hooks.json</code>
+          <code>~/.codex/config.toml</code>
+        </div>
+      </section>
+
+      <section class="section install-section" aria-labelledby="uninstall-title">
+        <div class="section-heading align-left" data-reveal>
+          <p class="eyebrow">Uninstall</p>
+          <h2 id="uninstall-title">Remove hooks before removing the app.</h2>
+        </div>
+        <ol class="large-steps">
+          <li data-reveal>
+            <span>01</span>
+            <strong>Uninstall hooks</strong>
+            <p>Use Uninstall Hooks from the app Settings or menu bar. This removes Vibelsland bridge entries from Claude and Codex hook configuration.</p>
+          </li>
+          <li data-reveal>
+            <span>02</span>
+            <strong>Quit and delete the app</strong>
+            <p>Quit Vibelsland Free from the menu bar, then delete <code>/Applications/&gt;_ - island.app</code>, or the app copy you moved into Applications.</p>
+          </li>
+          <li data-reveal>
+            <span>03</span>
+            <strong>Optionally remove local data</strong>
+            <p>If you no longer need configuration or logs, delete <code>~/Library/Application Support/VibelslandFree</code>, <code>~/Library/Logs/VibelslandFree</code>, and <code>~/.vibelsland-free</code>.</p>
+          </li>
+        </ol>
+      </section>
+
+      <section class="section note-section" aria-labelledby="report-title">
+        <div class="section-heading" data-reveal>
+          <p class="eyebrow">Report an issue</p>
+          <h2 id="report-title">Include reproducible details.</h2>
+        </div>
+        <div class="link-grid compact">
+          <a class="link-panel" href="https://github.com/shinteni/prompt-island/issues" data-reveal>
+            <span>Issues</span>
+            <strong>Report on GitHub</strong>
+            <p>Include the Vibelsland Free version, macOS version, affected source, reproduction steps, and a redacted log excerpt.</p>
+          </a>
+          <a class="link-panel" href="https://github.com/shinteni/prompt-island/releases/tag/v0.1.0" data-reveal>
+            <span>Release</span>
+            <strong>Check release assets</strong>
+            <p>Download the zip and SHA-256 file again to confirm the package, checksum, and release notes are from the same version.</p>
+          </a>
+          <a class="link-panel" href="privacy.html" data-reveal>
+            <span>Privacy</span>
+            <strong>Review privacy boundaries</strong>
+            <p>Understand what the app reads, writes, and never uploads before deciding what troubleshooting details to share.</p>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div>
+        <strong>Vibelsland Free</strong>
+        <p data-i18n="shared.footer.tagline">A local-first AI coding status display for macOS.</p>
+      </div>
+      <nav aria-label="Footer navigation">
+        <a href="index.html" data-i18n="shared.nav.home">Home</a>
+        <a href="advantages.html" data-i18n="shared.nav.advantages">Advantages</a>
+        <a href="download.html" data-i18n="shared.nav.download">Download</a>
+        <a href="privacy.html" data-i18n="shared.nav.privacy">Privacy</a>
+        <a href="faq.html" data-i18n="shared.nav.faq">FAQ</a>
+        <a href="support.html" data-i18n="shared.nav.support">Support</a>
+        <a href="https://github.com/shinteni/prompt-island">GitHub</a>
+      </nav>
+    </footer>
+    <script src="../lang.js" defer></script>
+    <script src="../effects.js" defer></script>
+  </body>
+</html>

@@ -26,6 +26,12 @@ required = [
     docs / "download.html",
     docs / "advantages.html",
     docs / "privacy.html",
+    docs / "faq.html",
+    docs / "en" / "faq.html",
+    docs / "ja" / "faq.html",
+    docs / "support.html",
+    docs / "en" / "support.html",
+    docs / "ja" / "support.html",
     docs / "site.webmanifest",
     docs / "sitemap.xml",
     docs / "robots.txt",
@@ -46,6 +52,12 @@ blocked_copy = [
     "without changing your workflow",
     "作業流れは変えず",
     "它补的是",
+    "尚未完成 Developer ID",
+    "not yet Developer ID",
+    "にはまだ対応",
+    "安装被 macOS 拦截",
+    "macOS blocks installation",
+    "起動をブロック",
 ]
 
 
@@ -55,9 +67,15 @@ class RefParser(HTMLParser):
         self.refs = []
         self.absolute_site_urls = []
         self.active_nav_without_current = []
+        self.script_type = ""
+        self.script_text = []
+        self.json_ld = []
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
+        if tag == "script":
+            self.script_type = attrs.get("type", "")
+            self.script_text = []
         if tag in {"a", "link"} and attrs.get("href"):
             self.refs.append(("href", attrs["href"]))
         if tag in {"img", "script", "source"} and attrs.get("src"):
@@ -77,6 +95,17 @@ class RefParser(HTMLParser):
             if attrs.get("aria-current") != "page":
                 self.active_nav_without_current.append(attrs.get("href", "<missing href>"))
 
+    def handle_data(self, data):
+        if self.script_type == "application/ld+json":
+            self.script_text.append(data)
+
+    def handle_endtag(self, tag):
+        if tag == "script":
+            if self.script_type == "application/ld+json":
+                self.json_ld.append("".join(self.script_text).strip())
+            self.script_type = ""
+            self.script_text = []
+
 
 def is_external(value):
     parsed = urlparse(value)
@@ -95,6 +124,14 @@ for path in html_files:
     parser.feed(text)
     for current in parser.active_nav_without_current:
         errors.append(f"Active navigation missing aria-current in {rel}: {current}")
+
+    for block in parser.json_ld:
+        if not block:
+            continue
+        try:
+            json.loads(block)
+        except json.JSONDecodeError as exc:
+            errors.append(f"Invalid JSON-LD in {rel}: {exc}")
 
     for kind, value in parser.refs:
         if not value or is_external(value):

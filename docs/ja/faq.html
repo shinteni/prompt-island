@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>FAQ | Vibelsland Free</title>
+    <meta
+      name="description"
+      content="Vibelsland Free の無料配布、macOS 初回起動、SHA-256、ローカルデータ、対応ツール、アンインストール境界を確認できます。"
+    >
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Vibelsland Free FAQ">
+    <meta property="og:description" content="価格、インストール、プライバシー、チェックサム、対応ツールのよくある質問。">
+    <meta property="og:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
+    <meta property="og:url" content="https://shinteni.github.io/prompt-island/ja/faq.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Vibelsland Free FAQ">
+    <meta name="twitter:description" content="価格、インストール、プライバシー、チェックサム、対応ツールのよくある質問。">
+    <meta name="twitter:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
+    <meta name="theme-color" content="#070706">
+    <link rel="canonical" href="https://shinteni.github.io/prompt-island/ja/faq.html">
+    <link rel="alternate" hreflang="zh-CN" href="https://shinteni.github.io/prompt-island/faq.html">
+    <link rel="alternate" hreflang="en" href="https://shinteni.github.io/prompt-island/en/faq.html">
+    <link rel="alternate" hreflang="ja" href="https://shinteni.github.io/prompt-island/ja/faq.html">
+    <link rel="alternate" hreflang="x-default" href="https://shinteni.github.io/prompt-island/faq.html">
+    <link rel="icon" href="../assets/readme/app-icon.png">
+    <link rel="apple-touch-icon" href="../assets/readme/app-icon.png">
+    <link rel="manifest" href="../site.webmanifest">
+    <link rel="stylesheet" href="../styles.css">
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "inLanguage": "ja",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Vibelsland Free は無料ですか？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "v0.1.0 は無料でダウンロードでき、ソースも公開されています。パッケージは GitHub Releases で配布しています。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "初回起動時に追加確認が必要なのはなぜですか？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "v0.1.0 は ad-hoc 署名を採用しているため、初回起動時に macOS が追加確認を求める場合があります。Control キーを押しながらアプリをクリックし、Open を選んでください。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "ダウンロードをどう検証しますか？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "zip と同名の .sha256 ファイルを同じフォルダに置き、shasum -a 256 -c Vibelsland-Free-0.1.0-macos.zip.sha256 を実行します。サイトの SHA-256 は GitHub リリースファイルと一致します。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "どの AI コーディングツールに対応していますか？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "v0.1.0 は Claude Code、Codex CLI、Codex Desktop のローカル状態表示、ツール実行サマリー、承認処理に対応しています。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "主要機能にインターネット接続は必要ですか？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "必要ありません。Vibelsland Free の状態表示、ソース制御、ローカル承認ブリッジは Mac 内で動作します。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Hooks を停止または削除できますか？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "設定画面でソースごとに hooks を有効化、修復、アンインストールできます。アプリは選択したときだけ hook 設定を変更します。"
+            }
+          }
+        ]
+      }
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main" data-i18n="shared.skip">本文へ移動</a>
+    <header class="site-header" aria-label="メインナビゲーション">
+      <a class="brand" href="index.html" aria-label="Vibelsland Free ホーム">
+        <img src="../assets/readme/app-icon.png" alt="" width="28" height="28">
+        <span>Vibelsland Free</span>
+      </a>
+      <nav class="nav-links" aria-label="ページナビゲーション">
+        <a href="index.html" data-i18n="shared.nav.home">ホーム</a>
+        <a href="advantages.html" data-i18n="shared.nav.advantages">強み</a>
+        <a href="download.html" data-i18n="shared.nav.download">ダウンロード</a>
+        <a href="privacy.html" data-i18n="shared.nav.privacy">プライバシー</a>
+      <a class="active" aria-current="page" href="faq.html" data-i18n="shared.nav.faq">FAQ</a>
+      </nav>
+      <div class="header-tools">
+        <nav class="lang-switch" aria-label="言語切替">
+          <a data-lang-option="zh" href="../faq.html" aria-current="false">中文</a>
+          <a data-lang-option="en" href="../en/faq.html" aria-current="false">EN</a>
+          <a data-lang-option="ja" href="faq.html" class="active" aria-current="true">日本語</a>
+        </nav>
+        <a class="nav-cta" href="download.html" data-i18n="shared.cta">macOS 版をダウンロード</a>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="subpage-hero faq-hero" aria-labelledby="faq-title">
+        <div class="subpage-copy" data-reveal="">
+          <p class="eyebrow">FAQ</p>
+          <h1 id="faq-title">よくある質問。</h1>
+          <p>
+            インストール、チェックサム、プライバシー、対応範囲をダウンロード前に確認できます。Vibelsland Free はローカル状態表示に特化し、クラウド同期や完全な IDE 機能は含みません。
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="download.html">v0.1.0 をダウンロード</a>
+            <a class="button secondary" href="privacy.html">プライバシー境界を見る</a>
+          </div>
+        </div>
+        <div class="privacy-summary" aria-label="FAQ summary" data-reveal="">
+          <div>
+            <span>価格</span>
+            <strong>無料ダウンロード</strong>
+          </div>
+          <div>
+            <span>データ</span>
+            <strong>テレメトリなし</strong>
+          </div>
+          <div>
+            <span>システム</span>
+            <strong>macOS 14+</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="section faq-section" aria-labelledby="install-faq-title">
+        <div class="section-heading align-left" data-reveal="">
+          <p class="eyebrow">インストールと信頼</p>
+          <h2 id="install-faq-title">ダウンロード前に確認すること。</h2>
+        </div>
+        <div class="faq-list">
+          <article data-reveal="">
+            <h3>Vibelsland Free は無料ですか？</h3>
+            <p>v0.1.0 は無料でダウンロードでき、ソースも公開されています。パッケージは GitHub Releases で配布し、サイト、GitHub リリースファイル、SHA-256 チェックサムを同期しています。</p>
+          </article>
+          <article data-reveal="">
+            <h3>初回起動時に追加確認が必要なのはなぜですか？</h3>
+            <p>v0.1.0 は ad-hoc 署名を採用しているため、初回起動時に macOS が追加確認を求める場合があります。Control キーを押しながらアプリをクリックし、Open を選んでください。</p>
+          </article>
+          <article data-reveal="">
+            <h3>ダウンロードをどう検証しますか？</h3>
+            <p>zip と同名の <code>.sha256</code> ファイルを同じフォルダに置き、<code>shasum -a 256 -c Vibelsland-Free-0.1.0-macos.zip.sha256</code> を実行します。サイトの SHA-256 は GitHub リリースファイルと一致します。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section faq-section surface-section" aria-labelledby="usage-faq-title">
+        <div class="section-heading align-left" data-reveal="">
+          <p class="eyebrow">対応範囲</p>
+          <h2 id="usage-faq-title">読み取るもの、対応するもの。</h2>
+        </div>
+        <div class="faq-list">
+          <article data-reveal="">
+            <h3>どの AI コーディングツールに対応していますか？</h3>
+            <p>v0.1.0 は Claude Code、Codex CLI、Codex Desktop のローカル状態表示、ツール実行サマリー、承認処理に対応しています。</p>
+          </article>
+          <article data-reveal="">
+            <h3>主要機能にインターネット接続は必要ですか？</h3>
+            <p>必要ありません。Vibelsland Free の状態表示、ソース制御、ローカル承認ブリッジは Mac 内で動作します。Claude Code、Codex CLI、Codex Desktop はそれぞれ独自のネットワーク接続を使う場合があります。</p>
+          </article>
+          <article data-reveal="">
+            <h3>Hooks を停止または削除できますか？</h3>
+            <p>設定画面でソースごとに hooks を有効化、修復、アンインストールできます。アプリは選択したときだけ hook 設定を変更します。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section cta-section" aria-labelledby="faq-cta-title">
+        <div data-reveal="">
+          <p class="eyebrow">次のステップ</p>
+          <h2 id="faq-cta-title">境界を確認してからダウンロード。</h2>
+          <p>初回起動の説明を確認したら、macOS 版をダウンロードできます。データ境界を知りたい場合は、先にプライバシーページを確認してください。</p>
+          <div class="hero-actions">
+            <a class="button primary" href="download.html">macOS 版をダウンロード</a>
+            <a class="button secondary" href="privacy.html">プライバシー境界を見る</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div>
+        <strong>Vibelsland Free</strong>
+        <p data-i18n="shared.footer.tagline">macOS 向けローカルファースト AI coding 状態表示。</p>
+      </div>
+      <nav aria-label="フッターナビゲーション">
+        <a href="advantages.html" data-i18n="shared.nav.advantages">強み</a>
+        <a href="download.html" data-i18n="shared.nav.download">ダウンロード</a>
+        <a href="privacy.html" data-i18n="shared.nav.privacy">プライバシー</a>
+        <a href="faq.html" data-i18n="shared.nav.faq">FAQ</a>
+        <a href="support.html" data-i18n="shared.nav.support">サポート</a>
+        <a href="https://github.com/shinteni/prompt-island">GitHub</a>
+      </nav>
+    </footer>
+    <script src="../lang.js" defer></script>
+    <script src="../effects.js" defer></script>
+  </body>
+</html>

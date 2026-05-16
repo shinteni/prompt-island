@@ -1022,6 +1022,50 @@ button:focus-visible {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+.faq-section {
+  align-content: start;
+}
+
+.faq-list {
+  width: min(var(--content), 100%);
+  margin: 0 auto;
+  border-top: 1px solid rgba(226, 191, 112, 0.22);
+}
+
+.faq-list article {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.44fr) minmax(0, 1fr);
+  gap: clamp(20px, 5vw, 84px);
+  padding: clamp(26px, 4vw, 44px) 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.faq-list h3 {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(22px, 2.6vw, 36px);
+  font-weight: 720;
+  line-height: 1.08;
+}
+
+.faq-list p {
+  max-width: 720px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 17px;
+  line-height: 1.78;
+}
+
+.faq-list code {
+  padding: 0.12em 0.38em;
+  border: 1px solid rgba(226, 191, 112, 0.2);
+  border-radius: 8px;
+  background: rgba(226, 191, 112, 0.08);
+  color: var(--ink);
+  font-size: 0.88em;
+  overflow-wrap: anywhere;
+}
+
 .privacy-summary {
   display: grid;
   gap: 0;
@@ -1275,6 +1319,43 @@ button:focus-visible {
     object-position: center 28%;
   }
 
+  .faq-list article {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 26px 0;
+  }
+
+  .faq-list h3 {
+    font-size: 24px;
+  }
+
+  .faq-list p {
+    font-size: 15px;
+    line-height: 1.72;
+  }
+
+  .privacy-summary {
+    width: min(560px, 100%);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    padding: 8px;
+  }
+
+  .privacy-summary div {
+    min-height: 92px;
+    padding: 14px 10px;
+    border-right: 1px solid var(--line);
+    border-bottom: 0;
+  }
+
+  .privacy-summary div:last-child {
+    border-right: 0;
+  }
+
+  .privacy-summary strong {
+    font-size: clamp(19px, 6.6vw, 25px);
+    line-height: 1.08;
+  }
+
   .release-card {
     margin-bottom: calc(72px + env(safe-area-inset-bottom));
   }
@@ -1369,6 +1450,19 @@ button:focus-visible {
   .download-hero {
     padding-left: 18px;
     padding-right: 18px;
+  }
+
+  .privacy-summary div {
+    min-height: 84px;
+    padding: 12px 7px;
+  }
+
+  .subpage-hero .privacy-summary {
+    margin-top: 48px;
+  }
+
+  .privacy-summary strong {
+    font-size: 20px;
   }
 
   .hero-copy,

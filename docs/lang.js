@@ -20,6 +20,7 @@
   const file = window.location.pathname.split("/").pop() || "index.html";
   const page = file.replace(".html", "") || "index";
   const rootPrefix = pathLang && pathLang !== "zh" ? "../" : "";
+  const pathLanguage = supported.includes(pathLang) ? pathLang : "zh";
 
   const routeFor = (targetLang, targetFile = file, hash = "") => {
     const normalizedFile = targetFile || "index.html";
@@ -27,6 +28,11 @@
     if (pathLang === targetLang) return `${normalizedFile}${hash}`;
     return `${rootPrefix}${targetLang}/${normalizedFile}${hash}`;
   };
+
+  if (supported.includes(requested) && requested !== pathLanguage) {
+    window.location.replace(routeFor(requested, file, window.location.hash));
+    return;
+  }
 
   if (!supported.includes(requested) && !supported.includes(pathLang) && supported.includes(stored) && stored !== "zh") {
     window.location.replace(routeFor(stored, file, window.location.hash));
@@ -66,6 +72,18 @@
           description: "Vibelsland Free 不创建账号，不上传遥测，只读取本机 Claude Code、Codex CLI 和 Codex Desktop 状态用于展示浮岛。",
           ogTitle: "Vibelsland Free 隐私与本地数据",
           ogDescription: "本地优先，无账号，无遥测，无远程会话同步。"
+        },
+        faq: {
+          title: "常见问题 | Vibelsland Free",
+          description: "了解 Vibelsland Free 的免费分发、macOS 首次打开、SHA-256 校验、本地数据、支持工具和卸载方式。",
+          ogTitle: "Vibelsland Free 常见问题",
+          ogDescription: "免费、安装、隐私、校验和支持工具的常见问题。"
+        },
+        support: {
+          title: "支持与排障 | Vibelsland Free",
+          description: "Vibelsland Free 支持与排障：处理 macOS 首次打开确认、SHA-256 校验、本地数据位置、卸载、报告问题以及工具状态不显示。",
+          ogTitle: "Vibelsland Free 支持与排障",
+          ogDescription: "安装、校验、本地数据、卸载和状态显示问题的排障说明。"
         }
       },
       strings: {
@@ -74,6 +92,8 @@
         "shared.nav.advantages": "优势",
         "shared.nav.download": "下载",
         "shared.nav.privacy": "隐私",
+        "shared.nav.faq": "FAQ",
+        "shared.nav.support": "支持",
         "shared.cta": "下载 macOS 版",
         "shared.footer.tagline": "面向 macOS 的本地优先 AI coding 状态显示。",
 
@@ -185,7 +205,7 @@
         "download.install.step3.copy": "打开设置页，按需启用 Claude Code、Codex CLI 和 Codex Desktop 的本地状态来源。",
         "download.security.eyebrow": "签名与校验",
         "download.security.title": "安装前需要知道的事项。",
-        "download.security.copy": "当前 v0.1.0 使用 ad-hoc 签名，尚未完成 Developer ID 签名和 Apple notarization。首次打开时如被 macOS 拦截，请按住 Control 点按应用并选择 Open。下载包提供 SHA-256 校验，源码可在 GitHub 查看。",
+        "download.security.copy": "v0.1.0 采用 ad-hoc 签名，因此首次打开时 macOS 可能要求额外确认。请按住 Control 点按应用并选择 Open。下载包提供 SHA-256 校验，源码可在 GitHub 查看。",
         "download.security.hash.label": "SHA-256",
         "download.links.eyebrow": "开源透明",
         "download.links.title": "下载、源码、隐私边界放在同一条信任链里。",
@@ -262,6 +282,18 @@
           description: "Vibelsland Free creates no account, uploads no telemetry, and reads only local Claude Code, Codex CLI, and Codex Desktop state to render the island.",
           ogTitle: "Vibelsland Free Privacy and Local Data",
           ogDescription: "Local-first. No account. No telemetry. No remote session sync."
+        },
+        faq: {
+          title: "FAQ | Vibelsland Free",
+          description: "Learn about Vibelsland Free pricing, macOS first launch, SHA-256 checksums, local data, supported tools, and uninstall boundaries.",
+          ogTitle: "Vibelsland Free FAQ",
+          ogDescription: "Common questions about pricing, install, privacy, checksums, and supported tools."
+        },
+        support: {
+          title: "Support and Troubleshooting | Vibelsland Free",
+          description: "Support and troubleshooting for Vibelsland Free: first-launch confirmation, SHA-256 verification, local data locations, uninstalling, issue reports, and missing tool status.",
+          ogTitle: "Vibelsland Free Support and Troubleshooting",
+          ogDescription: "Troubleshoot install, checksum, local data, uninstall, and missing status display issues."
         }
       },
       strings: {
@@ -270,6 +302,8 @@
         "shared.nav.advantages": "Advantages",
         "shared.nav.download": "Download",
         "shared.nav.privacy": "Privacy",
+        "shared.nav.faq": "FAQ",
+        "shared.nav.support": "Support",
         "shared.cta": "Download for macOS",
         "shared.footer.tagline": "A local-first AI coding status display for macOS.",
 
@@ -381,7 +415,7 @@
         "download.install.step3.copy": "Open Settings and enable the Claude Code, Codex CLI, and Codex Desktop sources you need.",
         "download.security.eyebrow": "Signing and checksum",
         "download.security.title": "What to know before installing.",
-        "download.security.copy": "v0.1.0 uses ad-hoc signing and is not yet Developer ID signed or Apple notarized. If macOS blocks first launch, Control-click the app and choose Open. The download includes a SHA-256 checksum and the source is available on GitHub.",
+        "download.security.copy": "v0.1.0 uses ad-hoc signing, so macOS may require an extra confirmation on first launch. Control-click the app and choose Open. The download includes a SHA-256 checksum and the source is available on GitHub.",
         "download.security.hash.label": "SHA-256",
         "download.links.eyebrow": "Open source",
         "download.links.title": "Download, source, and privacy stay in one trust chain.",
@@ -458,6 +492,18 @@
           description: "Vibelsland Free はアカウントを作成せず、テレメトリを送信せず、Mac 内の Claude Code、Codex CLI、Codex Desktop 状態だけを使います。",
           ogTitle: "Vibelsland Free プライバシーとローカルデータ",
           ogDescription: "ローカルファースト。アカウントなし。テレメトリなし。リモート同期なし。"
+        },
+        faq: {
+          title: "FAQ | Vibelsland Free",
+          description: "Vibelsland Free の無料配布、macOS 初回起動、SHA-256、ローカルデータ、対応ツール、アンインストール境界を確認できます。",
+          ogTitle: "Vibelsland Free FAQ",
+          ogDescription: "価格、インストール、プライバシー、チェックサム、対応ツールのよくある質問。"
+        },
+        support: {
+          title: "サポートとトラブルシューティング | Vibelsland Free",
+          description: "Vibelsland Free のサポートとトラブルシューティング。macOS の初回起動確認、SHA-256 確認、ローカルデータの場所、アンインストール、問題報告、ツール状態が出ない場合を確認できます。",
+          ogTitle: "Vibelsland Free サポートとトラブルシューティング",
+          ogDescription: "インストール、チェックサム、ローカルデータ、アンインストール、状態表示の問題を確認できます。"
         }
       },
       strings: {
@@ -466,6 +512,8 @@
         "shared.nav.advantages": "強み",
         "shared.nav.download": "ダウンロード",
         "shared.nav.privacy": "プライバシー",
+        "shared.nav.faq": "FAQ",
+        "shared.nav.support": "サポート",
         "shared.cta": "macOS 版をダウンロード",
         "shared.footer.tagline": "macOS 向けローカルファースト AI coding 状態表示。",
 
@@ -577,7 +625,7 @@
         "download.install.step3.copy": "設定画面で必要な Claude Code、Codex CLI、Codex Desktop のソースを有効化します。",
         "download.security.eyebrow": "署名とチェックサム",
         "download.security.title": "インストール前に知っておくこと。",
-        "download.security.copy": "v0.1.0 は ad-hoc 署名で、Developer ID 署名と Apple notarization にはまだ対応していません。初回起動時に macOS が止めた場合は、Control キーを押しながらアプリをクリックし、Open を選んでください。ダウンロードには SHA-256 チェックサムがあり、ソースは GitHub で確認できます。",
+        "download.security.copy": "v0.1.0 は ad-hoc 署名を採用しているため、初回起動時に macOS が追加確認を求める場合があります。Control キーを押しながらアプリをクリックし、Open を選んでください。ダウンロードには SHA-256 チェックサムがあり、ソースは GitHub で確認できます。",
         "download.security.hash.label": "SHA-256",
         "download.links.eyebrow": "オープンソース",
         "download.links.title": "ダウンロード、ソース、プライバシーを一つの信頼線に。",
