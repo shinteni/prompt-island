@@ -1,0 +1,30 @@
+{
+  "name": ">_ - island",
+  "short_name": ">_ - island",
+  "description": "Local-first macOS AI coding island for Claude Code, Codex CLI, and Codex Desktop.",
+  "lang": "en",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f5f5f7",
+  "theme_color": "#f5f5f7",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "assets/readme/app-icon.png",
+      "sizes": "256x256",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Download",
+      "url": "./download.html"
+    },
+    {
+      "name": "Privacy",
+      "url": "./privacy.html"
+    }
+  ]
+}
