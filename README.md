@@ -98,6 +98,18 @@ swift test
 zsh scripts/package-release.sh
 ```
 
+## 官网发布
+
+默认官网源码位于 `docs/`，面向 GitHub Pages 路径 `https://shinteni.github.io/prompt-island/`。绑定正式域名时，不直接手改分散的 canonical、OG、sitemap、robots 或 security.txt；用构建脚本生成域名化产物：
+
+```sh
+VIBELSLAND_SITE_URL=https://你的域名/ \
+VIBELSLAND_CUSTOM_DOMAIN=你的域名 \
+zsh scripts/build-docs-site.sh /tmp/vibelsland-docs-site
+```
+
+脚本会生成 `CNAME`，重写全站 URL，并运行 `scripts/verify-docs-site.sh` 验证多语言 canonical/hreflang、sitemap alternates、manifest、robots、security.txt 和 release checksum。
+
 本地打包产物会生成在：
 
 ```text

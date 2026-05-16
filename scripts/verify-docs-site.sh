@@ -2,9 +2,11 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+DOCS_DIR="${VIBELSLAND_DOCS_DIR:-$ROOT/docs}"
 SITE_URL="${VIBELSLAND_SITE_URL:-https://shinteni.github.io/prompt-island/}"
+CUSTOM_DOMAIN="${VIBELSLAND_CUSTOM_DOMAIN:-}"
 
-python3 - "$ROOT" "$SITE_URL" <<'PY'
+python3 - "$ROOT" "$DOCS_DIR" "$SITE_URL" "$CUSTOM_DOMAIN" <<'PY'
 import json
 import os
 import re
@@ -15,11 +17,24 @@ from pathlib import Path
 from urllib.parse import urlparse
 import xml.etree.ElementTree as ET
 
-root = Path(sys.argv[1])
-docs = root / "docs"
-site_url = sys.argv[2].rstrip("/") + "/"
+root = Path(sys.argv[1]).resolve()
+docs = Path(sys.argv[2]).resolve()
+site_url = sys.argv[3].rstrip("/") + "/"
+custom_domain = sys.argv[4].strip()
+default_site_url = "https://shinteni.github.io/prompt-island/"
 site_host = urlparse(site_url).netloc
+docs_root = docs.resolve()
 errors = []
+
+
+def display(path):
+    path = Path(path).resolve()
+    for base in [root, docs_root]:
+        try:
+            return str(path.relative_to(base))
+        except ValueError:
+            continue
+    return str(path)
 
 required = [
     docs / ".nojekyll",
@@ -48,7 +63,7 @@ for filename in localized_files:
     ])
 for path in required:
     if not path.exists():
-        errors.append(f"Missing required docs file: {path.relative_to(root)}")
+        errors.append(f"Missing required docs file: {display(path)}")
 
 blocked_copy = [
     "状态层",
@@ -157,7 +172,29 @@ def page_url(language, filename):
     return f"{site_url}{language}/{filename}"
 
 
+def collect_strings(value):
+    if isinstance(value, str):
+        yield value
+    elif isinstance(value, list):
+        for item in value:
+            yield from collect_strings(item)
+    elif isinstance(value, dict):
+        for item in value.values():
+            yield from collect_strings(item)
+
+
+def validate_absolute_site_url(value, rel, context):
+    parsed = urlparse(value)
+    if not parsed.scheme:
+        return
+    if parsed.netloc == site_host and not value.startswith(site_url):
+        errors.append(f"{context} should start with {site_url} in {rel}: {value}")
+    if default_site_url in value and not site_url.startswith(default_site_url):
+        errors.append(f"GitHub Pages URL remains after custom site URL in {rel}: {value}")
+
+
 expected_routes = {}
+expected_url_alternates = {}
 for filename in localized_files:
     expected_alternates = {
         "zh-CN": page_url("zh-CN", filename),
@@ -165,6 +202,8 @@ for filename in localized_files:
         "ja": page_url("ja", filename),
         "x-default": page_url("zh-CN", filename),
     }
+    for expected_url in expected_alternates.values():
+        expected_url_alternates[expected_url] = expected_alternates
     for language in ["zh-CN", "en", "ja"]:
         expected_routes[page_file(language, filename)] = {
             "canonical": page_url(language, filename),
@@ -176,7 +215,9 @@ html_files = sorted(docs.glob("**/*.html"))
 versioned_assets = {"styles.css", "lang.js", "effects.js"}
 for path in html_files:
     text = path.read_text(encoding="utf-8")
-    rel = path.relative_to(root)
+    rel = display(path)
+    if site_url != default_site_url and default_site_url in text:
+        errors.append(f"Default GitHub Pages URL remains in {rel}")
     for phrase in blocked_copy:
         if phrase in text:
             errors.append(f"Blocked copy remains in {rel}: {phrase}")
@@ -235,9 +276,12 @@ for path in html_files:
         if not block:
             continue
         try:
-            json.loads(block)
+            payload = json.loads(block)
         except json.JSONDecodeError as exc:
             errors.append(f"Invalid JSON-LD in {rel}: {exc}")
+            continue
+        for value in collect_strings(payload):
+            validate_absolute_site_url(value, rel, "JSON-LD URL")
 
     for kind, value in parser.refs:
         if not value or is_external(value):
@@ -247,7 +291,7 @@ for path in html_files:
             continue
         target = (path.parent / clean).resolve()
         try:
-            target.relative_to(root.resolve())
+            target.relative_to(docs_root)
         except ValueError:
             errors.append(f"Local {kind} escapes repository in {rel}: {value}")
             continue
@@ -257,17 +301,22 @@ for path in html_files:
             errors.append(f"Version query missing for local asset in {rel}: {value}")
 
     for value in parser.absolute_site_urls:
-        parsed = urlparse(value)
-        if not parsed.scheme:
-            continue
-        if parsed.netloc == site_host and not value.startswith(site_url):
-            errors.append(f"Site URL should start with {site_url} in {rel}: {value}")
-        if "shinteni.github.io/prompt-island/" in value and not site_url.startswith("https://shinteni.github.io/prompt-island/"):
-            errors.append(f"GitHub Pages URL remains after custom site URL in {rel}: {value}")
+        validate_absolute_site_url(value, rel, "Site URL")
 
 manifest_path = docs / "site.webmanifest"
 if manifest_path.exists():
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    expected_manifest_values = {
+        "id": "./",
+        "start_url": "./index.html",
+        "scope": "./",
+    }
+    for key, expected_value in expected_manifest_values.items():
+        actual_value = manifest.get(key)
+        if actual_value != expected_value:
+            errors.append(f"Manifest {key} should be {expected_value}: {actual_value}")
+    for value in collect_strings(manifest):
+        validate_absolute_site_url(value, "site.webmanifest", "Manifest URL")
     for icon in manifest.get("icons", []):
         src = icon.get("src")
         if src and not (docs / src).exists():
@@ -276,6 +325,16 @@ if manifest_path.exists():
         src = screenshot.get("src")
         if src and not (docs / src).exists():
             errors.append(f"Manifest screenshot is missing: {src}")
+
+if site_url != default_site_url:
+    text_suffixes = {".html", ".xml", ".txt", ".json", ".webmanifest"}
+    for path in docs.rglob("*"):
+        if not path.is_file():
+            continue
+        if path.suffix not in text_suffixes and path.name != "security.txt":
+            continue
+        if default_site_url in path.read_text(encoding="utf-8"):
+            errors.append(f"Default GitHub Pages URL remains in {display(path)}")
 
 for path in [docs / "download.html", docs / "en" / "download.html", docs / "ja" / "download.html"]:
     if path.exists():
@@ -291,19 +350,38 @@ for path in [docs / "download.html", docs / "en" / "download.html", docs / "ja" 
                 continue
             json_ld_types.append(payload.get("@type"))
         if "SoftwareApplication" not in json_ld_types:
-            errors.append(f"Download page missing SoftwareApplication JSON-LD: {path.relative_to(root)}")
+            errors.append(f"Download page missing SoftwareApplication JSON-LD: {display(path)}")
 
 sitemap_path = docs / "sitemap.xml"
 if sitemap_path.exists():
     tree = ET.parse(sitemap_path)
-    namespace = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
-    locs = [node.text or "" for node in tree.findall(".//sm:loc", namespace)]
+    namespace = {
+        "sm": "http://www.sitemaps.org/schemas/sitemap/0.9",
+        "xhtml": "http://www.w3.org/1999/xhtml",
+    }
+    url_nodes = tree.findall(".//sm:url", namespace)
+    locs = [node.findtext("sm:loc", default="", namespaces=namespace) for node in url_nodes]
     if not locs:
         errors.append("Sitemap has no loc entries.")
-    for loc in locs:
+    for url_node, loc in zip(url_nodes, locs):
         if not loc.startswith(site_url):
             errors.append(f"Sitemap loc does not match site URL {site_url}: {loc}")
             continue
+        expected_alternates = expected_url_alternates.get(loc)
+        if not expected_alternates:
+            errors.append(f"Sitemap loc is not in expected localized route matrix: {loc}")
+        else:
+            actual_alternates = {}
+            for link in url_node.findall("xhtml:link", namespace):
+                if link.attrib.get("rel") == "alternate" and link.attrib.get("hreflang"):
+                    actual_alternates[link.attrib["hreflang"]] = link.attrib.get("href", "")
+            for hreflang, expected_href in expected_alternates.items():
+                actual_href = actual_alternates.get(hreflang)
+                if actual_href != expected_href:
+                    errors.append(f"Unexpected sitemap hreflang {hreflang} for {loc}: {actual_href or '<missing>'}")
+            extra_hreflangs = sorted(set(actual_alternates) - set(expected_alternates))
+            for hreflang in extra_hreflangs:
+                errors.append(f"Unexpected extra sitemap hreflang {hreflang} for {loc}: {actual_alternates[hreflang]}")
         parsed = urlparse(loc)
         rel_url = loc[len(site_url):].split("#", 1)[0].split("?", 1)[0]
         if not rel_url:
@@ -349,6 +427,15 @@ if security_path.exists():
         if line not in security:
             errors.append(f"security.txt missing expected line: {line}")
 
+if custom_domain:
+    cname_path = docs / "CNAME"
+    if not cname_path.exists():
+        errors.append(f"CNAME is required when VIBELSLAND_CUSTOM_DOMAIN={custom_domain}")
+    else:
+        actual_domain = cname_path.read_text(encoding="utf-8").strip()
+        if actual_domain != custom_domain:
+            errors.append(f"CNAME should be {custom_domain}: {actual_domain}")
+
 markdown_ref_pattern = re.compile(r"!\[[^\]]*\]\(([^)]+)\)|\[[^\]]+\]\(([^)]+)\)|<img[^>]+src=\"([^\"]+)\"", re.I)
 for md_path in [root / "README.md", root / "README.en.md", root / "PRIVACY.md"]:
     if not md_path.exists():
@@ -363,7 +450,7 @@ for md_path in [root / "README.md", root / "README.en.md", root / "PRIVACY.md"]:
             continue
         target = (md_path.parent / clean).resolve()
         try:
-            target.relative_to(root.resolve())
+            target.relative_to(root)
         except ValueError:
             errors.append(f"Markdown reference escapes repository in {md_path.name}: {value}")
             continue
@@ -387,7 +474,7 @@ if checksum_path.exists():
             root / "README.en.md",
         ]:
             if path.exists() and parts[0] not in path.read_text(encoding="utf-8"):
-                errors.append(f"Download page checksum does not match dist checksum: {path.relative_to(root)}")
+                errors.append(f"Download page checksum does not match dist checksum: {display(path)}")
         archive_path = checksum_path.with_suffix("")
         if archive_path.exists():
             result = subprocess.run(

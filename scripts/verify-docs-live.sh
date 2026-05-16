@@ -57,14 +57,63 @@ from xml.etree import ElementTree as ET
 
 sitemap_path = sys.argv[1]
 site_url = sys.argv[2]
-namespace = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
+namespace = {
+    "sm": "http://www.sitemaps.org/schemas/sitemap/0.9",
+    "xhtml": "http://www.w3.org/1999/xhtml",
+}
+
+localized_files = [
+    "index.html",
+    "advantages.html",
+    "download.html",
+    "install.html",
+    "privacy.html",
+    "faq.html",
+    "support.html",
+    "release-notes.html",
+]
+
+def page_url(language, filename):
+    if filename == "index.html":
+        if language == "zh-CN":
+            return site_url
+        return f"{site_url}{language}/"
+    if language == "zh-CN":
+        return f"{site_url}{filename}"
+    return f"{site_url}{language}/{filename}"
+
+expected_url_alternates = {}
+for filename in localized_files:
+    expected = {
+        "zh-CN": page_url("zh-CN", filename),
+        "en": page_url("en", filename),
+        "ja": page_url("ja", filename),
+        "x-default": page_url("zh-CN", filename),
+    }
+    for url in expected.values():
+        expected_url_alternates[url] = expected
+
 tree = ET.parse(sitemap_path)
-locs = [node.text or "" for node in tree.findall(".//sm:loc", namespace)]
+url_nodes = tree.findall(".//sm:url", namespace)
+locs = [node.findtext("sm:loc", default="", namespaces=namespace) for node in url_nodes]
 if not locs:
     raise SystemExit("Live check failed: sitemap has no loc entries.")
-for loc in locs:
+for url_node, loc in zip(url_nodes, locs):
     if not loc.startswith(site_url):
         raise SystemExit(f"Live check failed: sitemap loc does not start with {site_url}: {loc}")
+    expected = expected_url_alternates.get(loc)
+    if not expected:
+        raise SystemExit(f"Live check failed: unexpected sitemap loc: {loc}")
+    actual = {}
+    for link in url_node.findall("xhtml:link", namespace):
+        if link.attrib.get("rel") == "alternate" and link.attrib.get("hreflang"):
+            actual[link.attrib["hreflang"]] = link.attrib.get("href", "")
+    for hreflang, expected_href in expected.items():
+        if actual.get(hreflang) != expected_href:
+            raise SystemExit(f"Live check failed: sitemap hreflang {hreflang} mismatch for {loc}: {actual.get(hreflang)}")
+    extra = sorted(set(actual) - set(expected))
+    if extra:
+        raise SystemExit(f"Live check failed: sitemap has extra hreflang values for {loc}: {', '.join(extra)}")
     print(loc)
 PY
 
@@ -107,6 +156,31 @@ class HeadParser(HTMLParser):
                 self.og_locale = attrs.get("content", "")
 
 urls = [line.strip() for line in (tmp_dir / "sitemap-urls.txt").read_text(encoding="utf-8").splitlines() if line.strip()]
+localized_files = [
+    "index.html",
+    "advantages.html",
+    "download.html",
+    "install.html",
+    "privacy.html",
+    "faq.html",
+    "support.html",
+    "release-notes.html",
+]
+
+def filename_for_url(url):
+    if url == site_url or url in {site_url + "en/", site_url + "ja/"}:
+        return "index.html"
+    return url.rstrip("/").rsplit("/", 1)[-1]
+
+def page_url(language, filename):
+    if filename == "index.html":
+        if language == "zh-CN":
+            return site_url
+        return f"{site_url}{language}/"
+    if language == "zh-CN":
+        return f"{site_url}{filename}"
+    return f"{site_url}{language}/{filename}"
+
 for index, url in enumerate(urls, start=1):
     text = (tmp_dir / f"sitemap-page-{index}.html").read_text(encoding="utf-8")
     parser = HeadParser()
@@ -124,9 +198,22 @@ for index, url in enumerate(urls, start=1):
         raise SystemExit(f"Live check failed: og:site_name missing for {url}")
     if parser.og_locale != expected_locale:
         raise SystemExit(f"Live check failed: og:locale mismatch for {url}: {parser.og_locale}")
-    for hreflang in ["zh-CN", "en", "ja", "x-default"]:
-        if hreflang not in parser.alternates:
-            raise SystemExit(f"Live check failed: hreflang {hreflang} missing for {url}")
+    filename = filename_for_url(url)
+    if filename not in localized_files:
+        raise SystemExit(f"Live check failed: unexpected localized page in sitemap: {url}")
+    expected_alternates = {
+        "zh-CN": page_url("zh-CN", filename),
+        "en": page_url("en", filename),
+        "ja": page_url("ja", filename),
+        "x-default": page_url("zh-CN", filename),
+    }
+    for hreflang, expected_href in expected_alternates.items():
+        actual_href = parser.alternates.get(hreflang)
+        if actual_href != expected_href:
+            raise SystemExit(f"Live check failed: hreflang {hreflang} mismatch for {url}: {actual_href}")
+    extra = sorted(set(parser.alternates) - set(expected_alternates))
+    if extra:
+        raise SystemExit(f"Live check failed: extra hreflang values for {url}: {', '.join(extra)}")
 PY
 
 if ! grep -q "styles.css?v=" "$TMP_DIR/support.html"; then

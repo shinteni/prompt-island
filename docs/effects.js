@@ -46,4 +46,35 @@
     }
   }
 
+  const productStage = document.querySelector(".product-stage");
+  const demoLabel = productStage?.querySelector(".status-float strong");
+  if (productStage && demoLabel && !reduceMotion) {
+    const lang = document.documentElement.lang;
+    const states = lang === "ja"
+      ? [
+          ["running", "ツール実行中"],
+          ["approval", "承認待ち"],
+          ["idle", "待機中"]
+        ]
+      : lang === "en"
+        ? [
+            ["running", "Tool running"],
+            ["approval", "Approval needed"],
+            ["idle", "Idle"]
+          ]
+        : [
+            ["running", "工具运行中"],
+            ["approval", "等待审批"],
+            ["idle", "空闲待命"]
+          ];
+    let index = 0;
+    productStage.dataset.demoState = states[index][0];
+    demoLabel.textContent = states[index][1];
+    window.setInterval(() => {
+      index = (index + 1) % states.length;
+      productStage.dataset.demoState = states[index][0];
+      demoLabel.textContent = states[index][1];
+    }, 2200);
+  }
+
 })();

@@ -98,6 +98,18 @@ swift test
 zsh scripts/package-release.sh
 ```
 
+## Website Publishing
+
+The website source lives in `docs/` and targets `https://shinteni.github.io/prompt-island/` by default. For a custom domain, do not hand-edit scattered canonical, OG, sitemap, robots, or security.txt URLs. Generate a domain-specific output:
+
+```sh
+VIBELSLAND_SITE_URL=https://your-domain.example/ \
+VIBELSLAND_CUSTOM_DOMAIN=your-domain.example \
+zsh scripts/build-docs-site.sh /tmp/vibelsland-docs-site
+```
+
+The script writes `CNAME`, rewrites site URLs, and runs `scripts/verify-docs-site.sh` against multilingual canonical/hreflang, sitemap alternates, manifest, robots, security.txt, and release checksum data.
+
 Local release artifacts are generated at:
 
 ```text
