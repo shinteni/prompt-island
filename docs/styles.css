@@ -650,6 +650,18 @@ button:focus-visible {
   background: rgba(255, 255, 255, 0.62);
 }
 
+.editorial-section {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: minmax(300px, 0.72fr) minmax(520px, 1fr);
+  align-items: stretch;
+  justify-content: center;
+  gap: 24px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.74), rgba(241, 245, 250, 0.72));
+}
+
 .surface-section,
 .problem-section,
 .comparison-section,
@@ -660,20 +672,58 @@ button:focus-visible {
   background: rgba(244, 247, 251, 0.72);
 }
 
+.editorial-section .section-heading {
+  width: min(440px, 100%);
+  max-width: 440px;
+  height: 100%;
+  justify-self: end;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0;
+  padding: 34px;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.64);
+  box-shadow: 0 24px 80px rgba(23, 30, 45, 0.1);
+  backdrop-filter: blur(24px) saturate(150%);
+  text-align: left;
+}
+
+.editorial-section .section-heading h2 {
+  max-width: 360px;
+  font-size: 48px;
+}
+
 .signal-list {
-  width: min(980px, 100%);
-  margin: 0 auto;
+  width: min(720px, 100%);
+  margin: 0;
   display: grid;
   gap: 0;
-  border-top: 1px solid var(--line);
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.74);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 26px 80px rgba(23, 30, 45, 0.1);
+  backdrop-filter: blur(24px) saturate(150%);
 }
 
 .signal-list article {
   display: grid;
-  grid-template-columns: 100px minmax(0, 1fr);
-  gap: 28px;
-  padding: 34px 0;
-  border-bottom: 1px solid var(--line);
+  grid-template-columns: 54px minmax(0, 1fr);
+  align-items: center;
+  gap: 18px;
+  padding: 18px 20px;
+  border-bottom: 1px solid rgba(34, 40, 55, 0.1);
+}
+
+.signal-list article:last-child {
+  border-bottom: 0;
+}
+
+.signal-list span {
+  margin-bottom: 0;
+  color: var(--blue);
 }
 
 .signal-list h3,
@@ -685,7 +735,7 @@ button:focus-visible {
 .comparison-grid h3 {
   margin: 0;
   color: var(--ink);
-  font-size: 30px;
+  font-size: 24px;
   font-weight: 740;
   line-height: 1.08;
   letter-spacing: 0;
@@ -703,7 +753,7 @@ button:focus-visible {
 .trust-layout p {
   min-width: 0;
   color: var(--muted);
-  font-size: 17px;
+  font-size: 16px;
   line-height: 1.48;
   overflow-wrap: anywhere;
 }
@@ -714,6 +764,10 @@ button:focus-visible {
 .link-panel p,
 .large-steps p {
   margin: 12px 0 0;
+}
+
+.signal-list p {
+  margin-top: 4px;
 }
 
 .split-section {
@@ -824,12 +878,40 @@ button:focus-visible {
 }
 
 .trust-section-home {
+  position: relative;
+  overflow: hidden;
   display: grid;
   grid-template-columns: minmax(0, 0.9fr) minmax(360px, 1.1fr);
   align-items: center;
   gap: 80px;
-  max-width: var(--wide);
-  margin: 0 auto;
+  max-width: none;
+  background:
+    linear-gradient(180deg, rgba(241, 245, 250, 0.74), rgba(255, 255, 255, 0.62));
+}
+
+.trust-section-home > * {
+  position: relative;
+  z-index: 1;
+}
+
+.trust-copy {
+  width: min(540px, 100%);
+  justify-self: end;
+  padding: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.66);
+  box-shadow: 0 26px 80px rgba(23, 30, 45, 0.1);
+  backdrop-filter: blur(26px) saturate(150%);
+}
+
+.trust-section-home .trust-copy h2 {
+  font-size: 50px;
+}
+
+.trust-section-home .trust-copy p {
+  margin-top: 16px;
+  max-width: 420px;
 }
 
 .boundary-grid,
@@ -840,6 +922,7 @@ button:focus-visible {
 
 .boundary-grid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  max-width: 780px;
 }
 
 .boundary-grid.large {
@@ -866,8 +949,25 @@ button:focus-visible {
 }
 
 .boundary-grid div {
-  min-height: 168px;
-  padding: 24px;
+  min-height: 138px;
+  padding: 22px;
+}
+
+.trust-section-home .boundary-grid div {
+  border-color: rgba(255, 255, 255, 0.72);
+  border-radius: 24px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.76), rgba(255, 255, 255, 0.58));
+  box-shadow: 0 28px 84px rgba(23, 30, 45, 0.11);
+  backdrop-filter: blur(24px) saturate(150%);
+}
+
+.trust-section-home .boundary-grid div:nth-child(2) {
+  transform: translateY(16px);
+}
+
+.trust-section-home .boundary-grid strong {
+  font-size: 24px;
 }
 
 .boundary-grid strong,
@@ -1383,6 +1483,7 @@ button:focus-visible {
   }
 
   .home-hero,
+  .editorial-section,
   .subpage-hero,
   .download-hero,
   .split-section,
@@ -1413,6 +1514,13 @@ button:focus-visible {
   .device-card {
     width: min(760px, 100%);
     margin: 0 auto;
+  }
+
+  .editorial-section .section-heading,
+  .signal-list {
+    width: min(880px, 100%);
+    max-width: 880px;
+    justify-self: center;
   }
 }
 
@@ -1688,9 +1796,45 @@ button:focus-visible {
     padding: 36px 18px 70px;
   }
 
+  .editorial-section .section-heading,
+  .signal-list,
+  .trust-copy {
+    border-radius: 20px;
+  }
+
+  .editorial-section .section-heading {
+    margin-bottom: 12px;
+    padding: 22px;
+  }
+
+  .editorial-section .section-heading h2,
+  .trust-section-home .trust-copy h2 {
+    font-size: 38px;
+    line-height: 1.04;
+  }
+
+  .signal-list {
+    padding: 8px;
+  }
+
   .signal-list article {
-    grid-template-columns: 1fr;
-    gap: 8px;
+    grid-template-columns: 44px minmax(0, 1fr);
+    gap: 12px;
+    padding: 15px 14px;
+  }
+
+  .signal-list h3 {
+    font-size: 21px;
+  }
+
+  .signal-list p {
+    font-size: 14px;
+  }
+
+  .trust-copy {
+    width: auto;
+    justify-self: stretch;
+    padding: 24px;
   }
 
   .workflow-rail,
@@ -1717,6 +1861,15 @@ button:focus-visible {
   .problem-grid article {
     grid-template-columns: 1fr;
     gap: 8px;
+  }
+
+  .trust-section-home .boundary-grid div {
+    min-height: auto;
+    padding: 18px;
+  }
+
+  .trust-section-home .boundary-grid div:nth-child(2) {
+    transform: none;
   }
 
   .split-section,
@@ -1929,6 +2082,12 @@ button:focus-visible {
   .cta-section h2 {
     font-size: 30px;
     line-height: 1.08;
+  }
+
+  .editorial-section .section-heading h2,
+  .trust-section-home .trust-copy h2 {
+    font-size: 34px;
+    line-height: 1.06;
   }
 }
 
