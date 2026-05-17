@@ -253,6 +253,9 @@ code {
 }
 
 .nav-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   min-height: 34px;
   padding: 0 18px;
   border-radius: 17px;
@@ -261,7 +264,6 @@ code {
   font-size: 12px;
   font-weight: 650;
   line-height: 1;
-  justify-content: center;
   white-space: nowrap;
   box-shadow: 0 6px 18px rgba(37, 99, 235, 0.16);
 }
