@@ -12,7 +12,7 @@
     <meta property="og:site_name" content="Vibelsland Free">
     <meta property="og:locale" content="zh_CN">
     <meta property="og:title" content="下载 Vibelsland Free">
-    <meta property="og:description" content="macOS 14+ 本地优先 AI coding 状态显示，源码、校验和隐私边界公开。">
+    <meta property="og:description" content="macOS 14+ 本地优先 AI 编程状态显示，源码、校验和隐私边界公开。">
     <meta property="og:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
     <meta property="og:image:width" content="1672">
     <meta property="og:image:height" content="941">
@@ -20,7 +20,7 @@
     <meta property="og:url" content="https://shinteni.github.io/prompt-island/download.html">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="下载 Vibelsland Free">
-    <meta name="twitter:description" content="macOS 14+ 本地优先 AI coding 状态显示，源码、校验和隐私边界公开。">
+    <meta name="twitter:description" content="macOS 14+ 本地优先 AI 编程状态显示，源码、校验和隐私边界公开。">
     <meta name="twitter:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
     <meta name="twitter:image:alt" content="Vibelsland Free macOS AI 编程状态界面">
     <meta name="theme-color" content="#070706">
@@ -32,7 +32,7 @@
     <link rel="icon" href="assets/readme/app-icon.png">
     <link rel="apple-touch-icon" href="assets/readme/app-icon.png">
     <link rel="manifest" href="site.webmanifest">
-    <link rel="stylesheet" href="styles.css?v=e8bd70d9ea23">
+    <link rel="stylesheet" href="styles.css?v=b327b344f4be">
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -41,7 +41,7 @@
         "applicationCategory": "DeveloperApplication",
         "operatingSystem": "macOS 14+",
         "softwareVersion": "0.1.0",
-        "description": "面向 Claude Code、Codex CLI 和 Codex Desktop 的本地优先 macOS AI coding 状态显示。",
+        "description": "面向 Claude Code、Codex CLI 和 Codex Desktop 的本地优先 macOS AI 编程状态显示。",
         "url": "https://shinteni.github.io/prompt-island/download.html",
         "image": "https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg",
         "inLanguage": "zh-CN",
@@ -69,12 +69,13 @@
         <span>Vibelsland Free</span>
       </a>
       <nav class="nav-links" aria-label="页面导航">
-        <a href="index.html" data-i18n="shared.nav.home">首页</a>
-        <a class="active" aria-current="page" href="download.html" data-i18n="shared.nav.download">下载</a>
-        <a href="install.html" data-i18n="shared.nav.install">安装</a>
-        <a href="privacy.html" data-i18n="shared.nav.privacy">隐私</a>
-        <a href="faq.html" data-i18n="shared.nav.faq">FAQ</a>
-        <a href="support.html" data-i18n="shared.nav.support">支持</a>
+        <a href="index.html" data-i18n="shared.nav.home" data-mobile-label="首页">首页</a>
+        <a href="advantages.html" data-i18n="shared.nav.advantages" data-mobile-label="优势">优势</a>
+        <a class="active" aria-current="page" href="download.html" data-i18n="shared.nav.download" data-mobile-label="下载">下载</a>
+        <a href="install.html" data-i18n="shared.nav.install" data-mobile-label="安装">安装</a>
+        <a href="privacy.html" data-i18n="shared.nav.privacy" data-mobile-label="隐私">隐私</a>
+        <a href="faq.html" data-i18n="shared.nav.faq" data-mobile-label="FAQ">FAQ</a>
+        <a href="support.html" data-i18n="shared.nav.support" data-mobile-label="支持">支持</a>
       </nav>
       <div class="header-tools">
         <nav class="lang-switch" aria-label="语言切换">
@@ -101,11 +102,12 @@
               </svg>
               <span data-i18n="download.hero.primary">下载 v0.1.0</span>
             </a>
-            <a class="button secondary" href="https://github.com/shinteni/prompt-island/tree/v0.1.0" data-i18n="download.hero.secondary">查看源码</a>
+            <a class="button secondary" href="install.html" data-i18n="download.hero.secondary">查看安装与信任</a>
           </div>
           <div class="hero-assist-links">
             <a href="https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip.sha256" data-i18n="download.security.sha">下载 .sha256 文件</a>
             <a href="#security-title" data-i18n="download.security.verify">查看校验命令</a>
+            <a href="https://github.com/shinteni/prompt-island/tree/v0.1.0" data-i18n="download.security.source">查看源码</a>
           </div>
           <div class="download-meta-strip" aria-label="下载摘要" data-reveal>
             <span><strong data-i18n="download.card.version">v0.1.0</strong></span>
@@ -176,6 +178,10 @@
             <p data-i18n="download.install.step3.copy">把应用拖入 Applications，Control 点按打开，再安装 hooks 并查看设置页健康检查。</p>
           </li>
         </ol>
+        <div class="hero-assist-links">
+          <a href="install.html" data-i18n="download.install.guide">继续查看完整安装与信任说明</a>
+          <a href="privacy.html" data-i18n="download.install.privacy">查看本地数据边界</a>
+        </div>
       </section>
 
       <section class="section split-section" aria-labelledby="security-title">
@@ -204,11 +210,12 @@
     <footer class="site-footer">
       <div>
         <strong>Vibelsland Free</strong>
-        <p data-i18n="shared.footer.tagline">面向 macOS 的本地优先 AI coding 状态显示。</p>
+        <p data-i18n="shared.footer.tagline">面向 macOS 的本地优先 AI 编程状态显示。</p>
       </div>
       <nav aria-label="页脚导航">
         <a href="index.html" data-i18n="shared.nav.home">首页</a>
         <a href="advantages.html" data-i18n="shared.nav.advantages">优势</a>
+        <a href="download.html" data-i18n="shared.nav.download">下载</a>
         <a href="install.html" data-i18n="shared.nav.install">安装</a>
         <a href="release-notes.html" data-i18n="shared.nav.release">版本历史</a>
         <a href="privacy.html" data-i18n="shared.nav.privacy">隐私</a>
@@ -217,7 +224,7 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="lang.js?v=4e0be1988f7a" defer></script>
+    <script src="lang.js?v=cee21cea4938" defer></script>
     <script src="effects.js?v=5b40303a0205" defer></script>
   </body>
 </html>

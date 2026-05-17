@@ -1277,6 +1277,11 @@ button:focus-visible {
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 }
 
+.install-section .hero-assist-links {
+  justify-content: center;
+  margin-top: 24px;
+}
+
 .note-grid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
@@ -1738,6 +1743,19 @@ button:focus-visible {
     white-space: nowrap;
   }
 
+  .nav-links a[data-mobile-label] {
+    font-size: 0;
+  }
+
+  .nav-links a[data-mobile-label]::after {
+    content: attr(data-mobile-label);
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    font-size: 9.5px;
+    text-overflow: clip;
+  }
+
   .nav-links a.active {
     color: #ffffff;
     background: var(--blue);
@@ -2146,15 +2164,6 @@ button:focus-visible {
     font-size: 10px;
     min-width: 0;
     padding: 0 3px;
-  }
-
-  .nav-links a[data-mobile-label] {
-    font-size: 0;
-  }
-
-  .nav-links a[data-mobile-label]::after {
-    content: attr(data-mobile-label);
-    font-size: 9.5px;
   }
 
   .product-stage img {

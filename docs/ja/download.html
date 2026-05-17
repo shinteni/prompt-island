@@ -8,7 +8,7 @@
     <meta property="og:site_name" content="Vibelsland Free">
     <meta property="og:locale" content="ja_JP">
     <meta property="og:title" content="Vibelsland Free をダウンロード">
-    <meta property="og:description" content="ソース、チェックサム、プライバシー境界を公開した macOS 向けローカルファースト AI coding 状態表示。">
+    <meta property="og:description" content="ソース、チェックサム、プライバシー境界を公開した macOS 向けローカルファースト AI コーディングの状態表示。">
     <meta property="og:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
     <meta property="og:image:width" content="1672">
     <meta property="og:image:height" content="941">
@@ -16,7 +16,7 @@
     <meta property="og:url" content="https://shinteni.github.io/prompt-island/ja/download.html">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Vibelsland Free をダウンロード">
-    <meta name="twitter:description" content="ソース、チェックサム、プライバシー境界を公開した macOS 向けローカルファースト AI coding 状態表示。">
+    <meta name="twitter:description" content="ソース、チェックサム、プライバシー境界を公開した macOS 向けローカルファースト AI コーディングの状態表示。">
     <meta name="twitter:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
     <meta name="twitter:image:alt" content="Vibelsland Free macOS AI コーディング状態インターフェイス">
     <meta name="theme-color" content="#070706">
@@ -28,7 +28,7 @@
     <link rel="icon" href="../assets/readme/app-icon.png">
     <link rel="apple-touch-icon" href="../assets/readme/app-icon.png">
     <link rel="manifest" href="../site.webmanifest">
-    <link rel="stylesheet" href="../styles.css?v=e8bd70d9ea23">
+    <link rel="stylesheet" href="../styles.css?v=b327b344f4be">
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -37,7 +37,7 @@
         "applicationCategory": "DeveloperApplication",
         "operatingSystem": "macOS 14+",
         "softwareVersion": "0.1.0",
-        "description": "Claude Code、Codex CLI、Codex Desktop 向けの macOS ローカルファースト AI coding 状態表示。",
+        "description": "Claude Code、Codex CLI、Codex Desktop 向けの macOS ローカルファースト AI コーディングの状態表示。",
         "url": "https://shinteni.github.io/prompt-island/ja/download.html",
         "image": "https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg",
         "inLanguage": "ja",
@@ -65,12 +65,13 @@
         <span>Vibelsland Free</span>
       </a>
       <nav class="nav-links" aria-label="ページナビゲーション">
-        <a href="index.html" data-i18n="shared.nav.home">ホーム</a>
-        <a class="active" aria-current="page" href="download.html" data-i18n="shared.nav.download">ダウンロード</a>
-        <a href="install.html" data-i18n="shared.nav.install">インストール</a>
-        <a href="privacy.html" data-i18n="shared.nav.privacy">プライバシー</a>
-        <a href="faq.html" data-i18n="shared.nav.faq">FAQ</a>
-        <a href="support.html" data-i18n="shared.nav.support">サポート</a>
+        <a href="index.html" data-i18n="shared.nav.home" data-mobile-label="ホーム">ホーム</a>
+        <a href="advantages.html" data-i18n="shared.nav.advantages" data-mobile-label="強み">強み</a>
+        <a class="active" aria-current="page" href="download.html" data-i18n="shared.nav.download" data-mobile-label="入手">ダウンロード</a>
+        <a href="install.html" data-i18n="shared.nav.install" data-mobile-label="導入">インストール</a>
+        <a href="privacy.html" data-i18n="shared.nav.privacy" data-mobile-label="個人情報">プライバシー</a>
+        <a href="faq.html" data-i18n="shared.nav.faq" data-mobile-label="FAQ">FAQ</a>
+        <a href="support.html" data-i18n="shared.nav.support" data-mobile-label="支援">サポート</a>
       </nav>
       <div class="header-tools">
         <nav class="lang-switch" aria-label="言語切替">
@@ -95,11 +96,12 @@
               </svg>
               <span data-i18n="download.hero.primary">v0.1.0 をダウンロード</span>
             </a>
-            <a class="button secondary" href="https://github.com/shinteni/prompt-island/tree/v0.1.0" data-i18n="download.hero.secondary">ソースを見る</a>
+            <a class="button secondary" href="install.html" data-i18n="download.hero.secondary">インストールと信頼</a>
           </div>
           <div class="hero-assist-links">
             <a href="https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip.sha256" data-i18n="download.security.sha">.sha256 をダウンロード</a>
             <a href="#security-title" data-i18n="download.security.verify">確認コマンドを見る</a>
+            <a href="https://github.com/shinteni/prompt-island/tree/v0.1.0" data-i18n="download.security.source">ソースを見る</a>
           </div>
           <div class="download-meta-strip" aria-label="ダウンロード概要" data-reveal="">
             <span><strong data-i18n="download.card.version">v0.1.0</strong></span>
@@ -170,6 +172,10 @@
             <p data-i18n="download.install.step3.copy">Applications に移動し、Control クリックで開き、hooks を入れて設定画面のヘルスチェックを確認します。</p>
           </li>
         </ol>
+        <div class="hero-assist-links">
+          <a href="install.html" data-i18n="download.install.guide">完全なインストールと信頼の手順を見る</a>
+          <a href="privacy.html" data-i18n="download.install.privacy">ローカルデータ境界を見る</a>
+        </div>
       </section>
 
       <section class="section split-section" aria-labelledby="security-title">
@@ -196,11 +202,12 @@
     <footer class="site-footer">
       <div>
         <strong>Vibelsland Free</strong>
-        <p data-i18n="shared.footer.tagline">macOS 向けローカルファースト AI coding 状態表示。</p>
+        <p data-i18n="shared.footer.tagline">macOS 向けローカルファースト AI コーディングの状態表示。</p>
       </div>
       <nav aria-label="フッターナビゲーション">
         <a href="index.html" data-i18n="shared.nav.home">ホーム</a>
         <a href="advantages.html" data-i18n="shared.nav.advantages">強み</a>
+        <a href="download.html" data-i18n="shared.nav.download">ダウンロード</a>
         <a href="install.html" data-i18n="shared.nav.install">インストール</a>
         <a href="release-notes.html" data-i18n="shared.nav.release">リリースノート</a>
         <a href="privacy.html" data-i18n="shared.nav.privacy">プライバシー</a>
@@ -209,7 +216,7 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="../lang.js?v=4e0be1988f7a" defer=""></script>
+    <script src="../lang.js?v=cee21cea4938" defer=""></script>
     <script src="../effects.js?v=5b40303a0205" defer=""></script>
 
 
