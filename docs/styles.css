@@ -1344,6 +1344,11 @@ button:focus-visible {
   margin-top: 18px;
 }
 
+.redaction-example {
+  width: min(var(--content), 100%);
+  margin: 18px auto 0;
+}
+
 .checksum-actions .text-link {
   margin-top: 0;
 }
@@ -1581,6 +1586,33 @@ button:focus-visible {
   }
 }
 
+@media (min-width: 861px) and (max-width: 1100px) {
+  .download-hero {
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 0.78fr);
+    gap: 34px;
+    padding-top: calc(var(--header-height) + 54px);
+    padding-bottom: 64px;
+    min-height: min(760px, 100svh);
+  }
+
+  .download-hero h1 {
+    font-size: 54px;
+  }
+
+  .download-side .release-card {
+    padding: 22px;
+  }
+
+  .download-side .release-card strong {
+    margin-bottom: 12px;
+    font-size: 40px;
+  }
+
+  .download-side .release-card dl div {
+    padding: 10px 0;
+  }
+}
+
 @media (max-width: 860px) {
   ::view-transition-old(root),
   ::view-transition-new(root) {
@@ -1619,10 +1651,10 @@ button:focus-visible {
     top: auto;
     left: 50%;
     bottom: calc(8px + env(safe-area-inset-bottom));
-    width: min(430px, calc(100vw - 16px));
+    width: min(430px, calc(100vw - 20px));
     min-height: 54px;
     justify-content: center;
-    gap: 4px;
+    gap: 3px;
     padding: 4px;
     border: 1px solid var(--line);
     border-radius: 999px;
@@ -1645,9 +1677,9 @@ button:focus-visible {
 
   .nav-links a {
     flex: 1 1 0;
-    min-width: 60px;
+    min-width: 0;
     min-height: 46px;
-    padding: 0 8px;
+    padding: 0 6px;
     border-radius: 999px;
     font-size: 12px;
     white-space: nowrap;
@@ -1788,7 +1820,7 @@ button:focus-visible {
 
   .release-card {
     padding: 24px;
-    margin-bottom: calc(72px + env(safe-area-inset-bottom));
+    margin-bottom: calc(84px + env(safe-area-inset-bottom));
   }
 
   .release-card strong {
@@ -1976,7 +2008,8 @@ button:focus-visible {
 
   .subpage-hero {
     padding-top: 100px;
-    padding-bottom: calc(42px + env(safe-area-inset-bottom));
+    padding-bottom: calc(136px + env(safe-area-inset-bottom));
+    min-height: 100svh;
   }
 
   .privacy-summary div {
@@ -2046,7 +2079,8 @@ button:focus-visible {
 
   .nav-links a {
     font-size: 10px;
-    min-width: 58px;
+    min-width: 0;
+    padding: 0 3px;
   }
 
   .nav-links a[data-mobile-label] {
@@ -2055,7 +2089,7 @@ button:focus-visible {
 
   .nav-links a[data-mobile-label]::after {
     content: attr(data-mobile-label);
-    font-size: 10px;
+    font-size: 9.5px;
   }
 
   .product-stage img {
@@ -2069,8 +2103,8 @@ button:focus-visible {
 
   .download-hero {
     padding-top: 84px;
-    padding-bottom: calc(8px + env(safe-area-inset-bottom));
-    min-height: auto;
+    padding-bottom: calc(116px + env(safe-area-inset-bottom));
+    min-height: 100svh;
     gap: 18px;
   }
 
@@ -2094,6 +2128,10 @@ button:focus-visible {
   }
 
   .download-media {
+    display: none;
+  }
+
+  .download-side {
     display: none;
   }
 
@@ -2131,16 +2169,22 @@ button:focus-visible {
   }
 
   .support-shortcuts {
-    gap: 8px;
+    gap: 6px;
   }
 
   .support-shortcuts a {
-    min-height: 86px;
-    padding: 16px;
+    min-height: 70px;
+    padding: 12px;
+  }
+
+  .support-shortcuts span {
+    margin-bottom: 4px;
+    font-size: 10px;
   }
 
   .support-shortcuts strong {
-    font-size: 20px;
+    font-size: 16px;
+    line-height: 1.08;
   }
 
   .section-heading {
@@ -2184,6 +2228,10 @@ button:focus-visible {
 
   .subpage-hero .privacy-summary {
     margin-top: 56px;
+  }
+
+  .support-shortcuts {
+    display: none;
   }
 }
 

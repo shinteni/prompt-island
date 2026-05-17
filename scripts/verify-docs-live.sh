@@ -55,15 +55,31 @@ for page in "${pages[@]}"; do
   require_status "${SITE_URL}${page}" "$TMP_DIR/$safe_name"
 done
 
-missing_status="$(fetch_status "${SITE_URL}en/not-found-${RANDOM}.html" "$TMP_DIR/not-found-en.html")"
-if [[ "$missing_status" != "404" ]]; then
-  echo "Live check failed: missing English URL should return 404, got $missing_status" >&2
-  exit 1
-fi
-if ! grep -q 'data-page="404"' "$TMP_DIR/not-found-en.html"; then
-  echo "Live check failed: missing English URL did not serve the site 404 page." >&2
-  exit 1
-fi
+missing_pages=(
+  "not-found-${RANDOM}.html"
+  "en/not-found-${RANDOM}.html"
+  "ja/not-found-${RANDOM}.html"
+)
+for missing_page in "${missing_pages[@]}"; do
+  safe_missing_name="not-found-${missing_page//\//_}"
+  missing_status="$(fetch_status "${SITE_URL}${missing_page}" "$TMP_DIR/$safe_missing_name")"
+  if [[ "$missing_status" != "404" ]]; then
+    echo "Live check failed: missing URL should return 404, got $missing_status for $missing_page" >&2
+    exit 1
+  fi
+  if ! grep -q 'data-page="404"' "$TMP_DIR/$safe_missing_name"; then
+    echo "Live check failed: missing URL did not serve the site 404 page: $missing_page" >&2
+    exit 1
+  fi
+  if ! grep -q "Page not found" "$TMP_DIR/$safe_missing_name" || ! grep -q "ページが見つかりません" "$TMP_DIR/$safe_missing_name"; then
+    echo "Live check failed: 404 static fallback is not multilingual for $missing_page" >&2
+    exit 1
+  fi
+  if ! grep -q "styles.css?v=" "$TMP_DIR/$safe_missing_name" || ! grep -q "lang.js?v=" "$TMP_DIR/$safe_missing_name"; then
+    echo "Live check failed: 404 page is missing versioned assets for $missing_page" >&2
+    exit 1
+  fi
+done
 
 python3 - "$TMP_DIR/release.json" > "$TMP_DIR/release-vars.txt" <<'PY'
 import json

@@ -12,6 +12,7 @@ import html
 import hashlib
 import os
 import re
+import struct
 import subprocess
 import sys
 from html.parser import HTMLParser
@@ -265,6 +266,42 @@ def collect_strings(value):
             yield from collect_strings(item)
 
 
+def image_dimensions(path):
+    data = path.read_bytes()
+    if data.startswith(b"\x89PNG\r\n\x1a\n") and len(data) >= 24:
+        width, height = struct.unpack(">II", data[16:24])
+        return width, height
+    if data.startswith(b"\xff\xd8"):
+        index = 2
+        while index + 9 < len(data):
+            while index < len(data) and data[index] == 0xFF:
+                index += 1
+            if index >= len(data):
+                break
+            marker = data[index]
+            index += 1
+            if marker in {0xD8, 0xD9}:
+                continue
+            if index + 2 > len(data):
+                break
+            length = int.from_bytes(data[index:index + 2], "big")
+            if length < 2 or index + length > len(data):
+                break
+            if marker in {0xC0, 0xC1, 0xC2, 0xC3, 0xC5, 0xC6, 0xC7, 0xC9, 0xCA, 0xCB, 0xCD, 0xCE, 0xCF}:
+                height = int.from_bytes(data[index + 3:index + 5], "big")
+                width = int.from_bytes(data[index + 5:index + 7], "big")
+                return width, height
+            index += length
+    return None
+
+
+def parse_declared_size(value):
+    match = re.fullmatch(r"(\d+)x(\d+)", value or "")
+    if not match:
+        return None
+    return int(match.group(1)), int(match.group(2))
+
+
 def validate_absolute_site_url(value, rel, context):
     parsed = urlparse(value)
     if not parsed.scheme:
@@ -311,6 +348,22 @@ for path in html_files:
     for phrase in blocked_copy:
         if phrase in text:
             errors.append(f"Blocked copy remains in {rel}: {phrase}")
+    nav_match = re.search(r'<nav class="nav-links"[^>]*>(.*?)</nav>', text, re.S)
+    if not nav_match:
+        errors.append(f"Missing primary navigation in {rel}")
+    else:
+        nav_block = nav_match.group(1)
+        required_nav_keys = [
+            "shared.nav.home",
+            "shared.nav.download",
+            "shared.nav.install",
+            "shared.nav.privacy",
+            "shared.nav.faq",
+            "shared.nav.support",
+        ]
+        for key in required_nav_keys:
+            if f'data-i18n="{key}"' not in nav_block:
+                errors.append(f"Primary navigation missing {key} in {rel}")
 
     parser = RefParser()
     parser.feed(text)
@@ -409,20 +462,109 @@ if manifest_path.exists():
         "start_url": "./index.html",
         "scope": "./",
     }
+    required_manifest_fields = [
+        "name",
+        "short_name",
+        "description",
+        "id",
+        "start_url",
+        "scope",
+        "display",
+        "background_color",
+        "theme_color",
+        "icons",
+        "screenshots",
+        "shortcuts",
+    ]
+    for key in required_manifest_fields:
+        if not manifest.get(key):
+            errors.append(f"Manifest missing required field: {key}")
+    if manifest.get("short_name") == manifest.get("name"):
+        errors.append("Manifest short_name should be shorter than name.")
+    if isinstance(manifest.get("short_name"), str) and len(manifest["short_name"]) > 12:
+        errors.append(f"Manifest short_name is too long for install surfaces: {manifest['short_name']}")
     for key, expected_value in expected_manifest_values.items():
         actual_value = manifest.get(key)
         if actual_value != expected_value:
             errors.append(f"Manifest {key} should be {expected_value}: {actual_value}")
     for value in collect_strings(manifest):
         validate_absolute_site_url(value, "site.webmanifest", "Manifest URL")
+    has_maskable_icon = False
     for icon in manifest.get("icons", []):
         src = icon.get("src")
-        if src and not (docs / src).exists():
+        icon_path = docs / src if src else None
+        if not src:
+            errors.append("Manifest icon is missing src.")
+            continue
+        if not icon_path.exists():
             errors.append(f"Manifest icon is missing: {src}")
+            continue
+        if icon.get("type") != "image/png":
+            errors.append(f"Manifest icon should be image/png: {src}")
+        declared_size = parse_declared_size(icon.get("sizes"))
+        actual_size = image_dimensions(icon_path)
+        if not declared_size:
+            errors.append(f"Manifest icon has invalid sizes value: {src}")
+        elif actual_size != declared_size:
+            errors.append(f"Manifest icon size mismatch for {src}: declared {declared_size}, actual {actual_size}")
+        purpose_tokens = set((icon.get("purpose") or "").split())
+        if "maskable" in purpose_tokens:
+            has_maskable_icon = True
+        if "any" not in purpose_tokens:
+            errors.append(f"Manifest icon should include purpose any: {src}")
+    if manifest.get("icons") and not has_maskable_icon:
+        errors.append("Manifest should include at least one maskable icon.")
     for screenshot in manifest.get("screenshots", []):
         src = screenshot.get("src")
-        if src and not (docs / src).exists():
+        screenshot_path = docs / src if src else None
+        if not src:
+            errors.append("Manifest screenshot is missing src.")
+            continue
+        if not screenshot_path.exists():
             errors.append(f"Manifest screenshot is missing: {src}")
+            continue
+        declared_size = parse_declared_size(screenshot.get("sizes"))
+        actual_size = image_dimensions(screenshot_path)
+        if not declared_size:
+            errors.append(f"Manifest screenshot has invalid sizes value: {src}")
+        elif actual_size != declared_size:
+            errors.append(f"Manifest screenshot size mismatch for {src}: declared {declared_size}, actual {actual_size}")
+        expected_type = "image/jpeg" if screenshot_path.suffix.lower() in {".jpg", ".jpeg"} else "image/png"
+        if screenshot.get("type") != expected_type:
+            errors.append(f"Manifest screenshot type mismatch for {src}: {screenshot.get('type')}")
+    for shortcut in manifest.get("shortcuts", []):
+        url = shortcut.get("url", "")
+        if not shortcut.get("name") or not shortcut.get("description") or not url:
+            errors.append(f"Manifest shortcut is incomplete: {shortcut}")
+            continue
+        if url.startswith(("http://", "https://")):
+            errors.append(f"Manifest shortcut should stay local: {url}")
+            continue
+        clean = url.split("#", 1)[0].split("?", 1)[0]
+        if clean.startswith("./"):
+            clean = clean[2:]
+        target = (docs / clean).resolve()
+        try:
+            target.relative_to(docs_root)
+        except ValueError:
+            errors.append(f"Manifest shortcut escapes docs root: {url}")
+            continue
+        if not target.exists():
+            errors.append(f"Manifest shortcut target is missing: {url}")
+
+not_found_path = docs / "404.html"
+if not_found_path.exists():
+    not_found_text = not_found_path.read_text(encoding="utf-8")
+    for phrase in [
+        'data-page="404"',
+        "Page not found",
+        "ページが見つかりません",
+        '404.html?lang=en',
+        '404.html?lang=ja',
+        'base.href = window.location.hostname.endsWith("github.io") ? "/prompt-island/" : "/"',
+    ]:
+        if phrase not in not_found_text:
+            errors.append(f"404 page missing static fallback value: {phrase}")
 
 if site_url != default_site_url:
     text_suffixes = {".html", ".xml", ".txt", ".json", ".webmanifest"}
@@ -541,7 +683,8 @@ security_path = docs / ".well-known" / "security.txt"
 if security_path.exists():
     security = security_path.read_text(encoding="utf-8")
     expected_security_lines = [
-        "Contact: https://github.com/shinteni/prompt-island/issues",
+        "Contact: https://github.com/shinteni/prompt-island/security/advisories/new",
+        "Contact: https://github.com/shinteni/prompt-island/issues/new?labels=security",
         f"Canonical: {site_url}.well-known/security.txt",
         f"Policy: {site_url}support.html",
     ]
