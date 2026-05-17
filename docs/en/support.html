@@ -106,6 +106,19 @@
         </div>
       </section>
 
+      <section class="section note-section" aria-labelledby="trust-note-title">
+        <div class="section-heading align-left" data-reveal>
+          <p class="eyebrow">Trust boundary</p>
+          <h2 id="trust-note-title">Gatekeeper and checksum results are different checks.</h2>
+          <p>
+            v0.1.0 is ad-hoc signed, not Developer ID notarized. A passing checksum means the zip matches the GitHub Release file; if <code>spctl</code> reports rejected or not accepted, that is the notarization boundary and does not mean SHA-256 verification failed.
+          </p>
+          <p>
+            Vibelsland Free is an independent project and is not affiliated with Anthropic, OpenAI, Claude, or Codex.
+          </p>
+        </div>
+      </section>
+
       <section class="section data-section" aria-labelledby="status-title">
         <div class="section-heading align-left" data-reveal>
           <p class="eyebrow">Status display</p>

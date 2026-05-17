@@ -106,6 +106,19 @@
         </div>
       </section>
 
+      <section class="section note-section" aria-labelledby="trust-note-title">
+        <div class="section-heading align-left" data-reveal>
+          <p class="eyebrow">信任边界</p>
+          <h2 id="trust-note-title">Gatekeeper 与校验结果不是同一件事。</h2>
+          <p>
+            v0.1.0 是 ad-hoc 签名，不是 Developer ID notarized。下载校验通过只能说明 zip 与 GitHub Release 文件一致；如果 <code>spctl</code> 显示 rejected 或 not accepted，那是 notarization 边界，不等于 SHA-256 校验失败。
+          </p>
+          <p>
+            Vibelsland Free 是独立项目，不隶属于 Anthropic、OpenAI、Claude 或 Codex。
+          </p>
+        </div>
+      </section>
+
       <section class="section data-section" aria-labelledby="status-title">
         <div class="section-heading align-left" data-reveal>
           <p class="eyebrow">状态显示</p>

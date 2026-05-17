@@ -6,6 +6,7 @@ SITE_URL="${VIBELSLAND_SITE_URL:-https://shinteni.github.io/prompt-island/}"
 SITE_URL="${SITE_URL%/}/"
 VERIFY_DIST="${VIBELSLAND_VERIFY_DIST:-0}"
 TMP_DIR="$(mktemp -d)"
+REFERENCE_DIR="$TMP_DIR/reference"
 
 cleanup() {
   rm -rf "$TMP_DIR"
@@ -32,6 +33,15 @@ require_status() {
     return 1
   fi
 }
+
+fetch_resource() {
+  local url="$1"
+  local headers="$2"
+  local output="$3"
+  /usr/bin/curl -L -sS -D "$headers" -o "$output" -w "%{http_code} %{url_effective}" "$url"
+}
+
+zsh "$ROOT/scripts/build-docs-site.sh" "$REFERENCE_DIR" >/dev/null
 
 pages=(
   ""
@@ -225,6 +235,255 @@ while IFS= read -r sitemap_url; do
   sitemap_index=$((sitemap_index + 1))
   require_status "$sitemap_url" "$TMP_DIR/sitemap-page-$sitemap_index.html"
 done < "$TMP_DIR/sitemap-urls.txt"
+
+python3 - "$REFERENCE_DIR" "$SITE_URL" > "$TMP_DIR/live-resources.tsv" <<'PY'
+import hashlib
+import json
+import re
+import sys
+from html.parser import HTMLParser
+from pathlib import Path
+from urllib.parse import urldefrag, urljoin, urlparse
+from xml.etree import ElementTree as ET
+
+reference_dir = Path(sys.argv[1]).resolve()
+site_url = sys.argv[2]
+site_parts = urlparse(site_url)
+
+type_by_suffix = {
+    ".html": "text/html",
+    ".css": "text/css",
+    ".js": "javascript",
+    ".png": "image/png",
+    ".jpg": "image/jpeg",
+    ".jpeg": "image/jpeg",
+    ".webmanifest": "manifest+json",
+    ".json": "application/json",
+    ".xml": "xml",
+    ".txt": "text/plain",
+}
+
+
+def is_same_origin(url):
+    parsed = urlparse(url)
+    return parsed.scheme in {"http", "https"} and parsed.netloc == site_parts.netloc
+
+
+def local_path_for(url):
+    parsed = urlparse(url)
+    if not is_same_origin(url):
+        return None
+    site_path = site_parts.path.rstrip("/") + "/"
+    if not parsed.path.startswith(site_path):
+        return None
+    rel = parsed.path[len(site_path):]
+    if not rel:
+        rel = "index.html"
+    elif rel.endswith("/"):
+        rel += "index.html"
+    rel_path = Path(rel)
+    if rel_path.is_absolute() or ".." in rel_path.parts:
+        return None
+    return rel_path
+
+
+def expected_type_for(rel_path):
+    return type_by_suffix.get(rel_path.suffix.lower(), "")
+
+
+def add_url(resources, url):
+    clean_url, _ = urldefrag(url)
+    if not clean_url:
+        return
+    rel_path = local_path_for(clean_url)
+    if rel_path is None:
+        return
+    expected_type = expected_type_for(rel_path)
+    if not expected_type:
+        return
+    path = (reference_dir / rel_path).resolve()
+    try:
+        path.relative_to(reference_dir)
+    except ValueError:
+        return
+    if not path.exists() or not path.is_file():
+        return
+    resources[clean_url] = (rel_path, expected_type)
+
+
+def add_relative_url(resources, base_url, value):
+    if not value or value.startswith(("data:", "mailto:", "tel:", "#")):
+        return
+    add_url(resources, urljoin(base_url, value))
+
+
+def srcset_urls(value):
+    for candidate in value.split(","):
+        url = candidate.strip().split(" ", 1)[0]
+        if url:
+            yield url
+
+
+def collect_json_urls(value):
+    if isinstance(value, str):
+        yield value
+    elif isinstance(value, list):
+        for item in value:
+            yield from collect_json_urls(item)
+    elif isinstance(value, dict):
+        for item in value.values():
+            yield from collect_json_urls(item)
+
+
+class ResourceParser(HTMLParser):
+    def __init__(self, base_url):
+        super().__init__()
+        self.base_url = base_url
+        self.resources = set()
+        self.script_type = ""
+        self.script_text = []
+
+    def handle_starttag(self, tag, attrs):
+        attrs = dict(attrs)
+        if tag == "script":
+            self.script_type = attrs.get("type", "")
+            self.script_text = []
+            if attrs.get("src"):
+                self.resources.add(attrs["src"])
+        elif tag == "link" and attrs.get("href"):
+            rel_tokens = set((attrs.get("rel") or "").lower().split())
+            if rel_tokens & {"stylesheet", "manifest", "icon", "apple-touch-icon", "mask-icon"}:
+                self.resources.add(attrs["href"])
+        elif tag in {"img", "source"}:
+            for key in ("src", "poster"):
+                if attrs.get(key):
+                    self.resources.add(attrs[key])
+            if attrs.get("srcset"):
+                self.resources.update(srcset_urls(attrs["srcset"]))
+        elif tag == "video" and attrs.get("poster"):
+            self.resources.add(attrs["poster"])
+        elif tag == "meta":
+            key = attrs.get("property") or attrs.get("name") or ""
+            if key in {"og:image", "twitter:image", "msapplication-config"} and attrs.get("content"):
+                self.resources.add(attrs["content"])
+
+    def handle_data(self, data):
+        if self.script_type == "application/ld+json":
+            self.script_text.append(data)
+
+    def handle_endtag(self, tag):
+        if tag != "script":
+            return
+        if self.script_type == "application/ld+json":
+            text = "".join(self.script_text).strip()
+            if text:
+                try:
+                    payload = json.loads(text)
+                except json.JSONDecodeError:
+                    payload = None
+                if payload is not None:
+                    self.resources.update(collect_json_urls(payload))
+        self.script_type = ""
+        self.script_text = []
+
+
+resources = {}
+for html_path in reference_dir.glob("**/*.html"):
+    rel = html_path.relative_to(reference_dir)
+    if rel.name == "index.html":
+        if len(rel.parts) == 1:
+            base_url = site_url
+        else:
+            base_url = urljoin(site_url, "/".join(rel.parts[:-1]) + "/")
+    else:
+        base_url = urljoin(site_url, rel.as_posix())
+    add_url(resources, base_url)
+    parser = ResourceParser(base_url)
+    parser.feed(html_path.read_text(encoding="utf-8", errors="ignore"))
+    for resource in parser.resources:
+        add_relative_url(resources, base_url, resource)
+
+css_path = reference_dir / "styles.css"
+if css_path.exists():
+    for match in re.finditer(r"url\\(([^)]+)\\)", css_path.read_text(encoding="utf-8", errors="ignore")):
+        value = match.group(1).strip().strip("'\"")
+        add_relative_url(resources, urljoin(site_url, "styles.css"), value)
+
+manifest_path = reference_dir / "site.webmanifest"
+if manifest_path.exists():
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    for icon in manifest.get("icons", []):
+        add_relative_url(resources, urljoin(site_url, "site.webmanifest"), icon.get("src", ""))
+    for screenshot in manifest.get("screenshots", []):
+        add_relative_url(resources, urljoin(site_url, "site.webmanifest"), screenshot.get("src", ""))
+
+browserconfig_path = reference_dir / "browserconfig.xml"
+if browserconfig_path.exists():
+    root = ET.parse(browserconfig_path).getroot()
+    for node in root.iter():
+        src = node.attrib.get("src")
+        if src:
+            add_relative_url(resources, urljoin(site_url, "browserconfig.xml"), src)
+
+for text_name in ["robots.txt", "llms.txt", ".well-known/security.txt"]:
+    text_path = reference_dir / text_name
+    if not text_path.exists():
+        continue
+    for url in re.findall(r"https?://[^\\s)<>\"']+", text_path.read_text(encoding="utf-8", errors="ignore")):
+        add_url(resources, url)
+
+for rel_name in ["release.json", "sitemap.xml", "site.webmanifest", "browserconfig.xml", "llms.txt", ".well-known/security.txt"]:
+    add_url(resources, urljoin(site_url, rel_name))
+
+for url, (rel_path, expected_type) in sorted(resources.items(), key=lambda item: item[1][0].as_posix()):
+    path = reference_dir / rel_path
+    digest = hashlib.sha256(path.read_bytes()).hexdigest()
+    size = path.stat().st_size
+    print(f"{url}\t{rel_path.as_posix()}\t{digest}\t{size}\t{expected_type}")
+PY
+
+while IFS=$'\t' read -r resource_url resource_rel expected_hash expected_size expected_type; do
+  [[ -n "$resource_url" ]] || continue
+  safe_resource_name="${resource_rel//\//_}"
+  safe_resource_name="${safe_resource_name//[^A-Za-z0-9_.-]/_}"
+  resource_body="$TMP_DIR/resource-$safe_resource_name"
+  resource_headers="$TMP_DIR/resource-$safe_resource_name.headers"
+  resource_result="$(fetch_resource "$resource_url" "$resource_headers" "$resource_body")"
+  resource_status="${resource_result%% *}"
+  resource_effective="${resource_result#* }"
+  if [[ "$resource_status" != "200" ]]; then
+    echo "Live resource failed: $resource_status $resource_url" >&2
+    exit 1
+  fi
+  case "$resource_effective" in
+    "$SITE_URL"*) ;;
+    *)
+      echo "Live resource escaped site origin: $resource_rel => $resource_effective" >&2
+      exit 1
+      ;;
+  esac
+  actual_hash="$(/usr/bin/shasum -a 256 "$resource_body" | awk '{print $1}')"
+  if [[ "$actual_hash" != "$expected_hash" ]]; then
+    echo "Live resource hash mismatch: $resource_rel" >&2
+    echo "expected: $expected_hash" >&2
+    echo "actual:   $actual_hash" >&2
+    exit 1
+  fi
+  content_type="$(awk 'BEGIN{IGNORECASE=1} /^content-type:/ {value=tolower($0); sub(/^content-type:[[:space:]]*/, "", value); sub(/\r$/, "", value); print value}' "$resource_headers" | tail -1)"
+  if [[ "$content_type" != *"$expected_type"* ]]; then
+    echo "Live resource content-type mismatch: $resource_rel => ${content_type:-<missing>}" >&2
+    exit 1
+  fi
+  if ! awk 'BEGIN{IGNORECASE=1; found=0} /^content-encoding:/ {found=1} END{exit found ? 0 : 1}' "$resource_headers"; then
+    header_size="$(awk 'BEGIN{IGNORECASE=1} /^content-length:/ {gsub(/\r/, ""); print $2}' "$resource_headers" | tail -1)"
+    if [[ -n "$header_size" && "$header_size" != "$expected_size" ]]; then
+      echo "Live resource content-length mismatch: $resource_rel" >&2
+      echo "expected: $expected_size" >&2
+      echo "actual:   $header_size" >&2
+      exit 1
+    fi
+  fi
+done < "$TMP_DIR/live-resources.tsv"
 
 python3 - "$TMP_DIR" "$SITE_URL" <<'PY'
 import sys

@@ -28,10 +28,42 @@ Hook payloads are filtered before they are sent to the app. The bridge keeps onl
 
 Logs are intentionally conservative. They record connection state, event types, timestamps, local paths, thread/request ids, and error reasons, but do not intentionally store full transcript text or full sensitive command output.
 
+Logs stay on the user's Mac until the user deletes them. The app does not currently claim automatic log upload, automatic retention limits, or automatic log cleanup.
+
 ## Network
 
 &gt;_ - island does not require an internet connection for its core features. Claude Code, Codex CLI, and Codex Desktop may use their own network connections independently of this app.
 
+Vibelsland Free is an independent project. It is not affiliated with Anthropic, OpenAI, Claude, or Codex.
+
+## Distribution Trust
+
+v0.1.0 is ad-hoc signed and is not Developer ID notarized. The SHA-256 checksum verifies that the downloaded file matches the GitHub Release asset; it does not prove developer identity.
+
+The v0.1.0 package targets macOS 14+ on Apple Silicon / arm64.
+
+## Website Privacy
+
+The public website is a static site. It sets no first-party cookies, embeds no analytics script, and collects no form submissions.
+
+Pages are hosted by GitHub Pages. Downloads, source links, release pages, issues, and private vulnerability reporting are provided by GitHub and are governed by GitHub's own terms and privacy policy.
+
+Do not paste tokens, prompts, full session content, absolute private paths, or unredacted logs into public GitHub Issues.
+
+## Security Reports
+
+Security vulnerabilities should be reported through GitHub private vulnerability reporting when available. If that path is unavailable, open only a minimal public issue asking for private contact and do not include exploit details, tokens, prompts, paths, or full logs.
+
 ## Uninstall
 
-Use the settings page to uninstall hooks. The local runtime directory, logs, and app configuration can then be removed manually if desired.
+Use the settings page or menu bar to uninstall hooks before removing the app. This removes Vibelsland bridge entries from Claude and Codex hook configuration.
+
+Then quit `>_ - island` and delete the app from Applications or from the location where it was installed.
+
+If you no longer need local state, delete:
+
+- `~/Library/Application Support/VibelslandFree`
+- `~/Library/Logs/VibelslandFree`
+- `~/.vibelsland-free`
+
+Deleting `~/.vibelsland-free` removes the local bridge token and runtime socket. The app or hooks recreate the required runtime files on the next launch.
