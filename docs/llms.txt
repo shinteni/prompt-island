@@ -41,3 +41,6 @@ Vibelsland Free keeps local AI coding session status, tool activity, token summa
 - It writes local configuration, logs, and bridge runtime files on the user's Mac.
 - Core status display, source control, and approval bridge behavior are local-first.
 - Claude Code, Codex CLI, and Codex Desktop may have their own account, network, and session behavior independent of Vibelsland Free.
+- Vibelsland Free is independent and is not affiliated with Anthropic, OpenAI, Claude, or Codex.
+- v0.1.0 is not Developer ID notarized; SHA-256 verifies asset integrity, not developer identity.
+- Security vulnerability details should use private vulnerability reporting, not public GitHub Issues.

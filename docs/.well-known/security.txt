@@ -1,6 +1,5 @@
 Contact: https://github.com/shinteni/prompt-island/security/advisories/new
-Contact: https://github.com/shinteni/prompt-island/issues/new?labels=security
 Expires: 2027-05-17T00:00:00Z
 Preferred-Languages: zh, en, ja
 Canonical: https://shinteni.github.io/prompt-island/.well-known/security.txt
-Policy: https://shinteni.github.io/prompt-island/support.html
+Policy: https://shinteni.github.io/prompt-island/support.html#report-title

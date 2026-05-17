@@ -82,6 +82,7 @@
 
   const productStage = document.querySelector(".product-stage");
   const demoLabel = productStage?.querySelector(".status-float strong");
+  const demoControls = Array.from(document.querySelectorAll("[data-demo-control]"));
   if (productStage && demoLabel) {
     const lang = document.documentElement.lang;
     const states = lang === "ja"
@@ -99,15 +100,24 @@
         : [
             ["running", "示例 · 工具运行中"],
             ["approval", "示例 · 等待审批"],
-            ["idle", "示例 · 空闲待命"]
-          ];
+          ["idle", "示例 · 空闲待命"]
+        ];
+    const stateIndexByName = new Map(states.map((state, stateIndex) => [state[0], stateIndex]));
 
     let index = 0;
     let demoTimer = 0;
-    const setDemoState = (nextIndex) => {
+    const setDemoState = (nextState) => {
+      const nextIndex = typeof nextState === "string"
+        ? stateIndexByName.get(nextState) ?? 0
+        : nextState;
       index = nextIndex;
       productStage.dataset.demoState = states[index][0];
       demoLabel.textContent = states[index][1];
+      demoControls.forEach((control) => {
+        const isActive = control.dataset.demoControl === states[index][0];
+        control.classList.toggle("active", isActive);
+        control.setAttribute("aria-pressed", isActive ? "true" : "false");
+      });
     };
     const stopDemo = () => {
       if (demoTimer) window.clearInterval(demoTimer);
@@ -122,6 +132,12 @@
     };
 
     setDemoState(0);
+    demoControls.forEach((control) => {
+      control.addEventListener("click", () => {
+        setDemoState(control.dataset.demoControl || "running");
+        stopDemo();
+      });
+    });
     startDemo();
     onMotionChange((event) => {
       reduceMotion = event.matches;

@@ -17,13 +17,14 @@ import subprocess
 import sys
 from html.parser import HTMLParser
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import unquote, urlparse
 import xml.etree.ElementTree as ET
 
 root = Path(sys.argv[1]).resolve()
 docs = Path(sys.argv[2]).resolve()
 site_url = sys.argv[3].rstrip("/") + "/"
 custom_domain = sys.argv[4].strip()
+require_custom_domain = os.environ.get("VIBELSLAND_REQUIRE_CUSTOM_DOMAIN") == "1"
 default_site_url = "https://shinteni.github.io/prompt-island/"
 site_parts = urlparse(site_url)
 site_host = site_parts.netloc
@@ -37,6 +38,11 @@ if custom_domain:
             "VIBELSLAND_SITE_URL host must match VIBELSLAND_CUSTOM_DOMAIN: "
             f"{site_parts.hostname} != {custom_domain}"
         )
+if require_custom_domain:
+    if site_url == default_site_url:
+        errors.append("VIBELSLAND_REQUIRE_CUSTOM_DOMAIN=1 requires a non-default VIBELSLAND_SITE_URL.")
+    if not custom_domain:
+        errors.append("VIBELSLAND_REQUIRE_CUSTOM_DOMAIN=1 requires VIBELSLAND_CUSTOM_DOMAIN.")
 
 
 def display(path):
@@ -235,7 +241,7 @@ class RefParser(HTMLParser):
 
 def is_external(value):
     parsed = urlparse(value)
-    return parsed.scheme in {"http", "https", "mailto", "tel"} or value.startswith("#")
+    return parsed.scheme in {"http", "https", "mailto", "tel"}
 
 
 def page_file(language, filename):
@@ -300,6 +306,20 @@ def parse_declared_size(value):
     if not match:
         return None
     return int(match.group(1)), int(match.group(2))
+
+
+def html_has_anchor(path, fragment):
+    if not fragment:
+        return True
+    target_id = unquote(fragment)
+    if not target_id:
+        return True
+    text = path.read_text(encoding="utf-8")
+    escaped = re.escape(target_id)
+    return (
+        re.search(rf'\bid=["\']{escaped}["\']', text) is not None
+        or re.search(rf'\bname=["\']{escaped}["\']', text) is not None
+    )
 
 
 def validate_absolute_site_url(value, rel, context):
@@ -427,12 +447,16 @@ for path in html_files:
             validate_absolute_site_url(value, rel, "JSON-LD URL")
 
     for kind, value in parser.refs:
+        if value.startswith("http://"):
+            errors.append(f"External {kind} should use https in {rel}: {value}")
         if not value or is_external(value):
             continue
-        clean = value.split("#", 1)[0].split("?", 1)[0]
+        before_hash, _, fragment = value.partition("#")
+        clean = before_hash.split("?", 1)[0]
         if not clean:
-            continue
-        target = (path.parent / clean).resolve()
+            target = path
+        else:
+            target = (path.parent / clean).resolve()
         try:
             target.relative_to(docs_root)
         except ValueError:
@@ -440,6 +464,8 @@ for path in html_files:
             continue
         if not target.exists():
             errors.append(f"Missing local {kind} target in {rel}: {value}")
+        elif fragment and target.suffix == ".html" and not html_has_anchor(target, fragment):
+            errors.append(f"Missing local anchor target in {rel}: {value}")
         if target.name in versioned_assets:
             query = urlparse(value).query
             match = re.search(r"(?:^|&)v=([^&]+)", query)
@@ -561,6 +587,7 @@ if not_found_path.exists():
         "ページが見つかりません",
         '404.html?lang=en',
         '404.html?lang=ja',
+        f'<noscript><link rel="stylesheet" href="{site_url}styles.css?v={asset_versions.get("styles.css", "")}"></noscript>',
         'base.href = window.location.hostname.endsWith("github.io") ? "/prompt-island/" : "/"',
     ]:
         if phrase not in not_found_text:
@@ -613,6 +640,20 @@ for path in [docs / "support.html", docs / "en" / "support.html", docs / "ja" / 
         for phrase in ["MIT License", "https://github.com/shinteni/prompt-island/blob/main/LICENSE"]:
             if phrase not in support_text:
                 errors.append(f"Support page missing license/disclaimer value in {display(path)}: {phrase}")
+
+for path in [docs / "index.html", docs / "en" / "index.html", docs / "ja" / "index.html"]:
+    if path.exists():
+        home_text = path.read_text(encoding="utf-8")
+        for phrase in [
+            'class="demo-controls"',
+            'data-demo-control="running"',
+            'data-demo-control="approval"',
+            'data-demo-control="idle"',
+            'aria-pressed="true"',
+            'data-i18n-aria-label="aria.demoControls"',
+        ]:
+            if phrase not in home_text:
+                errors.append(f"Home page missing interactive demo control in {display(path)}: {phrase}")
 
 sitemap_path = docs / "sitemap.xml"
 if sitemap_path.exists():
@@ -684,9 +725,8 @@ if security_path.exists():
     security = security_path.read_text(encoding="utf-8")
     expected_security_lines = [
         "Contact: https://github.com/shinteni/prompt-island/security/advisories/new",
-        "Contact: https://github.com/shinteni/prompt-island/issues/new?labels=security",
         f"Canonical: {site_url}.well-known/security.txt",
-        f"Policy: {site_url}support.html",
+        f"Policy: {site_url}support.html#report-title",
     ]
     for line in expected_security_lines:
         if line not in security:

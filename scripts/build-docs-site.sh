@@ -7,8 +7,9 @@ SITE_URL="${VIBELSLAND_SITE_URL:-https://shinteni.github.io/prompt-island/}"
 SITE_URL="${SITE_URL%/}/"
 OUTPUT_DIR="${1:-${TMPDIR:-/tmp}/vibelsland-docs-site}"
 CUSTOM_DOMAIN="${VIBELSLAND_CUSTOM_DOMAIN:-}"
+REQUIRE_CUSTOM_DOMAIN="${VIBELSLAND_REQUIRE_CUSTOM_DOMAIN:-0}"
 
-python3 - "$SOURCE_DIR" "$OUTPUT_DIR" "$SITE_URL" "$CUSTOM_DOMAIN" <<'PY'
+python3 - "$SOURCE_DIR" "$OUTPUT_DIR" "$SITE_URL" "$CUSTOM_DOMAIN" "$REQUIRE_CUSTOM_DOMAIN" <<'PY'
 import json
 import shutil
 import sys
@@ -19,11 +20,17 @@ source = Path(sys.argv[1]).resolve()
 output = Path(sys.argv[2]).expanduser().resolve()
 site_url = sys.argv[3].rstrip("/") + "/"
 custom_domain = sys.argv[4].strip()
+require_custom_domain = sys.argv[5] == "1"
 default_url = "https://shinteni.github.io/prompt-island/"
 
 parsed = urlparse(site_url)
 if parsed.scheme not in {"http", "https"} or not parsed.netloc:
     raise SystemExit(f"VIBELSLAND_SITE_URL must be an absolute http(s) URL: {site_url}")
+if require_custom_domain:
+    if site_url == default_url:
+        raise SystemExit("VIBELSLAND_REQUIRE_CUSTOM_DOMAIN=1 requires a non-default VIBELSLAND_SITE_URL.")
+    if not custom_domain:
+        raise SystemExit("VIBELSLAND_REQUIRE_CUSTOM_DOMAIN=1 requires VIBELSLAND_CUSTOM_DOMAIN.")
 if custom_domain:
     if "/" in custom_domain or ":" in custom_domain or custom_domain != custom_domain.strip("."):
         raise SystemExit(f"VIBELSLAND_CUSTOM_DOMAIN should be a bare host name: {custom_domain}")

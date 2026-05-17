@@ -105,29 +105,7 @@ VIBELSLAND_VERIFY_DIST=1 zsh scripts/verify-docs-site.sh
 VIBELSLAND_VERIFY_DIST=1 zsh scripts/verify-docs-live.sh
 ```
 
-## Website Publishing
-
-The website source lives in `docs/` and targets `https://shinteni.github.io/prompt-island/` by default. For a custom domain, do not hand-edit scattered canonical, OG, sitemap, robots, or security.txt URLs. Generate a domain-specific output:
-
-```sh
-VIBELSLAND_SITE_URL=https://your-domain.example/ \
-VIBELSLAND_CUSTOM_DOMAIN=your-domain.example \
-zsh scripts/build-docs-site.sh /tmp/vibelsland-docs-site
-```
-
-The script writes `CNAME`, rewrites site URLs, and runs `scripts/verify-docs-site.sh` against multilingual canonical/hreflang, sitemap alternates, manifest, robots, security.txt, and release checksum data.
-
-On pushes to `main`, `.github/workflows/pages.yml` uses the same script on a macOS runner to build `_site`, upload the GitHub Pages artifact, deploy, and then run `scripts/verify-docs-live.sh`. For a custom domain, set repository variables `VIBELSLAND_SITE_URL` and `VIBELSLAND_CUSTOM_DOMAIN`, or provide temporary workflow dispatch inputs; both hosts must match.
-
-The website and packaging scripts share [docs/release.json](docs/release.json) as the metadata source for the v0.1.0 package name, checksums, download URLs, and app bundle identity. `zsh scripts/verify-release-readiness.sh --github` verifies local `dist/`, website metadata, and the live GitHub Release assets in one gate so the site and download package cannot drift apart silently.
-
-Local release artifacts are generated at:
-
-```text
-dist/>_ - island.app
-dist/Vibelsland-Free-0.1.0-macos.zip
-dist/Vibelsland-Free-0.1.0-macos.zip.sha256
-```
+Maintainer publishing, custom-domain builds, and release gates are tracked in [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md).
 
 ## Project Status
 
