@@ -23,10 +23,18 @@ docs = Path(sys.argv[2]).resolve()
 site_url = sys.argv[3].rstrip("/") + "/"
 custom_domain = sys.argv[4].strip()
 default_site_url = "https://shinteni.github.io/prompt-island/"
-site_host = urlparse(site_url).netloc
+site_parts = urlparse(site_url)
+site_host = site_parts.netloc
 docs_root = docs.resolve()
 verify_dist = os.environ.get("VIBELSLAND_VERIFY_DIST") == "1"
 errors = []
+
+if custom_domain:
+    if (site_parts.hostname or "").lower() != custom_domain.lower():
+        errors.append(
+            "VIBELSLAND_SITE_URL host must match VIBELSLAND_CUSTOM_DOMAIN: "
+            f"{site_parts.hostname} != {custom_domain}"
+        )
 
 
 def display(path):

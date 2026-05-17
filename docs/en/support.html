@@ -32,7 +32,7 @@
     <link rel="icon" href="../assets/readme/app-icon.png">
     <link rel="apple-touch-icon" href="../assets/readme/app-icon.png">
     <link rel="manifest" href="../site.webmanifest">
-    <link rel="stylesheet" href="../styles.css?v=20260517-11">
+    <link rel="stylesheet" href="../styles.css?v=20260517-12">
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -57,12 +57,8 @@
       </a>
       <nav class="nav-links" aria-label="Page navigation">
         <a href="index.html" data-i18n="shared.nav.home">Home</a>
-        <a href="advantages.html" data-i18n="shared.nav.advantages">Advantages</a>
         <a href="download.html" data-i18n="shared.nav.download">Download</a>
-        <a href="install.html" data-i18n="shared.nav.install">Install</a>
         <a href="privacy.html" data-i18n="shared.nav.privacy">Privacy</a>
-        <a href="faq.html" data-i18n="shared.nav.faq">FAQ</a>
-        <a class="active" aria-current="page" href="support.html" data-i18n="shared.nav.support">Support</a>
       </nav>
       <div class="header-tools">
         <nav class="lang-switch" aria-label="Language switch">
@@ -80,7 +76,7 @@
           <p class="eyebrow">Support</p>
           <h1 id="support-title">Support.</h1>
           <p>
-            Resolve first-launch confirmation, SHA-256 verification, local data, uninstall, and missing tool status issues.
+            Missing status, hooks, uninstall, and security reports.
           </p>
           <div class="hero-actions">
             <a class="button primary" href="download.html">Read download notes</a>
@@ -88,7 +84,7 @@
           </div>
         </div>
         <div class="support-shortcuts" aria-label="Support task shortcuts" data-reveal="">
-          <a href="#first-checks-title">
+          <a href="install.html#first-open">
             <span>Cannot open</span>
             <strong>First launch and Gatekeeper</strong>
           </a>
@@ -105,30 +101,6 @@
             <strong>Hooks, app, and local data</strong>
           </a>
         </div>
-      </section>
-
-      <section class="section install-section" aria-labelledby="first-checks-title">
-        <div class="section-heading align-left" data-reveal>
-          <p class="eyebrow">First checks</p>
-          <h2 id="first-checks-title">Confirm these three things first.</h2>
-        </div>
-        <ol class="large-steps">
-          <li data-reveal>
-            <span>01</span>
-            <strong>macOS requires first-launch confirmation</strong>
-            <p>v0.1.0 uses ad-hoc signing, so macOS may require an extra confirmation on first launch. Confirm the download came from GitHub Releases, move the app into Applications, then Control-click the app and choose Open.</p>
-          </li>
-          <li data-reveal>
-            <span>02</span>
-            <strong>Verify SHA-256</strong>
-            <p>In the download directory, run <code>shasum -a 256 -c Vibelsland-Free-0.1.0-macos.zip.sha256</code>, or manually compare the zip hash with <code>64c7c0a4eae81042bbc3896e24a07ab5d5573aeaafa846eada2e982f887ecf81</code>.</p>
-          </li>
-          <li data-reveal>
-            <span>03</span>
-            <strong>Tool status does not appear</strong>
-            <p>Open Settings, make sure the matching source is enabled, run Install or Repair Hooks for Claude Code and Codex CLI, then start a new session. Existing sessions may not replay older hook events.</p>
-          </li>
-        </ol>
       </section>
 
       <section class="section data-section" aria-labelledby="status-title">
@@ -218,11 +190,6 @@
             <strong>Report on GitHub</strong>
             <p>Include the Vibelsland Free version, macOS version, affected source, reproduction steps, and a redacted log excerpt.</p>
           </a>
-          <a class="link-panel" href="https://github.com/shinteni/prompt-island/releases/tag/v0.1.0" data-reveal>
-            <span>Release</span>
-            <strong>Check release assets</strong>
-            <p>Download the zip and SHA-256 file again to confirm the package, checksum, and release notes are from the same version.</p>
-          </a>
           <a class="link-panel" href="privacy.html" data-reveal>
             <span>Privacy</span>
             <strong>Review privacy boundaries</strong>
@@ -233,12 +200,8 @@
             <strong>Security reporting entry</strong>
             <p>Use the public security.txt file to find the reporting route, language preference, and support page.</p>
           </a>
-          <a class="link-panel" href="https://github.com/shinteni/prompt-island/blob/main/LICENSE" data-reveal>
-            <span>License</span>
-            <strong>License and warranty disclaimer</strong>
-            <p>Vibelsland Free is distributed under the MIT License. The software is provided as is, without a warranty of fitness for a particular purpose; verify the Release, checksum, and source before installing.</p>
-          </a>
         </div>
+        <p><a class="text-link" href="https://github.com/shinteni/prompt-island/blob/main/LICENSE">MIT License</a></p>
       </section>
     </main>
 
@@ -259,7 +222,7 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="../lang.js?v=20260517-11" defer></script>
-    <script src="../effects.js?v=20260517-11" defer></script>
+    <script src="../lang.js?v=20260517-12" defer></script>
+    <script src="../effects.js?v=20260517-12" defer></script>
   </body>
 </html>

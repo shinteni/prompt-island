@@ -32,7 +32,7 @@
     <link rel="icon" href="../assets/readme/app-icon.png">
     <link rel="apple-touch-icon" href="../assets/readme/app-icon.png">
     <link rel="manifest" href="../site.webmanifest">
-    <link rel="stylesheet" href="../styles.css?v=20260517-11">
+    <link rel="stylesheet" href="../styles.css?v=20260517-12">
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -59,12 +59,8 @@
       </a>
       <nav class="nav-links" aria-label="Page navigation">
         <a href="index.html" data-i18n="shared.nav.home">Home</a>
-        <a href="advantages.html" data-i18n="shared.nav.advantages">Advantages</a>
         <a href="download.html" data-i18n="shared.nav.download">Download</a>
-        <a class="active" aria-current="page" href="install.html" data-i18n="shared.nav.install">Install</a>
         <a href="privacy.html" data-i18n="shared.nav.privacy">Privacy</a>
-        <a href="faq.html" data-i18n="shared.nav.faq">FAQ</a>
-        <a href="support.html" data-i18n="shared.nav.support">Support</a>
       </nav>
       <div class="header-tools">
         <nav class="lang-switch" aria-label="Language switch">
@@ -134,7 +130,7 @@
           <p class="eyebrow">Signing meaning</p>
           <h2 id="signing-title">ad-hoc signing is an intentional trust step.</h2>
           <p>
-            ad-hoc signing gives macOS a code signature on the app bundle, but it does not carry a Developer ID publisher identity. Gatekeeper therefore asks you to confirm the first launch. To decide whether to continue, check the Release page, download asset, SHA-256, and source repository together.
+            v0.1.0 has no Developer ID notarization, so macOS asks you to confirm the source on first launch.
           </p>
           <a class="text-link" href="support.html">Open install and status support</a>
         </div>
@@ -162,30 +158,6 @@
         </div>
       </section>
 
-      <section class="section note-section" aria-labelledby="release-title">
-        <div class="section-heading" data-reveal>
-          <p class="eyebrow">Source and Release</p>
-          <h2 id="release-title">Cross-check one version chain.</h2>
-        </div>
-        <div class="link-grid compact">
-          <a class="link-panel" href="https://github.com/shinteni/prompt-island/releases/tag/v0.1.0" data-reveal>
-            <span>Release</span>
-            <strong>Check release assets</strong>
-            <p>Confirm that the zip, <code>.sha256</code> file, and release notes all come from the same v0.1.0 release page.</p>
-          </a>
-          <a class="link-panel" href="https://github.com/shinteni/prompt-island/tree/v0.1.0" data-reveal>
-            <span>Source</span>
-            <strong>Review the source repository</strong>
-            <p>Compare implementation, privacy notes, build scripts, and packaging flow to understand what the app does locally.</p>
-          </a>
-          <a class="link-panel" href="download.html" data-reveal>
-            <span>Download</span>
-            <strong>Return to download</strong>
-            <p>Review system requirements, package name, version, and the current download entry point.</p>
-          </a>
-        </div>
-      </section>
-
       <section class="section data-section" aria-labelledby="local-title">
         <div class="section-heading align-left" data-reveal>
           <p class="eyebrow">Local permissions and data boundary</p>
@@ -195,9 +167,8 @@
           <article data-reveal>
             <h3>Read boundary</h3>
             <ul>
-              <li>Reads local Claude Code, Codex CLI, and Codex Desktop state for the island, tool-call summaries, and approval display.</li>
-              <li>Reads local hook configuration, session paths, and runtime state to show whether a source is enabled or needs repair.</li>
-              <li>Creates no online account and does not sync session content to a remote server.</li>
+              <li>Reads local Claude Code, Codex CLI, and Codex Desktop state.</li>
+              <li>Creates no online account and uploads no telemetry.</li>
             </ul>
           </article>
           <article data-reveal>
@@ -219,34 +190,6 @@
         </div>
       </section>
 
-      <section class="section note-section" aria-labelledby="next-title">
-        <div class="section-heading" data-reveal>
-          <p class="eyebrow">Keep reading</p>
-          <h2 id="next-title">Download, privacy, FAQ, and support cross-reference each other.</h2>
-        </div>
-        <div class="link-grid compact">
-          <a class="link-panel" href="faq.html" data-reveal>
-            <span>FAQ</span>
-            <strong>Common install questions</strong>
-            <p>Review first launch, free distribution, checksums, local data, and uninstall notes.</p>
-          </a>
-          <a class="link-panel" href="support.html" data-reveal>
-            <span>Support</span>
-            <strong>Troubleshooting and logs</strong>
-            <p>Resolve Gatekeeper, hooks, missing status, uninstall, and issue-reporting cases.</p>
-          </a>
-          <a class="link-panel" href="privacy.html" data-reveal>
-            <span>Privacy</span>
-            <strong>Privacy and local data</strong>
-            <p>Confirm read, write, network, and hook payload boundaries.</p>
-          </a>
-          <a class="link-panel" href="download.html" data-reveal>
-            <span>Download</span>
-            <strong>Download for macOS</strong>
-            <p>Return to the download entry point and verify version, filename, and system requirements.</p>
-          </a>
-        </div>
-      </section>
     </main>
 
     <footer class="site-footer">
@@ -266,7 +209,7 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="../lang.js?v=20260517-11" defer></script>
-    <script src="../effects.js?v=20260517-11" defer></script>
+    <script src="../lang.js?v=20260517-12" defer></script>
+    <script src="../effects.js?v=20260517-12" defer></script>
   </body>
 </html>

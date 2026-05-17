@@ -32,7 +32,7 @@
     <link rel="icon" href="../assets/readme/app-icon.png">
     <link rel="apple-touch-icon" href="../assets/readme/app-icon.png">
     <link rel="manifest" href="../site.webmanifest">
-    <link rel="stylesheet" href="../styles.css?v=20260517-11">
+    <link rel="stylesheet" href="../styles.css?v=20260517-12">
   </head>
   <body>
     <a class="skip-link" href="#main" data-i18n="shared.skip">本文へ移動</a>
@@ -43,12 +43,8 @@
       </a>
       <nav class="nav-links" aria-label="ページナビゲーション">
         <a href="index.html" data-i18n="shared.nav.home">ホーム</a>
-        <a href="advantages.html" data-i18n="shared.nav.advantages">強み</a>
         <a href="download.html" data-i18n="shared.nav.download">ダウンロード</a>
-        <a href="install.html" data-i18n="shared.nav.install">インストール</a>
         <a href="privacy.html" data-i18n="shared.nav.privacy">プライバシー</a>
-        <a href="faq.html" data-i18n="shared.nav.faq">FAQ</a>
-        <a href="support.html" data-i18n="shared.nav.support">サポート</a>
       </nav>
       <div class="header-tools">
         <nav class="lang-switch" aria-label="言語切替">
@@ -122,30 +118,6 @@
         </div>
       </section>
 
-      <section class="section install-section" aria-labelledby="download-assets-title">
-        <div class="section-heading align-left" data-reveal>
-          <p class="eyebrow">ダウンロードと確認</p>
-          <h2 id="download-assets-title">同じ Release からパッケージとチェックサムを取得します。</h2>
-        </div>
-        <div class="link-grid compact">
-          <a class="link-panel" href="https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip" data-reveal>
-            <span>Download</span>
-            <strong>macOS zip をダウンロード</strong>
-            <p>macOS 14+ 用の Vibelsland-Free-0.1.0-macos.zip を取得します。</p>
-          </a>
-          <a class="link-panel" href="https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip.sha256" data-reveal>
-            <span>Checksum</span>
-            <strong>SHA-256 ファイルをダウンロード</strong>
-            <p>zip と同じフォルダに置き、<code>shasum -a 256 -c</code> で確認します。</p>
-          </a>
-          <a class="link-panel" href="https://github.com/shinteni/prompt-island/releases/tag/v0.1.0" data-reveal>
-            <span>Release</span>
-            <strong>リリースページを開く</strong>
-            <p>GitHub 上のアセット、ソース、バージョン説明を確認します。</p>
-          </a>
-        </div>
-      </section>
-
       <section class="section data-section surface-section" aria-labelledby="features-title">
         <div class="section-heading align-left" data-reveal>
           <p class="eyebrow">主要機能</p>
@@ -187,30 +159,6 @@
         </div>
       </section>
 
-      <section class="section install-section" aria-labelledby="install-title">
-        <div class="section-heading align-left" data-reveal>
-          <p class="eyebrow">インストール</p>
-          <h2 id="install-title">v0.1.0 をインストール。</h2>
-        </div>
-        <ol class="large-steps">
-          <li data-reveal>
-            <span>01</span>
-            <strong>ダウンロードして確認</strong>
-            <p>zip と対応する <code>.sha256</code> ファイルをダウンロードし、同じフォルダで <code>shasum -a 256 -c Vibelsland-Free-0.1.0-macos.zip.sha256</code> を実行します。</p>
-          </li>
-          <li data-reveal>
-            <span>02</span>
-            <strong>Applications へ移動</strong>
-            <p>パッケージを解凍し、アプリを Applications に移動します。初回起動時は Control キーを押しながらアプリをクリックし、「開く（Open）」を選びます。</p>
-          </li>
-          <li data-reveal>
-            <span>03</span>
-            <strong>使うソースを有効化</strong>
-            <p>設定を開き、必要に応じて Claude Code、Codex CLI、Codex Desktop を有効化し、Claude Code または Codex CLI の hooks をインストールします。</p>
-          </li>
-        </ol>
-      </section>
-
       <section class="section split-section" aria-labelledby="boundaries-title">
         <div class="split-copy" data-reveal>
           <p class="eyebrow">既知の境界</p>
@@ -226,34 +174,6 @@
         </div>
       </section>
 
-      <section class="section note-section" aria-labelledby="related-title">
-        <div class="section-heading" data-reveal>
-          <p class="eyebrow">関連ページ</p>
-          <h2 id="related-title">リリースノートから詳細を確認できます。</h2>
-        </div>
-        <div class="link-grid compact">
-          <a class="link-panel" href="download.html" data-reveal>
-            <span>Download</span>
-            <strong>ダウンロードページ</strong>
-            <p>システム要件、署名、パッケージリンク、ソースを確認します。</p>
-          </a>
-          <a class="link-panel" href="faq.html" data-reveal>
-            <span>FAQ</span>
-            <strong>よくある質問</strong>
-            <p>価格、初回起動、確認方法、対応ツール、アンインストールを確認します。</p>
-          </a>
-          <a class="link-panel" href="support.html" data-reveal>
-            <span>Support</span>
-            <strong>サポートと排障</strong>
-            <p>Gatekeeper、hooks、状態表示、ログを使った排障を確認します。</p>
-          </a>
-          <a class="link-panel" href="privacy.html" data-reveal>
-            <span>Privacy</span>
-            <strong>プライバシーとローカルデータ</strong>
-            <p>読み取り、書き込み、hook payload、ネットワーク境界を確認します。</p>
-          </a>
-        </div>
-      </section>
     </main>
 
     <footer class="site-footer">
@@ -273,7 +193,7 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="../lang.js?v=20260517-11" defer></script>
-    <script src="../effects.js?v=20260517-11" defer></script>
+    <script src="../lang.js?v=20260517-12" defer></script>
+    <script src="../effects.js?v=20260517-12" defer></script>
   </body>
 </html>

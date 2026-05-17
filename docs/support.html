@@ -32,7 +32,7 @@
     <link rel="icon" href="assets/readme/app-icon.png">
     <link rel="apple-touch-icon" href="assets/readme/app-icon.png">
     <link rel="manifest" href="site.webmanifest">
-    <link rel="stylesheet" href="styles.css?v=20260517-11">
+    <link rel="stylesheet" href="styles.css?v=20260517-12">
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -57,12 +57,8 @@
       </a>
       <nav class="nav-links" aria-label="页面导航">
         <a href="index.html" data-i18n="shared.nav.home">首页</a>
-        <a href="advantages.html" data-i18n="shared.nav.advantages">优势</a>
         <a href="download.html" data-i18n="shared.nav.download">下载</a>
-        <a href="install.html" data-i18n="shared.nav.install">安装</a>
         <a href="privacy.html" data-i18n="shared.nav.privacy">隐私</a>
-        <a href="faq.html" data-i18n="shared.nav.faq">FAQ</a>
-        <a class="active" aria-current="page" href="support.html" data-i18n="shared.nav.support">支持</a>
       </nav>
       <div class="header-tools">
         <nav class="lang-switch" aria-label="语言切换">
@@ -80,7 +76,7 @@
           <p class="eyebrow">Support</p>
           <h1 id="support-title">支持。</h1>
           <p>
-            快速处理首次打开确认、SHA-256 校验、本地数据、卸载和工具状态不显示的问题。
+            状态不显示、hooks、卸载和安全报告。
           </p>
           <div class="hero-actions">
             <a class="button primary" href="download.html">查看下载说明</a>
@@ -88,7 +84,7 @@
           </div>
         </div>
         <div class="support-shortcuts" aria-label="支持任务入口" data-reveal>
-          <a href="#first-checks-title">
+          <a href="install.html#first-open">
             <span>无法打开</span>
             <strong>首次启动与 Gatekeeper</strong>
           </a>
@@ -105,30 +101,6 @@
             <strong>Hooks、应用与本地数据</strong>
           </a>
         </div>
-      </section>
-
-      <section class="section install-section" aria-labelledby="first-checks-title">
-        <div class="section-heading align-left" data-reveal>
-          <p class="eyebrow">快速排查</p>
-          <h2 id="first-checks-title">先确认这三件事。</h2>
-        </div>
-        <ol class="large-steps">
-          <li data-reveal>
-            <span>01</span>
-            <strong>macOS 要求额外确认</strong>
-            <p>v0.1.0 采用 ad-hoc 签名，因此首次打开时 macOS 可能要求额外确认。请确认下载来源是 GitHub Releases，把应用放入 Applications 后，按住 Control 点按应用并选择“打开（Open）”。</p>
-          </li>
-          <li data-reveal>
-            <span>02</span>
-            <strong>校验 SHA-256</strong>
-            <p>在下载目录运行 <code>shasum -a 256 -c Vibelsland-Free-0.1.0-macos.zip.sha256</code>，或手动比较 zip 的 SHA-256 是否为 <code>64c7c0a4eae81042bbc3896e24a07ab5d5573aeaafa846eada2e982f887ecf81</code>。</p>
-          </li>
-          <li data-reveal>
-            <span>03</span>
-            <strong>工具状态不显示</strong>
-            <p>打开设置页，确认对应来源已启用；对 Claude Code 和 Codex CLI 执行 Install 或 Repair Hooks，然后重新开始一个新会话。已有会话可能不会补发历史 hook 事件。</p>
-          </li>
-        </ol>
       </section>
 
       <section class="section data-section" aria-labelledby="status-title">
@@ -218,11 +190,6 @@
             <strong>在 GitHub 报告问题</strong>
             <p>请包含 Vibelsland Free 版本、macOS 版本、受影响来源、复现步骤，以及脱敏后的日志片段。</p>
           </a>
-          <a class="link-panel" href="https://github.com/shinteni/prompt-island/releases/tag/v0.1.0" data-reveal>
-            <span>Release</span>
-            <strong>核对发布文件</strong>
-            <p>重新下载 zip 和 SHA-256 文件，确认安装包、校验值和发布说明来自同一个版本。</p>
-          </a>
           <a class="link-panel" href="privacy.html" data-reveal>
             <span>Privacy</span>
             <strong>确认隐私边界</strong>
@@ -233,12 +200,8 @@
             <strong>安全报告入口</strong>
             <p>使用公开 security.txt 找到问题报告入口、语言偏好和支持页面。</p>
           </a>
-          <a class="link-panel" href="https://github.com/shinteni/prompt-island/blob/main/LICENSE" data-reveal>
-            <span>License</span>
-            <strong>许可与无担保说明</strong>
-            <p>Vibelsland Free 以 MIT License 分发。软件按现状提供，不承诺适合特定用途；安装前请自行核对 Release、校验值和源码。</p>
-          </a>
         </div>
+        <p><a class="text-link" href="https://github.com/shinteni/prompt-island/blob/main/LICENSE">MIT License</a></p>
       </section>
     </main>
 
@@ -259,7 +222,7 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="lang.js?v=20260517-11" defer></script>
-    <script src="effects.js?v=20260517-11" defer></script>
+    <script src="lang.js?v=20260517-12" defer></script>
+    <script src="effects.js?v=20260517-12" defer></script>
   </body>
 </html>

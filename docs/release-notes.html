@@ -32,7 +32,7 @@
     <link rel="icon" href="assets/readme/app-icon.png">
     <link rel="apple-touch-icon" href="assets/readme/app-icon.png">
     <link rel="manifest" href="site.webmanifest">
-    <link rel="stylesheet" href="styles.css?v=20260517-11">
+    <link rel="stylesheet" href="styles.css?v=20260517-12">
   </head>
   <body>
     <a class="skip-link" href="#main" data-i18n="shared.skip">跳到正文</a>
@@ -43,12 +43,8 @@
       </a>
       <nav class="nav-links" aria-label="页面导航">
         <a href="index.html" data-i18n="shared.nav.home">首页</a>
-        <a href="advantages.html" data-i18n="shared.nav.advantages">优势</a>
         <a href="download.html" data-i18n="shared.nav.download">下载</a>
-        <a href="install.html" data-i18n="shared.nav.install">安装</a>
         <a href="privacy.html" data-i18n="shared.nav.privacy">隐私</a>
-        <a href="faq.html" data-i18n="shared.nav.faq">FAQ</a>
-        <a href="support.html" data-i18n="shared.nav.support">支持</a>
       </nav>
       <div class="header-tools">
         <nav class="lang-switch" aria-label="语言切换">
@@ -122,30 +118,6 @@
         </div>
       </section>
 
-      <section class="section install-section" aria-labelledby="download-assets-title">
-        <div class="section-heading align-left" data-reveal>
-          <p class="eyebrow">下载与校验</p>
-          <h2 id="download-assets-title">从同一个 Release 获取安装包和校验文件。</h2>
-        </div>
-        <div class="link-grid compact">
-          <a class="link-panel" href="https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip" data-reveal>
-            <span>Download</span>
-            <strong>下载 macOS zip</strong>
-            <p>获取 Vibelsland-Free-0.1.0-macos.zip，用于 macOS 14+。</p>
-          </a>
-          <a class="link-panel" href="https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip.sha256" data-reveal>
-            <span>Checksum</span>
-            <strong>下载 SHA-256 文件</strong>
-            <p>与 zip 放在同一目录后，可用 <code>shasum -a 256 -c</code> 校验。</p>
-          </a>
-          <a class="link-panel" href="https://github.com/shinteni/prompt-island/releases/tag/v0.1.0" data-reveal>
-            <span>Release</span>
-            <strong>打开发布页</strong>
-            <p>查看 GitHub 上的发布文件、源码和版本说明。</p>
-          </a>
-        </div>
-      </section>
-
       <section class="section data-section surface-section" aria-labelledby="features-title">
         <div class="section-heading align-left" data-reveal>
           <p class="eyebrow">主要功能</p>
@@ -187,30 +159,6 @@
         </div>
       </section>
 
-      <section class="section install-section" aria-labelledby="install-title">
-        <div class="section-heading align-left" data-reveal>
-          <p class="eyebrow">安装说明</p>
-          <h2 id="install-title">安装 v0.1.0。</h2>
-        </div>
-        <ol class="large-steps">
-          <li data-reveal>
-            <span>01</span>
-            <strong>下载并校验</strong>
-            <p>下载 zip 和同名 <code>.sha256</code> 文件，在同一目录运行 <code>shasum -a 256 -c Vibelsland-Free-0.1.0-macos.zip.sha256</code>。</p>
-          </li>
-          <li data-reveal>
-            <span>02</span>
-            <strong>移动到 Applications</strong>
-            <p>解压后把应用拖入 Applications。首次打开时按住 Control 点按应用并选择“打开（Open）”。</p>
-          </li>
-          <li data-reveal>
-            <span>03</span>
-            <strong>启用需要的来源</strong>
-            <p>打开设置页，按需启用 Claude Code、Codex CLI 和 Codex Desktop，并对 Claude Code 或 Codex CLI 安装 hooks。</p>
-          </li>
-        </ol>
-      </section>
-
       <section class="section split-section" aria-labelledby="boundaries-title">
         <div class="split-copy" data-reveal>
           <p class="eyebrow">已知边界</p>
@@ -226,34 +174,6 @@
         </div>
       </section>
 
-      <section class="section note-section" aria-labelledby="related-title">
-        <div class="section-heading" data-reveal>
-          <p class="eyebrow">相关页面</p>
-          <h2 id="related-title">从版本记录继续确认细节。</h2>
-        </div>
-        <div class="link-grid compact">
-          <a class="link-panel" href="download.html" data-reveal>
-            <span>Download</span>
-            <strong>下载页</strong>
-            <p>查看系统要求、签名说明、安装包和源码入口。</p>
-          </a>
-          <a class="link-panel" href="faq.html" data-reveal>
-            <span>FAQ</span>
-            <strong>常见问题</strong>
-            <p>确认免费分发、首次打开、校验、支持工具和卸载方式。</p>
-          </a>
-          <a class="link-panel" href="support.html" data-reveal>
-            <span>Support</span>
-            <strong>支持与排障</strong>
-            <p>处理 Gatekeeper、hooks、状态不显示和日志排查。</p>
-          </a>
-          <a class="link-panel" href="privacy.html" data-reveal>
-            <span>Privacy</span>
-            <strong>隐私与本地数据</strong>
-            <p>了解读取、写入、hook payload 和网络边界。</p>
-          </a>
-        </div>
-      </section>
     </main>
 
     <footer class="site-footer">
@@ -273,7 +193,7 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="lang.js?v=20260517-11" defer></script>
-    <script src="effects.js?v=20260517-11" defer></script>
+    <script src="lang.js?v=20260517-12" defer></script>
+    <script src="effects.js?v=20260517-12" defer></script>
   </body>
 </html>

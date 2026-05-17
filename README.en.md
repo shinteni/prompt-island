@@ -110,6 +110,8 @@ zsh scripts/build-docs-site.sh /tmp/vibelsland-docs-site
 
 The script writes `CNAME`, rewrites site URLs, and runs `scripts/verify-docs-site.sh` against multilingual canonical/hreflang, sitemap alternates, manifest, robots, security.txt, and release checksum data.
 
+On pushes to `main`, `.github/workflows/pages.yml` uses the same script on a macOS runner to build `_site`, upload the GitHub Pages artifact, deploy, and then run `scripts/verify-docs-live.sh`. For a custom domain, set repository variables `VIBELSLAND_SITE_URL` and `VIBELSLAND_CUSTOM_DOMAIN`, or provide temporary workflow dispatch inputs; both hosts must match.
+
 The website and packaging scripts share [docs/release.json](docs/release.json) as the metadata source for the v0.1.0 package name, checksums, download URLs, and app bundle identity.
 
 Local release artifacts are generated at:
