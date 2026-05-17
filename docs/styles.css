@@ -211,23 +211,29 @@ code {
 
 .header-tools {
   justify-self: end;
-  gap: 10px;
+  align-self: center;
+  gap: 8px;
+  font-family: ui-rounded, "SF Pro Rounded", "SF Pro Text", var(--font-body);
 }
 
 .lang-switch {
+  height: 36px;
   overflow: hidden;
-  border: 1px solid var(--line);
-  border-radius: 9px;
-  background: rgba(255, 255, 255, 0.86);
+  border: 1px solid rgba(34, 40, 55, 0.13);
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: 0 1px 2px rgba(23, 30, 45, 0.04);
 }
 
 .lang-switch a {
-  min-width: 44px;
-  min-height: 44px;
-  padding: 0 12px;
-  border-right: 1px solid rgba(34, 40, 55, 0.1);
+  min-width: 50px;
+  min-height: 34px;
+  padding: 0 13px;
+  border-right: 1px solid rgba(34, 40, 55, 0.09);
   color: var(--muted);
-  font-size: 12px;
+  font-size: 13px;
+  font-weight: 560;
+  line-height: 1;
   white-space: nowrap;
   display: inline-flex;
   align-items: center;
@@ -244,13 +250,15 @@ code {
 }
 
 .nav-cta {
-  min-height: 44px;
-  padding: 0 14px;
+  min-height: 36px;
+  padding: 0 18px;
   border-radius: 999px;
   background: var(--blue);
   color: #ffffff;
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1;
+  box-shadow: 0 8px 22px rgba(37, 99, 235, 0.18);
 }
 
 .nav-cta:hover {
@@ -1357,11 +1365,13 @@ button:focus-visible {
   }
 
   .nav-cta {
-    display: none;
+    min-height: 34px;
+    padding: 0 14px;
+    font-size: 12px;
   }
 
   .lang-switch a {
-    min-width: 44px;
+    min-width: 46px;
     padding: 0 8px;
   }
 
@@ -1477,6 +1487,11 @@ button:focus-visible {
 
   .nav-cta {
     display: none;
+  }
+
+  .lang-switch {
+    height: 44px;
+    border-radius: 11px;
   }
 
   .lang-switch a {
