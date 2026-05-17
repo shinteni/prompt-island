@@ -14,7 +14,9 @@
   },
   "platform": {
     "name": "macOS",
-    "minimum_version": "14"
+    "minimum_version": "14",
+    "architecture": "arm64",
+    "processor": "Apple Silicon / arm64"
   },
   "app": {
     "bundle_name": ">_ - island.app",

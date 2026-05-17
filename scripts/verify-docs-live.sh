@@ -31,6 +31,7 @@ require_status() {
 
 pages=(
   ""
+  "404.html"
   "download.html"
   "install.html"
   "release-notes.html"
@@ -50,6 +51,16 @@ for page in "${pages[@]}"; do
   require_status "${SITE_URL}${page}" "$TMP_DIR/$safe_name"
 done
 
+missing_status="$(fetch_status "${SITE_URL}en/not-found-${RANDOM}.html" "$TMP_DIR/not-found-en.html")"
+if [[ "$missing_status" != "404" ]]; then
+  echo "Live check failed: missing English URL should return 404, got $missing_status" >&2
+  exit 1
+fi
+if ! grep -q 'data-page="404"' "$TMP_DIR/not-found-en.html"; then
+  echo "Live check failed: missing English URL did not serve the site 404 page." >&2
+  exit 1
+fi
+
 python3 - "$TMP_DIR/release.json" > "$TMP_DIR/release-vars.txt" <<'PY'
 import json
 import sys
@@ -61,6 +72,9 @@ required = [
     ("tag", metadata.get("tag")),
     ("release_url", metadata.get("release_url")),
     ("release_api_url", metadata.get("release_api_url")),
+    ("repository", metadata.get("repository")),
+    ("source.ref", metadata.get("source", {}).get("ref")),
+    ("source.sha", metadata.get("source", {}).get("sha")),
     ("archive.name", metadata.get("archive", {}).get("name")),
     ("archive.sha256", metadata.get("archive", {}).get("sha256")),
     ("archive.download_url", metadata.get("archive", {}).get("download_url")),
@@ -92,6 +106,10 @@ print(metadata["app"]["binary_name"])
 print(metadata["app"]["bundle_identifier"])
 print(metadata["version"])
 print(metadata["app"]["bundle_version"])
+print(metadata["repository"])
+print(metadata["source"]["ref"])
+print(metadata["source"]["sha"])
+print(metadata.get("platform", {}).get("architecture", ""))
 PY
 
 {
@@ -110,6 +128,10 @@ PY
   read -r APP_BUNDLE_ID
   read -r APP_VERSION
   read -r APP_BUILD_NUMBER
+  read -r REPOSITORY_URL
+  read -r SOURCE_REF
+  read -r SOURCE_SHA
+  read -r PLATFORM_ARCH
 } < "$TMP_DIR/release-vars.txt"
 
 python3 - "$TMP_DIR/sitemap.xml" "$SITE_URL" > "$TMP_DIR/sitemap-urls.txt" <<'PY'
@@ -290,18 +312,92 @@ if ! grep -q "security.txt" "$TMP_DIR/support.html"; then
   exit 1
 fi
 
+python3 - "$TMP_DIR" > "$TMP_DIR/external-links.txt" <<'PY'
+import json
+import re
+import sys
+from html.parser import HTMLParser
+from pathlib import Path
+
+tmp_dir = Path(sys.argv[1])
+
+class LinkParser(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.urls = set()
+
+    def handle_starttag(self, tag, attrs):
+        attrs = dict(attrs)
+        for key in ("href", "src", "content"):
+            value = attrs.get(key, "")
+            if value.startswith(("http://", "https://")):
+                self.urls.add(value.split("#", 1)[0])
+
+def collect_json_urls(value, urls):
+    if isinstance(value, str):
+        if value.startswith(("http://", "https://")):
+            urls.add(value.split("#", 1)[0])
+    elif isinstance(value, list):
+        for item in value:
+            collect_json_urls(item, urls)
+    elif isinstance(value, dict):
+        for item in value.values():
+            collect_json_urls(item, urls)
+
+urls = set()
+for path in tmp_dir.glob("*.html"):
+    parser = LinkParser()
+    parser.feed(path.read_text(encoding="utf-8", errors="ignore"))
+    urls.update(parser.urls)
+
+for path in [tmp_dir / "llms.txt", tmp_dir / ".well-known_security.txt"]:
+    if path.exists():
+        urls.update(re.findall(r"https?://[^\\s)<>\"']+", path.read_text(encoding="utf-8", errors="ignore")))
+
+release_path = tmp_dir / "release.json"
+if release_path.exists():
+    collect_json_urls(json.loads(release_path.read_text(encoding="utf-8")), urls)
+
+for url in sorted(urls):
+    print(url)
+PY
+
+while IFS= read -r external_url; do
+  [[ -z "$external_url" ]] && continue
+  external_status="$(/usr/bin/curl -L -s --max-time 20 -o /dev/null -w "%{http_code}" "$external_url" || true)"
+  [[ -n "$external_status" ]] || external_status="000"
+  case "$external_status" in
+    200|201|202|203|204|206|301|302|303|307|308) ;;
+    *)
+      echo "Live check failed: external link returned $external_status: $external_url" >&2
+      exit 1
+      ;;
+  esac
+done < "$TMP_DIR/external-links.txt"
+
 require_status "$RELEASE_API_URL" "$TMP_DIR/release-api.json"
-python3 - "$TMP_DIR/release.json" "$TMP_DIR/release-api.json" <<'PY'
+REPOSITORY_PATH="${REPOSITORY_URL#https://github.com/}"
+TAG_REF_API="https://api.github.com/repos/$REPOSITORY_PATH/git/ref/${SOURCE_REF#refs/}"
+require_status "$TAG_REF_API" "$TMP_DIR/release-tag-ref.json"
+python3 - "$TMP_DIR/release.json" "$TMP_DIR/release-api.json" "$TMP_DIR/release-tag-ref.json" <<'PY'
 import json
 import sys
 from pathlib import Path
 
 metadata = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
 release = json.loads(Path(sys.argv[2]).read_text(encoding="utf-8"))
+tag_ref = json.loads(Path(sys.argv[3]).read_text(encoding="utf-8"))
 if release.get("tag_name") != metadata["tag"]:
     raise SystemExit(f"Live check failed: release tag mismatch: {release.get('tag_name')}")
 if release.get("draft") or release.get("prerelease"):
     raise SystemExit("Live check failed: release should not be draft or prerelease.")
+if tag_ref.get("ref") != metadata["source"]["ref"]:
+    raise SystemExit(f"Live check failed: tag ref mismatch: {tag_ref.get('ref')}")
+tag_object = tag_ref.get("object", {})
+if tag_object.get("type") != "commit":
+    raise SystemExit(f"Live check failed: release tag should resolve directly to a commit: {tag_object.get('type')}")
+if tag_object.get("sha") != metadata["source"]["sha"]:
+    raise SystemExit(f"Live check failed: release tag commit mismatch: {tag_object.get('sha')}")
 assets = {asset.get("name"): asset for asset in release.get("assets", [])}
 expected_names = {metadata["archive"]["name"], metadata["checksum_file"]["name"]}
 actual_names = set(assets)
@@ -379,5 +475,10 @@ fi
 [[ "$(/usr/bin/plutil -extract CFBundleShortVersionString raw -o - "$INFO")" == "$APP_VERSION" ]]
 [[ "$(/usr/bin/plutil -extract CFBundleVersion raw -o - "$INFO")" == "$APP_BUILD_NUMBER" ]]
 [[ "$(/usr/bin/plutil -extract CFBundleExecutable raw -o - "$INFO")" == "$APP_BINARY_NAME" ]]
+if [[ -n "$PLATFORM_ARCH" ]] && ! /usr/bin/lipo -archs "$EXECUTABLE" | tr ' ' '\n' | grep -qx "$PLATFORM_ARCH"; then
+  echo "Live check failed: release executable missing architecture $PLATFORM_ARCH" >&2
+  /usr/bin/lipo -archs "$EXECUTABLE" >&2
+  exit 1
+fi
 
 echo "Live docs verification passed for $SITE_URL"

@@ -90,7 +90,11 @@ fi
     /usr/bin/shasum -a 256 -c "$(basename "$CHECKSUM")" >/dev/null
 )
 
-zsh "$ROOT/scripts/verify-docs-site.sh"
+if [[ "$MODE" == "local" ]]; then
+    VIBELSLAND_VERIFY_DIST=1 zsh "$ROOT/scripts/verify-docs-site.sh"
+else
+    zsh "$ROOT/scripts/verify-docs-site.sh"
+fi
 zsh "$ROOT/scripts/verify-docs-live.sh"
 
 SIGNATURE_INFO="$(/usr/bin/codesign -dv --verbose=4 "$APP_DIR" 2>&1)"

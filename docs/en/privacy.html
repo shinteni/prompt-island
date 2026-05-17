@@ -28,7 +28,7 @@
     <link rel="icon" href="../assets/readme/app-icon.png">
     <link rel="apple-touch-icon" href="../assets/readme/app-icon.png">
     <link rel="manifest" href="../site.webmanifest">
-    <link rel="stylesheet" href="../styles.css?v=20260517-5">
+    <link rel="stylesheet" href="../styles.css?v=20260517-11">
   </head>
   <body>
     <a class="skip-link" href="#main" data-i18n="shared.skip">Skip to content</a>
@@ -129,6 +129,32 @@
         </div>
       </section>
 
+      <section class="section data-section" aria-labelledby="retention-title">
+        <div class="section-heading align-left" data-reveal="">
+          <p class="eyebrow" data-i18n="privacy.retention.eyebrow">Retention and deletion</p>
+          <h2 id="retention-title" data-i18n="privacy.retention.title">Local tokens, logs, and removal paths are explicit.</h2>
+          <p data-i18n="privacy.retention.copy">The local bridge token authenticates the app-local socket only. Logs are for troubleshooting and are not uploaded by the app. After uninstalling hooks, runtime files, config, and logs can be deleted manually.</p>
+        </div>
+        <div class="data-grid">
+          <article data-reveal="">
+            <h3 data-i18n="privacy.retention.bridge.title">Local bridge token</h3>
+            <ul>
+              <li data-i18n="privacy.retention.bridge.item1" data-i18n-html>Runtime files live in <code>~/.vibelsland-free</code>, including the local Unix socket and local bridge token.</li>
+              <li data-i18n="privacy.retention.bridge.item2">The token is used only for local process-to-process request authentication. It is not an online account credential.</li>
+              <li data-i18n="privacy.retention.bridge.item3" data-i18n-html>Deleting <code>~/.vibelsland-free</code> removes the runtime token; the app or hooks recreate the required runtime files on the next launch.</li>
+            </ul>
+          </article>
+          <article data-reveal="">
+            <h3 data-i18n="privacy.retention.logs.title">Logs and deletion</h3>
+            <ul>
+              <li data-i18n="privacy.retention.logs.item1" data-i18n-html>Logs live at <code>~/Library/Logs/VibelslandFree/app.log</code> and record connection state, event types, timestamps, local paths, and error reasons.</li>
+              <li data-i18n="privacy.retention.logs.item2">The app does not upload logs. Before sharing logs, remove sensitive paths, prompts, tokens, and session content.</li>
+              <li data-i18n="privacy.retention.logs.item3" data-i18n-html>When you stop using the app, you can delete <code>~/Library/Application Support/VibelslandFree</code>, <code>~/Library/Logs/VibelslandFree</code>, and <code>~/.vibelsland-free</code>.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
       <section class="section split-section" aria-labelledby="control-title">
         <div class="split-copy" data-reveal="">
           <p class="eyebrow" data-i18n="privacy.control.eyebrow">Control</p>
@@ -166,8 +192,8 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="../lang.js?v=20260517-5" defer=""></script>
-    <script src="../effects.js?v=20260517-5" defer=""></script>
+    <script src="../lang.js?v=20260517-11" defer=""></script>
+    <script src="../effects.js?v=20260517-11" defer=""></script>
 
 
 </body></html>

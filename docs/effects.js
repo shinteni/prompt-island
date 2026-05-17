@@ -74,7 +74,7 @@
       index = (index + 1) % states.length;
       productStage.dataset.demoState = states[index][0];
       demoLabel.textContent = states[index][1];
-    }, 2200);
+    }, 4600);
   }
 
 })();
