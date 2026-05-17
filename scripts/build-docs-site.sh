@@ -70,13 +70,21 @@ for path in output.rglob("*"):
 manifest_path = output / "site.webmanifest"
 if manifest_path.exists():
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    manifest["id"] = "./"
-    manifest["start_url"] = "./index.html"
-    manifest["scope"] = "./"
-    manifest_path.write_text(
-        json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
-        encoding="utf-8",
-    )
+    manifest_defaults = {
+        "id": "./",
+        "start_url": "./index.html",
+        "scope": "./",
+    }
+    manifest_changed = False
+    for key, value in manifest_defaults.items():
+        if manifest.get(key) != value:
+            manifest[key] = value
+            manifest_changed = True
+    if manifest_changed:
+        manifest_path.write_text(
+            json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
 
 if custom_domain:
     (output / "CNAME").write_text(custom_domain + "\n", encoding="utf-8")
