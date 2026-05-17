@@ -377,7 +377,6 @@ for path in html_files:
         required_nav_keys = [
             "shared.nav.home",
             "shared.nav.download",
-            "shared.nav.install",
             "shared.nav.support",
         ]
         for key in required_nav_keys:
@@ -673,6 +672,11 @@ for path in [docs / "index.html", docs / "en" / "index.html", docs / "ja" / "ind
             'start-download',
             'class="start-steps"',
             'class="start-card"',
+            'class="start-card-image"',
+            'class="start-caption"',
+            'start-welcome.svg',
+            'start-project.svg',
+            'start-build.svg',
             'data-i18n="home.hero.title"',
             'data-i18n="home.step1.title"',
             'data-i18n="home.step2.title"',
