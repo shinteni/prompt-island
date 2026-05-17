@@ -106,6 +106,7 @@
 
     let index = 0;
     let demoTimer = 0;
+    let resumeTimer = 0;
     const setDemoState = (nextState) => {
       const nextIndex = typeof nextState === "string"
         ? stateIndexByName.get(nextState) ?? 0
@@ -123,6 +124,13 @@
       if (demoTimer) window.clearInterval(demoTimer);
       demoTimer = 0;
     };
+    const scheduleDemoResume = () => {
+      if (resumeTimer) window.clearTimeout(resumeTimer);
+      resumeTimer = window.setTimeout(() => {
+        resumeTimer = 0;
+        startDemo();
+      }, 8000);
+    };
     const startDemo = () => {
       stopDemo();
       if (reduceMotion) return;
@@ -136,6 +144,7 @@
       control.addEventListener("click", () => {
         setDemoState(control.dataset.demoControl || "running");
         stopDemo();
+        if (!reduceMotion) scheduleDemoResume();
       });
     });
     startDemo();
