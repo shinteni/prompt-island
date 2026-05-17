@@ -15,3 +15,4 @@ dist/
 # Local logs and temporary files
 *.log
 *.tmp
+.gstack/

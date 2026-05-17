@@ -9,6 +9,7 @@ CUSTOM_DOMAIN="${VIBELSLAND_CUSTOM_DOMAIN:-}"
 python3 - "$ROOT" "$DOCS_DIR" "$SITE_URL" "$CUSTOM_DOMAIN" <<'PY'
 import json
 import html
+import hashlib
 import os
 import re
 import subprocess
@@ -294,6 +295,14 @@ for filename in localized_files:
 
 html_files = sorted(docs.glob("**/*.html"))
 versioned_assets = {"styles.css", "lang.js", "effects.js"}
+asset_versions = {}
+for asset_name in versioned_assets:
+    asset_path = docs / asset_name
+    if not asset_path.exists():
+        errors.append(f"Missing versioned asset: {display(asset_path)}")
+        continue
+    asset_versions[asset_name] = hashlib.sha256(asset_path.read_bytes()).hexdigest()[:12]
+
 for path in html_files:
     text = path.read_text(encoding="utf-8")
     rel = display(path)
@@ -378,8 +387,16 @@ for path in html_files:
             continue
         if not target.exists():
             errors.append(f"Missing local {kind} target in {rel}: {value}")
-        if target.name in versioned_assets and "?v=" not in value:
-            errors.append(f"Version query missing for local asset in {rel}: {value}")
+        if target.name in versioned_assets:
+            query = urlparse(value).query
+            match = re.search(r"(?:^|&)v=([^&]+)", query)
+            expected_version = asset_versions.get(target.name)
+            if not match:
+                errors.append(f"Version query missing for local asset in {rel}: {value}")
+            elif expected_version and match.group(1) != expected_version:
+                errors.append(
+                    f"Version query for {target.name} in {rel} should be {expected_version}: {value}"
+                )
 
     for value in parser.absolute_site_urls:
         validate_absolute_site_url(value, rel, "Site URL")
