@@ -349,12 +349,24 @@ main {
   transform: translateY(-2px);
 }
 
-.start-card-image img {
+.start-shot {
   width: 100%;
   height: auto;
-  aspect-ratio: 1004 / 604;
+  aspect-ratio: 1.78 / 1;
   object-fit: cover;
   border-radius: inherit;
+}
+
+.start-shot-hero {
+  object-position: center center;
+}
+
+.start-shot-settings {
+  object-position: center 56%;
+}
+
+.start-shot-island {
+  object-position: center 18%;
 }
 
 .start-caption {
