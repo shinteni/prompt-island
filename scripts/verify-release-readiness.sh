@@ -13,6 +13,19 @@ ALLOW_PENDING=0
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
+        --help|-h)
+            cat <<'EOF'
+Usage: zsh scripts/verify-release-readiness.sh [--local|--github|--notarized] [--no-run] [--allow-pending-manual]
+
+Modes:
+  --local      Verify the local dist package against docs/release.json.
+  --github     Verify the GitHub Release, website metadata, and local dist package all describe the same public artifact.
+  --notarized  Same as --github, and require non-ad-hoc distribution signing.
+
+The release package, docs/release.json, download pages, and GitHub Release assets must stay in lockstep. For an unpublished candidate, run package-release.sh, upload the matching Release assets, update metadata, then run this readiness gate.
+EOF
+            exit 0
+            ;;
         --local)
             MODE="local"
             shift
@@ -58,7 +71,12 @@ esac
 
 if [[ "$RUN_AUTOMATION" == "1" ]]; then
     . "$ROOT/scripts/visible-test-window-guard.sh"
-    zsh "$ROOT/scripts/package-release.sh"
+    if [[ "$MODE" == "local" ]]; then
+        zsh "$ROOT/scripts/package-release.sh"
+    else
+        zsh "$ROOT/scripts/verify-app.sh"
+    fi
+    VIBELSLAND_VERIFY_DIST=1 zsh "$ROOT/scripts/verify-docs-site.sh"
     zsh "$ROOT/scripts/verify-idle-window.sh"
     zsh "$ROOT/scripts/verify-single-instance.sh"
     zsh "$ROOT/scripts/verify-menu-settings.sh"
@@ -90,12 +108,8 @@ fi
     /usr/bin/shasum -a 256 -c "$(basename "$CHECKSUM")" >/dev/null
 )
 
-if [[ "$MODE" == "local" ]]; then
-    VIBELSLAND_VERIFY_DIST=1 zsh "$ROOT/scripts/verify-docs-site.sh"
-else
-    zsh "$ROOT/scripts/verify-docs-site.sh"
-fi
-zsh "$ROOT/scripts/verify-docs-live.sh"
+VIBELSLAND_VERIFY_DIST=1 zsh "$ROOT/scripts/verify-docs-site.sh"
+VIBELSLAND_VERIFY_DIST=1 zsh "$ROOT/scripts/verify-docs-live.sh"
 
 SIGNATURE_INFO="$(/usr/bin/codesign -dv --verbose=4 "$APP_DIR" 2>&1)"
 SIGNING_BLOCKER=""
