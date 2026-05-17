@@ -98,6 +98,13 @@ swift test
 zsh scripts/package-release.sh
 ```
 
+`scripts/package-release.sh` reads package names and app identity from [docs/release.json](docs/release.json) when it creates the local zip and `.sha256` file. If a fresh local package has a different hash than `docs/release.json`, the script labels it as an unpublished candidate; do not update the website checksum alone. Upload the matching GitHub Release assets and update metadata together. To check the current local `dist/` against the public release, run:
+
+```sh
+VIBELSLAND_VERIFY_DIST=1 zsh scripts/verify-docs-site.sh
+VIBELSLAND_VERIFY_DIST=1 zsh scripts/verify-docs-live.sh
+```
+
 ## Website Publishing
 
 The website source lives in `docs/` and targets `https://shinteni.github.io/prompt-island/` by default. For a custom domain, do not hand-edit scattered canonical, OG, sitemap, robots, or security.txt URLs. Generate a domain-specific output:
@@ -112,7 +119,7 @@ The script writes `CNAME`, rewrites site URLs, and runs `scripts/verify-docs-sit
 
 On pushes to `main`, `.github/workflows/pages.yml` uses the same script on a macOS runner to build `_site`, upload the GitHub Pages artifact, deploy, and then run `scripts/verify-docs-live.sh`. For a custom domain, set repository variables `VIBELSLAND_SITE_URL` and `VIBELSLAND_CUSTOM_DOMAIN`, or provide temporary workflow dispatch inputs; both hosts must match.
 
-The website and packaging scripts share [docs/release.json](docs/release.json) as the metadata source for the v0.1.0 package name, checksums, download URLs, and app bundle identity.
+The website and packaging scripts share [docs/release.json](docs/release.json) as the metadata source for the v0.1.0 package name, checksums, download URLs, and app bundle identity. `zsh scripts/verify-release-readiness.sh --github` verifies local `dist/`, website metadata, and the live GitHub Release assets in one gate so the site and download package cannot drift apart silently.
 
 Local release artifacts are generated at:
 

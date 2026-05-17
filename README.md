@@ -98,6 +98,13 @@ swift test
 zsh scripts/package-release.sh
 ```
 
+`scripts/package-release.sh` 会读取 [docs/release.json](docs/release.json) 里的包名和应用身份来生成本地 zip 与 `.sha256` 文件。若本地重新打包后的 hash 与 `docs/release.json` 不一致，脚本会把它标记为未发布候选包；不要只改官网 hash，必须同时上传匹配的 GitHub Release 资产并同步元数据。检查现有本地 `dist/` 与公开发布一致性时使用：
+
+```sh
+VIBELSLAND_VERIFY_DIST=1 zsh scripts/verify-docs-site.sh
+VIBELSLAND_VERIFY_DIST=1 zsh scripts/verify-docs-live.sh
+```
+
 ## 官网发布
 
 默认官网源码位于 `docs/`，面向 GitHub Pages 路径 `https://shinteni.github.io/prompt-island/`。绑定正式域名时，不直接手改分散的 canonical、OG、sitemap、robots 或 security.txt；用构建脚本生成域名化产物：
@@ -112,7 +119,7 @@ zsh scripts/build-docs-site.sh /tmp/vibelsland-docs-site
 
 推送到 `main` 时，`.github/workflows/pages.yml` 会在 macOS runner 上用同一套脚本构建 `_site`、上传 GitHub Pages artifact、部署后再运行 `scripts/verify-docs-live.sh`。绑定正式域名时，可在仓库变量里设置 `VIBELSLAND_SITE_URL` 和 `VIBELSLAND_CUSTOM_DOMAIN`，或用 workflow dispatch 临时输入；两个变量的 host 必须一致。
 
-官网和打包脚本共用 [docs/release.json](docs/release.json) 作为 v0.1.0 的包名、校验值、下载链接和应用包身份元数据来源。
+官网和打包脚本共用 [docs/release.json](docs/release.json) 作为 v0.1.0 的包名、校验值、下载链接和应用包身份元数据来源。`zsh scripts/verify-release-readiness.sh --github` 会把本地 `dist/`、官网元数据和线上 GitHub Release 资产放在同一条门禁里验证，避免网站和下载包指向不同产物。
 
 本地打包产物会生成在：
 
