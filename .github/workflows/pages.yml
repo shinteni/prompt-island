@@ -1,0 +1,65 @@
+name: Docs site
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "docs/**"
+      - "README.md"
+      - "README.en.md"
+      - "RELEASE_CHECKLIST.md"
+      - "scripts/build-docs-site.sh"
+      - "scripts/verify-docs-site.sh"
+      - "scripts/verify-docs-live.sh"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+    inputs:
+      site_url:
+        description: "Public site URL, for example https://vibelsland.example/"
+        required: false
+        type: string
+      custom_domain:
+        description: "Optional bare custom domain, for example vibelsland.example"
+        required: false
+        type: string
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: macos-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    env:
+      VIBELSLAND_SITE_URL: ${{ inputs.site_url || vars.VIBELSLAND_SITE_URL || 'https://shinteni.github.io/prompt-island/' }}
+      VIBELSLAND_CUSTOM_DOMAIN: ${{ inputs.custom_domain || vars.VIBELSLAND_CUSTOM_DOMAIN || '' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build verified site
+        run: zsh scripts/build-docs-site.sh _site
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Verify deployed Pages URL
+        env:
+          VIBELSLAND_SITE_URL: ${{ steps.deployment.outputs.page_url }}
+        run: zsh scripts/verify-docs-live.sh
+
+      - name: Verify configured public site
+        run: zsh scripts/verify-docs-live.sh
