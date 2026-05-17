@@ -28,7 +28,7 @@
     <link rel="icon" href="../assets/readme/app-icon.png">
     <link rel="apple-touch-icon" href="../assets/readme/app-icon.png">
     <link rel="manifest" href="../site.webmanifest">
-    <link rel="stylesheet" href="../styles.css?v=72f06aa7ac50">
+    <link rel="stylesheet" href="../styles.css?v=8e56cfe12e8f">
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -52,7 +52,7 @@
       }
     </script>
   </head>
-  <body>
+  <body class="home-entry">
     <a class="skip-link" href="#main" data-i18n="shared.skip">本文へ移動</a>
     <header class="site-header" aria-label="メインナビゲーション">
       <a class="brand" href="index.html" aria-label="Vibelsland Free ホーム">
@@ -61,12 +61,9 @@
       </a>
       <nav class="nav-links" aria-label="ページナビゲーション">
         <a class="active" aria-current="page" href="index.html" data-i18n="shared.nav.home" data-mobile-label="ホーム">ホーム</a>
-        <a href="advantages.html" data-i18n="shared.nav.advantages" data-mobile-label="強み">強み</a>
-        <a href="download.html" data-i18n="shared.nav.download" data-mobile-label="入手">ダウンロード</a>
-        <a href="install.html" data-i18n="shared.nav.install" data-mobile-label="導入">インストール</a>
-        <a href="privacy.html" data-i18n="shared.nav.privacy" data-mobile-label="個人情報">プライバシー</a>
-        <a href="faq.html" data-i18n="shared.nav.faq" data-mobile-label="FAQ">FAQ</a>
-        <a href="support.html" data-i18n="shared.nav.support" data-mobile-label="支援">サポート</a>
+        <a href="download.html" data-i18n="shared.nav.download" data-mobile-label="ダウンロード">ダウンロード</a>
+        <a href="install.html" data-i18n="shared.nav.install" data-mobile-label="インストール">インストール</a>
+        <a href="support.html" data-i18n="shared.nav.support" data-mobile-label="サポート">サポート</a>
       </nav>
       <div class="header-tools">
         <nav class="lang-switch" aria-label="言語切替">
@@ -79,127 +76,43 @@
     </header>
 
     <main id="main">
-      <section class="hero home-hero" aria-labelledby="hero-title">
-        <div class="hero-content" data-reveal="">
-          <p class="eyebrow" data-i18n="home.hero.eyebrow">macOS 14+ · ローカルファースト</p>
-          <h1 id="hero-title" data-i18n="home.hero.title">Vibelsland Free</h1>
-          <p class="hero-kicker" data-i18n="home.hero.kicker">AI コーディングの状態を、画面上部に。</p>
-          <p class="hero-copy" data-i18n="home.hero.copy">Claude Code、Codex CLI、Codex Desktop の長いタスク、ツール実行、承認リクエストを見える場所に保ち、端末へ何度も戻らずに作業できます。</p>
-          <div class="hero-actions">
-            <a class="button primary" href="download.html">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M12 3v11m0 0 4-4m-4 4-4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"></path>
-              </svg>
-              <span data-i18n="home.hero.primary">macOS 版をダウンロード</span>
-            </a>
-            <a class="button secondary" href="install.html" data-i18n="home.hero.secondary">インストールと信頼</a>
-          </div>
-          <div class="hero-assist-links">
-            <a href="install.html" data-i18n="home.hero.assist.install">インストールと信頼</a>
-            <a href="privacy.html" data-i18n="home.hero.assist.privacy">ローカルデータ境界</a>
-            <a href="faq.html" data-i18n="home.hero.assist.faq">FAQ</a>
-          </div>
-        </div>
-        <div class="product-stage" data-reveal="">
-          <img src="../assets/readme/ui-island-light.jpg" alt="Vibelsland Free のアイランド、展開パネル、設定ウィンドウ" width="1040" height="860" fetchpriority="high" decoding="async">
-          <div class="status-float status-float-bottom" aria-hidden="true">
-            <span></span>
-            <strong data-i18n="home.hero.status">デモ · ツール実行中</strong>
-          </div>
-          <div class="demo-controls" role="group" aria-label="デモ状態" data-i18n-aria-label="aria.demoControls">
-            <button type="button" class="active" data-demo-control="running" data-i18n="home.demo.running" aria-pressed="true">実行中</button>
-            <button type="button" data-demo-control="approval" data-i18n="home.demo.approval" aria-pressed="false">承認待ち</button>
-            <button type="button" data-demo-control="idle" data-i18n="home.demo.idle" aria-pressed="false">待機中</button>
-          </div>
-        </div>
+      <section class="start-hero" aria-labelledby="hero-title">
+        <img class="start-logo" src="../assets/readme/app-icon-192.png" alt="" width="96" height="96" fetchpriority="high">
+        <h1 id="hero-title" data-i18n="home.hero.title">Vibelsland Free を開始</h1>
+        <p data-i18n="home.hero.copy">ダウンロードが自動で始まらない場合は、下をクリックしてください。</p>
+        <a class="button primary start-download" href="https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 3v11m0 0 4-4m-4 4-4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"></path>
+          </svg>
+          <span data-i18n="home.hero.primary">macOS 版をダウンロード</span>
+        </a>
       </section>
 
-      <section class="spec-strip" aria-label="製品概要" data-reveal="">
-        <div>
-          <span data-i18n="home.spec.system.label">システム</span>
-          <strong data-i18n="home.spec.system.value">macOS 14+</strong>
-        </div>
-        <div>
-          <span data-i18n="home.spec.tools.label">対応ツール</span>
-          <strong data-i18n="home.spec.tools.value">Claude Code / Codex CLI / Codex Desktop</strong>
-        </div>
-        <div>
-          <span data-i18n="home.spec.data.label">データ方針</span>
-          <strong data-i18n="home.spec.data.value">ローカル優先</strong>
-        </div>
-        <div>
-          <span data-i18n="home.spec.version.label">現在のバージョン</span>
-          <strong data-i18n="home.spec.version.value">v0.1.0</strong>
-        </div>
-      </section>
-
-      <section class="section editorial-section" aria-labelledby="focus-title">
-        <div class="section-heading" data-reveal="">
-          <p class="eyebrow" data-i18n="home.focus.eyebrow">状態</p>
-          <h2 id="focus-title" data-i18n="home.focus.title">必要な状態だけ。</h2>
-        </div>
-        <div class="signal-list">
-          <article data-reveal="">
-            <span>01</span>
-            <div>
-              <h3 data-i18n="home.focus.item1.title">実行中</h3>
-              <p data-i18n="home.focus.item1.copy">長いタスクを見失いません。</p>
-            </div>
-          </article>
-          <article data-reveal="">
-            <span>02</span>
-            <div>
-              <h3 data-i18n="home.focus.item2.title">承認待ち</h3>
-              <p data-i18n="home.focus.item2.copy">実行を止める承認リクエストに気づけます。</p>
-            </div>
-          </article>
-          <article data-reveal="">
-            <span>03</span>
-            <div>
-              <h3 data-i18n="home.focus.item3.title">ローカル</h3>
-              <p data-i18n="home.focus.item3.copy">アカウント不要。送信なし。</p>
-            </div>
-          </article>
-        </div>
-      </section>
-
-      <section class="section trust-section-home" aria-labelledby="trust-title">
-        <div class="trust-copy" data-reveal="">
-          <p class="eyebrow" data-i18n="home.trust.eyebrow">境界</p>
-          <h2 id="trust-title" data-i18n="home.trust.title">ローカル読み取り。テレメトリなし。</h2>
-          <p data-i18n="home.trust.copy">状態だけを表示し、セッションはアップロードしません。</p>
-        </div>
-        <div class="boundary-grid" data-reveal="">
-          <div>
-            <span data-i18n="home.trust.read.label">読み取り</span>
-            <strong data-i18n="home.trust.read.value">セッション状態</strong>
+      <section class="start-steps" aria-label="開始する三つの手順" data-i18n-aria-label="aria.homeSteps">
+        <article class="start-card">
+          <div class="start-card-screen">
+            <img src="../assets/readme/app-icon.png" alt="" width="48" height="48" loading="lazy" decoding="async">
+            <h2 data-i18n="home.step1.title">zip をダウンロード</h2>
+            <p data-i18n="home.step1.copy">v0.1.0 の macOS パッケージを取得します。</p>
+            <a href="download.html" data-i18n="home.step1.link">ダウンロード詳細を見る</a>
           </div>
-          <div>
-            <span data-i18n="home.trust.write.label">書き込み</span>
-            <strong data-i18n="home.trust.write.value">設定とログ</strong>
+        </article>
+        <article class="start-card">
+          <div class="start-card-screen">
+            <span class="start-card-icon">✓</span>
+            <h2 data-i18n="home.step2.title">ファイルを確認</h2>
+            <p data-i18n="home.step2.copy">SHA-256 でダウンロードを確認します。</p>
+            <a href="install.html" data-i18n="home.step2.link">インストールと信頼を見る</a>
           </div>
-          <div>
-            <span data-i18n="home.trust.network.label">ネットワーク</span>
-            <strong data-i18n="home.trust.network.value">主要機能はオフライン</strong>
+        </article>
+        <article class="start-card">
+          <div class="start-card-screen">
+            <span class="start-card-icon">↗</span>
+            <h2 data-i18n="home.step3.title">アプリを開く</h2>
+            <p data-i18n="home.step3.copy">AI コーディング状態を macOS 上部に表示します。</p>
+            <a href="support.html" data-i18n="home.step3.link">サポートを見る</a>
           </div>
-        </div>
-      </section>
-
-      <section class="section cta-section" aria-labelledby="cta-title">
-        <div data-reveal="">
-          <p class="eyebrow" data-i18n="home.cta.eyebrow">ダウンロード</p>
-          <h2 id="cta-title" data-i18n="home.cta.title">macOS 版をダウンロード。</h2>
-          <p data-i18n="home.cta.copy">v0.1.0 は無料です。ソースと SHA-256 確認を公開しています。</p>
-          <div class="hero-actions">
-            <a class="button primary" href="download.html">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M12 3v11m0 0 4-4m-4 4-4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"></path>
-              </svg>
-              <span data-i18n="home.cta.primary">macOS 版をダウンロード</span>
-            </a>
-            <a class="button secondary" href="install.html" data-i18n="home.cta.secondary">インストールと信頼</a>
-          </div>
-        </div>
+        </article>
       </section>
     </main>
 
@@ -220,8 +133,8 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="../lang.js?v=e812a6ea4519" defer=""></script>
-    <script src="../effects.js?v=71a88e9bf5d8" defer=""></script>
+    <script src="../lang.js?v=367d42cfdd40" defer=""></script>
+    <script src="../effects.js?v=984d01b9fa2d" defer=""></script>
 
 
 </body></html>

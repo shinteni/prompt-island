@@ -376,11 +376,8 @@ for path in html_files:
         nav_block = nav_match.group(1)
         required_nav_keys = [
             "shared.nav.home",
-            "shared.nav.advantages",
             "shared.nav.download",
             "shared.nav.install",
-            "shared.nav.privacy",
-            "shared.nav.faq",
             "shared.nav.support",
         ]
         for key in required_nav_keys:
@@ -670,15 +667,20 @@ for path in [docs / "index.html", docs / "en" / "index.html", docs / "ja" / "ind
     if path.exists():
         home_text = path.read_text(encoding="utf-8")
         for phrase in [
-            'class="demo-controls"',
-            'data-demo-control="running"',
-            'data-demo-control="approval"',
-            'data-demo-control="idle"',
-            'aria-pressed="true"',
-            'data-i18n-aria-label="aria.demoControls"',
+            'class="home-entry"',
+            'class="start-hero"',
+            'class="start-logo"',
+            'start-download',
+            'class="start-steps"',
+            'class="start-card"',
+            'data-i18n="home.hero.title"',
+            'data-i18n="home.step1.title"',
+            'data-i18n="home.step2.title"',
+            'data-i18n="home.step3.title"',
+            'data-i18n-aria-label="aria.homeSteps"',
         ]:
             if phrase not in home_text:
-                errors.append(f"Home page missing interactive demo control in {display(path)}: {phrase}")
+                errors.append(f"Home page missing start layout in {display(path)}: {phrase}")
 
 sitemap_path = docs / "sitemap.xml"
 if sitemap_path.exists():

@@ -28,7 +28,7 @@
     <link rel="icon" href="../assets/readme/app-icon.png">
     <link rel="apple-touch-icon" href="../assets/readme/app-icon.png">
     <link rel="manifest" href="../site.webmanifest">
-    <link rel="stylesheet" href="../styles.css?v=72f06aa7ac50">
+    <link rel="stylesheet" href="../styles.css?v=8e56cfe12e8f">
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -52,7 +52,7 @@
       }
     </script>
   </head>
-  <body>
+  <body class="home-entry">
     <a class="skip-link" href="#main" data-i18n="shared.skip">Skip to content</a>
     <header class="site-header" aria-label="Main navigation">
       <a class="brand" href="index.html" aria-label="Vibelsland Free home">
@@ -61,12 +61,9 @@
       </a>
       <nav class="nav-links" aria-label="Page navigation">
         <a class="active" aria-current="page" href="index.html" data-i18n="shared.nav.home" data-mobile-label="Home">Home</a>
-        <a href="advantages.html" data-i18n="shared.nav.advantages" data-mobile-label="Value">Advantages</a>
-        <a href="download.html" data-i18n="shared.nav.download" data-mobile-label="Get">Download</a>
+        <a href="download.html" data-i18n="shared.nav.download" data-mobile-label="Download">Download</a>
         <a href="install.html" data-i18n="shared.nav.install" data-mobile-label="Install">Install</a>
-        <a href="privacy.html" data-i18n="shared.nav.privacy" data-mobile-label="Privacy">Privacy</a>
-        <a href="faq.html" data-i18n="shared.nav.faq" data-mobile-label="FAQ">FAQ</a>
-        <a href="support.html" data-i18n="shared.nav.support" data-mobile-label="Help">Support</a>
+        <a href="support.html" data-i18n="shared.nav.support" data-mobile-label="Support">Support</a>
       </nav>
       <div class="header-tools">
         <nav class="lang-switch" aria-label="Language switch">
@@ -79,127 +76,43 @@
     </header>
 
     <main id="main">
-      <section class="hero home-hero" aria-labelledby="hero-title">
-        <div class="hero-content" data-reveal="">
-          <p class="eyebrow" data-i18n="home.hero.eyebrow">macOS 14+ · Local-first</p>
-          <h1 id="hero-title" data-i18n="home.hero.title">Vibelsland Free</h1>
-          <p class="hero-kicker" data-i18n="home.hero.kicker">AI coding status, always in sight.</p>
-          <p class="hero-copy" data-i18n="home.hero.copy">Keep Claude Code, Codex CLI, and Codex Desktop long tasks, tool calls, and approval requests visible without repeatedly switching back to a terminal.</p>
-          <div class="hero-actions">
-            <a class="button primary" href="download.html">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M12 3v11m0 0 4-4m-4 4-4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"></path>
-              </svg>
-              <span data-i18n="home.hero.primary">Download for macOS</span>
-            </a>
-            <a class="button secondary" href="install.html" data-i18n="home.hero.secondary">Install &amp; trust</a>
-          </div>
-          <div class="hero-assist-links">
-            <a href="install.html" data-i18n="home.hero.assist.install">Install &amp; trust</a>
-            <a href="privacy.html" data-i18n="home.hero.assist.privacy">Local data boundary</a>
-            <a href="faq.html" data-i18n="home.hero.assist.faq">FAQ</a>
-          </div>
-        </div>
-        <div class="product-stage" data-reveal="">
-          <img src="../assets/readme/ui-island-light.jpg" alt="Vibelsland Free island, expanded panel, and settings window" width="1040" height="860" fetchpriority="high" decoding="async">
-          <div class="status-float status-float-bottom" aria-hidden="true">
-            <span></span>
-            <strong data-i18n="home.hero.status">Demo · Tool running</strong>
-          </div>
-          <div class="demo-controls" role="group" aria-label="Demo state" data-i18n-aria-label="aria.demoControls">
-            <button type="button" class="active" data-demo-control="running" data-i18n="home.demo.running" aria-pressed="true">Running</button>
-            <button type="button" data-demo-control="approval" data-i18n="home.demo.approval" aria-pressed="false">Approval</button>
-            <button type="button" data-demo-control="idle" data-i18n="home.demo.idle" aria-pressed="false">Idle</button>
-          </div>
-        </div>
+      <section class="start-hero" aria-labelledby="hero-title">
+        <img class="start-logo" src="../assets/readme/app-icon-192.png" alt="" width="96" height="96" fetchpriority="high">
+        <h1 id="hero-title" data-i18n="home.hero.title">Start using Vibelsland Free</h1>
+        <p data-i18n="home.hero.copy">If the download does not start automatically, click below.</p>
+        <a class="button primary start-download" href="https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 3v11m0 0 4-4m-4 4-4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"></path>
+          </svg>
+          <span data-i18n="home.hero.primary">Download for macOS</span>
+        </a>
       </section>
 
-      <section class="spec-strip" aria-label="Product summary" data-reveal="">
-        <div>
-          <span data-i18n="home.spec.system.label">System</span>
-          <strong data-i18n="home.spec.system.value">macOS 14+</strong>
-        </div>
-        <div>
-          <span data-i18n="home.spec.tools.label">Tools</span>
-          <strong data-i18n="home.spec.tools.value">Claude Code / Codex CLI / Codex Desktop</strong>
-        </div>
-        <div>
-          <span data-i18n="home.spec.data.label">Data model</span>
-          <strong data-i18n="home.spec.data.value">Local-first</strong>
-        </div>
-        <div>
-          <span data-i18n="home.spec.version.label">Version</span>
-          <strong data-i18n="home.spec.version.value">v0.1.0</strong>
-        </div>
-      </section>
-
-      <section class="section editorial-section" aria-labelledby="focus-title">
-        <div class="section-heading" data-reveal="">
-          <p class="eyebrow" data-i18n="home.focus.eyebrow">Signal</p>
-          <h2 id="focus-title" data-i18n="home.focus.title">Only what matters.</h2>
-        </div>
-        <div class="signal-list">
-          <article data-reveal="">
-            <span>01</span>
-            <div>
-              <h3 data-i18n="home.focus.item1.title">Running</h3>
-              <p data-i18n="home.focus.item1.copy">Long tasks stay visible.</p>
-            </div>
-          </article>
-          <article data-reveal="">
-            <span>02</span>
-            <div>
-              <h3 data-i18n="home.focus.item2.title">Approval requests</h3>
-              <p data-i18n="home.focus.item2.copy">Catch approval requests before they block a run.</p>
-            </div>
-          </article>
-          <article data-reveal="">
-            <span>03</span>
-            <div>
-              <h3 data-i18n="home.focus.item3.title">Local</h3>
-              <p data-i18n="home.focus.item3.copy">No account. No telemetry.</p>
-            </div>
-          </article>
-        </div>
-      </section>
-
-      <section class="section trust-section-home" aria-labelledby="trust-title">
-        <div class="trust-copy" data-reveal="">
-          <p class="eyebrow" data-i18n="home.trust.eyebrow">Boundary</p>
-          <h2 id="trust-title" data-i18n="home.trust.title">Local reads. No telemetry.</h2>
-          <p data-i18n="home.trust.copy">Shows status without uploading sessions.</p>
-        </div>
-        <div class="boundary-grid" data-reveal="">
-          <div>
-            <span data-i18n="home.trust.read.label">Reads</span>
-            <strong data-i18n="home.trust.read.value">Session state</strong>
+      <section class="start-steps" aria-label="Three steps to start" data-i18n-aria-label="aria.homeSteps">
+        <article class="start-card">
+          <div class="start-card-screen">
+            <img src="../assets/readme/app-icon.png" alt="" width="48" height="48" loading="lazy" decoding="async">
+            <h2 data-i18n="home.step1.title">Download zip</h2>
+            <p data-i18n="home.step1.copy">Get the v0.1.0 macOS package.</p>
+            <a href="download.html" data-i18n="home.step1.link">View download details</a>
           </div>
-          <div>
-            <span data-i18n="home.trust.write.label">Writes</span>
-            <strong data-i18n="home.trust.write.value">Config and logs</strong>
+        </article>
+        <article class="start-card">
+          <div class="start-card-screen">
+            <span class="start-card-icon">✓</span>
+            <h2 data-i18n="home.step2.title">Verify the file</h2>
+            <p data-i18n="home.step2.copy">Use SHA-256 to confirm the download.</p>
+            <a href="install.html" data-i18n="home.step2.link">Read install and trust</a>
           </div>
-          <div>
-            <span data-i18n="home.trust.network.label">Network</span>
-            <strong data-i18n="home.trust.network.value">Core works offline</strong>
+        </article>
+        <article class="start-card">
+          <div class="start-card-screen">
+            <span class="start-card-icon">↗</span>
+            <h2 data-i18n="home.step3.title">Open the app</h2>
+            <p data-i18n="home.step3.copy">Keep AI coding status at the top of macOS.</p>
+            <a href="support.html" data-i18n="home.step3.link">View support</a>
           </div>
-        </div>
-      </section>
-
-      <section class="section cta-section" aria-labelledby="cta-title">
-        <div data-reveal="">
-          <p class="eyebrow" data-i18n="home.cta.eyebrow">Download</p>
-          <h2 id="cta-title" data-i18n="home.cta.title">Download for macOS.</h2>
-          <p data-i18n="home.cta.copy">v0.1.0 is free. Source and SHA-256 verification are public.</p>
-          <div class="hero-actions">
-            <a class="button primary" href="download.html">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M12 3v11m0 0 4-4m-4 4-4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"></path>
-              </svg>
-              <span data-i18n="home.cta.primary">Download for macOS</span>
-            </a>
-            <a class="button secondary" href="install.html" data-i18n="home.cta.secondary">Install &amp; trust</a>
-          </div>
-        </div>
+        </article>
       </section>
     </main>
 
@@ -220,8 +133,8 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="../lang.js?v=e812a6ea4519" defer=""></script>
-    <script src="../effects.js?v=71a88e9bf5d8" defer=""></script>
+    <script src="../lang.js?v=367d42cfdd40" defer=""></script>
+    <script src="../effects.js?v=984d01b9fa2d" defer=""></script>
 
 
 </body></html>
