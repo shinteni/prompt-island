@@ -443,7 +443,7 @@ for path in [docs / "download.html", docs / "en" / "download.html", docs / "ja" 
 for path in [docs / "support.html", docs / "en" / "support.html", docs / "ja" / "support.html"]:
     if path.exists():
         support_text = path.read_text(encoding="utf-8")
-        for phrase in ["MIT License", "https://github.com/shinteni/prompt-island/blob/v0.1.0/LICENSE"]:
+        for phrase in ["MIT License", "https://github.com/shinteni/prompt-island/blob/main/LICENSE"]:
             if phrase not in support_text:
                 errors.append(f"Support page missing license/disclaimer value in {display(path)}: {phrase}")
 
