@@ -13,71 +13,10 @@
 
   root.classList.add("js", "page-ready");
 
-  const bottomNav = document.querySelector(".nav-links");
-  const homeHero = document.querySelector(".home-hero");
-  if (bottomNav && homeHero) {
-    const syncBottomNav = () => {
-      const navRect = bottomNav.getBoundingClientRect();
-      const heroRect = homeHero.getBoundingClientRect();
-      const isMobileNav = window.matchMedia("(max-width: 860px)").matches;
-      const overlapsHero = heroRect.bottom > navRect.top;
-      root.classList.toggle("mobile-nav-hidden", isMobileNav && window.scrollY < 80 && overlapsHero);
-    };
-
-    syncBottomNav();
-    window.addEventListener("scroll", syncBottomNav, { passive: true });
-    window.addEventListener("resize", syncBottomNav);
-  }
-
   const revealItems = Array.from(document.querySelectorAll("[data-reveal]"));
   if (revealItems.length > 0) {
-    const isNearViewport = (element) => {
-      const rect = element.getBoundingClientRect();
-      const viewport = window.innerHeight || document.documentElement.clientHeight;
-      return rect.top < viewport * 1.08 && rect.bottom > viewport * -0.08;
-    };
-
-    const showRevealItems = () => {
-      revealItems.forEach((element) => element.classList.add("is-visible"));
-      root.classList.add("reveal-ready");
-    };
-
-    revealItems.forEach((element, index) => {
-      element.style.setProperty("--reveal-delay", `${Math.min((index % 4) * 36, 108)}ms`);
-    });
-
-    if (reduceMotion || !("IntersectionObserver" in window)) {
-      showRevealItems();
-    } else {
-      revealItems.forEach((element) => {
-        if (isNearViewport(element)) element.classList.add("is-visible");
-      });
-      root.classList.add("reveal-ready");
-
-      const observer = new IntersectionObserver(
-        (entries) => {
-          for (const entry of entries) {
-            if (entry.isIntersecting) {
-              entry.target.classList.add("is-visible");
-              observer.unobserve(entry.target);
-            }
-          }
-        },
-        {
-          rootMargin: "0px 0px 14% 0px",
-          threshold: 0.04
-        }
-      );
-
-      revealItems.forEach((element) => {
-        if (!element.classList.contains("is-visible")) observer.observe(element);
-      });
-    }
-
-    onMotionChange((event) => {
-      reduceMotion = event.matches;
-      if (reduceMotion) showRevealItems();
-    });
+    revealItems.forEach((element) => element.classList.add("is-visible"));
+    root.classList.add("reveal-ready");
   }
 
   const productStage = document.querySelector(".product-stage");
@@ -106,7 +45,6 @@
 
     let index = 0;
     let demoTimer = 0;
-    let resumeTimer = 0;
     const setDemoState = (nextState) => {
       const nextIndex = typeof nextState === "string"
         ? stateIndexByName.get(nextState) ?? 0
@@ -124,13 +62,6 @@
       if (demoTimer) window.clearInterval(demoTimer);
       demoTimer = 0;
     };
-    const scheduleDemoResume = () => {
-      if (resumeTimer) window.clearTimeout(resumeTimer);
-      resumeTimer = window.setTimeout(() => {
-        resumeTimer = 0;
-        startDemo();
-      }, 8000);
-    };
     const startDemo = () => {
       stopDemo();
       if (reduceMotion) return;
@@ -144,7 +75,6 @@
       control.addEventListener("click", () => {
         setDemoState(control.dataset.demoControl || "running");
         stopDemo();
-        if (!reduceMotion) scheduleDemoResume();
       });
     });
     startDemo();
