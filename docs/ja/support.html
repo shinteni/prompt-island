@@ -32,7 +32,7 @@
     <link rel="icon" href="../assets/readme/app-icon.png">
     <link rel="apple-touch-icon" href="../assets/readme/app-icon.png">
     <link rel="manifest" href="../site.webmanifest">
-    <link rel="stylesheet" href="../styles.css?v=f183895def42">
+    <link rel="stylesheet" href="../styles.css?v=b462862c6c3e">
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -187,19 +187,19 @@
           <p class="eyebrow">問題報告</p>
           <h2 id="report-title">再現できる情報を添えてください。</h2>
           <p>
-            GitHub Issues は公開ページです。投稿前にローカルユーザー名、プロジェクトパス、token、prompt、セッション内容、完全なログを削除してください。セキュリティ報告も同じルールで伏せ字にします。
+            GitHub Issues は公開ページで、通常のバグと伏せ字済みログにだけ使います。脆弱性の悪用手順、token、パス、prompt、完全なログは公開 issue に投稿しないでください。まず GitHub private vulnerability reporting を使い、使えない場合は詳細を含まない最小限の公開 issue で私的連絡先を依頼してください。
           </p>
         </div>
         <div class="link-grid compact">
           <a class="link-panel" href="https://github.com/shinteni/prompt-island/issues" data-reveal>
             <span>Issues</span>
             <strong>GitHub で報告</strong>
-            <p>Vibelsland Free のバージョン、macOS バージョン、影響を受けるソース、再現手順、伏せ字にしたログ抜粋を含めてください。</p>
+            <p>通常の問題では、Vibelsland Free のバージョン、macOS バージョン、影響を受けるソース、再現手順、伏せ字にしたログ抜粋を含めてください。</p>
           </a>
           <a class="link-panel" href="support.html#data-title" data-reveal>
             <span>Redaction</span>
             <strong>公開してはいけない内容を確認</strong>
-            <p>公開 issue に bridge token、作業フォルダの絶対パス、AI prompt、セッション全文、個人情報を含むログを貼らないでください。</p>
+            <p>公開 issue には bridge token、作業フォルダの絶対パス、URL query token、AI prompt、セッション全文、個人情報を含むコマンド引数を貼らないでください。</p>
           </a>
           <a class="link-panel" href="privacy.html" data-reveal>
             <span>Privacy</span>
@@ -209,8 +209,15 @@
           <a class="link-panel" href="../.well-known/security.txt" data-reveal>
             <span>Security</span>
             <strong>セキュリティ報告入口</strong>
-            <p>公開 security.txt で、報告先、言語設定、サポートページを確認できます。</p>
+            <p>まず security.txt を確認します。脆弱性の詳細は公開せず、私的報告が使えない場合だけ詳細なしの調整 issue を作成します。</p>
           </a>
+        </div>
+        <div class="checksum-card redaction-example" data-reveal>
+          <span>伏せ字の例</span>
+          <code>/Users/rinka/private-repo => /Users/&lt;user&gt;/&lt;project&gt;</code>
+          <code>https://example.test/callback?token=abc123 => https://example.test/callback?token=&lt;redacted&gt;</code>
+          <code>--api-key sk-... => --api-key &lt;redacted&gt;</code>
+          <code>bridge token / prompt / session body => &lt;redacted summary&gt;</code>
         </div>
         <p><a class="text-link" href="https://github.com/shinteni/prompt-island/blob/main/LICENSE">MIT License</a></p>
       </section>
@@ -233,7 +240,7 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="../lang.js?v=373a83fd4731" defer></script>
+    <script src="../lang.js?v=9b03203760c2" defer></script>
     <script src="../effects.js?v=11e4bcf6da54" defer></script>
   </body>
 </html>
