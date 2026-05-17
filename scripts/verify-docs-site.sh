@@ -99,6 +99,8 @@ release_api_url = release_value(["release_api_url"])
 release_notes_url = release_value(["release_notes_url"])
 release_source_ref = release_value(["source", "ref"])
 release_source_sha = release_value(["source", "sha"])
+release_platform_arch = release_value(["platform", "architecture"])
+release_platform_processor = release_value(["platform", "processor"])
 release_app_name = release_value(["app", "bundle_name"])
 release_binary_name = release_value(["app", "binary_name"])
 release_bundle_id = release_value(["app", "bundle_identifier"])
@@ -426,16 +428,24 @@ for path in [docs / "download.html", docs / "en" / "download.html", docs / "ja" 
                     "softwareVersion": release_version,
                     "downloadUrl": release_archive_url,
                     "sha256": release_archive_hash,
+                    "processorRequirements": release_platform_processor,
                 }
                 for key, expected_value in expected_payload.items():
                     if expected_value and payload.get(key) != expected_value:
                         errors.append(f"Download JSON-LD {key} does not match release.json in {display(path)}: {payload.get(key)}")
         if "SoftwareApplication" not in json_ld_types:
             errors.append(f"Download page missing SoftwareApplication JSON-LD: {display(path)}")
-        for phrase in [release_label, release_archive_name, release_archive_hash, release_archive_url, release_checksum_url, release_app_name]:
+        for phrase in [release_label, release_archive_name, release_archive_hash, release_archive_url, release_checksum_url, release_app_name, release_source_sha[:7], release_platform_arch, release_platform_processor]:
             escaped_phrase = html.escape(phrase) if phrase else ""
             if phrase and phrase not in page_text and escaped_phrase not in page_text:
                 errors.append(f"Download page missing release metadata value in {display(path)}: {phrase}")
+
+for path in [docs / "support.html", docs / "en" / "support.html", docs / "ja" / "support.html"]:
+    if path.exists():
+        support_text = path.read_text(encoding="utf-8")
+        for phrase in ["MIT License", "https://github.com/shinteni/prompt-island/blob/v0.1.0/LICENSE"]:
+            if phrase not in support_text:
+                errors.append(f"Support page missing license/disclaimer value in {display(path)}: {phrase}")
 
 sitemap_path = docs / "sitemap.xml"
 if sitemap_path.exists():

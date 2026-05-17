@@ -28,7 +28,7 @@
     <link rel="icon" href="../assets/readme/app-icon.png">
     <link rel="apple-touch-icon" href="../assets/readme/app-icon.png">
     <link rel="manifest" href="../site.webmanifest">
-    <link rel="stylesheet" href="../styles.css?v=20260517-5">
+    <link rel="stylesheet" href="../styles.css?v=20260517-11">
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -45,7 +45,8 @@
         "downloadUrl": "https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip",
         "codeRepository": "https://github.com/shinteni/prompt-island",
         "releaseNotes": "https://github.com/shinteni/prompt-island/releases/tag/v0.1.0",
-        "softwareRequirements": "macOS 14+",
+        "softwareRequirements": "macOS 14+, Apple Silicon / arm64",
+        "processorRequirements": "Apple Silicon / arm64",
         "fileSize": "2.3 MB",
         "sha256": "64c7c0a4eae81042bbc3896e24a07ab5d5573aeaafa846eada2e982f887ecf81",
         "offers": {
@@ -87,7 +88,7 @@
         <div class="download-lead" data-reveal="">
           <p class="eyebrow" data-i18n="download.hero.eyebrow">ダウンロード</p>
           <h1 id="download-title" data-i18n="download.hero.title">macOS 版をダウンロード</h1>
-          <p data-i18n="download.hero.copy">現在のバージョンは v0.1.0、macOS 14+ 対応。パッケージは GitHub Releases で配布し、ソース、プライバシー説明、SHA-256 チェックサムを公開しています。</p>
+          <p data-i18n="download.hero.copy">v0.1.0、macOS 14+、Apple Silicon / arm64。</p>
           <div class="hero-actions">
             <a class="button primary" href="https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip">
               <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -104,15 +105,13 @@
           <div class="download-meta-strip" aria-label="ダウンロード概要" data-reveal="">
             <span><strong data-i18n="download.card.version">v0.1.0</strong></span>
             <span data-i18n="download.card.system.value">macOS 14+</span>
+            <span data-i18n="download.card.arch.value">Apple Silicon / arm64</span>
             <span data-i18n="download.card.app.value">&gt;_ - island.app</span>
             <span data-i18n="download.card.size.value">約 2.3 MB</span>
             <span data-i18n="download.card.signing.value">ad-hoc 署名</span>
           </div>
         </div>
         <div class="download-side" data-reveal="">
-          <div class="download-media">
-            <img src="../assets/readme/hero-island-light.jpg" alt="デスクトップ上部に AI コーディング状態を表示する Vibelsland Free" width="1672" height="941" decoding="async">
-          </div>
           <aside class="release-card" aria-label="リリース情報">
             <span data-i18n="download.card.label">現在の版</span>
             <strong data-i18n="download.card.version">v0.1.0</strong>
@@ -120,6 +119,10 @@
               <div>
                 <dt data-i18n="download.card.system.label">システム</dt>
                 <dd data-i18n="download.card.system.value">macOS 14+</dd>
+              </div>
+              <div>
+                <dt data-i18n="download.card.arch.label">アーキテクチャ</dt>
+                <dd data-i18n="download.card.arch.value">Apple Silicon / arm64</dd>
               </div>
               <div>
                 <dt data-i18n="download.card.package.label">パッケージ</dt>
@@ -137,6 +140,10 @@
                 <dt data-i18n="download.card.signing.label">署名</dt>
                 <dd data-i18n="download.card.signing.value">ad-hoc 署名</dd>
               </div>
+              <div>
+                <dt data-i18n="download.card.source.label">ソース commit</dt>
+                <dd><a href="https://github.com/shinteni/prompt-island/commit/83a0fc5a1ca8bb45a6219b65b7042882e182d472">83a0fc5</a></dd>
+              </div>
             </dl>
           </aside>
         </div>
@@ -151,17 +158,17 @@
           <li data-reveal="">
             <span>01</span>
             <strong data-i18n="download.install.step1.title">zip をダウンロード</strong>
-            <p data-i18n="download.install.step1.copy">GitHub Releases から Vibelsland-Free-0.1.0-macos.zip をダウンロードします。</p>
+            <p data-i18n="download.install.step1.copy">Vibelsland-Free-0.1.0-macos.zip を取得します。</p>
           </li>
           <li data-reveal="">
             <span>02</span>
             <strong data-i18n="download.install.step2.title">Applications へ移動</strong>
-            <p data-i18n="download.install.step2.copy" data-i18n-html>解凍してアプリを Applications に移動します。インストール後のアプリ名は <code>&gt;_ - island.app</code> と表示され、下の初回起動メモに沿って起動します。</p>
+            <p data-i18n="download.install.step2.copy" data-i18n-html>解凍して <code>&gt;_ - island.app</code> を移動します。</p>
           </li>
           <li data-reveal="">
             <span>03</span>
-            <strong data-i18n="download.install.step3.title">ローカルソースを有効化</strong>
-            <p data-i18n="download.install.step3.copy">設定画面で必要な Claude Code、Codex CLI、Codex Desktop のソースを有効化します。</p>
+            <strong data-i18n="download.install.step3.title">Control クリックで開く</strong>
+            <p data-i18n="download.install.step3.copy">初回起動時は macOS の確認に従います。</p>
           </li>
         </ol>
       </section>
@@ -169,8 +176,8 @@
       <section class="section split-section" aria-labelledby="security-title">
         <div class="split-copy" data-reveal="">
           <p class="eyebrow" data-i18n="download.security.eyebrow">署名とチェックサム</p>
-          <h2 id="security-title" data-i18n="download.security.title">インストール前に知っておくこと。</h2>
-          <p data-i18n="download.security.copy">v0.1.0 は ad-hoc 署名を採用しているため、初回起動時に macOS が追加確認を求める場合があります。Control キーを押しながらアプリをクリックし、「開く（Open）」を選んでください。ダウンロードには SHA-256 チェックサムがあり、ソースは GitHub で確認できます。</p>
+          <h2 id="security-title" data-i18n="download.security.title">ダウンロードを確認。</h2>
+          <p data-i18n="download.security.copy">現在のパッケージは ad-hoc 署名です。初回起動は Control クリックで開き、zip は SHA-256 ファイルで確認できます。</p>
           <a class="text-link" href="support.html">インストールと状態表示のサポートを見る</a>
         </div>
         <div class="checksum-card" data-reveal="">
@@ -184,34 +191,6 @@
         </div>
       </section>
 
-      <section class="section note-section" aria-labelledby="links-title">
-        <div class="section-heading" data-reveal="">
-          <p class="eyebrow" data-i18n="download.links.eyebrow">オープンソース</p>
-          <h2 id="links-title" data-i18n="download.links.title">ダウンロード、ソース、プライバシーを一つの信頼線に。</h2>
-        </div>
-        <div class="link-grid compact">
-          <a class="link-panel" href="https://github.com/shinteni/prompt-island/releases/tag/v0.1.0" data-reveal="">
-            <span data-i18n="download.links.release.label">Release</span>
-            <strong data-i18n="download.links.release.title">v0.1.0 リリースを見る</strong>
-            <p data-i18n="download.links.release.copy">macOS zip パッケージ、SHA-256 ファイル、リリースノートを確認できます。</p>
-          </a>
-          <a class="link-panel" href="install.html" data-reveal="">
-            <span data-i18n="download.links.install.label">Install</span>
-            <strong data-i18n="download.links.install.title">インストールと信頼を確認</strong>
-            <p data-i18n="download.links.install.copy">Gatekeeper の初回起動、確認方法、署名状態、ローカルデータ境界を確認できます。</p>
-          </a>
-          <a class="link-panel" href="https://github.com/shinteni/prompt-island/tree/v0.1.0" data-reveal="">
-            <span data-i18n="download.links.source.label">Source</span>
-            <strong data-i18n="download.links.source.title">ソースを見る</strong>
-            <p data-i18n="download.links.source.copy">実装、ビルドスクリプト、配布物を確認できます。</p>
-          </a>
-          <a class="link-panel" href="privacy.html" data-reveal="">
-            <span data-i18n="download.links.privacy.label">Privacy</span>
-            <strong data-i18n="download.links.privacy.title">プライバシー境界を見る</strong>
-            <p data-i18n="download.links.privacy.copy">アプリが読み取り、書き込み、送信しない内容を確認できます。</p>
-          </a>
-        </div>
-      </section>
     </main>
 
     <footer class="site-footer">
@@ -230,8 +209,8 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="../lang.js?v=20260517-5" defer=""></script>
-    <script src="../effects.js?v=20260517-5" defer=""></script>
+    <script src="../lang.js?v=20260517-11" defer=""></script>
+    <script src="../effects.js?v=20260517-11" defer=""></script>
 
 
 </body></html>

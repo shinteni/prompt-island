@@ -28,7 +28,7 @@
     <link rel="icon" href="../assets/readme/app-icon.png">
     <link rel="apple-touch-icon" href="../assets/readme/app-icon.png">
     <link rel="manifest" href="../site.webmanifest">
-    <link rel="stylesheet" href="../styles.css?v=20260517-5">
+    <link rel="stylesheet" href="../styles.css?v=20260517-11">
   </head>
   <body>
     <a class="skip-link" href="#main" data-i18n="shared.skip">本文へ移動</a>
@@ -129,6 +129,32 @@
         </div>
       </section>
 
+      <section class="section data-section" aria-labelledby="retention-title">
+        <div class="section-heading align-left" data-reveal="">
+          <p class="eyebrow" data-i18n="privacy.retention.eyebrow">保持と削除</p>
+          <h2 id="retention-title" data-i18n="privacy.retention.title">ローカル token、ログ、削除場所を明確にします。</h2>
+          <p data-i18n="privacy.retention.copy">ローカル bridge token は Mac 内の socket 認証だけに使われます。ログはトラブルシューティング用で、アプリがアップロードすることはありません。hooks をアンインストールした後、実行ファイル、設定、ログは手動で削除できます。</p>
+        </div>
+        <div class="data-grid">
+          <article data-reveal="">
+            <h3 data-i18n="privacy.retention.bridge.title">ローカル bridge token</h3>
+            <ul>
+              <li data-i18n="privacy.retention.bridge.item1" data-i18n-html>実行ファイルは <code>~/.vibelsland-free</code> にあり、ローカル Unix socket とローカル bridge token を含みます。</li>
+              <li data-i18n="privacy.retention.bridge.item2">token は Mac 内のプロセス間でリクエスト元を確認するためだけに使われ、オンラインアカウントの認証情報ではありません。</li>
+              <li data-i18n="privacy.retention.bridge.item3" data-i18n-html><code>~/.vibelsland-free</code> を削除すると実行 token は消えます。次回起動時にアプリまたは hooks が必要な実行ファイルを作り直します。</li>
+            </ul>
+          </article>
+          <article data-reveal="">
+            <h3 data-i18n="privacy.retention.logs.title">ログと削除</h3>
+            <ul>
+              <li data-i18n="privacy.retention.logs.item1" data-i18n-html>ログは <code>~/Library/Logs/VibelslandFree/app.log</code> にあり、接続状態、イベント種別、時刻、ローカルパス、エラー理由を記録します。</li>
+              <li data-i18n="privacy.retention.logs.item2">アプリはログをアップロードしません。ログを共有する前に、機密性のあるパス、プロンプト、token、セッション内容を削除してください。</li>
+              <li data-i18n="privacy.retention.logs.item3" data-i18n-html>使用をやめる場合は、<code>~/Library/Application Support/VibelslandFree</code>、<code>~/Library/Logs/VibelslandFree</code>、<code>~/.vibelsland-free</code> を削除できます。</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
       <section class="section split-section" aria-labelledby="control-title">
         <div class="split-copy" data-reveal="">
           <p class="eyebrow" data-i18n="privacy.control.eyebrow">ユーザー制御</p>
@@ -166,8 +192,8 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="../lang.js?v=20260517-5" defer=""></script>
-    <script src="../effects.js?v=20260517-5" defer=""></script>
+    <script src="../lang.js?v=20260517-11" defer=""></script>
+    <script src="../effects.js?v=20260517-11" defer=""></script>
 
 
 </body></html>

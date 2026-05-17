@@ -28,7 +28,7 @@
     <link rel="icon" href="../assets/readme/app-icon.png">
     <link rel="apple-touch-icon" href="../assets/readme/app-icon.png">
     <link rel="manifest" href="../site.webmanifest">
-    <link rel="stylesheet" href="../styles.css?v=20260517-5">
+    <link rel="stylesheet" href="../styles.css?v=20260517-11">
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -45,7 +45,8 @@
         "downloadUrl": "https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip",
         "codeRepository": "https://github.com/shinteni/prompt-island",
         "releaseNotes": "https://github.com/shinteni/prompt-island/releases/tag/v0.1.0",
-        "softwareRequirements": "macOS 14+",
+        "softwareRequirements": "macOS 14+, Apple Silicon / arm64",
+        "processorRequirements": "Apple Silicon / arm64",
         "fileSize": "2.3 MB",
         "sha256": "64c7c0a4eae81042bbc3896e24a07ab5d5573aeaafa846eada2e982f887ecf81",
         "offers": {
@@ -87,7 +88,7 @@
         <div class="download-lead" data-reveal="">
           <p class="eyebrow" data-i18n="download.hero.eyebrow">Download</p>
           <h1 id="download-title" data-i18n="download.hero.title">Download for macOS</h1>
-          <p data-i18n="download.hero.copy">Current version v0.1.0 for macOS 14+. The package is distributed through GitHub Releases with public source, privacy notes, and a SHA-256 checksum.</p>
+          <p data-i18n="download.hero.copy">v0.1.0, macOS 14+, Apple Silicon / arm64.</p>
           <div class="hero-actions">
             <a class="button primary" href="https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip">
               <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -104,15 +105,13 @@
           <div class="download-meta-strip" aria-label="Download summary" data-reveal="">
             <span><strong data-i18n="download.card.version">v0.1.0</strong></span>
             <span data-i18n="download.card.system.value">macOS 14+</span>
+            <span data-i18n="download.card.arch.value">Apple Silicon / arm64</span>
             <span data-i18n="download.card.app.value">&gt;_ - island.app</span>
             <span data-i18n="download.card.size.value">About 2.3 MB</span>
             <span data-i18n="download.card.signing.value">ad-hoc signed</span>
           </div>
         </div>
         <div class="download-side" data-reveal="">
-          <div class="download-media">
-            <img src="../assets/readme/hero-island-light.jpg" alt="Vibelsland Free showing AI coding status at the top of the desktop" width="1672" height="941" decoding="async">
-          </div>
           <aside class="release-card" aria-label="Release information">
             <span data-i18n="download.card.label">Current version</span>
             <strong data-i18n="download.card.version">v0.1.0</strong>
@@ -120,6 +119,10 @@
               <div>
                 <dt data-i18n="download.card.system.label">System</dt>
                 <dd data-i18n="download.card.system.value">macOS 14+</dd>
+              </div>
+              <div>
+                <dt data-i18n="download.card.arch.label">Architecture</dt>
+                <dd data-i18n="download.card.arch.value">Apple Silicon / arm64</dd>
               </div>
               <div>
                 <dt data-i18n="download.card.package.label">Package</dt>
@@ -137,6 +140,10 @@
                 <dt data-i18n="download.card.signing.label">Signing</dt>
                 <dd data-i18n="download.card.signing.value">ad-hoc signed</dd>
               </div>
+              <div>
+                <dt data-i18n="download.card.source.label">Source commit</dt>
+                <dd><a href="https://github.com/shinteni/prompt-island/commit/83a0fc5a1ca8bb45a6219b65b7042882e182d472">83a0fc5</a></dd>
+              </div>
             </dl>
           </aside>
         </div>
@@ -150,18 +157,18 @@
         <ol class="large-steps">
           <li data-reveal="">
             <span>01</span>
-            <strong data-i18n="download.install.step1.title">Download the zip</strong>
-            <p data-i18n="download.install.step1.copy">Download Vibelsland-Free-0.1.0-macos.zip from GitHub Releases.</p>
+            <strong data-i18n="download.install.step1.title">Download zip</strong>
+            <p data-i18n="download.install.step1.copy">Get Vibelsland-Free-0.1.0-macos.zip.</p>
           </li>
           <li data-reveal="">
             <span>02</span>
             <strong data-i18n="download.install.step2.title">Move to Applications</strong>
-            <p data-i18n="download.install.step2.copy" data-i18n-html>Unzip it and drag the app into Applications. The installed app appears as <code>&gt;_ - island.app</code>, then follow the first-launch note below.</p>
+            <p data-i18n="download.install.step2.copy" data-i18n-html>Unzip and move <code>&gt;_ - island.app</code>.</p>
           </li>
           <li data-reveal="">
             <span>03</span>
-            <strong data-i18n="download.install.step3.title">Enable local sources</strong>
-            <p data-i18n="download.install.step3.copy">Open Settings and enable the Claude Code, Codex CLI, and Codex Desktop sources you need.</p>
+            <strong data-i18n="download.install.step3.title">Control-click Open</strong>
+            <p data-i18n="download.install.step3.copy">Confirm the first launch when macOS asks.</p>
           </li>
         </ol>
       </section>
@@ -169,8 +176,8 @@
       <section class="section split-section" aria-labelledby="security-title">
         <div class="split-copy" data-reveal="">
           <p class="eyebrow" data-i18n="download.security.eyebrow">Signing and checksum</p>
-          <h2 id="security-title" data-i18n="download.security.title">What to know before installing.</h2>
-          <p data-i18n="download.security.copy">v0.1.0 uses ad-hoc signing, so macOS may require an extra confirmation on first launch. Control-click the app and choose Open. The download includes a SHA-256 checksum and the source is available on GitHub.</p>
+          <h2 id="security-title" data-i18n="download.security.title">Verify the download.</h2>
+          <p data-i18n="download.security.copy">The current package is ad-hoc signed. First launch uses Control-click Open; the zip can be checked with the SHA-256 file.</p>
           <a class="text-link" href="support.html">Open install and status support</a>
         </div>
         <div class="checksum-card" data-reveal="">
@@ -184,34 +191,6 @@
         </div>
       </section>
 
-      <section class="section note-section" aria-labelledby="links-title">
-        <div class="section-heading" data-reveal="">
-          <p class="eyebrow" data-i18n="download.links.eyebrow">Open source</p>
-          <h2 id="links-title" data-i18n="download.links.title">Download, source, and privacy stay in one trust chain.</h2>
-        </div>
-        <div class="link-grid compact">
-          <a class="link-panel" href="https://github.com/shinteni/prompt-island/releases/tag/v0.1.0" data-reveal="">
-            <span data-i18n="download.links.release.label">Release</span>
-            <strong data-i18n="download.links.release.title">View v0.1.0 release</strong>
-            <p data-i18n="download.links.release.copy">Get the macOS zip package, SHA-256 file, and release notes.</p>
-          </a>
-          <a class="link-panel" href="install.html" data-reveal="">
-            <span data-i18n="download.links.install.label">Install</span>
-            <strong data-i18n="download.links.install.title">Read install and trust guidance</strong>
-            <p data-i18n="download.links.install.copy">Confirm Gatekeeper first launch, verification, signing status, and local data boundaries.</p>
-          </a>
-          <a class="link-panel" href="https://github.com/shinteni/prompt-island/tree/v0.1.0" data-reveal="">
-            <span data-i18n="download.links.source.label">Source</span>
-            <strong data-i18n="download.links.source.title">View source</strong>
-            <p data-i18n="download.links.source.copy">Review implementation, build scripts, and packaged output.</p>
-          </a>
-          <a class="link-panel" href="privacy.html" data-reveal="">
-            <span data-i18n="download.links.privacy.label">Privacy</span>
-            <strong data-i18n="download.links.privacy.title">View privacy boundary</strong>
-            <p data-i18n="download.links.privacy.copy">Understand what the app reads, writes, and never uploads.</p>
-          </a>
-        </div>
-      </section>
     </main>
 
     <footer class="site-footer">
@@ -230,8 +209,8 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="../lang.js?v=20260517-5" defer=""></script>
-    <script src="../effects.js?v=20260517-5" defer=""></script>
+    <script src="../lang.js?v=20260517-11" defer=""></script>
+    <script src="../effects.js?v=20260517-11" defer=""></script>
 
 
 </body></html>
