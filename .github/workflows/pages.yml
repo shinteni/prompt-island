@@ -41,6 +41,7 @@ jobs:
     env:
       VIBELSLAND_SITE_URL: ${{ inputs.site_url || vars.VIBELSLAND_SITE_URL || 'https://shinteni.github.io/prompt-island/' }}
       VIBELSLAND_CUSTOM_DOMAIN: ${{ inputs.custom_domain || vars.VIBELSLAND_CUSTOM_DOMAIN || '' }}
+      GITHUB_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v4
 
