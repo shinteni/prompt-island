@@ -604,6 +604,59 @@ button:focus-visible {
   white-space: nowrap;
 }
 
+.demo-controls {
+  position: absolute;
+  z-index: 3;
+  top: 42px;
+  left: 50%;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid rgba(34, 40, 55, 0.12);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 16px 46px rgba(23, 30, 45, 0.14);
+  backdrop-filter: blur(18px) saturate(150%);
+  transform: translateX(-50%);
+}
+
+.demo-controls button {
+  min-height: 32px;
+  min-width: 72px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font: 700 12px/1 var(--font-ui);
+  letter-spacing: 0;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    color 170ms ease,
+    background 170ms ease,
+    transform 170ms ease;
+}
+
+.demo-controls button:hover,
+.demo-controls button:focus-visible {
+  color: var(--ink);
+}
+
+.demo-controls button.active {
+  color: #ffffff;
+  background: var(--blue);
+}
+
+.product-stage[data-demo-state="approval"] .demo-controls button.active {
+  background: var(--approval);
+}
+
+.product-stage[data-demo-state="idle"] .demo-controls button.active {
+  background: var(--privacy);
+}
+
 @keyframes statusPulse {
   0%,
   100% {
@@ -1745,6 +1798,18 @@ button:focus-visible {
     width: min(324px, 100%);
     padding: 12px;
     border-radius: 22px;
+  }
+
+  .demo-controls {
+    top: 22px;
+    max-width: calc(100% - 32px);
+  }
+
+  .demo-controls button {
+    min-width: 58px;
+    min-height: 30px;
+    padding: 0 8px;
+    font-size: 11px;
   }
 
   .product-stage::before {
