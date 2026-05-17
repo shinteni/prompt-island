@@ -268,7 +268,8 @@ code {
   box-shadow: 0 6px 18px rgba(37, 99, 235, 0.16);
 }
 
-.nav-cta:hover {
+.nav-cta:hover,
+.nav-cta:focus-visible {
   color: #ffffff;
   background: var(--blue-hover);
   transform: translateY(-1px);
@@ -442,7 +443,8 @@ html[lang="zh-CN"] .cta-section h2 {
   box-shadow: 0 12px 36px rgba(37, 99, 235, 0.18);
 }
 
-.button.primary:hover {
+.button.primary:hover,
+.button.primary:focus-visible {
   background: var(--blue-hover);
   transform: translateY(-1px);
   box-shadow: 0 16px 42px rgba(37, 99, 235, 0.24);
@@ -454,7 +456,8 @@ html[lang="zh-CN"] .cta-section h2 {
   background: rgba(255, 255, 255, 0.62);
 }
 
-.button.secondary:hover {
+.button.secondary:hover,
+.button.secondary:focus-visible {
   border-color: var(--line-strong);
   background: rgba(255, 255, 255, 0.88);
   transform: translateY(-1px);
@@ -495,6 +498,23 @@ button:focus-visible {
   filter: blur(18px);
 }
 
+.product-stage::after {
+  content: "";
+  position: absolute;
+  inset: 16px;
+  pointer-events: none;
+  z-index: 1;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 18% 20%, rgba(8, 145, 178, 0.28), transparent 20%),
+    linear-gradient(116deg, transparent 0 28%, rgba(37, 99, 235, 0.12) 28.1%, transparent 29.5% 100%);
+  opacity: 0.38;
+  mix-blend-mode: screen;
+  transition:
+    opacity 360ms ease,
+    background 360ms ease;
+}
+
 .product-stage img,
 .device-card img,
 .subpage-media img,
@@ -503,10 +523,12 @@ button:focus-visible {
   height: auto;
   border-radius: 18px;
   box-shadow: 0 22px 70px rgba(0, 0, 0, 0.2);
-  filter: brightness(1.01) contrast(1.01) saturate(0.98);
+  filter: brightness(0.98) contrast(1.08) saturate(1.04);
 }
 
 .product-stage img {
+  position: relative;
+  z-index: 0;
   aspect-ratio: 1040 / 860;
   object-fit: cover;
   object-position: center 22%;
@@ -514,6 +536,7 @@ button:focus-visible {
 
 .status-float {
   position: absolute;
+  z-index: 2;
   left: 50%;
   display: inline-flex;
   align-items: center;
@@ -529,6 +552,10 @@ button:focus-visible {
     0 14px 42px rgba(23, 30, 45, 0.14);
   backdrop-filter: blur(18px);
   transform: translateX(-50%);
+  transition:
+    border-color 260ms ease,
+    box-shadow 260ms ease,
+    transform 260ms ease;
 }
 
 .status-float span {
@@ -537,6 +564,7 @@ button:focus-visible {
   border-radius: 50%;
   background: var(--cyan);
   box-shadow: 0 0 16px var(--cyan);
+  animation: statusPulse 2.4s ease-in-out infinite;
 }
 
 .product-stage[data-demo-state="approval"] .status-float {
@@ -544,6 +572,13 @@ button:focus-visible {
   box-shadow:
     0 0 26px rgba(217, 119, 6, 0.16),
     0 14px 42px rgba(23, 30, 45, 0.14);
+}
+
+.product-stage[data-demo-state="approval"]::after {
+  background:
+    radial-gradient(circle at 84% 24%, rgba(217, 119, 6, 0.36), transparent 18%),
+    linear-gradient(116deg, transparent 0 52%, rgba(217, 119, 6, 0.16) 52.1%, transparent 53.8% 100%);
+  opacity: 0.48;
 }
 
 .product-stage[data-demo-state="approval"] .status-float span {
@@ -556,10 +591,30 @@ button:focus-visible {
   box-shadow: 0 0 16px var(--privacy);
 }
 
+.product-stage[data-demo-state="idle"]::after {
+  background:
+    radial-gradient(circle at 50% 68%, rgba(5, 150, 105, 0.28), transparent 20%),
+    linear-gradient(116deg, transparent 0 18%, rgba(5, 150, 105, 0.11) 18.1%, transparent 19.4% 100%);
+  opacity: 0.34;
+}
+
 .status-float strong {
   font-size: 13px;
   font-weight: 680;
   white-space: nowrap;
+}
+
+@keyframes statusPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+
+  50% {
+    transform: scale(1.35);
+    opacity: 1;
+  }
 }
 
 .status-float-top {
@@ -1097,7 +1152,8 @@ button:focus-visible {
   box-shadow: 0 18px 54px rgba(23, 30, 45, 0.08);
 }
 
-.support-shortcuts a:hover {
+.support-shortcuts a:hover,
+.support-shortcuts a:focus-visible {
   border-color: var(--line-strong);
   background: rgba(255, 255, 255, 0.94);
   transform: translateY(-2px);
@@ -1196,7 +1252,8 @@ button:focus-visible {
   min-height: 230px;
 }
 
-.link-panel:hover {
+.link-panel:hover,
+.link-panel:focus-visible {
   transform: translateY(-3px);
   box-shadow: 0 22px 60px rgba(0, 0, 0, 0.09);
 }
@@ -1543,7 +1600,7 @@ button:focus-visible {
   }
 
   main {
-    padding-bottom: calc(78px + env(safe-area-inset-bottom));
+    padding-bottom: calc(104px + env(safe-area-inset-bottom));
   }
 
   .site-header {
@@ -1559,29 +1616,38 @@ button:focus-visible {
   .nav-links {
     position: fixed;
     z-index: 45;
-    top: calc(100svh - 62px - env(safe-area-inset-bottom));
+    top: auto;
     left: 50%;
-    bottom: auto;
+    bottom: calc(8px + env(safe-area-inset-bottom));
     width: min(430px, calc(100vw - 16px));
-    min-height: 48px;
-    justify-content: flex-start;
+    min-height: 54px;
+    justify-content: center;
     gap: 4px;
     padding: 4px;
     border: 1px solid var(--line);
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.94);
+    background: rgba(255, 255, 255, 0.98);
     box-shadow: 0 18px 54px rgba(23, 30, 45, 0.16);
     transform: translateX(-50%);
-    backdrop-filter: none;
+    transition:
+      opacity 180ms ease,
+      transform 180ms ease;
+    backdrop-filter: blur(22px) saturate(150%);
     overflow-x: auto;
     scrollbar-width: none;
   }
 
+  .mobile-nav-hidden .nav-links {
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, 18px);
+  }
+
   .nav-links a {
-    flex: 0 0 auto;
+    flex: 1 1 0;
     min-width: 60px;
-    min-height: 44px;
-    padding: 0 4px;
+    min-height: 46px;
+    padding: 0 8px;
     border-radius: 999px;
     font-size: 12px;
     white-space: nowrap;
@@ -1624,7 +1690,7 @@ button:focus-visible {
 
   .home-hero {
     align-content: start;
-    gap: 28px;
+    gap: 22px;
   }
 
   .hero h1 {
@@ -1644,7 +1710,7 @@ button:focus-visible {
   }
 
   .product-stage {
-    width: min(340px, 100%);
+    width: min(324px, 100%);
     padding: 12px;
     border-radius: 22px;
   }
@@ -1670,7 +1736,7 @@ button:focus-visible {
   .download-side {
     width: min(560px, 100%);
     margin: 0 auto;
-    gap: 12px;
+    gap: 10px;
   }
 
   .download-media {
@@ -1948,6 +2014,12 @@ button:focus-visible {
     width: 100%;
   }
 
+  .home-hero {
+    padding-top: 102px;
+    padding-bottom: calc(22px + env(safe-area-inset-bottom));
+    gap: 18px;
+  }
+
   .download-lead .hero-actions {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -1957,6 +2029,13 @@ button:focus-visible {
     justify-content: center;
     margin-top: 10px;
     font-size: 12px;
+  }
+
+  .hero-assist-links a {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    padding: 0 8px;
   }
 
   .download-lead .button {
@@ -1980,7 +2059,8 @@ button:focus-visible {
   }
 
   .product-stage img {
-    aspect-ratio: 1.42 / 1;
+    aspect-ratio: 1.78 / 1;
+    object-position: center top;
   }
 
   .download-media img {
@@ -1988,9 +2068,10 @@ button:focus-visible {
   }
 
   .download-hero {
-    padding-top: 92px;
-    padding-bottom: calc(34px + env(safe-area-inset-bottom));
+    padding-top: 84px;
+    padding-bottom: calc(8px + env(safe-area-inset-bottom));
     min-height: auto;
+    gap: 18px;
   }
 
   .download-lead p {
@@ -2111,6 +2192,11 @@ button:focus-visible {
     scroll-behavior: auto;
   }
 
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none !important;
+  }
+
   *,
   *::before,
   *::after {
@@ -2124,5 +2210,13 @@ button:focus-visible {
   .reveal-ready [data-reveal].is-visible {
     opacity: 1;
     transform: none;
+  }
+
+  .button,
+  .nav-cta,
+  .link-panel,
+  .support-shortcuts a,
+  .product-stage {
+    transform: none !important;
   }
 }
