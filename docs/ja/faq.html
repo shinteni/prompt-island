@@ -57,6 +57,22 @@
           },
           {
             "@type": "Question",
+            "name": "Developer ID notarization がないのはなぜですか？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "v0.1.0 は ad-hoc 署名で、Developer ID notarization ではありません。Gatekeeper が Control-click Open を求める場合があります。現在のパッケージでは spctl の rejected または not accepted は想定される結果です。SHA-256 は GitHub Release の配布物と一致することを確認するもので、開発者本人性を証明しません。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Intel Mac で使えますか？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "v0.1.0 の配布パッケージは Apple Silicon / arm64 と macOS 14+ 向けです。Intel Mac は現在のサポート範囲に含まれません。"
+            }
+          },
+          {
+            "@type": "Question",
             "name": "ダウンロードをどう検証しますか？",
             "acceptedAnswer": {
               "@type": "Answer",
@@ -73,10 +89,34 @@
           },
           {
             "@type": "Question",
-            "name": "主要機能にインターネット接続は必要ですか？",
+            "name": "Anthropic や OpenAI に内容を送信しますか？",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "必要ありません。Vibelsland Free の状態表示、ソース制御、ローカル承認ブリッジは Mac 内で動作します。"
+              "text": "Vibelsland Free 自体はアカウントを作らず、テレメトリを送らず、セッション内容を自前のサーバーへ同期しません。Claude Code、Codex CLI、Codex Desktop はそれぞれ独自にネットワーク接続を使う場合があります。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Anthropic、OpenAI、Claude、Codex との関係は？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Vibelsland Free は独立したツールです。Anthropic、OpenAI、Claude、Codex に所属せず、代表せず、推奨を受けたものでもありません。製品名はローカル互換性を説明するためだけに使っています。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "app.log にプロンプトは保存されますか？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "app.log は接続状態、イベント種別、時刻、ローカルパス、エラー理由を記録する設計で、raw prompt をログ本文として保存するものではありません。アプリは状態表示のために Mac 内の Claude/Codex transcript の末尾を読み取るため、prompt にまったく触れないとは言えません。ログ共有前に prompt、パス、token、コマンド引数を伏せ字にしてください。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "ダウンロード後のアプリ名が「>_ - island.app」なのはなぜですか？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "これは macOS のアプリ bundle 名です。Web サイト、リリースパッケージ、ソースでは引き続き Vibelsland Free を製品名として使います。この名前は Anthropic、OpenAI、Claude、Codex との公式関係を示すものではありません。"
             }
           },
           {
@@ -84,7 +124,7 @@
             "name": "Hooks を停止または削除できますか？",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "設定画面でソースごとに hooks を有効化、修復、アンインストールできます。アプリは選択したときだけ hook 設定を変更します。"
+              "text": "Uninstall Hooks は Claude/Codex hook 設定から Vibelsland bridge 項目を削除します。アプリ本体、ログ、設定、~/.vibelsland-free、Codex の codex_hooks スイッチ、第三者ツールが保存済みのセッション単位の承認状態は自動削除しません。"
             }
           }
         ]
@@ -140,7 +180,7 @@
           </div>
           <div>
             <span>システム</span>
-            <strong>macOS 14+</strong>
+            <strong>macOS 14+ / Apple Silicon</strong>
           </div>
         </div>
       </section>
@@ -160,6 +200,14 @@
             <p>v0.1.0 は ad-hoc 署名を採用しているため、初回起動時に macOS が追加確認を求める場合があります。Control キーを押しながらアプリをクリックし、「開く（Open）」を選んでください。</p>
           </article>
           <article data-reveal="">
+            <h3>Developer ID notarization がないのはなぜですか？</h3>
+            <p>v0.1.0 は ad-hoc 署名で、Developer ID notarization ではありません。Gatekeeper が Control-click Open を求める場合があります。現在のパッケージでは <code>spctl</code> の rejected または not accepted は想定される結果です。SHA-256 は GitHub Release の配布物と一致することを確認するもので、開発者本人性を証明しません。</p>
+          </article>
+          <article data-reveal="">
+            <h3>Intel Mac で使えますか？</h3>
+            <p>v0.1.0 の配布パッケージは Apple Silicon / arm64 と macOS 14+ 向けです。Intel Mac は現在のサポート範囲に含まれません。</p>
+          </article>
+          <article data-reveal="">
             <h3>ダウンロードをどう検証しますか？</h3>
             <p>zip と同名の <code>.sha256</code> ファイルを同じフォルダに置き、<code>shasum -a 256 -c Vibelsland-Free-0.1.0-macos.zip.sha256</code> を実行します。</p>
           </article>
@@ -177,12 +225,24 @@
             <p>v0.1.0 は Claude Code、Codex CLI、Codex Desktop のローカル状態表示、ツール実行サマリー、承認処理に対応しています。</p>
           </article>
           <article data-reveal="">
-            <h3>主要機能にインターネット接続は必要ですか？</h3>
-            <p>必要ありません。状態表示、ソース制御、承認ブリッジは Mac 内で動作します。</p>
+            <h3>Anthropic や OpenAI に内容を送信しますか？</h3>
+            <p>Vibelsland Free 自体はアカウントを作らず、テレメトリを送らず、セッション内容を自前のサーバーへ同期しません。Claude Code、Codex CLI、Codex Desktop はそれぞれ独自にネットワーク接続を使う場合があります。</p>
+          </article>
+          <article data-reveal="">
+            <h3>Anthropic、OpenAI、Claude、Codex との関係は？</h3>
+            <p>Vibelsland Free は独立したツールです。Anthropic、OpenAI、Claude、Codex に所属せず、代表せず、推奨を受けたものでもありません。製品名はローカル互換性を説明するためだけに使っています。</p>
+          </article>
+          <article data-reveal="">
+            <h3>app.log にプロンプトは保存されますか？</h3>
+            <p><code>app.log</code> は接続状態、イベント種別、時刻、ローカルパス、エラー理由を記録する設計で、raw prompt をログ本文として保存するものではありません。アプリは状態表示のために Mac 内の Claude/Codex transcript の末尾を読み取るため、prompt にまったく触れないとは言えません。ログ共有前に prompt、パス、token、コマンド引数を伏せ字にしてください。</p>
+          </article>
+          <article data-reveal="">
+            <h3>ダウンロード後のアプリ名が「&gt;_ - island.app」なのはなぜですか？</h3>
+            <p>これは macOS のアプリ bundle 名です。Web サイト、リリースパッケージ、ソースでは引き続き Vibelsland Free を製品名として使います。この名前は Anthropic、OpenAI、Claude、Codex との公式関係を示すものではありません。</p>
           </article>
           <article data-reveal="">
             <h3>Hooks を停止または削除できますか？</h3>
-            <p>設定画面でソースごとに hooks を削除できます。アプリは操作したときだけ設定を変更します。</p>
+            <p>Uninstall Hooks は Claude/Codex hook 設定から Vibelsland bridge 項目を削除します。アプリ本体、ログ、設定、<code>~/.vibelsland-free</code>、Codex の <code>codex_hooks</code> スイッチ、第三者ツールが保存済みのセッション単位の承認状態は自動削除しません。</p>
           </article>
         </div>
       </section>

@@ -57,6 +57,22 @@
           },
           {
             "@type": "Question",
+            "name": "为什么不是 Developer ID notarized？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "v0.1.0 是 ad-hoc 签名，不是 Developer ID notarization。Gatekeeper 可能要求 Control-click Open；spctl 显示 rejected 或 not accepted 对当前包是预期结果。SHA-256 只能确认下载文件与 GitHub Release 一致，不能证明开发者身份。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Intel Mac 可以使用吗？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "v0.1.0 发布包面向 Apple Silicon / arm64 和 macOS 14+。Intel Mac 不在当前支持范围内。"
+            }
+          },
+          {
+            "@type": "Question",
             "name": "如何确认下载包没有被替换？",
             "acceptedAnswer": {
               "@type": "Answer",
@@ -73,18 +89,42 @@
           },
           {
             "@type": "Question",
-            "name": "核心功能需要互联网连接吗？",
+            "name": "它会把内容发给 Anthropic 或 OpenAI 吗？",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "不需要。Vibelsland Free 的状态显示、来源控制和本地审批桥接都在本机完成。"
+              "text": "Vibelsland Free 本身不创建账号、不上传遥测、不把会话内容同步到自有服务器。Claude Code、Codex CLI 和 Codex Desktop 各自可能联网，这是它们自己的行为。"
             }
           },
           {
             "@type": "Question",
-            "name": "如何停止或卸载 hooks？",
+            "name": "和 Anthropic、OpenAI、Claude、Codex 是什么关系？",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "在设置页可以按来源启用、修复或卸载 hooks。应用只会在你选择安装、修复或卸载时修改对应配置。"
+              "text": "Vibelsland Free 是独立工具，不隶属、不代表、也没有被 Anthropic、OpenAI、Claude 或 Codex 背书。页面中的产品名只用于说明本地兼容性。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "app.log 会保存我的 prompt 吗？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "app.log 设计为记录连接状态、事件类型、时间戳、本地路径和错误原因，不把 raw prompt 当日志正文保存。应用会读取本机 Claude/Codex transcript 尾部用于状态显示，所以不能说完全不接触 prompt；分享日志前仍应脱敏 prompt、路径、token 和命令参数。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "下载后看到的应用名为什么是“>_ - island.app”？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "这是 macOS 应用 bundle 名称。官网、发布包和源码仍使用 Vibelsland Free 作为产品名；这个名称不表示与 Anthropic、OpenAI、Claude 或 Codex 的官方关系。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "卸载 hooks 和权限会移除什么？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Uninstall Hooks 会移除 Claude/Codex hook 配置中的 Vibelsland bridge 项。它不会自动删除应用、日志、配置、~/.vibelsland-free、Codex 的 codex_hooks 开关，或第三方工具已经保存的会话级审批状态。"
             }
           }
         ]
@@ -140,7 +180,7 @@
           </div>
           <div>
             <span>系统</span>
-            <strong>macOS 14+</strong>
+            <strong>macOS 14+ / Apple Silicon</strong>
           </div>
         </div>
       </section>
@@ -160,6 +200,14 @@
             <p>v0.1.0 采用 ad-hoc 签名，因此首次打开时 macOS 可能要求额外确认。请按住 Control 点按应用并选择“打开（Open）”。</p>
           </article>
           <article data-reveal>
+            <h3>为什么不是 Developer ID notarized？</h3>
+            <p>v0.1.0 是 ad-hoc 签名，不是 Developer ID notarization。Gatekeeper 可能要求 Control-click Open；<code>spctl</code> 显示 rejected 或 not accepted 对当前包是预期结果。SHA-256 只能确认下载文件与 GitHub Release 一致，不能证明开发者身份。</p>
+          </article>
+          <article data-reveal>
+            <h3>Intel Mac 可以使用吗？</h3>
+            <p>v0.1.0 发布包面向 Apple Silicon / arm64 和 macOS 14+。Intel Mac 不在当前支持范围内。</p>
+          </article>
+          <article data-reveal>
             <h3>如何确认下载包没有被替换？</h3>
             <p>把 zip 和同名 <code>.sha256</code> 文件放在同一目录后，运行 <code>shasum -a 256 -c Vibelsland-Free-0.1.0-macos.zip.sha256</code> 校验。</p>
           </article>
@@ -177,12 +225,24 @@
             <p>v0.1.0 支持 Claude Code、Codex CLI 和 Codex Desktop 的本地状态展示、工具调用摘要和审批请求处理。</p>
           </article>
           <article data-reveal>
-            <h3>核心功能需要互联网连接吗？</h3>
-            <p>不需要。状态显示、来源控制和审批桥接都在本机完成。</p>
+            <h3>它会把内容发给 Anthropic 或 OpenAI 吗？</h3>
+            <p>Vibelsland Free 本身不创建账号、不上传遥测、不把会话内容同步到自有服务器。Claude Code、Codex CLI 和 Codex Desktop 各自可能联网，这是它们自己的行为。</p>
           </article>
           <article data-reveal>
-            <h3>如何停止或卸载 hooks？</h3>
-            <p>在设置页按来源卸载 hooks；应用只在你确认操作时修改配置。</p>
+            <h3>和 Anthropic、OpenAI、Claude、Codex 是什么关系？</h3>
+            <p>Vibelsland Free 是独立工具，不隶属、不代表、也没有被 Anthropic、OpenAI、Claude 或 Codex 背书。页面中的产品名只用于说明本地兼容性。</p>
+          </article>
+          <article data-reveal>
+            <h3>app.log 会保存我的 prompt 吗？</h3>
+            <p><code>app.log</code> 设计为记录连接状态、事件类型、时间戳、本地路径和错误原因，不把 raw prompt 当日志正文保存。应用会读取本机 Claude/Codex transcript 尾部用于状态显示，所以不能说完全不接触 prompt；分享日志前仍应脱敏 prompt、路径、token 和命令参数。</p>
+          </article>
+          <article data-reveal>
+            <h3>下载后看到的应用名为什么是“&gt;_ - island.app”？</h3>
+            <p>这是 macOS 应用 bundle 名称。官网、发布包和源码仍使用 Vibelsland Free 作为产品名；这个名称不表示与 Anthropic、OpenAI、Claude 或 Codex 的官方关系。</p>
+          </article>
+          <article data-reveal>
+            <h3>卸载 hooks 和权限会移除什么？</h3>
+            <p>Uninstall Hooks 会移除 Claude/Codex hook 配置中的 Vibelsland bridge 项。它不会自动删除应用、日志、配置、<code>~/.vibelsland-free</code>、Codex 的 <code>codex_hooks</code> 开关，或第三方工具已经保存的会话级审批状态。</p>
           </article>
         </div>
       </section>

@@ -57,6 +57,22 @@
           },
           {
             "@type": "Question",
+            "name": "Why is it not Developer ID notarized?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "v0.1.0 is ad-hoc signed, not Developer ID notarized. Gatekeeper may require Control-click Open; spctl rejected or not accepted is expected for the current package. SHA-256 verifies that the downloaded file matches the GitHub Release asset; it does not prove developer identity."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does it work on Intel Macs?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "The v0.1.0 package targets Apple Silicon / arm64 and macOS 14+. Intel Macs are not in the current support scope."
+            }
+          },
+          {
+            "@type": "Question",
             "name": "How do I verify the download?",
             "acceptedAnswer": {
               "@type": "Answer",
@@ -73,18 +89,42 @@
           },
           {
             "@type": "Question",
-            "name": "Do core features require internet access?",
+            "name": "Does it send content to Anthropic or OpenAI?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "No. Vibelsland Free status display, source controls, and the local approval bridge work on your Mac."
+              "text": "Vibelsland Free itself creates no account, uploads no telemetry, and does not sync session content to its own server. Claude Code, Codex CLI, and Codex Desktop may use their own network connections independently."
             }
           },
           {
             "@type": "Question",
-            "name": "How do I stop or uninstall hooks?",
+            "name": "Is Vibelsland Free affiliated with Anthropic, OpenAI, Claude, or Codex?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Settings let you enable, repair, or uninstall hooks by source. The app changes hook configuration only when you choose install, repair, or uninstall."
+              "text": "No. Vibelsland Free is an independent tool. It is not affiliated with, representative of, or endorsed by Anthropic, OpenAI, Claude, or Codex. Product names are used only to describe local compatibility."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does app.log store my prompts?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "app.log is designed to record connection state, event types, timestamps, local paths, and error reasons, not raw prompts as log body. The app does read the tail of local Claude/Codex transcripts for status display, so it is not accurate to say it never touches prompts. Redact prompts, paths, tokens, and command arguments before sharing logs."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Why is the downloaded app named \">_ - island.app\"?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "That is the macOS app bundle name. The website, release package, and source still use Vibelsland Free as the product name; the bundle name does not imply an official relationship with Anthropic, OpenAI, Claude, or Codex."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What does uninstalling hooks and permissions remove?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Uninstall Hooks removes Vibelsland bridge entries from Claude/Codex hook configuration. It does not automatically delete the app, logs, config, ~/.vibelsland-free, Codex's codex_hooks switch, or session-level approval state already stored by third-party tools."
             }
           }
         ]
@@ -140,7 +180,7 @@
           </div>
           <div>
             <span>System</span>
-            <strong>macOS 14+</strong>
+            <strong>macOS 14+ / Apple Silicon</strong>
           </div>
         </div>
       </section>
@@ -160,6 +200,14 @@
             <p>v0.1.0 uses ad-hoc signing, so macOS may require an extra confirmation on first launch. Control-click the app and choose Open.</p>
           </article>
           <article data-reveal="">
+            <h3>Why is it not Developer ID notarized?</h3>
+            <p>v0.1.0 is ad-hoc signed, not Developer ID notarized. Gatekeeper may require Control-click Open; <code>spctl</code> rejected or not accepted is expected for the current package. SHA-256 verifies that the downloaded file matches the GitHub Release asset; it does not prove developer identity.</p>
+          </article>
+          <article data-reveal="">
+            <h3>Does it work on Intel Macs?</h3>
+            <p>The v0.1.0 package targets Apple Silicon / arm64 and macOS 14+. Intel Macs are not in the current support scope.</p>
+          </article>
+          <article data-reveal="">
             <h3>How do I verify the download?</h3>
             <p>Put the zip and matching <code>.sha256</code> file in one folder, then run <code>shasum -a 256 -c Vibelsland-Free-0.1.0-macos.zip.sha256</code>.</p>
           </article>
@@ -177,12 +225,24 @@
             <p>v0.1.0 supports local status display, tool-call summaries, and approval handling for Claude Code, Codex CLI, and Codex Desktop.</p>
           </article>
           <article data-reveal="">
-            <h3>Do core features require internet access?</h3>
-            <p>No. Status display, source controls, and approval bridging run on your Mac.</p>
+            <h3>Does it send content to Anthropic or OpenAI?</h3>
+            <p>Vibelsland Free itself creates no account, uploads no telemetry, and does not sync session content to its own server. Claude Code, Codex CLI, and Codex Desktop may use their own network connections independently.</p>
           </article>
           <article data-reveal="">
-            <h3>How do I stop or uninstall hooks?</h3>
-            <p>Uninstall hooks by source in Settings. The app changes configuration only after your action.</p>
+            <h3>Is Vibelsland Free affiliated with Anthropic, OpenAI, Claude, or Codex?</h3>
+            <p>No. Vibelsland Free is an independent tool. It is not affiliated with, representative of, or endorsed by Anthropic, OpenAI, Claude, or Codex. Product names are used only to describe local compatibility.</p>
+          </article>
+          <article data-reveal="">
+            <h3>Does app.log store my prompts?</h3>
+            <p><code>app.log</code> is designed to record connection state, event types, timestamps, local paths, and error reasons, not raw prompts as log body. The app does read the tail of local Claude/Codex transcripts for status display, so it is not accurate to say it never touches prompts. Redact prompts, paths, tokens, and command arguments before sharing logs.</p>
+          </article>
+          <article data-reveal="">
+            <h3>Why is the downloaded app named “&gt;_ - island.app”?</h3>
+            <p>That is the macOS app bundle name. The website, release package, and source still use Vibelsland Free as the product name; the bundle name does not imply an official relationship with Anthropic, OpenAI, Claude, or Codex.</p>
+          </article>
+          <article data-reveal="">
+            <h3>What does uninstalling hooks and permissions remove?</h3>
+            <p>Uninstall Hooks removes Vibelsland bridge entries from Claude/Codex hook configuration. It does not automatically delete the app, logs, config, <code>~/.vibelsland-free</code>, Codex's <code>codex_hooks</code> switch, or session-level approval state already stored by third-party tools.</p>
           </article>
         </div>
       </section>
