@@ -10,6 +10,7 @@ python3 - "$ROOT" "$DOCS_DIR" "$SITE_URL" "$CUSTOM_DOMAIN" <<'PY'
 import json
 import html
 import hashlib
+import datetime as dt
 import os
 import re
 import struct
@@ -375,6 +376,7 @@ for path in html_files:
         nav_block = nav_match.group(1)
         required_nav_keys = [
             "shared.nav.home",
+            "shared.nav.advantages",
             "shared.nav.download",
             "shared.nav.install",
             "shared.nav.privacy",
@@ -384,6 +386,29 @@ for path in html_files:
         for key in required_nav_keys:
             if f'data-i18n="{key}"' not in nav_block:
                 errors.append(f"Primary navigation missing {key} in {rel}")
+                continue
+            anchor_match = re.search(rf'<a\b(?=[^>]*data-i18n="{re.escape(key)}")[^>]*>', nav_block)
+            if not anchor_match or "data-mobile-label=" not in anchor_match.group(0):
+                errors.append(f"Primary navigation missing mobile label for {key} in {rel}")
+
+    footer_match = re.search(r'<footer class="site-footer"[^>]*>.*?<nav\b[^>]*>(.*?)</nav>', text, re.S)
+    if not footer_match:
+        errors.append(f"Missing footer navigation in {rel}")
+    else:
+        footer_block = footer_match.group(1)
+        required_footer_keys = [
+            "shared.nav.home",
+            "shared.nav.advantages",
+            "shared.nav.download",
+            "shared.nav.install",
+            "shared.nav.release",
+            "shared.nav.privacy",
+            "shared.nav.faq",
+            "shared.nav.support",
+        ]
+        for key in required_footer_keys:
+            if f'data-i18n="{key}"' not in footer_block:
+                errors.append(f"Footer navigation missing {key} in {rel}")
 
     parser = RefParser()
     parser.feed(text)
@@ -725,12 +750,31 @@ if security_path.exists():
     security = security_path.read_text(encoding="utf-8")
     expected_security_lines = [
         "Contact: https://github.com/shinteni/prompt-island/security/advisories/new",
+        "Preferred-Languages: zh, en, ja",
         f"Canonical: {site_url}.well-known/security.txt",
         f"Policy: {site_url}support.html#report-title",
     ]
     for line in expected_security_lines:
         if line not in security:
             errors.append(f"security.txt missing expected line: {line}")
+    security_fields = {}
+    for raw_line in security.splitlines():
+        if ":" not in raw_line:
+            continue
+        name, value = raw_line.split(":", 1)
+        security_fields[name.strip().lower()] = value.strip()
+    expires_value = security_fields.get("expires")
+    if not expires_value:
+        errors.append("security.txt missing Expires line")
+    else:
+        try:
+            expires_at = dt.datetime.fromisoformat(expires_value.replace("Z", "+00:00"))
+        except ValueError:
+            errors.append(f"security.txt Expires is not valid ISO-8601: {expires_value}")
+        else:
+            now = dt.datetime.now(dt.timezone.utc)
+            if expires_at <= now:
+                errors.append(f"security.txt Expires is not in the future: {expires_value}")
 
 if custom_domain:
     cname_path = docs / "CNAME"
