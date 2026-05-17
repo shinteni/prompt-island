@@ -32,7 +32,7 @@
     <link rel="icon" href="../assets/readme/app-icon.png">
     <link rel="apple-touch-icon" href="../assets/readme/app-icon.png">
     <link rel="manifest" href="../site.webmanifest">
-    <link rel="stylesheet" href="../styles.css?v=20260517-11">
+    <link rel="stylesheet" href="../styles.css?v=20260517-12">
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -100,12 +100,8 @@
       </a>
       <nav class="nav-links" aria-label="Page navigation">
         <a href="index.html" data-i18n="shared.nav.home">Home</a>
-        <a href="advantages.html" data-i18n="shared.nav.advantages">Advantages</a>
         <a href="download.html" data-i18n="shared.nav.download">Download</a>
-        <a href="install.html" data-i18n="shared.nav.install">Install</a>
         <a href="privacy.html" data-i18n="shared.nav.privacy">Privacy</a>
-        <a class="active" aria-current="page" href="faq.html" data-i18n="shared.nav.faq">FAQ</a>
-        <a href="support.html" data-i18n="shared.nav.support">Support</a>
       </nav>
       <div class="header-tools">
         <nav class="lang-switch" aria-label="Language switch">
@@ -154,7 +150,7 @@
         <div class="faq-list">
           <article data-reveal="">
             <h3>Is Vibelsland Free free?</h3>
-            <p>v0.1.0 is free to download and the source is public. The package is distributed through GitHub Releases, and the website, GitHub Release file, and SHA-256 checksum are kept in sync.</p>
+            <p>Yes. v0.1.0 is free to download, source-available, and distributed through GitHub Releases.</p>
           </article>
           <article data-reveal="">
             <h3>Why does first launch require an extra step?</h3>
@@ -162,7 +158,7 @@
           </article>
           <article data-reveal="">
             <h3>How do I verify the download?</h3>
-            <p>Download the zip and matching <code>.sha256</code> file into the same folder, then run <code>shasum -a 256 -c Vibelsland-Free-0.1.0-macos.zip.sha256</code>. The SHA-256 shown on the website matches the GitHub Release file.</p>
+            <p>Put the zip and matching <code>.sha256</code> file in one folder, then run <code>shasum -a 256 -c</code>.</p>
           </article>
         </div>
       </section>
@@ -179,24 +175,12 @@
           </article>
           <article data-reveal="">
             <h3>Do core features require internet access?</h3>
-            <p>No. Vibelsland Free status display, source controls, and the local approval bridge work on your Mac. Claude Code, Codex CLI, and Codex Desktop may have their own network connections independently of this app.</p>
+            <p>No. Status display, source controls, and approval bridging run on your Mac.</p>
           </article>
           <article data-reveal="">
             <h3>How do I stop or uninstall hooks?</h3>
-            <p>Settings let you enable, repair, or uninstall hooks by source. The app changes hook configuration only when you choose install, repair, or uninstall.</p>
+            <p>Uninstall hooks by source in Settings. The app changes configuration only after your action.</p>
           </article>
-        </div>
-      </section>
-
-      <section class="section cta-section" aria-labelledby="faq-cta-title">
-        <div data-reveal="">
-          <p class="eyebrow">Next step</p>
-          <h2 id="faq-cta-title">Confirm the boundary, then download.</h2>
-          <p>After reading the first-launch note, you can download the macOS version. To understand data boundaries, review the privacy page first.</p>
-          <div class="hero-actions">
-            <a class="button primary" href="download.html">Download for macOS</a>
-            <a class="button secondary" href="privacy.html">View privacy boundary</a>
-          </div>
         </div>
       </section>
     </main>
@@ -217,7 +201,7 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="../lang.js?v=20260517-11" defer></script>
-    <script src="../effects.js?v=20260517-11" defer></script>
+    <script src="../lang.js?v=20260517-12" defer></script>
+    <script src="../effects.js?v=20260517-12" defer></script>
   </body>
 </html>

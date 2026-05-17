@@ -32,7 +32,7 @@
     <link rel="icon" href="../assets/readme/app-icon.png">
     <link rel="apple-touch-icon" href="../assets/readme/app-icon.png">
     <link rel="manifest" href="../site.webmanifest">
-    <link rel="stylesheet" href="../styles.css?v=20260517-11">
+    <link rel="stylesheet" href="../styles.css?v=20260517-12">
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -100,12 +100,8 @@
       </a>
       <nav class="nav-links" aria-label="ページナビゲーション">
         <a href="index.html" data-i18n="shared.nav.home">ホーム</a>
-        <a href="advantages.html" data-i18n="shared.nav.advantages">強み</a>
         <a href="download.html" data-i18n="shared.nav.download">ダウンロード</a>
-        <a href="install.html" data-i18n="shared.nav.install">インストール</a>
         <a href="privacy.html" data-i18n="shared.nav.privacy">プライバシー</a>
-        <a class="active" aria-current="page" href="faq.html" data-i18n="shared.nav.faq">FAQ</a>
-        <a href="support.html" data-i18n="shared.nav.support">サポート</a>
       </nav>
       <div class="header-tools">
         <nav class="lang-switch" aria-label="言語切替">
@@ -154,7 +150,7 @@
         <div class="faq-list">
           <article data-reveal="">
             <h3>Vibelsland Free は無料ですか？</h3>
-            <p>v0.1.0 は無料でダウンロードでき、ソースも公開されています。パッケージは GitHub Releases で配布し、サイト、GitHub リリースファイル、SHA-256 チェックサムを同期しています。</p>
+            <p>はい。v0.1.0 は無料でダウンロードでき、ソースも公開されています。配布は GitHub Releases です。</p>
           </article>
           <article data-reveal="">
             <h3>初回起動時に追加確認が必要なのはなぜですか？</h3>
@@ -162,7 +158,7 @@
           </article>
           <article data-reveal="">
             <h3>ダウンロードをどう検証しますか？</h3>
-            <p>zip と同名の <code>.sha256</code> ファイルを同じフォルダに置き、<code>shasum -a 256 -c Vibelsland-Free-0.1.0-macos.zip.sha256</code> を実行します。サイトの SHA-256 は GitHub リリースファイルと一致します。</p>
+            <p>zip と同名の <code>.sha256</code> ファイルを同じフォルダに置き、<code>shasum -a 256 -c</code> を実行します。</p>
           </article>
         </div>
       </section>
@@ -179,24 +175,12 @@
           </article>
           <article data-reveal="">
             <h3>主要機能にインターネット接続は必要ですか？</h3>
-            <p>必要ありません。Vibelsland Free の状態表示、ソース制御、ローカル承認ブリッジは Mac 内で動作します。Claude Code、Codex CLI、Codex Desktop はそれぞれ独自のネットワーク接続を使う場合があります。</p>
+            <p>必要ありません。状態表示、ソース制御、承認ブリッジは Mac 内で動作します。</p>
           </article>
           <article data-reveal="">
             <h3>Hooks を停止または削除できますか？</h3>
-            <p>設定画面でソースごとに hooks を有効化、修復、アンインストールできます。アプリは選択したときだけ hook 設定を変更します。</p>
+            <p>設定画面でソースごとに hooks を削除できます。アプリは操作したときだけ設定を変更します。</p>
           </article>
-        </div>
-      </section>
-
-      <section class="section cta-section" aria-labelledby="faq-cta-title">
-        <div data-reveal="">
-          <p class="eyebrow">次のステップ</p>
-          <h2 id="faq-cta-title">境界を確認してからダウンロード。</h2>
-          <p>初回起動の説明を確認したら、macOS 版をダウンロードできます。データ境界を知りたい場合は、先にプライバシーページを確認してください。</p>
-          <div class="hero-actions">
-            <a class="button primary" href="download.html">macOS 版をダウンロード</a>
-            <a class="button secondary" href="privacy.html">プライバシー境界を見る</a>
-          </div>
         </div>
       </section>
     </main>
@@ -217,7 +201,7 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="../lang.js?v=20260517-11" defer></script>
-    <script src="../effects.js?v=20260517-11" defer></script>
+    <script src="../lang.js?v=20260517-12" defer></script>
+    <script src="../effects.js?v=20260517-12" defer></script>
   </body>
 </html>

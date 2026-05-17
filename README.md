@@ -110,6 +110,8 @@ zsh scripts/build-docs-site.sh /tmp/vibelsland-docs-site
 
 脚本会生成 `CNAME`，重写全站 URL，并运行 `scripts/verify-docs-site.sh` 验证多语言 canonical/hreflang、sitemap alternates、manifest、robots、security.txt 和 release checksum。
 
+推送到 `main` 时，`.github/workflows/pages.yml` 会在 macOS runner 上用同一套脚本构建 `_site`、上传 GitHub Pages artifact、部署后再运行 `scripts/verify-docs-live.sh`。绑定正式域名时，可在仓库变量里设置 `VIBELSLAND_SITE_URL` 和 `VIBELSLAND_CUSTOM_DOMAIN`，或用 workflow dispatch 临时输入；两个变量的 host 必须一致。
+
 官网和打包脚本共用 [docs/release.json](docs/release.json) 作为 v0.1.0 的包名、校验值、下载链接和应用包身份元数据来源。
 
 本地打包产物会生成在：

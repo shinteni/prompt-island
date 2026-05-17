@@ -209,13 +209,6 @@ code {
   color: var(--ink);
 }
 
-.site-header .nav-links a[data-i18n="shared.nav.advantages"],
-.site-header .nav-links a[data-i18n="shared.nav.install"],
-.site-header .nav-links a[data-i18n="shared.nav.faq"],
-.site-header .nav-links a[data-i18n="shared.nav.support"] {
-  display: none;
-}
-
 .header-tools {
   justify-self: end;
   gap: 10px;
@@ -1906,6 +1899,14 @@ button:focus-visible {
   .download-hero h1 {
     font-size: 40px;
     line-height: 1.04;
+  }
+
+  .section-heading h2,
+  .split-copy h2,
+  .trust-copy h2,
+  .cta-section h2 {
+    font-size: 30px;
+    line-height: 1.08;
   }
 }
 

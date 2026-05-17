@@ -32,7 +32,7 @@
     <link rel="icon" href="assets/readme/app-icon.png">
     <link rel="apple-touch-icon" href="assets/readme/app-icon.png">
     <link rel="manifest" href="site.webmanifest">
-    <link rel="stylesheet" href="styles.css?v=20260517-11">
+    <link rel="stylesheet" href="styles.css?v=20260517-12">
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -100,12 +100,8 @@
       </a>
       <nav class="nav-links" aria-label="页面导航">
         <a href="index.html" data-i18n="shared.nav.home">首页</a>
-        <a href="advantages.html" data-i18n="shared.nav.advantages">优势</a>
         <a href="download.html" data-i18n="shared.nav.download">下载</a>
-        <a href="install.html" data-i18n="shared.nav.install">安装</a>
         <a href="privacy.html" data-i18n="shared.nav.privacy">隐私</a>
-        <a class="active" aria-current="page" href="faq.html" data-i18n="shared.nav.faq">FAQ</a>
-        <a href="support.html" data-i18n="shared.nav.support">支持</a>
       </nav>
       <div class="header-tools">
         <nav class="lang-switch" aria-label="语言切换">
@@ -154,7 +150,7 @@
         <div class="faq-list">
           <article data-reveal>
             <h3>Vibelsland Free 是免费的吗？</h3>
-            <p>v0.1.0 免费下载，源码公开。下载包通过 GitHub Releases 分发，官网、GitHub Release 文件和 SHA-256 校验值保持一致。</p>
+            <p>是。v0.1.0 免费下载，源码公开，安装包放在 GitHub Releases。</p>
           </article>
           <article data-reveal>
             <h3>首次打开为什么需要额外确认？</h3>
@@ -162,7 +158,7 @@
           </article>
           <article data-reveal>
             <h3>如何确认下载包没有被替换？</h3>
-            <p>下载 zip 和同名 <code>.sha256</code> 文件后，在同一目录运行 <code>shasum -a 256 -c Vibelsland-Free-0.1.0-macos.zip.sha256</code>。官网展示的 SHA-256 与 GitHub Release 文件一致。</p>
+            <p>下载 zip 和同名 <code>.sha256</code> 文件后，运行 <code>shasum -a 256 -c</code> 校验。</p>
           </article>
         </div>
       </section>
@@ -179,24 +175,12 @@
           </article>
           <article data-reveal>
             <h3>核心功能需要互联网连接吗？</h3>
-            <p>不需要。Vibelsland Free 的状态显示、来源控制和本地审批桥接都在本机完成。Claude Code、Codex CLI 和 Codex Desktop 可能有各自的网络连接，但它们独立于本应用。</p>
+            <p>不需要。状态显示、来源控制和审批桥接都在本机完成。</p>
           </article>
           <article data-reveal>
             <h3>如何停止或卸载 hooks？</h3>
-            <p>在设置页可以按来源启用、修复或卸载 hooks。应用只会在你选择安装、修复或卸载时修改对应配置。</p>
+            <p>在设置页按来源卸载 hooks；应用只在你确认操作时修改配置。</p>
           </article>
-        </div>
-      </section>
-
-      <section class="section cta-section" aria-labelledby="faq-cta-title">
-        <div data-reveal>
-          <p class="eyebrow">下一步</p>
-          <h2 id="faq-cta-title">确认边界后再下载。</h2>
-          <p>阅读首次打开说明后，可以下载 macOS 版；想了解数据边界，可以先查看隐私页。</p>
-          <div class="hero-actions">
-            <a class="button primary" href="download.html">下载 macOS 版</a>
-            <a class="button secondary" href="privacy.html">查看隐私边界</a>
-          </div>
         </div>
       </section>
     </main>
@@ -217,7 +201,7 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="lang.js?v=20260517-11" defer></script>
-    <script src="effects.js?v=20260517-11" defer></script>
+    <script src="lang.js?v=20260517-12" defer></script>
+    <script src="effects.js?v=20260517-12" defer></script>
   </body>
 </html>

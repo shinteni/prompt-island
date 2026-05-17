@@ -24,6 +24,14 @@ default_url = "https://shinteni.github.io/prompt-island/"
 parsed = urlparse(site_url)
 if parsed.scheme not in {"http", "https"} or not parsed.netloc:
     raise SystemExit(f"VIBELSLAND_SITE_URL must be an absolute http(s) URL: {site_url}")
+if custom_domain:
+    if "/" in custom_domain or ":" in custom_domain or custom_domain != custom_domain.strip("."):
+        raise SystemExit(f"VIBELSLAND_CUSTOM_DOMAIN should be a bare host name: {custom_domain}")
+    if (parsed.hostname or "").lower() != custom_domain.lower():
+        raise SystemExit(
+            "VIBELSLAND_SITE_URL host must match VIBELSLAND_CUSTOM_DOMAIN: "
+            f"{parsed.hostname} != {custom_domain}"
+        )
 
 if not source.is_dir():
     raise SystemExit(f"Source docs directory does not exist: {source}")
@@ -64,8 +72,6 @@ if manifest_path.exists():
     )
 
 if custom_domain:
-    if "/" in custom_domain or ":" in custom_domain or custom_domain != custom_domain.strip("."):
-        raise SystemExit(f"VIBELSLAND_CUSTOM_DOMAIN should be a bare host name: {custom_domain}")
     (output / "CNAME").write_text(custom_domain + "\n", encoding="utf-8")
 
 print(f"Built docs site for {site_url} at {output}")

@@ -32,7 +32,7 @@
     <link rel="icon" href="assets/readme/app-icon.png">
     <link rel="apple-touch-icon" href="assets/readme/app-icon.png">
     <link rel="manifest" href="site.webmanifest">
-    <link rel="stylesheet" href="styles.css?v=20260517-11">
+    <link rel="stylesheet" href="styles.css?v=20260517-12">
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -59,12 +59,8 @@
       </a>
       <nav class="nav-links" aria-label="页面导航">
         <a href="index.html" data-i18n="shared.nav.home">首页</a>
-        <a href="advantages.html" data-i18n="shared.nav.advantages">优势</a>
         <a href="download.html" data-i18n="shared.nav.download">下载</a>
-        <a class="active" aria-current="page" href="install.html" data-i18n="shared.nav.install">安装</a>
         <a href="privacy.html" data-i18n="shared.nav.privacy">隐私</a>
-        <a href="faq.html" data-i18n="shared.nav.faq">FAQ</a>
-        <a href="support.html" data-i18n="shared.nav.support">支持</a>
       </nav>
       <div class="header-tools">
         <nav class="lang-switch" aria-label="语言切换">
@@ -134,7 +130,7 @@
           <p class="eyebrow">签名含义</p>
           <h2 id="signing-title">ad-hoc 签名是一次主动信任选择。</h2>
           <p>
-            ad-hoc 签名让 macOS 识别应用包带有代码签名，但它不携带 Developer ID 发行者身份。Gatekeeper 因此会把首次打开交给你确认。判断是否继续安装时，请同时核对发布页、下载资产、SHA-256 和源码仓库。
+            v0.1.0 没有 Developer ID notarization，所以首次打开需要你确认来源。
           </p>
           <a class="text-link" href="support.html">查看安装与状态排障</a>
         </div>
@@ -162,30 +158,6 @@
         </div>
       </section>
 
-      <section class="section note-section" aria-labelledby="release-title">
-        <div class="section-heading" data-reveal>
-          <p class="eyebrow">源码与 Release</p>
-          <h2 id="release-title">用同一个版本链交叉确认。</h2>
-        </div>
-        <div class="link-grid compact">
-          <a class="link-panel" href="https://github.com/shinteni/prompt-island/releases/tag/v0.1.0" data-reveal>
-            <span>Release</span>
-            <strong>核对发布文件</strong>
-            <p>确认 zip、<code>.sha256</code> 文件和发布说明来自同一个 v0.1.0 发布页。</p>
-          </a>
-          <a class="link-panel" href="https://github.com/shinteni/prompt-island/tree/v0.1.0" data-reveal>
-            <span>Source</span>
-            <strong>查看源码仓库</strong>
-            <p>对照实现、隐私说明、构建脚本和打包流程，理解应用在本机做了什么。</p>
-          </a>
-          <a class="link-panel" href="download.html" data-reveal>
-            <span>Download</span>
-            <strong>回到下载页</strong>
-            <p>查看系统要求、安装包名称、版本号和当前下载入口。</p>
-          </a>
-        </div>
-      </section>
-
       <section class="section data-section" aria-labelledby="local-title">
         <div class="section-heading align-left" data-reveal>
           <p class="eyebrow">本地权限与数据边界</p>
@@ -195,9 +167,8 @@
           <article data-reveal>
             <h3>读取边界</h3>
             <ul>
-              <li>读取 Claude Code、Codex CLI 和 Codex Desktop 的本机状态，用于浮岛、工具调用摘要和审批显示。</li>
-              <li>读取本地 hook 配置、会话路径和运行状态，帮助判断来源是否启用、是否需要修复。</li>
-              <li>不会创建线上账号，也不会把会话内容同步到远程服务器。</li>
+              <li>读取 Claude Code、Codex CLI 和 Codex Desktop 的本机状态。</li>
+              <li>不创建线上账号，也不上传遥测。</li>
             </ul>
           </article>
           <article data-reveal>
@@ -219,34 +190,6 @@
         </div>
       </section>
 
-      <section class="section note-section" aria-labelledby="next-title">
-        <div class="section-heading" data-reveal>
-          <p class="eyebrow">继续阅读</p>
-          <h2 id="next-title">下载、隐私、FAQ 和支持互相对照。</h2>
-        </div>
-        <div class="link-grid compact">
-          <a class="link-panel" href="faq.html" data-reveal>
-            <span>FAQ</span>
-            <strong>常见安装问题</strong>
-            <p>查看首次打开、免费分发、校验、本地数据和卸载方式。</p>
-          </a>
-          <a class="link-panel" href="support.html" data-reveal>
-            <span>Support</span>
-            <strong>排障与日志位置</strong>
-            <p>处理 Gatekeeper、hooks、状态不显示、卸载和问题报告。</p>
-          </a>
-          <a class="link-panel" href="privacy.html" data-reveal>
-            <span>Privacy</span>
-            <strong>隐私与本地数据</strong>
-            <p>确认读取、写入、网络和 hook payload 的边界。</p>
-          </a>
-          <a class="link-panel" href="download.html" data-reveal>
-            <span>Download</span>
-            <strong>下载 macOS 版</strong>
-            <p>回到下载入口，核对版本、文件名和系统要求。</p>
-          </a>
-        </div>
-      </section>
     </main>
 
     <footer class="site-footer">
@@ -266,7 +209,7 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="lang.js?v=20260517-11" defer></script>
-    <script src="effects.js?v=20260517-11" defer></script>
+    <script src="lang.js?v=20260517-12" defer></script>
+    <script src="effects.js?v=20260517-12" defer></script>
   </body>
 </html>
