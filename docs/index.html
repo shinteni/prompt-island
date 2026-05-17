@@ -32,7 +32,7 @@
     <link rel="icon" href="assets/readme/app-icon.png">
     <link rel="apple-touch-icon" href="assets/readme/app-icon.png">
     <link rel="manifest" href="site.webmanifest">
-    <link rel="stylesheet" href="styles.css?v=72f06aa7ac50">
+    <link rel="stylesheet" href="styles.css?v=8e56cfe12e8f">
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -56,7 +56,7 @@
       }
     </script>
   </head>
-  <body>
+  <body class="home-entry">
     <a class="skip-link" href="#main" data-i18n="shared.skip">跳到正文</a>
     <header class="site-header" aria-label="主导航">
       <a class="brand" href="index.html" aria-label="Vibelsland Free 首页">
@@ -65,11 +65,8 @@
       </a>
       <nav class="nav-links" aria-label="页面导航">
         <a class="active" aria-current="page" href="index.html" data-i18n="shared.nav.home" data-mobile-label="首页">首页</a>
-        <a href="advantages.html" data-i18n="shared.nav.advantages" data-mobile-label="优势">优势</a>
         <a href="download.html" data-i18n="shared.nav.download" data-mobile-label="下载">下载</a>
         <a href="install.html" data-i18n="shared.nav.install" data-mobile-label="安装">安装</a>
-        <a href="privacy.html" data-i18n="shared.nav.privacy" data-mobile-label="隐私">隐私</a>
-        <a href="faq.html" data-i18n="shared.nav.faq" data-mobile-label="FAQ">FAQ</a>
         <a href="support.html" data-i18n="shared.nav.support" data-mobile-label="支持">支持</a>
       </nav>
       <div class="header-tools">
@@ -83,138 +80,43 @@
     </header>
 
     <main id="main">
-      <section class="hero home-hero" aria-labelledby="hero-title">
-        <div class="hero-content" data-reveal>
-          <p class="eyebrow" data-i18n="home.hero.eyebrow">macOS 14+ · 本地优先</p>
-          <h1 id="hero-title" data-i18n="home.hero.title">Vibelsland Free</h1>
-          <p class="hero-kicker" data-i18n="home.hero.kicker">把 AI 编程状态放在屏幕顶部。</p>
-          <p class="hero-copy" data-i18n="home.hero.copy">
-            让 Claude Code、Codex CLI 和 Codex Desktop 的长任务、工具调用和审批请求一直可见，不必反复切回终端。
-          </p>
-          <div class="hero-actions">
-            <a class="button primary" href="download.html">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M12 3v11m0 0 4-4m-4 4-4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"></path>
-              </svg>
-              <span data-i18n="home.hero.primary">下载 macOS 版</span>
-            </a>
-            <a class="button secondary" href="install.html" data-i18n="home.hero.secondary">安装与信任</a>
-          </div>
-          <div class="hero-assist-links">
-            <a href="install.html" data-i18n="home.hero.assist.install">安装与信任</a>
-            <a href="privacy.html" data-i18n="home.hero.assist.privacy">本地数据边界</a>
-            <a href="faq.html" data-i18n="home.hero.assist.faq">常见问题</a>
-          </div>
-        </div>
-        <div class="product-stage" data-reveal>
-          <img
-            src="assets/readme/ui-island-light.jpg"
-            alt="Vibelsland Free 浮岛、展开面板和设置窗口"
-            width="1040"
-            height="860"
-            fetchpriority="high"
-            decoding="async"
-          >
-          <div class="status-float status-float-bottom" aria-hidden="true">
-            <span></span>
-            <strong data-i18n="home.hero.status">示例 · 工具运行中</strong>
-          </div>
-          <div class="demo-controls" role="group" aria-label="演示状态" data-i18n-aria-label="aria.demoControls">
-            <button type="button" class="active" data-demo-control="running" data-i18n="home.demo.running" aria-pressed="true">运行中</button>
-            <button type="button" data-demo-control="approval" data-i18n="home.demo.approval" aria-pressed="false">待审批</button>
-            <button type="button" data-demo-control="idle" data-i18n="home.demo.idle" aria-pressed="false">空闲</button>
-          </div>
-        </div>
+      <section class="start-hero" aria-labelledby="hero-title">
+        <img class="start-logo" src="assets/readme/app-icon-192.png" alt="" width="96" height="96" fetchpriority="high">
+        <h1 id="hero-title" data-i18n="home.hero.title">开始使用 Vibelsland Free</h1>
+        <p data-i18n="home.hero.copy">如果下载没有自动开始，请点击下方。</p>
+        <a class="button primary start-download" href="https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 3v11m0 0 4-4m-4 4-4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"></path>
+          </svg>
+          <span data-i18n="home.hero.primary">下载 macOS 版</span>
+        </a>
       </section>
 
-      <section class="spec-strip" aria-label="产品摘要" data-reveal>
-        <div>
-          <span data-i18n="home.spec.system.label">系统</span>
-          <strong data-i18n="home.spec.system.value">macOS 14+</strong>
-        </div>
-        <div>
-          <span data-i18n="home.spec.tools.label">覆盖工具</span>
-          <strong data-i18n="home.spec.tools.value">Claude Code / Codex CLI / Codex Desktop</strong>
-        </div>
-        <div>
-          <span data-i18n="home.spec.data.label">数据策略</span>
-          <strong data-i18n="home.spec.data.value">本地优先</strong>
-        </div>
-        <div>
-          <span data-i18n="home.spec.version.label">当前版本</span>
-          <strong data-i18n="home.spec.version.value">v0.1.0</strong>
-        </div>
-      </section>
-
-      <section class="section editorial-section" aria-labelledby="focus-title">
-        <div class="section-heading" data-reveal>
-          <p class="eyebrow" data-i18n="home.focus.eyebrow">状态</p>
-          <h2 id="focus-title" data-i18n="home.focus.title">只看必要状态。</h2>
-        </div>
-        <div class="signal-list">
-          <article data-reveal>
-            <span>01</span>
-            <div>
-              <h3 data-i18n="home.focus.item1.title">运行中</h3>
-              <p data-i18n="home.focus.item1.copy">长任务保持可见。</p>
-            </div>
-          </article>
-          <article data-reveal>
-            <span>02</span>
-            <div>
-              <h3 data-i18n="home.focus.item2.title">待确认</h3>
-              <p data-i18n="home.focus.item2.copy">及时看到阻塞运行的审批请求。</p>
-            </div>
-          </article>
-          <article data-reveal>
-            <span>03</span>
-            <div>
-              <h3 data-i18n="home.focus.item3.title">本地</h3>
-              <p data-i18n="home.focus.item3.copy">无账号，无遥测。</p>
-            </div>
-          </article>
-        </div>
-      </section>
-
-      <section class="section trust-section-home" aria-labelledby="trust-title">
-        <div class="trust-copy" data-reveal>
-          <p class="eyebrow" data-i18n="home.trust.eyebrow">边界</p>
-          <h2 id="trust-title" data-i18n="home.trust.title">本地读取。无需遥测。</h2>
-          <p data-i18n="home.trust.copy">
-            显示状态，少打扰，会话不上传。
-          </p>
-        </div>
-        <div class="boundary-grid" data-reveal>
-          <div>
-            <span data-i18n="home.trust.read.label">读取</span>
-            <strong data-i18n="home.trust.read.value">会话状态</strong>
+      <section class="start-steps" aria-label="三步开始" data-i18n-aria-label="aria.homeSteps">
+        <article class="start-card">
+          <div class="start-card-screen">
+            <img src="assets/readme/app-icon.png" alt="" width="48" height="48" loading="lazy" decoding="async">
+            <h2 data-i18n="home.step1.title">下载 zip</h2>
+            <p data-i18n="home.step1.copy">获取 v0.1.0 macOS 包。</p>
+            <a href="download.html" data-i18n="home.step1.link">查看下载详情</a>
           </div>
-          <div>
-            <span data-i18n="home.trust.write.label">写入</span>
-            <strong data-i18n="home.trust.write.value">配置与日志</strong>
+        </article>
+        <article class="start-card">
+          <div class="start-card-screen">
+            <span class="start-card-icon">✓</span>
+            <h2 data-i18n="home.step2.title">校验下载</h2>
+            <p data-i18n="home.step2.copy">用 SHA-256 确认文件一致。</p>
+            <a href="install.html" data-i18n="home.step2.link">查看安装与信任</a>
           </div>
-          <div>
-            <span data-i18n="home.trust.network.label">网络</span>
-            <strong data-i18n="home.trust.network.value">核心离线可用</strong>
+        </article>
+        <article class="start-card">
+          <div class="start-card-screen">
+            <span class="start-card-icon">↗</span>
+            <h2 data-i18n="home.step3.title">打开应用</h2>
+            <p data-i18n="home.step3.copy">让状态留在 macOS 顶部。</p>
+            <a href="support.html" data-i18n="home.step3.link">查看支持</a>
           </div>
-        </div>
-      </section>
-
-      <section class="section cta-section" aria-labelledby="cta-title">
-        <div data-reveal>
-          <p class="eyebrow" data-i18n="home.cta.eyebrow">下载</p>
-          <h2 id="cta-title" data-i18n="home.cta.title">下载 macOS 版。</h2>
-          <p data-i18n="home.cta.copy">v0.1.0 免费下载。源码和 SHA-256 校验公开。</p>
-          <div class="hero-actions">
-            <a class="button primary" href="download.html">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M12 3v11m0 0 4-4m-4 4-4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"></path>
-              </svg>
-              <span data-i18n="home.cta.primary">下载 macOS 版</span>
-            </a>
-            <a class="button secondary" href="install.html" data-i18n="home.cta.secondary">查看安装与信任</a>
-          </div>
-        </div>
+        </article>
       </section>
     </main>
 
@@ -235,7 +137,7 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="lang.js?v=e812a6ea4519" defer></script>
-    <script src="effects.js?v=71a88e9bf5d8" defer></script>
+    <script src="lang.js?v=367d42cfdd40" defer></script>
+    <script src="effects.js?v=984d01b9fa2d" defer></script>
   </body>
 </html>
