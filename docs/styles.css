@@ -2196,14 +2196,10 @@ button:focus-visible {
     display: none;
   }
 
-  .download-side {
-    display: none;
-  }
-
   .download-side .release-card {
     display: block;
     width: min(310px, 100%);
-    margin: 0 auto;
+    margin: 0 auto calc(116px + env(safe-area-inset-bottom));
     padding: 14px;
     border-radius: 14px;
   }
@@ -2274,6 +2270,12 @@ button:focus-visible {
     line-height: 1.08;
   }
 
+  html[lang="ja"] .subpage-copy h1 {
+    font-family: var(--font-ui);
+    font-size: clamp(32px, 8.8vw, 40px);
+    line-height: 1.12;
+  }
+
   .editorial-section .section-heading h2,
   .trust-section-home .trust-copy h2 {
     font-size: 34px;
@@ -2291,12 +2293,30 @@ button:focus-visible {
     padding: 0 7px;
   }
 
+  .download-lead .hero-actions {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .download-lead .button {
+    width: 100%;
+    white-space: nowrap;
+  }
+
   .subpage-hero .privacy-summary {
     margin-top: 56px;
   }
 
   .support-shortcuts {
-    display: none;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .support-shortcuts a {
+    min-height: 62px;
+    padding: 10px;
+  }
+
+  .support-shortcuts strong {
+    font-size: 14px;
   }
 }
 
