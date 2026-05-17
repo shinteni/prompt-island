@@ -15,7 +15,11 @@ trap cleanup EXIT
 fetch_status() {
   local url="$1"
   local output="$2"
-  /usr/bin/curl -L -s -o "$output" -w "%{http_code}" "$url"
+  local curl_args=(-L -s -o "$output" -w "%{http_code}")
+  if [[ -n "${GITHUB_TOKEN:-}" && "$url" == https://api.github.com/* ]]; then
+    curl_args=(-L -s -H "Authorization: Bearer $GITHUB_TOKEN" -H "X-GitHub-Api-Version: 2022-11-28" -o "$output" -w "%{http_code}")
+  fi
+  /usr/bin/curl "${curl_args[@]}" "$url"
 }
 
 require_status() {
@@ -364,7 +368,7 @@ PY
 
 while IFS= read -r external_url; do
   [[ -z "$external_url" ]] && continue
-  external_status="$(/usr/bin/curl -L -s --max-time 20 -o /dev/null -w "%{http_code}" "$external_url" || true)"
+  external_status="$(fetch_status "$external_url" /dev/null || true)"
   [[ -n "$external_status" ]] || external_status="000"
   case "$external_status" in
     200|201|202|203|204|206|301|302|303|307|308) ;;
