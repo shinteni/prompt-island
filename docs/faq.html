@@ -105,10 +105,10 @@
           },
           {
             "@type": "Question",
-            "name": "app.log 会保存我的 prompt 吗？",
+            "name": "app.log 会保存我的对话内容吗？",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "app.log 设计为记录连接状态、事件类型、时间戳、本地路径和错误原因，不把 raw prompt 当日志正文保存。应用会读取本机 Claude/Codex transcript 尾部用于状态显示，所以不能说完全不接触 prompt；分享日志前仍应脱敏 prompt、路径、token 和命令参数。"
+              "text": "app.log 主要记录连接状态、事件类型、时间戳、本地路径和错误原因，不会把完整对话作为日志正文保存。状态显示可能读取本机工具提供的最新状态摘要；分享日志前请遮挡账号、个人文件路径、对话内容和其他敏感信息。"
             }
           },
           {
@@ -121,10 +121,10 @@
           },
           {
             "@type": "Question",
-            "name": "卸载 hooks 和权限会移除什么？",
+            "name": "卸载本地连接会移除什么？",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Uninstall Hooks 会移除 Claude/Codex hook 配置中的 Vibelsland bridge 项。它不会自动删除应用、日志、配置、~/.vibelsland-free、Codex 的 codex_hooks 开关，或第三方工具已经保存的会话级审批状态。"
+              "text": "Uninstall Hooks 会移除 Vibelsland Free 为本地状态显示添加的连接项。它不会自动删除应用、日志、配置、~/.vibelsland-free，第三方工具自己保存的记录也不会自动删除。"
             }
           }
         ]
@@ -229,16 +229,16 @@
             <p>Vibelsland Free 是独立工具，不隶属、不代表、也没有被 Anthropic、OpenAI、Claude 或 Codex 背书。页面中的产品名只用于说明本地兼容性。</p>
           </article>
           <article data-reveal>
-            <h3>app.log 会保存我的 prompt 吗？</h3>
-            <p><code>app.log</code> 设计为记录连接状态、事件类型、时间戳、本地路径和错误原因，不把 raw prompt 当日志正文保存。应用会读取本机 Claude/Codex transcript 尾部用于状态显示，所以不能说完全不接触 prompt；分享日志前仍应脱敏 prompt、路径、token 和命令参数。</p>
+            <h3>app.log 会保存我的对话内容吗？</h3>
+            <p><code>app.log</code> 主要记录连接状态、事件类型、时间戳、本地路径和错误原因，不会把完整对话作为日志正文保存。状态显示可能读取本机工具提供的最新状态摘要；分享日志前请遮挡账号、个人文件路径、对话内容和其他敏感信息。</p>
           </article>
           <article data-reveal>
             <h3>下载后看到的应用名为什么是“&gt;_ - island.app”？</h3>
             <p>这是 macOS 应用 bundle 名称。官网、发布包和源码仍使用 Vibelsland Free 作为产品名；这个名称不表示与 Anthropic、OpenAI、Claude 或 Codex 的官方关系。</p>
           </article>
           <article data-reveal>
-            <h3>卸载 hooks 和权限会移除什么？</h3>
-            <p>Uninstall Hooks 会移除 Claude/Codex hook 配置中的 Vibelsland bridge 项。它不会自动删除应用、日志、配置、<code>~/.vibelsland-free</code>、Codex 的 <code>codex_hooks</code> 开关，或第三方工具已经保存的会话级审批状态。</p>
+            <h3>卸载本地连接会移除什么？</h3>
+            <p>Uninstall Hooks 会移除 Vibelsland Free 为本地状态显示添加的连接项。它不会自动删除应用、日志、配置、<code>~/.vibelsland-free</code>，第三方工具自己保存的记录也不会自动删除。</p>
           </article>
         </div>
       </section>
@@ -261,7 +261,7 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="lang.js?v=062340399f45" defer></script>
+    <script src="lang.js?v=29b51dc50573" defer></script>
     <script src="effects.js?v=984d01b9fa2d" defer></script>
   </body>
 </html>

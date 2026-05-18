@@ -3,24 +3,24 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Support and Troubleshooting | Vibelsland Free</title>
+    <title>Help and Feedback | Vibelsland Free</title>
     <meta
       name="description"
-      content="Support and troubleshooting for Vibelsland Free: first-launch confirmation, SHA-256 verification, local data locations, uninstalling, issue reports, and missing tool status."
+      content="Help and feedback for Vibelsland Free: first-launch confirmation, SHA-256 verification, uninstalling, issue reports, and missing tool status."
     >
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Vibelsland Free">
     <meta property="og:locale" content="en_US">
-    <meta property="og:title" content="Vibelsland Free Support and Troubleshooting">
-    <meta property="og:description" content="Troubleshoot install, checksum, local data, uninstall, and missing status display issues.">
+    <meta property="og:title" content="Vibelsland Free Help and Feedback">
+    <meta property="og:description" content="Help for install, checksum, uninstall, missing status display, and feedback.">
     <meta property="og:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
     <meta property="og:image:width" content="1672">
     <meta property="og:image:height" content="941">
     <meta property="og:image:alt" content="Vibelsland Free macOS AI coding status interface">
     <meta property="og:url" content="https://shinteni.github.io/prompt-island/en/support.html">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Vibelsland Free Support and Troubleshooting">
-    <meta name="twitter:description" content="Troubleshoot install, checksum, local data, uninstall, and missing status display issues.">
+    <meta name="twitter:title" content="Vibelsland Free Help and Feedback">
+    <meta name="twitter:description" content="Help for install, checksum, uninstall, missing status display, and feedback.">
     <meta name="twitter:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
     <meta name="twitter:image:alt" content="Vibelsland Free macOS AI coding status interface">
     <meta name="theme-color" content="#070706">
@@ -37,8 +37,8 @@
       {
         "@context": "https://schema.org",
         "@type": "TechArticle",
-        "headline": "Vibelsland Free Support and Troubleshooting",
-        "description": "Troubleshooting notes for Vibelsland Free installation, SHA-256 verification, local data, uninstalling, issue reports, and missing tool status.",
+        "headline": "Vibelsland Free Help and Feedback",
+        "description": "Help for Vibelsland Free installation, SHA-256 verification, uninstalling, issue reports, and missing tool status.",
         "inLanguage": "en",
         "about": {
           "@type": "SoftwareApplication",
@@ -73,9 +73,9 @@
       <section class="subpage-hero" aria-labelledby="support-title">
         <div class="subpage-copy" data-reveal>
           <p class="eyebrow">Support</p>
-          <h1 id="support-title">Install, troubleshooting, and security reports.</h1>
+          <h1 id="support-title">Help, troubleshooting, and feedback.</h1>
           <p>
-            Start here when the app cannot open, status is missing, hooks need repair, or an issue needs a report.
+            Start here when the app cannot open, status is missing, you want to uninstall, or you need to send feedback.
           </p>
           <div class="hero-actions">
             <a class="button primary" href="install.html">Read install and trust</a>
@@ -89,7 +89,7 @@
           </a>
           <a href="#status-title">
             <span>Status missing</span>
-            <strong>Hooks and local sources</strong>
+            <strong>Connections and sources</strong>
           </a>
           <a href="download.html#security-title">
             <span>Verify download</span>
@@ -97,7 +97,7 @@
           </a>
           <a href="#uninstall-title">
             <span>Uninstall</span>
-            <strong>Hooks, app, and local data</strong>
+            <strong>Connections, app, and local data</strong>
           </a>
         </div>
       </section>
@@ -124,8 +124,7 @@
           <article data-reveal>
             <h3>Claude Code / Codex CLI</h3>
             <ul>
-              <li>Enable the source in Settings, then use Install Hooks or Repair Hooks from the menu bar or Settings.</li>
-              <li>Confirm the local bridge exists: <code>~/.vibelsland-free/bin/vibelsland-bridge</code>.</li>
+              <li>Enable the source in Settings, then run the install or repair connection action.</li>
               <li>Start a fresh Claude Code or Codex CLI session, then check the island and panel again.</li>
             </ul>
           </article>
@@ -140,9 +139,9 @@
           <article data-reveal>
             <h3>Approvals or tool calls do not update</h3>
             <ul>
-              <li>Keep Vibelsland Free running after hooks are installed.</li>
-              <li>Use Open Logs from the menu bar and look for recent hook, bridge, or socket errors.</li>
-              <li>If Claude or Codex config was edited manually, use Repair Hooks to merge the bridge entries again.</li>
+              <li>Keep Vibelsland Free running after the connection is installed.</li>
+              <li>Use Open Logs from the menu bar and look for recent connection or permission errors.</li>
+              <li>If related tool settings were changed manually, repair the connection from Vibelsland Free Settings.</li>
             </ul>
           </article>
         </div>
@@ -151,32 +150,29 @@
       <section class="section split-section surface-section" aria-labelledby="data-title">
         <div class="split-copy" data-reveal>
           <p class="eyebrow">Local data</p>
-          <h2 id="data-title">Locations used during troubleshooting.</h2>
+          <h2 id="data-title">Settings and logs stay on your Mac.</h2>
           <p>
-            Vibelsland Free is a local tool. Troubleshooting usually means checking config, logs, the bridge runtime directory, and Claude or Codex hook files. Before sharing logs, remove sensitive paths, prompts, tokens, and session content.
+            Vibelsland Free is a local tool. When sending feedback, the useful details are usually the app version, macOS version, what happened, what you expected, and how to reproduce it. Before sharing screenshots or logs, hide account names, private paths, conversation content, and other sensitive information.
           </p>
         </div>
         <div class="checksum-card" data-reveal>
-          <span>Common paths</span>
+          <span>App data locations</span>
           <code>~/Library/Application Support/VibelslandFree/config.json</code>
           <code>~/Library/Logs/VibelslandFree/app.log</code>
           <code>~/.vibelsland-free</code>
-          <code>~/.claude/settings.json</code>
-          <code>~/.codex/hooks.json</code>
-          <code>~/.codex/config.toml</code>
         </div>
       </section>
 
       <section class="section install-section" aria-labelledby="uninstall-title">
         <div class="section-heading align-left" data-reveal>
           <p class="eyebrow">Uninstall</p>
-          <h2 id="uninstall-title">Remove hooks before removing the app.</h2>
+          <h2 id="uninstall-title">Disconnect local integrations before removing the app.</h2>
         </div>
         <ol class="large-steps">
           <li data-reveal>
             <span>01</span>
-            <strong>Uninstall hooks</strong>
-            <p>Use Uninstall Hooks from the app Settings or menu bar. This removes Vibelsland bridge entries from Claude and Codex hook configuration.</p>
+            <strong>Disconnect local integrations</strong>
+            <p>Use Uninstall Hooks from the app Settings or menu bar. This removes the local connection entries Vibelsland Free added for status display.</p>
           </li>
           <li data-reveal>
             <span>02</span>
@@ -196,37 +192,30 @@
           <p class="eyebrow">Report an issue</p>
           <h2 id="report-title">Include reproducible details.</h2>
           <p>
-            GitHub Issues are public and should only be used for ordinary bugs with redacted logs. Do not post exploit details, tokens, paths, prompts, or full logs for security vulnerabilities; start with GitHub private vulnerability reporting, or open a minimal public issue asking for private contact if that route is unavailable.
+            GitHub Issues are public. Before posting, make sure screenshots and logs do not include account names, passwords, private file paths, conversation content, or other sensitive information. For security or privacy concerns, start with a short impact summary and avoid publishing details that could be misused.
           </p>
         </div>
         <div class="link-grid compact">
           <a class="link-panel" href="https://github.com/shinteni/prompt-island/issues" data-reveal>
             <span>Issues</span>
             <strong>Report on GitHub</strong>
-            <p>For ordinary bugs, include the Vibelsland Free version, macOS version, affected source, reproduction steps, and a redacted log excerpt.</p>
+            <p>Include the Vibelsland Free version, macOS version, what happened, what you expected, and reproduction steps.</p>
           </a>
           <a class="link-panel" href="support.html#data-title" data-reveal>
-            <span>Redaction</span>
-            <strong>Check what must stay private</strong>
-            <p>Do not paste bridge tokens, absolute workspace paths, URL query tokens, AI prompts, full session text, or command arguments containing personal data.</p>
+            <span>Prepare</span>
+            <strong>Hide private details first</strong>
+            <p>Before posting publicly, hide account names, project paths, private conversations, access credentials, and any window content you do not want public.</p>
           </a>
           <a class="link-panel" href="privacy.html" data-reveal>
             <span>Privacy</span>
-            <strong>Review privacy boundaries</strong>
-            <p>Understand what the app reads, writes, and never uploads before deciding what troubleshooting details to share.</p>
+            <strong>Read the privacy notes</strong>
+            <p>Understand what the app reads and writes on your Mac before deciding what troubleshooting details to share.</p>
           </a>
           <a class="link-panel" href="../.well-known/security.txt" data-reveal>
             <span>Security</span>
-            <strong>Security reporting entry</strong>
-            <p>Check security.txt first; do not publish vulnerability details, and use only a minimal coordination issue if private reporting is unavailable.</p>
+            <strong>Security and privacy feedback</strong>
+            <p>If an issue may affect user security or privacy, send a short summary first and avoid posting misuse-ready details publicly.</p>
           </a>
-        </div>
-        <div class="checksum-card redaction-example" data-reveal>
-          <span>Redaction examples</span>
-          <code>/Users/rinka/private-repo => /Users/&lt;user&gt;/&lt;project&gt;</code>
-          <code>https://example.test/callback?token=abc123 => https://example.test/callback?token=&lt;redacted&gt;</code>
-          <code>--api-key sk-... => --api-key &lt;redacted&gt;</code>
-          <code>bridge token / prompt / session body => &lt;redacted summary&gt;</code>
         </div>
         <p><a class="text-link" href="https://github.com/shinteni/prompt-island/blob/main/LICENSE">MIT License</a></p>
       </section>
@@ -249,7 +238,7 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="../lang.js?v=062340399f45" defer></script>
+    <script src="../lang.js?v=29b51dc50573" defer></script>
     <script src="../effects.js?v=984d01b9fa2d" defer></script>
   </body>
 </html>

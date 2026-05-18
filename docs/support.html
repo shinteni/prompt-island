@@ -3,24 +3,24 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>支持与排障 | Vibelsland Free</title>
+    <title>帮助与反馈 | Vibelsland Free</title>
     <meta
       name="description"
-      content="Vibelsland Free 支持与排障：处理 macOS 首次打开确认、SHA-256 校验、本地数据位置、卸载、报告问题以及工具状态不显示。"
+      content="Vibelsland Free 帮助与反馈：处理 macOS 首次打开确认、SHA-256 校验、卸载、反馈问题以及工具状态不显示。"
     >
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Vibelsland Free">
     <meta property="og:locale" content="zh_CN">
-    <meta property="og:title" content="Vibelsland Free 支持与排障">
-    <meta property="og:description" content="安装、校验、本地数据、卸载和状态显示问题的排障说明。">
+    <meta property="og:title" content="Vibelsland Free 帮助与反馈">
+    <meta property="og:description" content="安装、校验、卸载、状态显示和反馈问题的使用帮助。">
     <meta property="og:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
     <meta property="og:image:width" content="1672">
     <meta property="og:image:height" content="941">
     <meta property="og:image:alt" content="Vibelsland Free macOS AI 编程状态界面">
     <meta property="og:url" content="https://shinteni.github.io/prompt-island/support.html">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Vibelsland Free 支持与排障">
-    <meta name="twitter:description" content="安装、校验、本地数据、卸载和状态显示问题的排障说明。">
+    <meta name="twitter:title" content="Vibelsland Free 帮助与反馈">
+    <meta name="twitter:description" content="安装、校验、卸载、状态显示和反馈问题的使用帮助。">
     <meta name="twitter:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
     <meta name="twitter:image:alt" content="Vibelsland Free macOS AI 编程状态界面">
     <meta name="theme-color" content="#070706">
@@ -37,8 +37,8 @@
       {
         "@context": "https://schema.org",
         "@type": "TechArticle",
-        "headline": "Vibelsland Free 支持与排障",
-        "description": "处理 Vibelsland Free 安装、SHA-256 校验、本地数据、卸载、报告问题和工具状态不显示的排障说明。",
+        "headline": "Vibelsland Free 帮助与反馈",
+        "description": "处理 Vibelsland Free 安装、SHA-256 校验、卸载、反馈问题和工具状态不显示的使用帮助。",
         "inLanguage": "zh-CN",
         "about": {
           "@type": "SoftwareApplication",
@@ -73,9 +73,9 @@
       <section class="subpage-hero" aria-labelledby="support-title">
         <div class="subpage-copy" data-reveal>
           <p class="eyebrow">支持</p>
-          <h1 id="support-title">安装、排障与安全报告。</h1>
+          <h1 id="support-title">使用帮助与反馈。</h1>
           <p>
-            无法打开、状态不显示、hooks、卸载和问题报告，都从这里进入。
+            无法打开、状态不显示、卸载应用或提交反馈，都从这里开始。
           </p>
           <div class="hero-actions">
             <a class="button primary" href="install.html">查看安装与信任</a>
@@ -89,7 +89,7 @@
           </a>
           <a href="#status-title">
             <span>状态不显示</span>
-            <strong>Hooks 与本地来源</strong>
+            <strong>连接状态与来源</strong>
           </a>
           <a href="download.html#security-title">
             <span>校验下载</span>
@@ -97,7 +97,7 @@
           </a>
           <a href="#uninstall-title">
             <span>卸载清理</span>
-            <strong>Hooks、应用与本地数据</strong>
+            <strong>连接、应用与本地数据</strong>
           </a>
         </div>
       </section>
@@ -124,8 +124,7 @@
           <article data-reveal>
             <h3>Claude Code / Codex CLI</h3>
             <ul>
-              <li>在设置页启用对应来源，并使用菜单栏或设置页的 Install Hooks / Repair Hooks。</li>
-              <li>确认本地桥接文件存在：<code>~/.vibelsland-free/bin/vibelsland-bridge</code>。</li>
+              <li>在设置页启用对应来源，并运行连接安装或修复操作。</li>
               <li>重新启动一个 Claude Code 或 Codex CLI 会话，再观察浮岛和面板状态。</li>
             </ul>
           </article>
@@ -140,9 +139,9 @@
           <article data-reveal>
             <h3>审批或工具调用不更新</h3>
             <ul>
-              <li>保持 Vibelsland Free 运行，避免只安装 hooks 后退出应用。</li>
-              <li>打开菜单栏中的 Open Logs，查看最近是否有 hook、bridge 或 socket 错误。</li>
-              <li>如果曾手动编辑 Claude 或 Codex 配置，优先使用 Repair Hooks 重新合并配置。</li>
+              <li>保持 Vibelsland Free 运行，不要在完成连接后立即退出应用。</li>
+              <li>打开菜单栏中的 Open Logs，查看最近是否有连接或权限错误。</li>
+              <li>如果修改过相关工具设置，回到 Vibelsland Free 设置页重新修复连接。</li>
             </ul>
           </article>
         </div>
@@ -151,32 +150,29 @@
       <section class="section split-section surface-section" aria-labelledby="data-title">
         <div class="split-copy" data-reveal>
           <p class="eyebrow">本地数据</p>
-          <h2 id="data-title">排障时常用的位置。</h2>
+          <h2 id="data-title">应用会把设置和日志保存在本机。</h2>
           <p>
-            Vibelsland Free 是本地工具。排障通常只需要确认配置、日志、桥接运行目录，以及 Claude 与 Codex 的 hook 配置文件。分享日志前请删除敏感路径、提示词、令牌和会话内容。
+            Vibelsland Free 是本地工具。需要反馈问题时，通常只要说明应用版本、macOS 版本、看到的现象和复现步骤。分享截图或日志前，请遮挡账号、个人文件路径、对话内容和其他敏感信息。
           </p>
         </div>
         <div class="checksum-card" data-reveal>
-          <span>常用路径</span>
+          <span>应用数据位置</span>
           <code>~/Library/Application Support/VibelslandFree/config.json</code>
           <code>~/Library/Logs/VibelslandFree/app.log</code>
           <code>~/.vibelsland-free</code>
-          <code>~/.claude/settings.json</code>
-          <code>~/.codex/hooks.json</code>
-          <code>~/.codex/config.toml</code>
         </div>
       </section>
 
       <section class="section install-section" aria-labelledby="uninstall-title">
         <div class="section-heading align-left" data-reveal>
           <p class="eyebrow">卸载</p>
-          <h2 id="uninstall-title">完全移除前，先卸载 hooks。</h2>
+          <h2 id="uninstall-title">完全移除前，先断开本地连接。</h2>
         </div>
         <ol class="large-steps">
           <li data-reveal>
             <span>01</span>
-            <strong>卸载 hooks</strong>
-            <p>在应用的设置页或菜单栏执行 Uninstall Hooks。它会从 Claude 和 Codex hook 配置中移除 Vibelsland 的桥接项。</p>
+            <strong>断开本地连接</strong>
+            <p>在应用的设置页或菜单栏执行 Uninstall Hooks。它会移除 Vibelsland Free 为本地状态显示添加的连接项。</p>
           </li>
           <li data-reveal>
             <span>02</span>
@@ -196,37 +192,30 @@
           <p class="eyebrow">报告问题</p>
           <h2 id="report-title">提交问题时，请带上可复现信息。</h2>
           <p>
-            GitHub Issues 是公开页面，只适合普通 bug 和已经脱敏的日志。安全漏洞不要在公开 issue 中粘贴利用细节、token、路径、prompt 或完整日志；优先使用 GitHub private vulnerability reporting，如果不可用，只开一个不含细节的公开 issue 请求私下联系方式。
+            GitHub Issues 是公开页面。提交前请确认截图和日志中没有账号、密码、个人文件路径、对话内容或其他敏感信息。安全或隐私相关问题请先给出简短影响说明，不要公开发布可被滥用的细节。
           </p>
         </div>
         <div class="link-grid compact">
           <a class="link-panel" href="https://github.com/shinteni/prompt-island/issues" data-reveal>
             <span>Issues</span>
             <strong>在 GitHub 报告问题</strong>
-            <p>普通问题请包含 Vibelsland Free 版本、macOS 版本、受影响来源、复现步骤，以及脱敏后的日志片段。</p>
+            <p>请包含 Vibelsland Free 版本、macOS 版本、发生了什么、期望结果和复现步骤。</p>
           </a>
           <a class="link-panel" href="support.html#data-title" data-reveal>
-            <span>Redaction</span>
-            <strong>先确认哪些内容不能公开</strong>
-            <p>公开 issue 中不要粘贴 bridge token、工作区绝对路径、URL query token、AI prompt、会话全文或含个人信息的命令参数。</p>
+            <span>准备材料</span>
+            <strong>截图和日志先遮挡</strong>
+            <p>公开提交前，请遮挡账号、项目路径、私密对话、访问凭证和任何不希望公开的窗口内容。</p>
           </a>
           <a class="link-panel" href="privacy.html" data-reveal>
             <span>Privacy</span>
-            <strong>确认隐私边界</strong>
-            <p>了解应用读取、写入和不会上传的内容，再决定哪些排障信息适合分享。</p>
+            <strong>查看隐私说明</strong>
+            <p>了解应用在本机读取和写入的内容，再决定哪些排障信息适合分享。</p>
           </a>
           <a class="link-panel" href=".well-known/security.txt" data-reveal>
             <span>Security</span>
-            <strong>安全报告入口</strong>
-            <p>先看 security.txt；漏洞细节不要公开发布，私密通道不可用时只提交不含细节的协调请求。</p>
+            <strong>安全与隐私反馈</strong>
+            <p>如果问题可能影响用户安全或隐私，请先提交简短说明，避免公开可被滥用的操作细节。</p>
           </a>
-        </div>
-        <div class="checksum-card redaction-example" data-reveal>
-          <span>脱敏示例</span>
-          <code>/Users/rinka/private-repo => /Users/&lt;user&gt;/&lt;project&gt;</code>
-          <code>https://example.test/callback?token=abc123 => https://example.test/callback?token=&lt;redacted&gt;</code>
-          <code>--api-key sk-... => --api-key &lt;redacted&gt;</code>
-          <code>bridge token / prompt / session body => &lt;redacted summary&gt;</code>
         </div>
         <p><a class="text-link" href="https://github.com/shinteni/prompt-island/blob/main/LICENSE">MIT License</a></p>
       </section>
@@ -249,7 +238,7 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="lang.js?v=062340399f45" defer></script>
+    <script src="lang.js?v=29b51dc50573" defer></script>
     <script src="effects.js?v=984d01b9fa2d" defer></script>
   </body>
 </html>

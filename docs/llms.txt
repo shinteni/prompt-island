@@ -2,7 +2,7 @@
 
 > Local-first macOS AI coding status display for Claude Code, Codex CLI, and Codex Desktop.
 
-Vibelsland Free keeps local AI coding session status, tool activity, token summaries, and approval requests visible at the top of macOS. It creates no account, uploads no telemetry, and does not sync session content to a remote server.
+Vibelsland Free keeps local AI coding status, tool activity, status summaries, and approval requests visible at the top of macOS. It creates no account, uploads no telemetry, and does not sync conversation content to a remote server.
 
 ## Product Facts
 
@@ -38,9 +38,9 @@ Vibelsland Free keeps local AI coding session status, tool activity, token summa
 ## Boundaries
 
 - Vibelsland Free reads local Claude Code, Codex CLI, and Codex Desktop state for display.
-- It writes local configuration, logs, and bridge runtime files on the user's Mac.
-- Core status display, source control, and approval bridge behavior are local-first.
+- It writes local configuration, logs, and connection runtime files on the user's Mac.
+- Core status display, source control, and approval handling are local-first.
 - Claude Code, Codex CLI, and Codex Desktop may have their own account, network, and session behavior independent of Vibelsland Free.
 - Vibelsland Free is independent and is not affiliated with Anthropic, OpenAI, Claude, or Codex.
 - v0.1.0 is not Developer ID notarized; SHA-256 verifies asset integrity, not developer identity.
-- Security vulnerability details should use private vulnerability reporting, not public GitHub Issues.
+- Security-sensitive details should not be posted in public GitHub Issues; start with a minimal impact summary.
