@@ -126,7 +126,7 @@
           <article data-reveal>
             <h3>Top-of-screen status island</h3>
             <ul>
-              <li>Keeps AI coding activity, recent tool calls, and token summaries at the top of macOS.</li>
+              <li>Keeps AI coding activity, recent tool calls, and status summaries at the top of macOS.</li>
               <li>Contracts while idle and expands for long-running work or important state.</li>
               <li>Designed around parallel Claude Code, Codex CLI, and Codex Desktop workflows.</li>
             </ul>
@@ -135,24 +135,24 @@
             <h3>Local approval handling</h3>
             <ul>
               <li>Handles allow, deny, continue, and cancel actions in a native macOS surface.</li>
-              <li>Preserves useful context such as approval ID, tool name, path, and command.</li>
+              <li>Preserves the basic context needed to handle approvals.</li>
               <li>Reduces switching between terminals, desktop clients, and logs.</li>
             </ul>
           </article>
           <article data-reveal>
-            <h3>Source and hook controls</h3>
+            <h3>Sources and local connections</h3>
             <ul>
               <li>Enables Claude Code, Codex CLI, and Codex Desktop sources independently.</li>
-              <li>Installs, repairs, or uninstalls local hooks from the settings page.</li>
-              <li>Keeps bridge runtime files and logs local for troubleshooting and cleanup.</li>
+              <li>Installs, repairs, or uninstalls local connections from the settings page.</li>
+              <li>Keeps connection runtime files and logs local for troubleshooting and cleanup.</li>
             </ul>
           </article>
           <article data-reveal>
             <h3>Local-first boundary</h3>
             <ul>
               <li>No account creation, telemetry upload, or remote session sync from this app.</li>
-              <li>Core status display, source controls, and approval bridging run on the Mac.</li>
-              <li>The privacy page describes read, write, hook payload, and network boundaries.</li>
+              <li>Core status display, source controls, and approval handling run on the Mac.</li>
+              <li>The privacy page describes read, write, and network boundaries.</li>
             </ul>
           </article>
         </div>
@@ -163,7 +163,7 @@
           <p class="eyebrow">Known boundaries</p>
           <h2 id="boundaries-title">The v0.1.0 product scope.</h2>
           <p>
-            v0.1.0 focuses on local status display and approval bridging on macOS 14+. Claude Code, Codex CLI, and Codex Desktop keep their own account, network, and session behavior; Vibelsland Free organizes the local state available on your Mac and lets you control what appears by source.
+            v0.1.0 focuses on local status display and approval handling on macOS 14+. Claude Code, Codex CLI, and Codex Desktop keep their own account, network, and session behavior; Vibelsland Free organizes the local state available on your Mac and lets you control what appears by source.
           </p>
           <a class="text-link" href="support.html">Open support and troubleshooting</a>
         </div>
@@ -192,7 +192,7 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="../lang.js?v=062340399f45" defer></script>
+    <script src="../lang.js?v=29b51dc50573" defer></script>
     <script src="../effects.js?v=984d01b9fa2d" defer></script>
   </body>
 </html>

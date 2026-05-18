@@ -105,10 +105,10 @@
           },
           {
             "@type": "Question",
-            "name": "Does app.log store my prompts?",
+            "name": "Does app.log store my conversation content?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "app.log is designed to record connection state, event types, timestamps, local paths, and error reasons, not raw prompts as log body. The app does read the tail of local Claude/Codex transcripts for status display, so it is not accurate to say it never touches prompts. Redact prompts, paths, tokens, and command arguments before sharing logs."
+              "text": "app.log mainly records connection state, event types, timestamps, local paths, and error reasons. It does not store full conversations as log body. The status display may read recent local status summaries from supported tools; before sharing logs, hide account details, private file paths, conversation content, and other sensitive information."
             }
           },
           {
@@ -121,10 +121,10 @@
           },
           {
             "@type": "Question",
-            "name": "What does uninstalling hooks and permissions remove?",
+            "name": "What does disconnecting local integrations remove?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Uninstall Hooks removes Vibelsland bridge entries from Claude/Codex hook configuration. It does not automatically delete the app, logs, config, ~/.vibelsland-free, Codex's codex_hooks switch, or session-level approval state already stored by third-party tools."
+              "text": "Uninstall Hooks removes the connection entries Vibelsland Free added for local status display. It does not automatically delete the app, logs, config, ~/.vibelsland-free, or records saved by third-party tools."
             }
           }
         ]
@@ -229,16 +229,16 @@
             <p>No. Vibelsland Free is an independent tool. It is not affiliated with, representative of, or endorsed by Anthropic, OpenAI, Claude, or Codex. Product names are used only to describe local compatibility.</p>
           </article>
           <article data-reveal="">
-            <h3>Does app.log store my prompts?</h3>
-            <p><code>app.log</code> is designed to record connection state, event types, timestamps, local paths, and error reasons, not raw prompts as log body. The app does read the tail of local Claude/Codex transcripts for status display, so it is not accurate to say it never touches prompts. Redact prompts, paths, tokens, and command arguments before sharing logs.</p>
+            <h3>Does app.log store my conversation content?</h3>
+            <p><code>app.log</code> mainly records connection state, event types, timestamps, local paths, and error reasons. It does not store full conversations as log body. The status display may read recent local status summaries from supported tools; before sharing logs, hide account details, private file paths, conversation content, and other sensitive information.</p>
           </article>
           <article data-reveal="">
             <h3>Why is the downloaded app named “&gt;_ - island.app”?</h3>
             <p>That is the macOS app bundle name. The website, release package, and source still use Vibelsland Free as the product name; the bundle name does not imply an official relationship with Anthropic, OpenAI, Claude, or Codex.</p>
           </article>
           <article data-reveal="">
-            <h3>What does uninstalling hooks and permissions remove?</h3>
-            <p>Uninstall Hooks removes Vibelsland bridge entries from Claude/Codex hook configuration. It does not automatically delete the app, logs, config, <code>~/.vibelsland-free</code>, Codex's <code>codex_hooks</code> switch, or session-level approval state already stored by third-party tools.</p>
+            <h3>What does disconnecting local integrations remove?</h3>
+            <p>Uninstall Hooks removes the connection entries Vibelsland Free added for local status display. It does not automatically delete the app, logs, config, <code>~/.vibelsland-free</code>, or records saved by third-party tools.</p>
           </article>
         </div>
       </section>
@@ -261,7 +261,7 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="../lang.js?v=062340399f45" defer></script>
+    <script src="../lang.js?v=29b51dc50573" defer></script>
     <script src="../effects.js?v=984d01b9fa2d" defer></script>
   </body>
 </html>

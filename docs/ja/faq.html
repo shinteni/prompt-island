@@ -105,10 +105,10 @@
           },
           {
             "@type": "Question",
-            "name": "app.log にプロンプトは保存されますか？",
+            "name": "app.log に会話内容は保存されますか？",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "app.log は接続状態、イベント種別、時刻、ローカルパス、エラー理由を記録する設計で、raw prompt をログ本文として保存するものではありません。アプリは状態表示のために Mac 内の Claude/Codex transcript の末尾を読み取るため、prompt にまったく触れないとは言えません。ログ共有前に prompt、パス、token、コマンド引数を伏せ字にしてください。"
+              "text": "app.log は主に接続状態、イベント種別、時刻、ローカルパス、エラー理由を記録します。完全な会話をログ本文として保存するものではありません。状態表示では対応ツールから Mac 内の最新状態サマリーを読み取る場合があります。ログ共有前に、アカウント情報、個人的なファイルパス、会話内容、その他の機密情報を隠してください。"
             }
           },
           {
@@ -121,10 +121,10 @@
           },
           {
             "@type": "Question",
-            "name": "Hooks を停止または削除できますか？",
+            "name": "ローカル接続を停止または削除できますか？",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Uninstall Hooks は Claude/Codex hook 設定から Vibelsland bridge 項目を削除します。アプリ本体、ログ、設定、~/.vibelsland-free、Codex の codex_hooks スイッチ、第三者ツールが保存済みのセッション単位の承認状態は自動削除しません。"
+              "text": "Uninstall Hooks は、ローカル状態表示のために Vibelsland Free が追加した接続項目を削除します。アプリ本体、ログ、設定、~/.vibelsland-free、第三者ツールが保存した記録は自動削除しません。"
             }
           }
         ]
@@ -229,16 +229,16 @@
             <p>Vibelsland Free は独立したツールです。Anthropic、OpenAI、Claude、Codex に所属せず、代表せず、推奨を受けたものでもありません。製品名はローカル互換性を説明するためだけに使っています。</p>
           </article>
           <article data-reveal="">
-            <h3>app.log にプロンプトは保存されますか？</h3>
-            <p><code>app.log</code> は接続状態、イベント種別、時刻、ローカルパス、エラー理由を記録する設計で、raw prompt をログ本文として保存するものではありません。アプリは状態表示のために Mac 内の Claude/Codex transcript の末尾を読み取るため、prompt にまったく触れないとは言えません。ログ共有前に prompt、パス、token、コマンド引数を伏せ字にしてください。</p>
+            <h3>app.log に会話内容は保存されますか？</h3>
+            <p><code>app.log</code> は主に接続状態、イベント種別、時刻、ローカルパス、エラー理由を記録します。完全な会話をログ本文として保存するものではありません。状態表示では対応ツールから Mac 内の最新状態サマリーを読み取る場合があります。ログ共有前に、アカウント情報、個人的なファイルパス、会話内容、その他の機密情報を隠してください。</p>
           </article>
           <article data-reveal="">
             <h3>ダウンロード後のアプリ名が「&gt;_ - island.app」なのはなぜですか？</h3>
             <p>これは macOS のアプリ bundle 名です。Web サイト、リリースパッケージ、ソースでは引き続き Vibelsland Free を製品名として使います。この名前は Anthropic、OpenAI、Claude、Codex との公式関係を示すものではありません。</p>
           </article>
           <article data-reveal="">
-            <h3>Hooks を停止または削除できますか？</h3>
-            <p>Uninstall Hooks は Claude/Codex hook 設定から Vibelsland bridge 項目を削除します。アプリ本体、ログ、設定、<code>~/.vibelsland-free</code>、Codex の <code>codex_hooks</code> スイッチ、第三者ツールが保存済みのセッション単位の承認状態は自動削除しません。</p>
+            <h3>ローカル接続を停止または削除できますか？</h3>
+            <p>Uninstall Hooks は、ローカル状態表示のために Vibelsland Free が追加した接続項目を削除します。アプリ本体、ログ、設定、<code>~/.vibelsland-free</code>、第三者ツールが保存した記録は自動削除しません。</p>
           </article>
         </div>
       </section>
@@ -261,7 +261,7 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="../lang.js?v=062340399f45" defer></script>
+    <script src="../lang.js?v=29b51dc50573" defer></script>
     <script src="../effects.js?v=984d01b9fa2d" defer></script>
   </body>
 </html>

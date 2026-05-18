@@ -88,8 +88,8 @@
             <h3 data-i18n="privacy.data.read.title">読み取るもの</h3>
             <ul>
               <li data-i18n="privacy.data.read.item1">Claude Code、Codex CLI、Codex Desktop の Mac 内の状態。</li>
-              <li data-i18n="privacy.data.read.item2">活動状態、ツール実行、token サマリー、承認を表示するためのローカルセッション情報。</li>
-              <li data-i18n="privacy.data.read.item3">Claude と Codex のローカル hook 設定、セッションファイルのパス、実行状態。</li>
+              <li data-i18n="privacy.data.read.item2">活動状態、ツール実行、承認を表示するための Mac 内の状態サマリー。</li>
+              <li data-i18n="privacy.data.read.item3">Claude と Codex のローカル接続設定と実行状態。</li>
             </ul>
           </article>
           <article data-reveal="">
@@ -97,7 +97,7 @@
             <ul>
               <li data-i18n="privacy.data.write.item1">アプリ設定: ~/Library/Application Support/VibelslandFree/config.json。</li>
               <li data-i18n="privacy.data.write.item2">アプリログ: ~/Library/Logs/VibelslandFree/app.log。</li>
-              <li data-i18n="privacy.data.write.item3">ローカルブリッジのランタイムファイル: ~/.vibelsland-free。</li>
+              <li data-i18n="privacy.data.write.item3">ローカル接続のランタイムファイル: ~/.vibelsland-free。</li>
             </ul>
           </article>
         </div>
@@ -106,23 +106,23 @@
       <section class="section data-section" aria-labelledby="retention-title">
         <div class="section-heading align-left" data-reveal="">
           <p class="eyebrow" data-i18n="privacy.retention.eyebrow">保持と削除</p>
-          <h2 id="retention-title" data-i18n="privacy.retention.title">ローカル token、ログ、削除場所を明確にします。</h2>
-          <p data-i18n="privacy.retention.copy">ローカル bridge token は Mac 内の socket 認証だけに使われます。ログはトラブルシューティング用で、アプリがアップロードすることはありません。hooks をアンインストールした後、実行ファイル、設定、ログは手動で削除できます。</p>
+          <h2 id="retention-title" data-i18n="privacy.retention.title">ローカルログと削除場所を明確にします。</h2>
+          <p data-i18n="privacy.retention.copy">ローカル接続ファイルは Mac 内のアプリ通信だけに使われます。ログはトラブルシューティング用で、アプリがアップロードすることはありません。ローカル接続を外した後、実行ファイル、設定、ログは手動で削除できます。</p>
         </div>
         <div class="data-grid">
           <article data-reveal="">
-            <h3 data-i18n="privacy.retention.bridge.title">ローカル bridge token</h3>
+            <h3 data-i18n="privacy.retention.bridge.title">ローカル接続ファイル</h3>
             <ul>
-              <li data-i18n="privacy.retention.bridge.item1" data-i18n-html>実行ファイルは <code>~/.vibelsland-free</code> にあり、ローカル Unix socket とローカル bridge token を含みます。</li>
-              <li data-i18n="privacy.retention.bridge.item2">token は Mac 内のプロセス間でリクエスト元を確認するためだけに使われ、オンラインアカウントの認証情報ではありません。</li>
-              <li data-i18n="privacy.retention.bridge.item3" data-i18n-html><code>~/.vibelsland-free</code> を削除すると実行 token は消えます。次回起動時にアプリまたは hooks が必要な実行ファイルを作り直します。</li>
+              <li data-i18n="privacy.retention.bridge.item1" data-i18n-html>実行ファイルは <code>~/.vibelsland-free</code> にあり、Vibelsland Free が Mac 内のツールと通信するために使われます。</li>
+              <li data-i18n="privacy.retention.bridge.item2">これらのファイルは Mac 内のリクエスト元を確認するためだけに使われ、オンラインアカウントの認証情報ではありません。</li>
+              <li data-i18n="privacy.retention.bridge.item3" data-i18n-html><code>~/.vibelsland-free</code> を削除すると実行ファイルは消えます。次回起動時にアプリまたは接続項目が必要なファイルを作り直します。</li>
             </ul>
           </article>
           <article data-reveal="">
             <h3 data-i18n="privacy.retention.logs.title">ログと削除</h3>
             <ul>
               <li data-i18n="privacy.retention.logs.item1" data-i18n-html>ログは <code>~/Library/Logs/VibelslandFree/app.log</code> にあり、接続状態、イベント種別、時刻、ローカルパス、エラー理由を記録します。</li>
-              <li data-i18n="privacy.retention.logs.item2">アプリはログをアップロードしません。ログを共有する前に、機密性のあるパス、プロンプト、token、セッション内容を削除してください。</li>
+              <li data-i18n="privacy.retention.logs.item2">アプリはログをアップロードしません。ログを共有する前に、アカウント情報、個人的なファイルパス、会話内容、その他の機密情報を削除してください。</li>
               <li data-i18n="privacy.retention.logs.item3" data-i18n-html>使用をやめる場合は、<code>~/Library/Application Support/VibelslandFree</code>、<code>~/Library/Logs/VibelslandFree</code>、<code>~/.vibelsland-free</code> を削除できます。</li>
             </ul>
           </article>
@@ -132,8 +132,8 @@
       <section class="section split-section" aria-labelledby="control-title">
         <div class="split-copy" data-reveal="">
           <p class="eyebrow" data-i18n="privacy.control.eyebrow">ユーザー制御</p>
-          <h2 id="control-title" data-i18n="privacy.control.title">Hooks は選択したときだけ変更します。</h2>
-          <p data-i18n="privacy.control.copy">アプリは hooks のインストール、修復、アンインストール時だけ設定を変更します。Hook payload は先にフィルタリングされ、セッション ID、イベント種別、ワークスペース、承認 ID、ツール名、パス、コマンドなど必要なメタデータだけを保持します。</p>
+          <h2 id="control-title" data-i18n="privacy.control.title">ローカル接続は選択したときだけ変更します。</h2>
+          <p data-i18n="privacy.control.copy">アプリはローカル接続のインストール、修復、アンインストール時だけ設定を変更します。アプリに届く状態は整理され、現在の活動を表示するために必要な情報だけを保持します。</p>
         </div>
         <div class="device-card" data-reveal="">
           <img src="../assets/readme/hero-island-light.jpg" alt="ソース制御を表示する Vibelsland Free 設定画面" width="1672" height="941" loading="lazy" decoding="async">
@@ -144,7 +144,7 @@
         <div class="section-heading align-left" data-reveal="">
           <p class="eyebrow" data-i18n="privacy.network.eyebrow">ネットワーク境界</p>
           <h2 id="network-title" data-i18n="privacy.network.title">主要機能にインターネット接続は不要です。</h2>
-          <p data-i18n="privacy.network.copy">Vibelsland Free のステータス表示、ソース制御、ローカル承認ブリッジは Mac 内で動作します。Claude Code、Codex CLI、Codex Desktop はそれぞれ独自にネットワーク接続を使う場合があります。</p>
+          <p data-i18n="privacy.network.copy">Vibelsland Free のステータス表示、ソース制御、ローカル承認は Mac 内で動作します。Claude Code、Codex CLI、Codex Desktop はそれぞれ独自にネットワーク接続を使う場合があります。</p>
           <p>
             Vibelsland Free は独立したプロジェクトで、Anthropic、OpenAI、Claude、Codex の公式アプリではありません。
           </p>
@@ -174,7 +174,7 @@
             <ul>
               <li>GitHub Pages、GitHub Releases、GitHub Issues は GitHub が提供します。</li>
               <li>ダウンロード、ソース閲覧、issue 作成時は GitHub の規約とプライバシーポリシーが適用されます。</li>
-              <li>公開 issue に token、prompt、セッション内容、未編集ログを貼らないでください。</li>
+              <li>公開 issue にアカウント情報、アクセス情報、会話内容、未編集ログを貼らないでください。</li>
             </ul>
           </article>
         </div>
@@ -198,7 +198,7 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="../lang.js?v=062340399f45" defer=""></script>
+    <script src="../lang.js?v=29b51dc50573" defer=""></script>
     <script src="../effects.js?v=984d01b9fa2d" defer=""></script>
 
 
