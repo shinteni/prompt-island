@@ -357,16 +357,10 @@ main {
   border-radius: inherit;
 }
 
-.start-shot-hero {
-  object-position: center center;
-}
-
+.start-shot-collapsed,
+.start-shot-expanded,
 .start-shot-settings {
-  object-position: center 56%;
-}
-
-.start-shot-island {
-  object-position: center 18%;
+  object-position: center center;
 }
 
 .start-caption {
