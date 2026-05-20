@@ -119,7 +119,7 @@
       <section class="section install-section" aria-labelledby="install-title">
         <div class="section-heading align-left" data-reveal>
           <p class="eyebrow" data-i18n="download.install.eyebrow">安装</p>
-          <h2 id="install-title" data-i18n="download.install.title">三步安装。</h2>
+          <h2 id="install-title" data-i18n="download.install.title">四步安装。</h2>
         </div>
         <ol class="large-steps">
           <li data-reveal>
@@ -135,7 +135,12 @@
           <li data-reveal>
             <span>03</span>
             <strong data-i18n="download.install.step3.title">解压并启动</strong>
-            <p data-i18n="download.install.step3.copy">把应用拖入 Applications，Control 点按打开，再完成本地连接并查看设置页健康检查。</p>
+            <p data-i18n="download.install.step3.copy">把应用拖入 Applications 后先打开一次；如果出现 Apple 无法验证的提示，请点“完成”，不要点“移到废纸篓”。</p>
+          </li>
+          <li data-reveal>
+            <span>04</span>
+            <strong data-i18n="download.install.step4.title">在系统设置里仍要打开</strong>
+            <p data-i18n="download.install.step4.copy">进入“系统设置 → 隐私与安全性”，点击“仍要打开”，确认后再次打开应用。</p>
           </li>
         </ol>
         <div class="hero-assist-links">
@@ -149,7 +154,7 @@
           <p class="eyebrow" data-i18n="download.security.eyebrow">签名与校验</p>
           <h2 id="security-title" data-i18n="download.security.title">校验下载。</h2>
           <p data-i18n="download.security.copy">
-            当前包使用 ad-hoc 签名，不是 Developer ID notarization。SHA-256 只确认文件与 GitHub Release 资产一致，不证明开发者身份；ad-hoc 包的 spctl 可能显示 rejected 或 not accepted。
+            当前包使用 ad-hoc 签名，不是 Developer ID notarization。SHA-256 只确认文件与 GitHub Release 资产一致，不证明开发者身份；首次打开需要在 macOS 隐私与安全性里手动允许。
           </p>
           <a class="text-link" href="support.html">查看安装与状态排障</a>
         </div>
@@ -158,6 +163,7 @@
           <code>64c7c0a4eae81042bbc3896e24a07ab5d5573aeaafa846eada2e982f887ecf81</code>
           <code>cd ~/Downloads</code>
           <code>shasum -a 256 -c Vibelsland-Free-0.1.0-macos.zip.sha256</code>
+          <code>xattr -dr com.apple.quarantine "/Applications/&gt;_ - island.app"</code>
           <div class="checksum-actions">
             <a class="text-link" href="https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip" data-i18n="download.security.zip">下载 zip</a>
             <a class="text-link" href="https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip.sha256" data-i18n="download.security.sha">下载 .sha256 文件</a>
@@ -184,7 +190,7 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="lang.js?v=34c0d6aa3b10" defer></script>
+    <script src="lang.js?v=6f4584849ae7" defer></script>
     <script src="effects.js?v=984d01b9fa2d" defer></script>
   </body>
 </html>

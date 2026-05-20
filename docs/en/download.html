@@ -113,7 +113,7 @@
       <section class="section install-section" aria-labelledby="install-title">
         <div class="section-heading align-left" data-reveal="">
           <p class="eyebrow" data-i18n="download.install.eyebrow">Install</p>
-          <h2 id="install-title" data-i18n="download.install.title">Install in three steps.</h2>
+          <h2 id="install-title" data-i18n="download.install.title">Install in four steps.</h2>
         </div>
         <ol class="large-steps">
           <li data-reveal="">
@@ -129,7 +129,12 @@
           <li data-reveal="">
             <span>03</span>
             <strong data-i18n="download.install.step3.title">Unzip and launch</strong>
-            <p data-i18n="download.install.step3.copy">Move the app to Applications, Control-click Open, then complete local connection setup and check Settings health.</p>
+            <p data-i18n="download.install.step3.copy">Move the app to Applications and open it once. If macOS says Apple cannot verify the app, click Done. Do not click Move to Trash.</p>
+          </li>
+          <li data-reveal="">
+            <span>04</span>
+            <strong data-i18n="download.install.step4.title">Open Anyway in System Settings</strong>
+            <p data-i18n="download.install.step4.copy">Go to System Settings → Privacy &amp; Security, click Open Anyway, confirm, then open the app again.</p>
           </li>
         </ol>
         <div class="hero-assist-links">
@@ -142,7 +147,7 @@
         <div class="split-copy" data-reveal="">
           <p class="eyebrow" data-i18n="download.security.eyebrow">Signing and checksum</p>
           <h2 id="security-title" data-i18n="download.security.title">Verify the download.</h2>
-          <p data-i18n="download.security.copy">The current package is ad-hoc signed, not Developer ID notarized. SHA-256 only confirms the file matches the GitHub Release asset; it does not prove developer identity. spctl may show rejected or not accepted for this ad-hoc package.</p>
+          <p data-i18n="download.security.copy">The current package is ad-hoc signed, not Developer ID notarized. SHA-256 only confirms the file matches the GitHub Release asset; it does not prove developer identity. First launch requires manual approval in macOS Privacy &amp; Security.</p>
           <a class="text-link" href="support.html">Open install and status support</a>
         </div>
         <div class="checksum-card" data-reveal="">
@@ -150,6 +155,7 @@
           <code>64c7c0a4eae81042bbc3896e24a07ab5d5573aeaafa846eada2e982f887ecf81</code>
           <code>cd ~/Downloads</code>
           <code>shasum -a 256 -c Vibelsland-Free-0.1.0-macos.zip.sha256</code>
+          <code>xattr -dr com.apple.quarantine "/Applications/&gt;_ - island.app"</code>
           <div class="checksum-actions">
             <a class="text-link" href="https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip" data-i18n="download.security.zip">Download zip</a>
             <a class="text-link" href="https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip.sha256" data-i18n="download.security.sha">Download .sha256</a>
@@ -176,7 +182,7 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="../lang.js?v=34c0d6aa3b10" defer=""></script>
+    <script src="../lang.js?v=6f4584849ae7" defer=""></script>
     <script src="../effects.js?v=984d01b9fa2d" defer=""></script>
 
 

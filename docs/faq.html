@@ -52,7 +52,7 @@
             "name": "首次打开为什么需要额外确认？",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "v0.1.0 采用 ad-hoc 签名，因此首次打开时 macOS 可能要求额外确认。可以按住 Control 点按应用并选择“打开（Open）”。"
+              "text": "v0.1.0 采用 ad-hoc 签名，因此首次打开时 macOS 可能要求额外确认。若出现 Apple 无法验证的提示，请点“完成”，再到系统设置的“隐私与安全性”里选择“仍要打开”。"
             }
           },
           {
@@ -60,7 +60,7 @@
             "name": "为什么不是 Developer ID notarized？",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "v0.1.0 是 ad-hoc 签名，不是 Developer ID notarization。Gatekeeper 可能要求 Control-click Open；spctl 显示 rejected 或 not accepted 对当前包是预期结果。SHA-256 只能确认下载文件与 GitHub Release 一致，不能证明开发者身份。"
+              "text": "v0.1.0 是 ad-hoc 签名，不是 Developer ID notarization。Gatekeeper 会要求在系统设置里手动允许；spctl 显示 rejected 或 not accepted 对当前包是预期结果。SHA-256 只能确认下载文件与 GitHub Release 一致，不能证明开发者身份。"
             }
           },
           {
@@ -193,11 +193,11 @@
           </article>
           <article data-reveal>
             <h3>首次打开为什么需要额外确认？</h3>
-            <p>v0.1.0 采用 ad-hoc 签名，因此首次打开时 macOS 可能要求额外确认。请按住 Control 点按应用并选择“打开（Open）”。</p>
+            <p>v0.1.0 采用 ad-hoc 签名，因此首次打开时 macOS 可能要求额外确认。若出现 Apple 无法验证的提示，请点“完成”，再到系统设置的“隐私与安全性”里选择“仍要打开”。</p>
           </article>
           <article data-reveal>
             <h3>为什么不是 Developer ID notarized？</h3>
-            <p>v0.1.0 是 ad-hoc 签名，不是 Developer ID notarization。Gatekeeper 可能要求 Control-click Open；<code>spctl</code> 显示 rejected 或 not accepted 对当前包是预期结果。SHA-256 只能确认下载文件与 GitHub Release 一致，不能证明开发者身份。</p>
+            <p>v0.1.0 是 ad-hoc 签名，不是 Developer ID notarization。Gatekeeper 会要求在系统设置里手动允许；<code>spctl</code> 显示 rejected 或 not accepted 对当前包是预期结果。SHA-256 只能确认下载文件与 GitHub Release 一致，不能证明开发者身份。</p>
           </article>
           <article data-reveal>
             <h3>Intel Mac 可以使用吗？</h3>
@@ -261,7 +261,7 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="lang.js?v=34c0d6aa3b10" defer></script>
+    <script src="lang.js?v=6f4584849ae7" defer></script>
     <script src="effects.js?v=984d01b9fa2d" defer></script>
   </body>
 </html>

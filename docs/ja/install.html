@@ -113,13 +113,18 @@
           </li>
           <li data-reveal>
             <span>02</span>
-            <strong>Control クリックで開く</strong>
-            <p>macOS が確認を求めた場合は、Control キーを押しながらアプリのアイコンをクリックし、「開く（Open）」を選びます。この操作で Gatekeeper に入手元を信頼する意思を伝えます。</p>
+            <strong>ブロック表示で「完了」を選ぶ</strong>
+            <p>macOS が「Apple は悪質なソフトウェアかどうかを検証できません」と表示した場合は、「完了」を選びます。「ゴミ箱に入れる」は選ばないでください。この画面には通常「開く」ボタンはありません。</p>
           </li>
           <li data-reveal>
             <span>03</span>
-            <strong>システム確認を承認</strong>
-            <p>システムの確認画面でもう一度「開く（Open）」を選びます。この確認はこの Mac に記録され、次回以降は Applications、Spotlight、メニューバーから通常どおり起動できます。</p>
+            <strong>プライバシーとセキュリティで許可</strong>
+            <p>「システム設定 → プライバシーとセキュリティ」を開き、セキュリティ欄に表示される <code>&gt;_ - island</code> のブロック通知で「このまま開く」を選び、パスワードまたは Touch ID で確認します。</p>
+          </li>
+          <li data-reveal>
+            <span>04</span>
+            <strong>もう一度アプリを開く</strong>
+            <p>Applications に戻ってアプリをもう一度開き、確認画面で「開く」を選びます。この確認はこの Mac に記録され、次回以降は通常どおり起動できます。</p>
           </li>
         </ol>
       </section>
@@ -134,10 +139,15 @@
           <p>
             SHA-256 確認は、パッケージが GitHub Release の配布物と一致することだけを確認します。開発者本人性を証明するものではありません。現在の ad-hoc パッケージでは <code>spctl</code> が rejected または not accepted を示すことがあり、それは checksum 失敗を意味しません。
           </p>
+          <p>
+            「プライバシーとセキュリティ」に「このまま開く」が表示されず、このページの GitHub Release から取得した zip だと確認できている場合は、Terminal でブラウザのダウンロード隔離を解除できます。
+          </p>
           <a class="text-link" href="support.html">インストールと状態表示のサポートを見る</a>
         </div>
         <div class="checksum-card" data-reveal>
           <span>ローカル確認</span>
+          <code>xattr -dr com.apple.quarantine "/Applications/&gt;_ - island.app"</code>
+          <code>open "/Applications/&gt;_ - island.app"</code>
           <code>codesign --display --verbose=4 "/Applications/&gt;_ - island.app"</code>
           <code>spctl --assess --type execute "/Applications/&gt;_ - island.app"</code>
         </div>
@@ -212,7 +222,7 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="../lang.js?v=34c0d6aa3b10" defer></script>
+    <script src="../lang.js?v=6f4584849ae7" defer></script>
     <script src="../effects.js?v=984d01b9fa2d" defer></script>
   </body>
 </html>
