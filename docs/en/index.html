@@ -28,7 +28,7 @@
     <link rel="icon" href="../assets/readme/app-icon.png">
     <link rel="apple-touch-icon" href="../assets/readme/app-icon.png">
     <link rel="manifest" href="../site.webmanifest">
-    <link rel="stylesheet" href="../styles.css?v=ce19a93be5d8">
+    <link rel="stylesheet" href="../styles.css?v=1204c2d83443">
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -75,15 +75,101 @@
 
     <main id="main">
       <section class="start-hero" aria-labelledby="hero-title">
-        <img class="start-logo" src="../assets/readme/app-icon-192.png" alt="" width="96" height="96" fetchpriority="high">
-        <h1 id="hero-title" data-i18n="home.hero.title">Start using Vibelsland Free</h1>
-        <p data-i18n="home.hero.copy">If the download does not start automatically, click below.</p>
-        <a class="button primary start-download" href="https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M12 3v11m0 0 4-4m-4 4-4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"></path>
-          </svg>
-          <span data-i18n="home.hero.primary">Download for macOS</span>
-        </a>
+        <div class="landing-copy">
+          <img class="start-logo" src="../assets/readme/app-icon-192.png" alt="" width="96" height="96" fetchpriority="high">
+          <p class="landing-eyebrow">macOS 14+ · v0.1.0 · Open source, MIT</p>
+          <h1 id="hero-title" class="landing-title">
+            <span>Always there.</span>
+            <span class="landing-title-gradient">Never in the way.</span>
+          </h1>
+          <span class="visually-hidden" data-i18n="home.hero.title">Always there. Never in the way.</span>
+          <p class="landing-lede" data-i18n="home.hero.copy">A local-first macOS island for Claude Code, Codex CLI, and Codex Desktop session status, tool activity, and approvals. Quiet when idle. Breathing when running. Glowing when it needs you.</p>
+          <div class="landing-actions">
+            <a class="button primary start-download" href="https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 3v11m0 0 4-4m-4 4-4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"></path>
+              </svg>
+              <span data-i18n="home.hero.primary">Download free</span>
+            </a>
+            <a class="landing-link" href="#overview">Learn more</a>
+          </div>
+          <p class="landing-free">Free · Local-first · No telemetry</p>
+        </div>
+        <div class="landing-mac" aria-label="Vibelsland Free island status preview">
+          <div class="landing-mac-bar">
+            <span class="landing-apple" aria-hidden="true"></span>
+            <span class="landing-app-name">&gt;_ - island</span>
+            <span class="landing-bar-spacer"></span>
+            <span class="landing-status-dot" aria-hidden="true"></span>
+            <span>10:08</span>
+          </div>
+          <div class="landing-stage">
+            <div class="landing-island landing-island-running">
+              <span class="landing-terminal-icon" aria-hidden="true">&gt;_</span>
+              <span class="landing-island-text">
+                <strong>Codex Desktop</strong>
+                <small>running tool · local session</small>
+              </span>
+              <span class="landing-bars" aria-hidden="true"><i></i><i></i><i></i></span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="landing-tools" id="overview" aria-labelledby="tools-title">
+        <p class="landing-section-eyebrow">Supports</p>
+        <h2 id="tools-title">Three tools. One island.</h2>
+        <p>Claude Code events forwarded via Hooks, Codex CLI local status, and a real-time link to Codex Desktop all surface in one place.</p>
+        <div class="landing-agent-row" aria-label="Supported AI coding tools">
+          <div class="landing-agent">
+            <img src="../assets/readme/icon-claude.png" alt="" width="48" height="48" loading="lazy" decoding="async">
+            <span><strong>Claude Code</strong><small>Via Hooks</small></span>
+          </div>
+          <div class="landing-agent">
+            <span class="landing-terminal-icon" aria-hidden="true">&gt;_</span>
+            <span><strong>Codex CLI</strong><small>Via Hooks</small></span>
+          </div>
+          <div class="landing-agent">
+            <img src="../assets/readme/icon-codex-desktop.png" alt="" width="48" height="48" loading="lazy" decoding="async">
+            <span><strong>Codex Desktop</strong><small>Real-time</small></span>
+          </div>
+        </div>
+      </section>
+
+      <section class="landing-states" aria-labelledby="states-title">
+        <div class="landing-section-head">
+          <p class="landing-section-eyebrow">Forms</p>
+          <h2 id="states-title">One island. Three forms.</h2>
+          <p>The island morphs with your session. Color is the protocol, and the position stays out of your way.</p>
+        </div>
+        <div class="landing-state-grid">
+          <article class="landing-state-card">
+            <span>01</span>
+            <h3>Running</h3>
+            <p>An RGB ring marks the active tool, so you know a task is still moving without switching back to the terminal.</p>
+          </article>
+          <article class="landing-state-card">
+            <span>02</span>
+            <h3>Approval</h3>
+            <p>When permission is needed, the island goes amber and keeps allow, deny, continue, and cancel in one place.</p>
+          </article>
+          <article class="landing-state-card">
+            <span>03</span>
+            <h3>Many</h3>
+            <p>When multiple agents run at once, stacked avatars show who is thinking and who is waiting.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="landing-privacy" aria-labelledby="privacy-title">
+        <p class="landing-section-eyebrow">Local-first</p>
+        <h2 id="privacy-title">No uploads. No sync. No account.</h2>
+        <p>It reads local state files on your Mac to render the island. No cloud, no telemetry, full source available.</p>
+        <div class="landing-stat-row">
+          <div><strong>0</strong><span>bytes of telemetry leave your Mac</span></div>
+          <div><strong>0</strong><span>accounts or sign-in required</span></div>
+          <div><strong>100%</strong><span>local, open-source, auditable</span></div>
+        </div>
       </section>
 
       <section class="start-steps" aria-label="Three steps to start" data-i18n-aria-label="aria.homeSteps">
@@ -115,6 +201,21 @@
           </figcaption>
         </figure>
       </section>
+
+      <section class="landing-install" aria-labelledby="install-title">
+        <p class="landing-section-eyebrow">Install</p>
+        <h2 id="install-title">Three minutes. You are running.</h2>
+        <p>v0.1.0 ships with ad-hoc signing, so first launch needs manual trust in System Settings.</p>
+        <div class="landing-install-grid">
+          <ol>
+            <li><strong>Download and unzip</strong><span>Grab the zip from GitHub Releases and drag <code>&gt;_ - island.app</code> into Applications.</span></li>
+            <li><strong>Verify SHA-256</strong><span>Use <code>shasum -a 256 -c</code> to check the official checksum file against the download.</span></li>
+            <li><strong>Launch and install Hooks</strong><span>After the Gatekeeper prompt, open the app and install Hooks from the menu bar or settings.</span></li>
+          </ol>
+          <pre><code>$ shasum -a 256 -c Vibelsland-Free-0.1.0-macos.zip.sha256
+Vibelsland-Free-0.1.0-macos.zip: OK</code></pre>
+        </div>
+      </section>
     </main>
 
     <footer class="site-footer">
@@ -134,7 +235,7 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="../lang.js?v=29b51dc50573" defer=""></script>
+    <script src="../lang.js?v=34c0d6aa3b10" defer=""></script>
     <script src="../effects.js?v=984d01b9fa2d" defer=""></script>
 
 
