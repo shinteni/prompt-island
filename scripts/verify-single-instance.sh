@@ -5,14 +5,16 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 APP_DIR="$ROOT/dist/>_ - island.app"
 EXECUTABLE="$APP_DIR/Contents/MacOS/VibelslandFree"
 WINDOW_CHECKER="$ROOT/scripts/window-check.swift"
-WINDOW_ID="$ROOT/scripts/window-id.swift"
-MAX_IDLE_WIDTH="${VIBELSLAND_IDLE_MAX_WIDTH:-80}"
-MAX_IDLE_HEIGHT="${VIBELSLAND_IDLE_MAX_HEIGHT:-80}"
+MIN_PANEL_WIDTH="${VIBELSLAND_PANEL_MIN_WIDTH:-120}"
+MAX_PANEL_WIDTH="${VIBELSLAND_PANEL_MAX_WIDTH:-900}"
+MIN_PANEL_HEIGHT="${VIBELSLAND_PANEL_MIN_HEIGHT:-80}"
+MAX_PANEL_HEIGHT="${VIBELSLAND_PANEL_MAX_HEIGHT:-700}"
+MAX_HIDDEN_WIDTH="${VIBELSLAND_IDLE_VISIBLE_MAX_WIDTH:-900}"
+MAX_HIDDEN_HEIGHT="${VIBELSLAND_IDLE_VISIBLE_MAX_HEIGHT:-700}"
 
 [[ -d "$APP_DIR" ]]
 [[ -x "$EXECUTABLE" ]]
 [[ -f "$WINDOW_CHECKER" ]]
-[[ -f "$WINDOW_ID" ]]
 . "$ROOT/scripts/visible-test-window-guard.sh"
 
 TEMP_HOME="$(/usr/bin/mktemp -d "/tmp/vibelsland-single-instance-home.XXXXXX")"
@@ -97,25 +99,46 @@ wait_for_first_pid() {
     exit 1
 }
 
-wait_for_ready() {
+wait_for_runtime_ready() {
     local pid="$1"
     local label="$2"
     for _ in {1..60}; do
-        if is_active_process "$pid" && [[ -x "$BRIDGE" && -S "$SOCKET" ]] &&
-            /usr/bin/swift "$WINDOW_CHECKER" "$pid" 0 "$MAX_IDLE_WIDTH" 0 "$MAX_IDLE_HEIGHT" "$label" >/dev/null 2>&1; then
+        if is_active_process "$pid" && [[ -x "$BRIDGE" && -S "$SOCKET" ]]; then
             return
         fi
         sleep 0.2
     done
-    echo "Single-instance verification failed: $label did not become ready" >&2
+    echo "Single-instance verification failed: $label did not create bridge runtime" >&2
+    exit 1
+}
+
+assert_idle_hidden() {
+    local pid="$1"
+    if /usr/bin/swift "$WINDOW_CHECKER" "$pid" 0 "$MAX_HIDDEN_WIDTH" 0 "$MAX_HIDDEN_HEIGHT" "Initial idle hidden" >/dev/null 2>&1; then
+        echo "Single-instance verification failed: initial idle launch should stay hidden" >&2
+        exit 1
+    fi
+}
+
+wait_for_panel_visible() {
+    local pid="$1"
+    for _ in {1..60}; do
+        if is_active_process "$pid" &&
+            /usr/bin/swift "$WINDOW_CHECKER" "$pid" "$MIN_PANEL_WIDTH" "$MAX_PANEL_WIDTH" "$MIN_PANEL_HEIGHT" "$MAX_PANEL_HEIGHT" "Single-instance survivor panel" >/dev/null 2>&1; then
+            return
+        fi
+        sleep 0.2
+    done
+    echo "Single-instance verification failed: second launch did not open the survivor panel" >&2
+    /usr/bin/swift "$WINDOW_CHECKER" "$pid" 0 "$MAX_HIDDEN_WIDTH" 0 "$MAX_HIDDEN_HEIGHT" "Single-instance survivor windows" >&2 || true
     exit 1
 }
 
 BASELINE_PIDS="$(visible_processes | /usr/bin/xargs || true)"
 launch_app_bundle
 wait_for_first_pid
-wait_for_ready "$APP_PID" "Initial single-instance app"
-FIRST_WINDOW_ID="$(/usr/bin/swift "$WINDOW_ID" "$APP_PID" 0 "$MAX_IDLE_WIDTH" 0 "$MAX_IDLE_HEIGHT" "Initial single-instance app")"
+wait_for_runtime_ready "$APP_PID" "Initial single-instance app"
+assert_idle_hidden "$APP_PID"
 
 launch_app_bundle
 RETURNED_TO_ONE=0
@@ -145,11 +168,7 @@ if [[ "$PROCESS_COUNT" != "1" ]]; then
     exit 1
 fi
 
-wait_for_ready "$APP_PID" "Single-instance survivor"
-SECOND_WINDOW_ID="$(/usr/bin/swift "$WINDOW_ID" "$APP_PID" 0 "$MAX_IDLE_WIDTH" 0 "$MAX_IDLE_HEIGHT" "Single-instance survivor")"
-if [[ "$SECOND_WINDOW_ID" != "$FIRST_WINDOW_ID" ]]; then
-    echo "Single-instance verification failed: second launch replaced the survivor window instead of reusing it" >&2
-    exit 1
-fi
+wait_for_runtime_ready "$APP_PID" "Single-instance survivor"
+wait_for_panel_visible "$APP_PID"
 
 echo "Single-instance verification passed: survivor pid=$APP_PID via app bundle launch"

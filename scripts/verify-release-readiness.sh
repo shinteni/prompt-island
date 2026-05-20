@@ -69,6 +69,19 @@ case "$MODE" in
         ;;
 esac
 
+require_path() {
+    local path="$1"
+    local label="$2"
+    if [[ -e "$path" ]]; then
+        return
+    fi
+    echo "Release readiness missing $label: $path" >&2
+    if [[ "$RUN_AUTOMATION" == "0" ]]; then
+        echo "Run without --no-run to rebuild local verification artifacts, or restore the matching public Release assets into dist/ before checking $MODE mode." >&2
+    fi
+    exit 1
+}
+
 if [[ "$RUN_AUTOMATION" == "1" ]]; then
     . "$ROOT/scripts/visible-test-window-guard.sh"
     if [[ "$MODE" == "local" ]]; then
@@ -100,13 +113,16 @@ if [[ "$RUN_AUTOMATION" == "1" ]]; then
     zsh "$ROOT/scripts/verify-bridge-events.sh"
 fi
 
-[[ -d "$APP_DIR" ]]
-[[ -f "$ARCHIVE" ]]
-[[ -f "$CHECKSUM" ]]
-(
+require_path "$APP_DIR" "app bundle"
+require_path "$ARCHIVE" "release archive"
+require_path "$CHECKSUM" "release checksum"
+if ! (
     cd "$ROOT/dist"
     /usr/bin/shasum -a 256 -c "$(basename "$CHECKSUM")" >/dev/null
-)
+); then
+    echo "Release readiness checksum validation failed: $CHECKSUM" >&2
+    exit 1
+fi
 
 VIBELSLAND_VERIFY_DIST=1 zsh "$ROOT/scripts/verify-docs-site.sh"
 VIBELSLAND_VERIFY_DIST=1 zsh "$ROOT/scripts/verify-docs-live.sh"
