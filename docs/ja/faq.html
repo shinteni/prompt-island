@@ -52,7 +52,7 @@
             "name": "初回起動時に追加確認が必要なのはなぜですか？",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "v0.1.0 は ad-hoc 署名を採用しているため、初回起動時に macOS が追加確認を求める場合があります。Control キーを押しながらアプリをクリックし、「開く（Open）」を選んでください。"
+              "text": "v0.1.0 は ad-hoc 署名を採用しているため、初回起動時に macOS が追加確認を求める場合があります。Apple が検証できないという表示が出たら「完了」を選び、システム設定の「プライバシーとセキュリティ」で「このまま開く」を選んでください。"
             }
           },
           {
@@ -60,7 +60,7 @@
             "name": "Developer ID notarization がないのはなぜですか？",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "v0.1.0 は ad-hoc 署名で、Developer ID notarization ではありません。Gatekeeper が Control-click Open を求める場合があります。現在のパッケージでは spctl の rejected または not accepted は想定される結果です。SHA-256 は GitHub Release の配布物と一致することを確認するもので、開発者本人性を証明しません。"
+              "text": "v0.1.0 は ad-hoc 署名で、Developer ID notarization ではありません。Gatekeeper はシステム設定での手動許可を求めます。現在のパッケージでは spctl の rejected または not accepted は想定される結果です。SHA-256 は GitHub Release の配布物と一致することを確認するもので、開発者本人性を証明しません。"
             }
           },
           {
@@ -193,11 +193,11 @@
           </article>
           <article data-reveal="">
             <h3>初回起動時に追加確認が必要なのはなぜですか？</h3>
-            <p>v0.1.0 は ad-hoc 署名を採用しているため、初回起動時に macOS が追加確認を求める場合があります。Control キーを押しながらアプリをクリックし、「開く（Open）」を選んでください。</p>
+            <p>v0.1.0 は ad-hoc 署名を採用しているため、初回起動時に macOS が追加確認を求める場合があります。Apple が検証できないという表示が出たら「完了」を選び、システム設定の「プライバシーとセキュリティ」で「このまま開く」を選んでください。</p>
           </article>
           <article data-reveal="">
             <h3>Developer ID notarization がないのはなぜですか？</h3>
-            <p>v0.1.0 は ad-hoc 署名で、Developer ID notarization ではありません。Gatekeeper が Control-click Open を求める場合があります。現在のパッケージでは <code>spctl</code> の rejected または not accepted は想定される結果です。SHA-256 は GitHub Release の配布物と一致することを確認するもので、開発者本人性を証明しません。</p>
+            <p>v0.1.0 は ad-hoc 署名で、Developer ID notarization ではありません。Gatekeeper はシステム設定での手動許可を求めます。現在のパッケージでは <code>spctl</code> の rejected または not accepted は想定される結果です。SHA-256 は GitHub Release の配布物と一致することを確認するもので、開発者本人性を証明しません。</p>
           </article>
           <article data-reveal="">
             <h3>Intel Mac で使えますか？</h3>
@@ -261,7 +261,7 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="../lang.js?v=34c0d6aa3b10" defer></script>
+    <script src="../lang.js?v=6f4584849ae7" defer></script>
     <script src="../effects.js?v=984d01b9fa2d" defer></script>
   </body>
 </html>

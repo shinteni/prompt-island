@@ -52,7 +52,7 @@
             "name": "Why does first launch require an extra step?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "v0.1.0 uses ad-hoc signing, so macOS may require an extra confirmation on first launch. Control-click the app and choose Open."
+              "text": "v0.1.0 uses ad-hoc signing, so macOS may require an extra confirmation on first launch. If macOS says Apple cannot verify the app, click Done, then allow it from System Settings > Privacy & Security with Open Anyway."
             }
           },
           {
@@ -60,7 +60,7 @@
             "name": "Why is it not Developer ID notarized?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "v0.1.0 is ad-hoc signed, not Developer ID notarized. Gatekeeper may require Control-click Open; spctl rejected or not accepted is expected for the current package. SHA-256 verifies that the downloaded file matches the GitHub Release asset; it does not prove developer identity."
+              "text": "v0.1.0 is ad-hoc signed, not Developer ID notarized. Gatekeeper requires manual approval in System Settings; spctl rejected or not accepted is expected for the current package. SHA-256 verifies that the downloaded file matches the GitHub Release asset; it does not prove developer identity."
             }
           },
           {
@@ -193,11 +193,11 @@
           </article>
           <article data-reveal="">
             <h3>Why does first launch require an extra step?</h3>
-            <p>v0.1.0 uses ad-hoc signing, so macOS may require an extra confirmation on first launch. Control-click the app and choose Open.</p>
+            <p>v0.1.0 uses ad-hoc signing, so macOS may require an extra confirmation on first launch. If macOS says Apple cannot verify the app, click Done, then allow it from System Settings &gt; Privacy &amp; Security with Open Anyway.</p>
           </article>
           <article data-reveal="">
             <h3>Why is it not Developer ID notarized?</h3>
-            <p>v0.1.0 is ad-hoc signed, not Developer ID notarized. Gatekeeper may require Control-click Open; <code>spctl</code> rejected or not accepted is expected for the current package. SHA-256 verifies that the downloaded file matches the GitHub Release asset; it does not prove developer identity.</p>
+            <p>v0.1.0 is ad-hoc signed, not Developer ID notarized. Gatekeeper requires manual approval in System Settings; <code>spctl</code> rejected or not accepted is expected for the current package. SHA-256 verifies that the downloaded file matches the GitHub Release asset; it does not prove developer identity.</p>
           </article>
           <article data-reveal="">
             <h3>Does it work on Intel Macs?</h3>
@@ -261,7 +261,7 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="../lang.js?v=34c0d6aa3b10" defer></script>
+    <script src="../lang.js?v=6f4584849ae7" defer></script>
     <script src="../effects.js?v=984d01b9fa2d" defer></script>
   </body>
 </html>

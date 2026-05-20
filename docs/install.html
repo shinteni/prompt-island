@@ -113,13 +113,18 @@
           </li>
           <li data-reveal>
             <span>02</span>
-            <strong>Control 点按打开</strong>
-            <p>如果 macOS 要求确认，请按住 Control 点按应用图标，选择“打开（Open）”。这个动作明确告诉 Gatekeeper 你信任当前下载来源。</p>
+            <strong>看到拦截提示后点“完成”</strong>
+            <p>如果出现“Apple 无法验证是否包含恶意软件”的提示，请点“完成”，不要点“移到废纸篓”。这个弹窗里通常不会直接出现“打开”按钮。</p>
           </li>
           <li data-reveal>
             <span>03</span>
-            <strong>确认系统提示</strong>
-            <p>在系统提示中再次选择“打开（Open）”。确认会记录在这台 Mac 上，之后可以按常规方式从 Applications、Spotlight 或菜单栏启动。</p>
+            <strong>在隐私与安全性里仍要打开</strong>
+            <p>打开“系统设置 → 隐私与安全性”，在安全性区域找到被阻止的 <code>&gt;_ - island</code>，点击“仍要打开”，再用密码或 Touch ID 确认。</p>
+          </li>
+          <li data-reveal>
+            <span>04</span>
+            <strong>再次打开应用</strong>
+            <p>回到 Applications 再次打开应用，弹窗出现时选择“打开”。确认会记录在这台 Mac 上，之后可以按常规方式启动。</p>
           </li>
         </ol>
       </section>
@@ -134,10 +139,15 @@
           <p>
             SHA-256 校验只能确认下载包与 GitHub Release 资产一致，不证明开发者身份。对当前 ad-hoc 包执行 <code>spctl</code> 时，看到 rejected 或 not accepted 是正常结果，不代表 checksum 失败。
           </p>
+          <p>
+            如果“隐私与安全性”里没有出现“仍要打开”，并且你确认 zip 来自本页面的 GitHub Release，可以用终端解除浏览器下载隔离：
+          </p>
           <a class="text-link" href="support.html">查看安装与状态排障</a>
         </div>
         <div class="checksum-card" data-reveal>
           <span>本机检查</span>
+          <code>xattr -dr com.apple.quarantine "/Applications/&gt;_ - island.app"</code>
+          <code>open "/Applications/&gt;_ - island.app"</code>
           <code>codesign --display --verbose=4 "/Applications/&gt;_ - island.app"</code>
           <code>spctl --assess --type execute "/Applications/&gt;_ - island.app"</code>
         </div>
@@ -212,7 +222,7 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="lang.js?v=34c0d6aa3b10" defer></script>
+    <script src="lang.js?v=6f4584849ae7" defer></script>
     <script src="effects.js?v=984d01b9fa2d" defer></script>
   </body>
 </html>
