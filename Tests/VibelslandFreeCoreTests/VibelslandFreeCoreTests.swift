@@ -396,7 +396,40 @@ struct VibelslandFreeCoreTests {
         let disabledFeatureFlag = CodexConfigMerger.mergedFeatureFlagConfig(existing: "[features]\ncodex_hooks = false\n")
         XCTAssertTrue(disabledFeatureFlag.changed && disabledFeatureFlag.text.contains("codex_hooks = true"), "Codex feature flag flips false")
         XCTAssertTrue(DisplayTextSanitizer.sanitize("复刻 " + "Vibe " + "Island UI") == "复刻 浮岛 UI", "Display title sanitizer")
-        
+
+        let resolverHome = FileManager.default.temporaryDirectory
+            .appendingPathComponent("vibelsland-codex-resolver-\(UUID().uuidString)", isDirectory: true)
+        let standaloneBinURL = resolverHome
+            .appendingPathComponent(".codex/packages/standalone/current/bin", isDirectory: true)
+        let localBinURL = resolverHome
+            .appendingPathComponent(".local/bin", isDirectory: true)
+        try FileManager.default.createDirectory(at: standaloneBinURL, withIntermediateDirectories: true)
+        try FileManager.default.createDirectory(at: localBinURL, withIntermediateDirectories: true)
+        let standaloneCodexURL = standaloneBinURL.appendingPathComponent("codex")
+        let localCodexURL = localBinURL.appendingPathComponent("codex")
+        try "#!/bin/sh\n".write(to: standaloneCodexURL, atomically: true, encoding: .utf8)
+        try FileManager.default.setAttributes([.posixPermissions: 0o755], ofItemAtPath: standaloneCodexURL.path)
+        try FileManager.default.createSymbolicLink(at: localCodexURL, withDestinationURL: standaloneCodexURL)
+        defer { try? FileManager.default.removeItem(at: resolverHome) }
+
+        XCTAssertEqual(
+            CodexExecutableResolver.executablePath(environment: ["HOME": resolverHome.path]),
+            localCodexURL.path,
+            "Codex executable resolver prefers the user-installed CLI before bundled app resources"
+        )
+        let codexEnvironment = CodexExecutableResolver.processEnvironment(
+            forExecutablePath: localCodexURL.path,
+            baseEnvironment: ["HOME": resolverHome.path, "PATH": "/custom/bin"]
+        )
+        let pathEntries = codexEnvironment["PATH"]?.split(separator: ":").map(String.init) ?? []
+        XCTAssertEqual(pathEntries.first, localBinURL.path, "Codex child PATH starts with the selected executable directory")
+        XCTAssertTrue(pathEntries.contains(standaloneBinURL.path), "Codex child PATH includes symlink target directory")
+        XCTAssertTrue(pathEntries.contains("/Applications/Codex.app/Contents/Resources"), "Codex child PATH includes bundled Codex resources")
+        XCTAssertTrue(
+            (pathEntries.firstIndex(of: standaloneBinURL.path) ?? .max) < (pathEntries.firstIndex(of: "/custom/bin") ?? .min),
+            "Codex child PATH puts known runtime locations before inherited PATH entries"
+        )
+
         let desktopCommandRequest: [String: Any] = [
             "id": "request-1",
             "method": "item/commandExecution/requestApproval",

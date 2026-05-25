@@ -110,6 +110,15 @@ package final class CodexAppServerLiveClient: @unchecked Sendable {
         }
     }
 
+    package func retryNow() {
+        queue.async { [weak self] in
+            guard let self else { return }
+            self.shouldRun = true
+            guard self.process == nil else { return }
+            self.startLocked()
+        }
+    }
+
     package func respond(
         to approval: CodexDesktopApproval,
         decision: ApprovalDecision,
@@ -243,6 +252,7 @@ package final class CodexAppServerLiveClient: @unchecked Sendable {
 
         process.executableURL = URL(fileURLWithPath: codexPath)
         process.arguments = ["app-server", "proxy", "--sock", socketURL.path]
+        process.environment = CodexExecutableResolver.processEnvironment(forExecutablePath: codexPath)
         process.standardInput = stdin
         process.standardOutput = stdout
         process.standardError = stderr
@@ -260,6 +270,9 @@ package final class CodexAppServerLiveClient: @unchecked Sendable {
             guard !data.isEmpty else { return }
             let detail = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
             if !detail.isEmpty {
+                self?.queue.async { [weak self] in
+                    self?.lastFailureMessage = detail
+                }
                 self?.logger.error("codex.desktop.live.stderr", detail: detail)
             }
         }
@@ -323,7 +336,9 @@ package final class CodexAppServerLiveClient: @unchecked Sendable {
         stdoutBuffer.removeAll()
         failPendingThreadLoadedChecks()
         if shouldRun {
-            lastFailureMessage = "Codex Desktop 实时审批连接已断开"
+            if lastFailureMessage?.isEmpty != false {
+                lastFailureMessage = "Codex Desktop 实时审批连接已断开"
+            }
         }
         publishStatus(false, nil)
         scheduleReconnect()
@@ -465,17 +480,7 @@ package final class CodexAppServerLiveClient: @unchecked Sendable {
     }
 
     private func findCodexExecutable() -> String? {
-        if let override = ProcessInfo.processInfo.environment["VIBELSLAND_CODEX_EXECUTABLE"],
-           FileManager.default.isExecutableFile(atPath: override) {
-            return override
-        }
-
-        let candidates = [
-            "/opt/homebrew/bin/codex",
-            "/usr/local/bin/codex",
-            "/Applications/Codex.app/Contents/Resources/codex"
-        ]
-        return candidates.first { FileManager.default.isExecutableFile(atPath: $0) }
+        CodexExecutableResolver.executablePath()
     }
 }
 
