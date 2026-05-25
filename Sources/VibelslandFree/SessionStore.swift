@@ -173,6 +173,11 @@ final class SessionStore: ObservableObject {
         }
     }
 
+    func repairConnections() {
+        installSelectedHooks()
+        refreshDiagnostics()
+    }
+
     func uninstallHooks() {
         do {
             let report = try hookInstaller.uninstallHooks()
@@ -188,6 +193,9 @@ final class SessionStore: ObservableObject {
 
     func refreshDiagnostics() {
         refreshHealthChecks()
+        if configurationStore.config.enableCodexDesktop {
+            codexAppServerLiveClient.retryNow()
+        }
         Task {
             await refreshCodexConnectivity()
             await refreshCodexDesktop(force: true)
@@ -1233,7 +1241,7 @@ final class SessionStore: ObservableObject {
                 name: "Codex Desktop",
                 status: configurationStore.config.enableCodexDesktop ? (codexDesktopApprovalConnected ? .normal : .needsAction) : .disabled,
                 detail: configurationStore.config.enableCodexDesktop ? codexDesktopDetail : "来源已关闭，不读取 Codex Desktop 状态",
-                suggestedAction: configurationStore.config.enableCodexDesktop ? "重新检测" : "在接收来源中启用"
+                suggestedAction: configurationStore.config.enableCodexDesktop ? "重新连接" : "在接收来源中启用"
             )
         ]
     }
