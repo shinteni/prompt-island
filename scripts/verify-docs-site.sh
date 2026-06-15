@@ -173,7 +173,7 @@ blocked_copy = [
     "安装被 macOS 拦截",
     "macOS blocks installation",
     "起動をブロック",
-    "/Users/rinka",
+    "/Users/example",
     "private-repo",
     "example.test/callback?token=abc123",
     "--api-key sk-",
