@@ -529,9 +529,9 @@
       htmlLang: "ja",
       meta: {
         index: {
-          title: "Vibelsland Free | AI コーディングアイランド",
-          description: "Vibelsland Free は Claude Code、Codex CLI、Codex Desktop の Mac 内の状態、ツール実行、承認リクエストを macOS 上部に表示します。",
-          ogTitle: "Vibelsland Free | AI コーディングアイランド",
+          title: "Vibelsland Free | AI コーディング状態表示",
+          description: "Vibelsland Free は Claude Code、Codex CLI、Codex Desktop の Mac 上のローカル状態、ツール実行、承認リクエストを macOS 上部に表示します。",
+          ogTitle: "Vibelsland Free | AI コーディング状態表示",
           ogDescription: "Claude Code、Codex CLI、Codex Desktop のローカル状態を macOS 上部に表示します。"
         },
         advantages: {
@@ -544,7 +544,7 @@
           title: "macOS 版ダウンロード | Vibelsland Free",
           description: "Vibelsland Free v0.1.0 をダウンロード。macOS 14+ 要件、初回起動、SHA-256、ソース、プライバシー境界を確認できます。",
           ogTitle: "Vibelsland Free をダウンロード",
-          ogDescription: "ソース、チェックサム、プライバシー境界を公開した macOS 向けローカルファースト AI コーディングの状態表示。"
+          ogDescription: "ソース、チェックサム、プライバシー境界を公開した macOS 向けのローカル AI コーディング状態ビューア。"
         },
         privacy: {
           title: "プライバシーとローカルデータ | Vibelsland Free",
@@ -580,7 +580,7 @@
           title: "ページが見つかりません | Vibelsland Free",
           description: "このページは存在しないか移動しました。Vibelsland Free のホーム、強み、ダウンロード、プライバシーへ戻れます。",
           ogTitle: "ページが見つかりません | Vibelsland Free",
-          ogDescription: "Vibelsland Free のサイトへ戻り、この macOS AI コーディングアイランドを確認できます。"
+          ogDescription: "Vibelsland Free のサイトへ戻り、この macOS 向け AI コーディング状態ビューアを確認できます。"
         }
       },
       strings: {
@@ -699,7 +699,7 @@
 
         "privacy.hero.eyebrow": "ローカルファースト",
         "privacy.hero.title": "標準で Mac 内に。",
-        "privacy.hero.copy": "Vibelsland Free は Claude Code、Codex CLI、Codex Desktop の Mac 内の状態だけを読み取り、アイランド表示と承認処理に使います。アカウントを作らず、テレメトリを送らず、セッション内容をリモートサーバーへ同期しません。",
+        "privacy.hero.copy": "Vibelsland Free は Claude Code、Codex CLI、Codex Desktop の Mac 上のローカル状態だけを読み取り、アイランド表示と承認処理に使います。アカウントを作らず、テレメトリを送らず、セッション内容をリモートサーバーへ同期しません。",
         "privacy.hero.primary": "インストールと信頼の説明を見る",
         "privacy.hero.secondary": "ソース内のプライバシーファイルを見る",
         "privacy.summary.account.label": "アカウント",
@@ -711,8 +711,8 @@
         "privacy.data.eyebrow": "データ境界",
         "privacy.data.title": "読み取るもの、書き込むもの。",
         "privacy.data.read.title": "読み取るもの",
-        "privacy.data.read.item1": "Claude Code、Codex CLI、Codex Desktop の Mac 内の状態。",
-        "privacy.data.read.item2": "活動状態、ツール実行、承認を表示するための Mac 内の状態サマリー。",
+        "privacy.data.read.item1": "Claude Code、Codex CLI、Codex Desktop の Mac 上のローカル状態。",
+        "privacy.data.read.item2": "活動状態、ツール実行、承認を表示するためのローカル状態サマリー。",
         "privacy.data.read.item3": "Claude と Codex のローカル接続設定と実行状態。",
         "privacy.data.write.title": "書き込むもの",
         "privacy.data.write.item1": "アプリ設定: ~/Library/Application Support/VibelslandFree/config.json。",
