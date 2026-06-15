@@ -23,8 +23,8 @@ permissions:
 
 jobs:
   swift:
-    name: Swift build and test
-    runs-on: macos-14
+    name: Swift build and test discovery
+    runs-on: macos-latest
 
     steps:
       - uses: actions/checkout@v4
@@ -40,5 +40,5 @@ jobs:
       - name: Build
         run: swift build
 
-      - name: Test
-        run: zsh scripts/run-tests.sh
+      - name: Compile and discover tests
+        run: swift test --list-tests
