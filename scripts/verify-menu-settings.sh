@@ -8,8 +8,8 @@ WINDOW_CHECKER="$ROOT/scripts/window-check.swift"
 WINDOW_ID="$ROOT/scripts/window-id.swift"
 IMAGE_CHECK="$ROOT/scripts/image-content-check.swift"
 WAIT_SECONDS="${VIBELSLAND_MENU_SETTINGS_SECONDS:-5}"
-MAX_IDLE_WIDTH="${VIBELSLAND_IDLE_MAX_WIDTH:-80}"
-MAX_IDLE_HEIGHT="${VIBELSLAND_IDLE_MAX_HEIGHT:-80}"
+MAX_VISIBLE_WIDTH="${VIBELSLAND_IDLE_VISIBLE_MAX_WIDTH:-900}"
+MAX_VISIBLE_HEIGHT="${VIBELSLAND_IDLE_VISIBLE_MAX_HEIGHT:-600}"
 
 [[ -d "$APP_DIR" ]]
 [[ -x "$EXECUTABLE" ]]
@@ -103,7 +103,11 @@ fi
 
 [[ -x "$BRIDGE" ]]
 [[ -S "$SOCKET" ]]
-wait_for_window "Initial menu settings idle" 0 "$MAX_IDLE_WIDTH" 0 "$MAX_IDLE_HEIGHT"
+
+if /usr/bin/swift "$WINDOW_CHECKER" "$APP_PID" 0 "$MAX_VISIBLE_WIDTH" 0 "$MAX_VISIBLE_HEIGHT" "Initial menu settings idle" >/dev/null 2>&1; then
+    echo "Menu settings verification failed: idle island should be hidden before opening settings" >&2
+    exit 1
+fi
 
 if ! open_settings_from_menu; then
     echo "Menu settings verification failed: could not click status bar Settings menu item" >&2

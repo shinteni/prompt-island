@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <a href="README.md">中文</a> | <a href="README.en.md">English</a>
+  <a href="README.md">中文</a> | <a href="README.en.md">English</a> | <a href="README.ja.md">日本語</a>
 </p>
 
 <p align="center">
@@ -38,7 +38,7 @@ Vibelsland Free 是给重度 AI 编程用户的 macOS 原生工具。它把 Clau
 
 ## 产品亮点
 
-- **顶部浮岛**：空闲小圆点、任务药丸、展开面板三种形态，适合常驻屏幕顶部。
+- **顶部浮岛**：无任务时隐藏、任务中显示紧凑药丸、需要处理时展开面板，适合常驻屏幕顶部。
 - **RGB 光环状态感**：边缘动态光环是核心视觉识别，让运行、完成、失败和审批状态更容易感知。
 - **多工具统一视图**：同时覆盖 Claude Code、Codex CLI 和 Codex Desktop，减少反复切换窗口。
 - **会话进度摘要**：展示任务标题、工具调用、AI 回复摘要、token 用量和最近活动。
@@ -52,6 +52,16 @@ Vibelsland Free 是给重度 AI 编程用户的 macOS 原生工具。它把 Clau
 - 希望不切窗口就能看见 AI 编程状态的人。
 - 想把审批请求、工具调用和会话进度放到一个可见位置的人。
 - 偏好本地工具、低干扰 UI 和 macOS 原生体验的人。
+
+## 技术架构
+
+Vibelsland Free 是一个 Swift Package 组织的 macOS 原生应用，界面层使用 SwiftUI 与 AppKit 组合实现菜单栏、浮岛面板和设置窗口。核心逻辑集中在 `Sources/VibelslandFreeCore`，把会话解析、审批映射、去重、展示策略、重启恢复和健康检查拆成可测试的策略模块。
+
+本地数据流是：Claude Code / Codex CLI Hooks 与 Codex Desktop 本机状态进入 Bridge 和读取器，统一转换为 `AgentEvent` / `AgentSession`，再由 `SessionStore` 驱动顶部浮岛显示。运行时通信只使用本机文件、Unix socket 和本地配置，不需要账号或远程服务。
+
+## 验证策略
+
+仓库包含 Swift 单元测试、发布打包脚本、文档站校验和多组 macOS 窗口自动化验证。常用入口是 `swift test`、`zsh scripts/run-tests.sh`、`zsh scripts/verify-docs-site.sh` 和 `zsh scripts/verify-release-readiness.sh`。GitHub Actions 会在源码、测试或包配置变更时执行 Swift 构建与测试，并在文档变更时部署和校验 GitHub Pages。
 
 ## 下载与安装
 

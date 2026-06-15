@@ -6,8 +6,8 @@ APP_DIR="$ROOT/dist/>_ - island.app"
 EXECUTABLE="$APP_DIR/Contents/MacOS/VibelslandFree"
 WINDOW_CHECKER="$ROOT/scripts/window-check.swift"
 WAIT_SECONDS="${VIBELSLAND_MENU_LOGS_SECONDS:-5}"
-MAX_IDLE_WIDTH="${VIBELSLAND_IDLE_MAX_WIDTH:-80}"
-MAX_IDLE_HEIGHT="${VIBELSLAND_IDLE_MAX_HEIGHT:-80}"
+MAX_VISIBLE_WIDTH="${VIBELSLAND_IDLE_VISIBLE_MAX_WIDTH:-900}"
+MAX_VISIBLE_HEIGHT="${VIBELSLAND_IDLE_VISIBLE_MAX_HEIGHT:-600}"
 
 [[ -d "$APP_DIR" ]]
 [[ -x "$EXECUTABLE" ]]
@@ -64,18 +64,15 @@ is_active_process() {
     [[ -n "$state" && "$state" != Z* ]]
 }
 
-wait_for_window() {
+ensure_hidden_window() {
     local label="$1"
-    shift
-    local output=""
-    for _ in {1..40}; do
-        if output="$(/usr/bin/swift "$WINDOW_CHECKER" "$APP_PID" "$@" "$label" 2>&1)"; then
-            return
+    for _ in {1..20}; do
+        if ! /usr/bin/swift "$WINDOW_CHECKER" "$APP_PID" 0 "$MAX_VISIBLE_WIDTH" 0 "$MAX_VISIBLE_HEIGHT" "$label" >/dev/null 2>&1; then
+            return 0
         fi
-        sleep 0.2
+        sleep 0.1
     done
-    echo "Menu open logs verification failed: $label did not appear" >&2
-    echo "$output" >&2
+    echo "Menu open logs verification failed: $label should be hidden" >&2
     exit 1
 }
 
@@ -121,7 +118,7 @@ fi
 
 [[ -x "$BRIDGE" ]]
 [[ -S "$SOCKET" ]]
-wait_for_window "Initial menu open logs idle" 0 "$MAX_IDLE_WIDTH" 0 "$MAX_IDLE_HEIGHT"
+ensure_hidden_window "Initial menu open logs idle"
 
 if [[ ! -f "$LOG" ]] || ! /usr/bin/grep -q 'bridge.start' "$LOG"; then
     echo "Menu open logs verification failed: isolated log is missing bridge.start" >&2

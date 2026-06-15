@@ -524,9 +524,9 @@ struct VibelslandFreeCoreTests {
         let tempDirectory = FileManager.default.temporaryDirectory
         let claudeTranscriptURL = tempDirectory.appendingPathComponent("vibelsland-claude-\(UUID().uuidString).jsonl")
         let claudeTranscript = [
-            #"{"type":"user","timestamp":"2026-05-06T12:00:00Z","message":{"role":"user","content":"当前任务已经结束的情况下还是显示思考中"},"sessionId":"session-1","cwd":"/Users/rinka/.claude"}"#,
-            #"{"type":"assistant","timestamp":"2026-05-06T12:00:02Z","message":{"role":"assistant","content":[{"type":"tool_use","name":"Bash","input":{"command":"swift build"}},{"type":"text","text":"已修复状态显示和跳转问题。"}]},"sessionId":"session-1","cwd":"/Users/rinka/.claude"}"#,
-            #"{"type":"system","subtype":"stop_hook_summary","timestamp":"2026-05-06T12:00:03Z","sessionId":"session-1","cwd":"/Users/rinka/.claude"}"#
+            #"{"type":"user","timestamp":"2026-05-06T12:00:00Z","message":{"role":"user","content":"当前任务已经结束的情况下还是显示思考中"},"sessionId":"session-1","cwd":"/Users/example/.claude"}"#,
+            #"{"type":"assistant","timestamp":"2026-05-06T12:00:02Z","message":{"role":"assistant","content":[{"type":"tool_use","name":"Bash","input":{"command":"swift build"}},{"type":"text","text":"已修复状态显示和跳转问题。"}]},"sessionId":"session-1","cwd":"/Users/example/.claude"}"#,
+            #"{"type":"system","subtype":"stop_hook_summary","timestamp":"2026-05-06T12:00:03Z","sessionId":"session-1","cwd":"/Users/example/.claude"}"#
         ].joined(separator: "\n")
         try claudeTranscript.write(to: claudeTranscriptURL, atomically: true, encoding: .utf8)
         defer { try? FileManager.default.removeItem(at: claudeTranscriptURL) }
@@ -545,7 +545,7 @@ struct VibelslandFreeCoreTests {
             title: ".claude",
             prompt: ".claude",
             source: .claudeCode,
-            workspace: "/Users/rinka/.claude",
+            workspace: "/Users/example/.claude",
             terminal: "Claude",
             updatedAt: Date(),
             status: .done,
@@ -759,10 +759,10 @@ struct VibelslandFreeCoreTests {
         let duplicateDate = Date()
         let codexCliShadow = AgentSession(
             id: "codex-cli-shadow",
-            title: "files-mentioned-by-the-user-memory",
-            prompt: "files-mentioned-by-the-user-memory",
+            title: "example-workspace",
+            prompt: "example-workspace",
             source: .codexCli,
-            workspace: "/Users/rinka/codexprojects/files-mentioned-by-the-user-memory",
+            workspace: "/Users/example/projects/example-workspace",
             terminal: "Codex",
             updatedAt: duplicateDate,
             status: .done,
@@ -778,10 +778,10 @@ struct VibelslandFreeCoreTests {
         )
         let codexDesktopPrimary = AgentSession(
             id: "codex-desktop-thread",
-            title: "files-mentioned-by-the-user-memory",
-            prompt: "files-mentioned-by-the-user-memory",
+            title: "example-workspace",
+            prompt: "example-workspace",
             source: .codexDesktop,
-            workspace: "/Users/rinka/codexprojects/files-mentioned-by-the-user-memory",
+            workspace: "/Users/example/projects/example-workspace",
             terminal: "Codex",
             updatedAt: duplicateDate.addingTimeInterval(-4),
             status: .done,
@@ -806,7 +806,7 @@ struct VibelslandFreeCoreTests {
             title: "vibelsland free",
             prompt: "vibelsland free",
             source: .codexCli,
-            workspace: "/Users/rinka/codexprojects/files-mentioned-by-the-user-memory",
+            workspace: "/Users/example/projects/example-workspace",
             terminal: "Codex",
             updatedAt: duplicateDate.addingTimeInterval(20),
             status: .done,
@@ -826,20 +826,20 @@ struct VibelslandFreeCoreTests {
         XCTAssertTrue(nestedDeduped.sessions.first?.usage == nil, "Nested CLI usage is not merged into the Desktop task")
         XCTAssertTrue(
             SessionDeduper.sameWorkspace(
-                "/Users/rinka/codexprojects/files-mentioned-by-the-user-memory/subtask",
-                "/Users/rinka/codexprojects/files-mentioned-by-the-user-memory"
+                "/Users/example/projects/example-workspace/subtask",
+                "/Users/example/projects/example-workspace"
             ),
             "Codex internal CLI calls from child directories stay associated with the Desktop task"
         )
         var nestedCliFromChildDirectory = nestedCliCall
         nestedCliFromChildDirectory.id = "nested-cli-child-dir"
-        nestedCliFromChildDirectory.workspace = "/Users/rinka/codexprojects/files-mentioned-by-the-user-memory/subtask"
+        nestedCliFromChildDirectory.workspace = "/Users/example/projects/example-workspace/subtask"
         let childDirectoryDeduped = SessionDeduper.compact([codexDesktopPrimary, nestedCliFromChildDirectory], selectedSessionID: nestedCliFromChildDirectory.id)
         XCTAssertTrue(childDirectoryDeduped.sessions.count == 1, "Nested Codex CLI calls from child directories are hidden")
 
         var structuredNestedCli = nestedCliCall
         structuredNestedCli.id = "structured-desktop-child"
-        structuredNestedCli.workspace = "/Users/rinka/codexprojects/files-mentioned-by-the-user-memory/subtask"
+        structuredNestedCli.workspace = "/Users/example/projects/example-workspace/subtask"
         structuredNestedCli.activity = [
             ActivityItem(symbol: "wrench.and.screwdriver", title: "exec_command", detail: "plain command", date: duplicateDate.addingTimeInterval(20))
         ]
@@ -868,7 +868,7 @@ struct VibelslandFreeCoreTests {
             title: "Codex CLI 请求权限",
             detail: "npm test",
             tool: "Bash",
-            workspace: "/Users/rinka/codexprojects/files-mentioned-by-the-user-memory/subtask",
+            workspace: "/Users/example/projects/example-workspace/subtask",
             availableDecisions: [.accept, .decline, .cancel],
             suggestedSessionAllow: false,
             supportsCancel: true,
@@ -881,7 +881,7 @@ struct VibelslandFreeCoreTests {
         independentCliFromChildDirectory.id = "manual-cli-child-dir"
         independentCliFromChildDirectory.title = "manual child task"
         independentCliFromChildDirectory.prompt = "manual child task"
-        independentCliFromChildDirectory.workspace = "/Users/rinka/codexprojects/files-mentioned-by-the-user-memory/subtask"
+        independentCliFromChildDirectory.workspace = "/Users/example/projects/example-workspace/subtask"
         independentCliFromChildDirectory.activity = [
             ActivityItem(symbol: "wrench.and.screwdriver", title: "exec_command", detail: "manual command", date: duplicateDate.addingTimeInterval(20))
         ]
@@ -959,7 +959,7 @@ struct VibelslandFreeCoreTests {
             title: "vibelsland free",
             prompt: "继续修复",
             source: .codexCli,
-            workspace: "/Users/rinka/codexprojects/vibelsland free",
+            workspace: "/Users/example/projects/vibelsland-free",
             terminal: "Codex",
             updatedAt: baseDate.addingTimeInterval(15),
             status: timeline.status,

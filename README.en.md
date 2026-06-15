@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <a href="README.md">中文</a> | <a href="README.en.md">English</a>
+  <a href="README.md">中文</a> | <a href="README.en.md">English</a> | <a href="README.ja.md">日本語</a>
 </p>
 
 <p align="center">
@@ -38,7 +38,7 @@ It keeps the most important AI coding state visible while you work. When idle, i
 
 ## Highlights
 
-- **Floating island UI**: idle dot, compact task pill, and expandable session panel.
+- **Floating island UI**: hidden when idle, compact task pill while work is active, and expandable session panel when attention is needed.
 - **RGB status glow**: the edge glow is the core visual signature for running, completed, failed, and approval states.
 - **Unified AI coding view**: supports Claude Code, Codex CLI, and Codex Desktop in one place.
 - **Session summaries**: shows task titles, tool activity, AI response snippets, token usage, and recent updates.
@@ -52,6 +52,16 @@ It keeps the most important AI coding state visible while you work. When idle, i
 - People who want AI task status visible without switching windows.
 - Users who want approvals, tool calls, and session progress in a single macOS-native surface.
 - Anyone who prefers quiet, local, low-friction tools.
+
+## Technical Architecture
+
+Vibelsland Free is a Swift Package based native macOS app. The interface combines SwiftUI and AppKit for the menu bar item, floating island panel, and settings window. Core behavior lives in `Sources/VibelslandFreeCore`, where session parsing, approval mapping, deduplication, presentation policy, restart recovery, and health checks are split into testable policy modules.
+
+The local data flow is: Claude Code / Codex CLI hooks and Codex Desktop local state enter the bridge and readers, are normalized into `AgentEvent` / `AgentSession`, and then `SessionStore` drives the top-of-screen island. Runtime communication uses local files, a Unix socket, and local configuration only; no account or remote service is required.
+
+## Verification Strategy
+
+The repository includes Swift unit tests, release packaging scripts, documentation-site checks, and macOS window automation checks. The common entry points are `swift test`, `zsh scripts/run-tests.sh`, `zsh scripts/verify-docs-site.sh`, and `zsh scripts/verify-release-readiness.sh`. GitHub Actions runs Swift build and test checks for source, test, and package changes, and deploys plus verifies GitHub Pages for documentation changes.
 
 ## Download And Install
 

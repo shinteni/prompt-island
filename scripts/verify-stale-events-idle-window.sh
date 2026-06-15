@@ -6,8 +6,8 @@ APP_DIR="$ROOT/dist/>_ - island.app"
 EXECUTABLE="$APP_DIR/Contents/MacOS/VibelslandFree"
 WINDOW_CHECKER="$ROOT/scripts/window-check.swift"
 WAIT_SECONDS="${VIBELSLAND_STALE_EVENTS_SECONDS:-5}"
-MAX_IDLE_WIDTH="${VIBELSLAND_IDLE_MAX_WIDTH:-80}"
-MAX_IDLE_HEIGHT="${VIBELSLAND_IDLE_MAX_HEIGHT:-80}"
+MAX_VISIBLE_WIDTH="${VIBELSLAND_IDLE_VISIBLE_MAX_WIDTH:-900}"
+MAX_VISIBLE_HEIGHT="${VIBELSLAND_IDLE_VISIBLE_MAX_HEIGHT:-600}"
 
 [[ -d "$APP_DIR" ]]
 [[ -x "$EXECUTABLE" ]]
@@ -91,7 +91,10 @@ for _ in {1..30}; do
     if [[ -f "$LOG" ]] &&
         /usr/bin/grep -q 'event.ingest claudeCode prompt' "$LOG" &&
         /usr/bin/grep -q 'event.ingest codexCli session' "$LOG"; then
-        /usr/bin/swift "$WINDOW_CHECKER" "$APP_PID" 0 "$MAX_IDLE_WIDTH" 0 "$MAX_IDLE_HEIGHT" "Stale idle"
+        if /usr/bin/swift "$WINDOW_CHECKER" "$APP_PID" 0 "$MAX_VISIBLE_WIDTH" 0 "$MAX_VISIBLE_HEIGHT" "Stale idle" >/dev/null 2>&1; then
+            echo "Stale event verification failed: stale events should not show an idle window" >&2
+            exit 1
+        fi
         exit 0
     fi
     sleep 0.2

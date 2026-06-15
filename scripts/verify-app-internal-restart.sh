@@ -6,8 +6,8 @@ APP_DIR="$ROOT/dist/>_ - island.app"
 EXECUTABLE="$APP_DIR/Contents/MacOS/VibelslandFree"
 WINDOW_CHECKER="$ROOT/scripts/window-check.swift"
 WAIT_SECONDS="${VIBELSLAND_INTERNAL_RESTART_SECONDS:-5}"
-MAX_IDLE_WIDTH="${VIBELSLAND_IDLE_MAX_WIDTH:-80}"
-MAX_IDLE_HEIGHT="${VIBELSLAND_IDLE_MAX_HEIGHT:-80}"
+MAX_VISIBLE_WIDTH="${VIBELSLAND_IDLE_VISIBLE_MAX_WIDTH:-900}"
+MAX_VISIBLE_HEIGHT="${VIBELSLAND_IDLE_VISIBLE_MAX_HEIGHT:-600}"
 
 [[ -d "$APP_DIR" ]]
 [[ -x "$EXECUTABLE" ]]
@@ -72,9 +72,10 @@ wait_for_ready() {
     local label="$2"
     for _ in {1..60}; do
         assert_no_duplicate_instances
-        if is_active_process "$pid" && [[ -x "$BRIDGE" && -S "$SOCKET" ]] &&
-            /usr/bin/swift "$WINDOW_CHECKER" "$pid" 0 "$MAX_IDLE_WIDTH" 0 "$MAX_IDLE_HEIGHT" "$label" >/dev/null 2>&1; then
-            return
+        if is_active_process "$pid" && [[ -x "$BRIDGE" && -S "$SOCKET" ]]; then
+            if ! /usr/bin/swift "$WINDOW_CHECKER" "$pid" 0 "$MAX_VISIBLE_WIDTH" 0 "$MAX_VISIBLE_HEIGHT" "$label" >/dev/null 2>&1; then
+                return
+            fi
         fi
         sleep 0.2
     done

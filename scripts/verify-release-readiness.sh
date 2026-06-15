@@ -82,12 +82,37 @@ require_path() {
     exit 1
 }
 
+restore_public_release_assets() {
+    local metadata
+    metadata=("${(@f)$(python3 - "$ROOT/docs/release.json" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+metadata = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+print(metadata["archive"]["name"])
+print(metadata["archive"]["download_url"])
+print(metadata["checksum_file"]["name"])
+print(metadata["checksum_file"]["download_url"])
+PY
+)}")
+    local archive_name="$metadata[1]"
+    local archive_url="$metadata[2]"
+    local checksum_name="$metadata[3]"
+    local checksum_url="$metadata[4]"
+
+    /bin/mkdir -p "$ROOT/dist"
+    /usr/bin/curl -L -sS -o "$ROOT/dist/$archive_name" "$archive_url"
+    /usr/bin/curl -L -sS -o "$ROOT/dist/$checksum_name" "$checksum_url"
+}
+
 if [[ "$RUN_AUTOMATION" == "1" ]]; then
     . "$ROOT/scripts/visible-test-window-guard.sh"
     if [[ "$MODE" == "local" ]]; then
         zsh "$ROOT/scripts/package-release.sh"
     else
         zsh "$ROOT/scripts/verify-app.sh"
+        restore_public_release_assets
     fi
     VIBELSLAND_VERIFY_DIST=1 zsh "$ROOT/scripts/verify-docs-site.sh"
     zsh "$ROOT/scripts/verify-idle-window.sh"

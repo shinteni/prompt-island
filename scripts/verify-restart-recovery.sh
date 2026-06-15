@@ -6,8 +6,8 @@ APP_DIR="$ROOT/dist/>_ - island.app"
 EXECUTABLE="$APP_DIR/Contents/MacOS/VibelslandFree"
 WINDOW_CHECKER="$ROOT/scripts/window-check.swift"
 WAIT_SECONDS="${VIBELSLAND_RESTART_RECOVERY_SECONDS:-5}"
-MAX_IDLE_WIDTH="${VIBELSLAND_IDLE_MAX_WIDTH:-80}"
-MAX_IDLE_HEIGHT="${VIBELSLAND_IDLE_MAX_HEIGHT:-80}"
+MAX_VISIBLE_WIDTH="${VIBELSLAND_IDLE_VISIBLE_MAX_WIDTH:-900}"
+MAX_VISIBLE_HEIGHT="${VIBELSLAND_IDLE_VISIBLE_MAX_HEIGHT:-600}"
 
 [[ -d "$APP_DIR" ]]
 [[ -x "$EXECUTABLE" ]]
@@ -82,7 +82,10 @@ verify_ready() {
     [[ "$socket_mode" == "600" ]]
     socket_owner="$(/usr/bin/stat -f "%u" "$SOCKET")"
     [[ "$socket_owner" == "$(/usr/bin/id -u)" ]]
-    /usr/bin/swift "$WINDOW_CHECKER" "$APP_PID" 0 "$MAX_IDLE_WIDTH" 0 "$MAX_IDLE_HEIGHT" "$label" >/dev/null
+    if /usr/bin/swift "$WINDOW_CHECKER" "$APP_PID" 0 "$MAX_VISIBLE_WIDTH" 0 "$MAX_VISIBLE_HEIGHT" "$label" >/dev/null 2>&1; then
+        echo "Restart recovery verification failed: $label should be hidden while idle" >&2
+        exit 1
+    fi
 }
 
 start_app
