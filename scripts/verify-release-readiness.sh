@@ -5,7 +5,7 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 APP_DIR="$ROOT/dist/>_ - island.app"
 ARCHIVE="$ROOT/dist/Vibelsland-Free-0.1.0-macos.zip"
 CHECKSUM="$ARCHIVE.sha256"
-CHECKLIST="$ROOT/RELEASE_CHECKLIST.md"
+CHECKLIST="$ROOT/MAINTAINER_RELEASE_CHECKLIST.md"
 
 MODE="${VIBELSLAND_RELEASE_MODE:-github}"
 RUN_AUTOMATION=1

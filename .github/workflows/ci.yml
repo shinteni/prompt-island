@@ -40,5 +40,5 @@ jobs:
       - name: Build
         run: swift build
 
-      - name: Compile and discover tests
-        run: swift test --list-tests
+      - name: Compile and list tests
+        run: swift test list

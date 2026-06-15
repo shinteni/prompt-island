@@ -61,7 +61,7 @@ The local data flow is: Claude Code / Codex CLI hooks and Codex Desktop local st
 
 ## Verification Strategy
 
-The repository includes Swift unit tests, release packaging scripts, documentation-site checks, and macOS window automation checks. The common entry points are `swift test`, `zsh scripts/run-tests.sh`, `zsh scripts/verify-docs-site.sh`, and `zsh scripts/verify-release-readiness.sh`. GitHub Actions runs Swift build and test checks for source, test, and package changes, and deploys plus verifies GitHub Pages for documentation changes.
+The repository includes Swift unit tests, release packaging scripts, documentation-site checks, and macOS window automation checks. The common entry points are `swift test`, `zsh scripts/run-tests.sh`, `zsh scripts/verify-docs-site.sh`, and `zsh scripts/verify-release-readiness.sh`. GitHub Actions runs Swift build plus test-target compilation/discovery for source, test, and package changes; full test execution remains the local `zsh scripts/run-tests.sh` path. Documentation changes deploy and verify GitHub Pages.
 
 ## Download And Install
 
@@ -115,7 +115,9 @@ VIBELSLAND_VERIFY_DIST=1 zsh scripts/verify-docs-site.sh
 VIBELSLAND_VERIFY_DIST=1 zsh scripts/verify-docs-live.sh
 ```
 
-Maintainer publishing, custom-domain builds, and release gates are tracked in [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md).
+Maintainer publishing, custom-domain builds, and release gates are tracked in [MAINTAINER_RELEASE_CHECKLIST.md](MAINTAINER_RELEASE_CHECKLIST.md).
+
+Note: the repository originally used `prompt-island` as its repository name. The current product name is Vibelsland Free, and the app bundle is shown as `>_ - island.app`.
 
 ## Project Status
 

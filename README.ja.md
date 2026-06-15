@@ -61,7 +61,7 @@ Vibelsland Free は Swift Package ベースの macOS ネイティブアプリで
 
 ## 検証方針
 
-このリポジトリには Swift 単体テスト、リリースパッケージングスクリプト、ドキュメントサイト検証、macOS ウィンドウ自動化検証が含まれています。主な入口は `swift test`、`zsh scripts/run-tests.sh`、`zsh scripts/verify-docs-site.sh`、`zsh scripts/verify-release-readiness.sh` です。GitHub Actions は、ソース、テスト、パッケージ設定の変更時に Swift のビルドとテストを実行し、ドキュメント変更時には GitHub Pages のデプロイと検証を行います。
+このリポジトリには Swift 単体テスト、リリースパッケージングスクリプト、ドキュメントサイト検証、macOS ウィンドウ自動化検証が含まれています。主な入口は `swift test`、`zsh scripts/run-tests.sh`、`zsh scripts/verify-docs-site.sh`、`zsh scripts/verify-release-readiness.sh` です。GitHub Actions は、ソース、テスト、パッケージ設定の変更時に Swift のビルドとテストターゲットのコンパイル/検出を実行します。完全なテスト実行はローカルの `zsh scripts/run-tests.sh` を基準にします。ドキュメント変更時には GitHub Pages のデプロイと検証を行います。
 
 ## ダウンロードとインストール
 
@@ -115,7 +115,9 @@ VIBELSLAND_VERIFY_DIST=1 zsh scripts/verify-docs-site.sh
 VIBELSLAND_VERIFY_DIST=1 zsh scripts/verify-docs-live.sh
 ```
 
-メンテナー向けの公開手順、カスタムドメインビルド、release gate の詳細は [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md) にあります。
+メンテナー向けの公開手順、カスタムドメインビルド、release gate の詳細は [MAINTAINER_RELEASE_CHECKLIST.md](MAINTAINER_RELEASE_CHECKLIST.md) にあります。
+
+注記：このリポジトリは当初 `prompt-island` をリポジトリ名として使っていました。現在のプロダクト名は Vibelsland Free で、アプリバンドル名は `>_ - island.app` です。
 
 ## プロジェクト状態
 

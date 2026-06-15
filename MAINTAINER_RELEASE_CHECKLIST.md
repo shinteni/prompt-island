@@ -1,4 +1,4 @@
-# Vibelsland Free Release Checklist
+# Vibelsland Free Maintainer Release Checklist
 
 这是维护者用于下一次发布执行的清单，不是 v0.1.0 的公开就绪状态。v0.1.0 的下载包、SHA-256、源码 tag、安装说明、隐私页和支持入口已经公开；清单中的未勾选项用于避免后续重新打包、正式域名切换或 notarized 分发时漏项。
 

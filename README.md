@@ -61,7 +61,7 @@ Vibelsland Free 是一个 Swift Package 组织的 macOS 原生应用，界面层
 
 ## 验证策略
 
-仓库包含 Swift 单元测试、发布打包脚本、文档站校验和多组 macOS 窗口自动化验证。常用入口是 `swift test`、`zsh scripts/run-tests.sh`、`zsh scripts/verify-docs-site.sh` 和 `zsh scripts/verify-release-readiness.sh`。GitHub Actions 会在源码、测试或包配置变更时执行 Swift 构建与测试，并在文档变更时部署和校验 GitHub Pages。
+仓库包含 Swift 单元测试、发布打包脚本、文档站校验和多组 macOS 窗口自动化验证。常用入口是 `swift test`、`zsh scripts/run-tests.sh`、`zsh scripts/verify-docs-site.sh` 和 `zsh scripts/verify-release-readiness.sh`。GitHub Actions 会在源码、测试或包配置变更时执行 Swift 构建并编译/发现测试目标；完整测试执行仍以本地 `zsh scripts/run-tests.sh` 为准。文档变更会触发 GitHub Pages 部署与线上校验。
 
 ## 下载与安装
 
@@ -115,7 +115,9 @@ VIBELSLAND_VERIFY_DIST=1 zsh scripts/verify-docs-site.sh
 VIBELSLAND_VERIFY_DIST=1 zsh scripts/verify-docs-live.sh
 ```
 
-维护者发布、正式域名构建和 release gate 细节见 [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md)。
+维护者发布、正式域名构建和 release gate 细节见 [MAINTAINER_RELEASE_CHECKLIST.md](MAINTAINER_RELEASE_CHECKLIST.md)。
+
+说明：仓库最初使用 `prompt-island` 作为代码仓库名，当前产品名是 Vibelsland Free，应用包名显示为 `>_ - island.app`。
 
 ## 项目状态
 
