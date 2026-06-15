@@ -14,44 +14,31 @@ MAX_HEIGHT="${VIBELSLAND_APPROVAL_MAX_HEIGHT:-240}"
 [[ -d "$APP_DIR" ]]
 [[ -x "$EXECUTABLE" ]]
 [[ -f "$WINDOW_CHECKER" ]]
-. "$ROOT/scripts/visible-test-window-guard.sh"
+. "$ROOT/scripts/verify-support.sh"
 
 TEMP_HOME="$(/usr/bin/mktemp -d "/tmp/vibelsland-codex-approval-response-home.XXXXXX")"
 APP_PID=""
 BRIDGE_PID=""
-LOG="$TEMP_HOME/Library/Logs/VibelslandFree/app.log"
-BRIDGE="$TEMP_HOME/.vibelsland-free/bin/vibelsland-bridge"
-SOCKET="$TEMP_HOME/.vibelsland-free/run/vibelsland.sock"
+LOG="$(vibelsland_log_path "$TEMP_HOME")"
+BRIDGE="$(vibelsland_bridge_path "$TEMP_HOME")"
+SOCKET="$(vibelsland_socket_path "$TEMP_HOME")"
 
 cleanup() {
-    if [[ -n "$BRIDGE_PID" ]]; then
-        /bin/kill "$BRIDGE_PID" >/dev/null 2>&1 || true
-        wait "$BRIDGE_PID" >/dev/null 2>&1 || true
-    fi
-    if [[ -n "$APP_PID" ]]; then
-        /bin/kill "$APP_PID" >/dev/null 2>&1 || true
-        wait "$APP_PID" >/dev/null 2>&1 || true
-    fi
-    /bin/rm -rf "$TEMP_HOME"
+    vibelsland_cleanup_temp_home "$TEMP_HOME" "$BRIDGE_PID" "$APP_PID"
 }
 trap cleanup EXIT
 
-CONFIG_DIR="$TEMP_HOME/Library/Application Support/VibelslandFree"
-/bin/mkdir -p "$CONFIG_DIR"
-/bin/cat > "$CONFIG_DIR/config.json" <<'JSON'
-{
-  "enableClaude": false,
-  "enableCodexCLI": true,
-  "enableCodexDesktop": false,
-  "enableSounds": false,
-  "soundTheme": "soft",
-  "doNotDisturb": false,
-  "launchAtLogin": false,
-  "islandPosition": "topCenter",
-  "approvalTimeoutSeconds": 7200,
-  "maxVisibleSessions": 5
-}
-JSON
+vibelsland_write_test_config "$TEMP_HOME" \
+    enableClaude=false \
+    enableCodexCLI=true \
+    enableCodexDesktop=false \
+    enableSounds=false \
+    soundTheme=soft \
+    doNotDisturb=false \
+    launchAtLogin=false \
+    islandPosition=topCenter \
+    approvalTimeoutSeconds=7200 \
+    maxVisibleSessions=5
 
 start_app() {
     /bin/rm -f "$SOCKET"

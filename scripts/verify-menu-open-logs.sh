@@ -12,13 +12,13 @@ MAX_VISIBLE_HEIGHT="${VIBELSLAND_IDLE_VISIBLE_MAX_HEIGHT:-600}"
 [[ -d "$APP_DIR" ]]
 [[ -x "$EXECUTABLE" ]]
 [[ -f "$WINDOW_CHECKER" ]]
-. "$ROOT/scripts/visible-test-window-guard.sh"
+. "$ROOT/scripts/verify-support.sh"
 
 TEMP_HOME="$(/usr/bin/mktemp -d "/tmp/vibelsland-menu-logs-home.XXXXXX")"
 APP_PID=""
-LOG="$TEMP_HOME/Library/Logs/VibelslandFree/app.log"
-BRIDGE="$TEMP_HOME/.vibelsland-free/bin/vibelsland-bridge"
-SOCKET="$TEMP_HOME/.vibelsland-free/run/vibelsland.sock"
+LOG="$(vibelsland_log_path "$TEMP_HOME")"
+BRIDGE="$(vibelsland_bridge_path "$TEMP_HOME")"
+SOCKET="$(vibelsland_socket_path "$TEMP_HOME")"
 
 cleanup() {
     /usr/bin/osascript >/dev/null 2>&1 <<APPLESCRIPT || true
@@ -40,22 +40,17 @@ APPLESCRIPT
 }
 trap cleanup EXIT
 
-CONFIG_DIR="$TEMP_HOME/Library/Application Support/VibelslandFree"
-/bin/mkdir -p "$CONFIG_DIR"
-/bin/cat > "$CONFIG_DIR/config.json" <<'JSON'
-{
-  "enableClaude": false,
-  "enableCodexCLI": false,
-  "enableCodexDesktop": false,
-  "enableSounds": false,
-  "soundTheme": "soft",
-  "doNotDisturb": true,
-  "launchAtLogin": false,
-  "islandPosition": "topCenter",
-  "approvalTimeoutSeconds": 7200,
-  "maxVisibleSessions": 5
-}
-JSON
+vibelsland_write_test_config "$TEMP_HOME" \
+    enableClaude=false \
+    enableCodexCLI=false \
+    enableCodexDesktop=false \
+    enableSounds=false \
+    soundTheme=soft \
+    doNotDisturb=true \
+    launchAtLogin=false \
+    islandPosition=topCenter \
+    approvalTimeoutSeconds=7200 \
+    maxVisibleSessions=5
 
 is_active_process() {
     local pid="$1"

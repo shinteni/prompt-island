@@ -14,37 +14,28 @@ MAX_EXPANDED_HEIGHT="${VIBELSLAND_EXPANDED_MAX_HEIGHT:-380}"
 [[ -d "$APP_DIR" ]]
 [[ -x "$EXECUTABLE" ]]
 [[ -f "$WINDOW_CHECKER" ]]
-. "$ROOT/scripts/visible-test-window-guard.sh"
+. "$ROOT/scripts/verify-support.sh"
 
 TEMP_HOME="$(/usr/bin/mktemp -d "/tmp/vibelsland-menu-open-panel-home.XXXXXX")"
 APP_PID=""
-LOG="$TEMP_HOME/Library/Logs/VibelslandFree/app.log"
+LOG="$(vibelsland_log_path "$TEMP_HOME")"
 
 cleanup() {
-    if [[ -n "$APP_PID" ]]; then
-        /bin/kill "$APP_PID" >/dev/null 2>&1 || true
-        wait "$APP_PID" >/dev/null 2>&1 || true
-    fi
-    /bin/rm -rf "$TEMP_HOME"
+    vibelsland_cleanup_temp_home "$TEMP_HOME" "$APP_PID"
 }
 trap cleanup EXIT
 
-CONFIG_DIR="$TEMP_HOME/Library/Application Support/VibelslandFree"
-/bin/mkdir -p "$CONFIG_DIR"
-/bin/cat > "$CONFIG_DIR/config.json" <<'JSON'
-{
-  "enableClaude": false,
-  "enableCodexCLI": false,
-  "enableCodexDesktop": false,
-  "enableSounds": false,
-  "soundTheme": "soft",
-  "doNotDisturb": true,
-  "launchAtLogin": false,
-  "islandPosition": "topCenter",
-  "approvalTimeoutSeconds": 7200,
-  "maxVisibleSessions": 5
-}
-JSON
+vibelsland_write_test_config "$TEMP_HOME" \
+    enableClaude=false \
+    enableCodexCLI=false \
+    enableCodexDesktop=false \
+    enableSounds=false \
+    soundTheme=soft \
+    doNotDisturb=true \
+    launchAtLogin=false \
+    islandPosition=topCenter \
+    approvalTimeoutSeconds=7200 \
+    maxVisibleSessions=5
 
 wait_for_expanded_window() {
     local label="$1"

@@ -14,37 +14,28 @@ WAIT_SECONDS="${VIBELSLAND_SESSION_CARD_CLICK_SECONDS:-5}"
 [[ -f "$WINDOW_CHECKER" ]]
 [[ -f "$WINDOW_FRAME" ]]
 [[ -f "$CLICK_POINT" ]]
-. "$ROOT/scripts/visible-test-window-guard.sh"
+. "$ROOT/scripts/verify-support.sh"
 
 TEMP_HOME="$(/usr/bin/mktemp -d "/tmp/vibelsland-card-click-home.XXXXXX")"
 APP_PID=""
-LOG="$TEMP_HOME/Library/Logs/VibelslandFree/app.log"
+LOG="$(vibelsland_log_path "$TEMP_HOME")"
 
 cleanup() {
-    if [[ -n "$APP_PID" ]]; then
-        /bin/kill "$APP_PID" >/dev/null 2>&1 || true
-        wait "$APP_PID" >/dev/null 2>&1 || true
-    fi
-    /bin/rm -rf "$TEMP_HOME"
+    vibelsland_cleanup_temp_home "$TEMP_HOME" "$APP_PID"
 }
 trap cleanup EXIT
 
-CONFIG_DIR="$TEMP_HOME/Library/Application Support/VibelslandFree"
-/bin/mkdir -p "$CONFIG_DIR"
-/bin/cat > "$CONFIG_DIR/config.json" <<'JSON'
-{
-  "enableClaude": false,
-  "enableCodexCLI": false,
-  "enableCodexDesktop": false,
-  "enableSounds": false,
-  "soundTheme": "soft",
-  "doNotDisturb": true,
-  "launchAtLogin": false,
-  "islandPosition": "topCenter",
-  "approvalTimeoutSeconds": 7200,
-  "maxVisibleSessions": 5
-}
-JSON
+vibelsland_write_test_config "$TEMP_HOME" \
+    enableClaude=false \
+    enableCodexCLI=false \
+    enableCodexDesktop=false \
+    enableSounds=false \
+    soundTheme=soft \
+    doNotDisturb=true \
+    launchAtLogin=false \
+    islandPosition=topCenter \
+    approvalTimeoutSeconds=7200 \
+    maxVisibleSessions=5
 
 wait_for_window() {
     local label="$1"
@@ -80,8 +71,8 @@ if ! /bin/kill -0 "$APP_PID" >/dev/null 2>&1; then
     exit 1
 fi
 
-BRIDGE="$TEMP_HOME/.vibelsland-free/bin/vibelsland-bridge"
-SOCKET="$TEMP_HOME/.vibelsland-free/run/vibelsland.sock"
+BRIDGE="$(vibelsland_bridge_path "$TEMP_HOME")"
+SOCKET="$(vibelsland_socket_path "$TEMP_HOME")"
 for _ in {1..60}; do
     if [[ -x "$BRIDGE" && -S "$SOCKET" ]]; then
         break

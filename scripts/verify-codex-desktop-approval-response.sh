@@ -14,39 +14,30 @@ MAX_HEIGHT="${VIBELSLAND_APPROVAL_MAX_HEIGHT:-240}"
 [[ -d "$APP_DIR" ]]
 [[ -x "$EXECUTABLE" ]]
 [[ -f "$WINDOW_CHECKER" ]]
-. "$ROOT/scripts/visible-test-window-guard.sh"
+. "$ROOT/scripts/verify-support.sh"
 
 TEMP_HOME="$(/usr/bin/mktemp -d "/tmp/vibelsland-desktop-approval-response-home.XXXXXX")"
 APP_PID=""
-LOG="$TEMP_HOME/Library/Logs/VibelslandFree/app.log"
+LOG="$(vibelsland_log_path "$TEMP_HOME")"
 FAKE_CODEX="$TEMP_HOME/fake-codex"
 FAKE_SOCKET="$TEMP_HOME/fake-codex-ipc.sock"
 
 cleanup() {
-    if [[ -n "$APP_PID" ]]; then
-        /bin/kill "$APP_PID" >/dev/null 2>&1 || true
-        wait "$APP_PID" >/dev/null 2>&1 || true
-    fi
-    /bin/rm -rf "$TEMP_HOME"
+    vibelsland_cleanup_temp_home "$TEMP_HOME" "$APP_PID"
 }
 trap cleanup EXIT
 
-CONFIG_DIR="$TEMP_HOME/Library/Application Support/VibelslandFree"
-/bin/mkdir -p "$CONFIG_DIR"
-/bin/cat > "$CONFIG_DIR/config.json" <<'JSON'
-{
-  "enableClaude": false,
-  "enableCodexCLI": false,
-  "enableCodexDesktop": true,
-  "enableSounds": false,
-  "soundTheme": "soft",
-  "doNotDisturb": false,
-  "launchAtLogin": false,
-  "islandPosition": "topCenter",
-  "approvalTimeoutSeconds": 7200,
-  "maxVisibleSessions": 5
-}
-JSON
+vibelsland_write_test_config "$TEMP_HOME" \
+    enableClaude=false \
+    enableCodexCLI=false \
+    enableCodexDesktop=true \
+    enableSounds=false \
+    soundTheme=soft \
+    doNotDisturb=false \
+    launchAtLogin=false \
+    islandPosition=topCenter \
+    approvalTimeoutSeconds=7200 \
+    maxVisibleSessions=5
 
 /bin/cat > "$FAKE_CODEX" <<'PY'
 #!/usr/bin/env python3

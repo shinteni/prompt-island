@@ -107,7 +107,7 @@ PY
 }
 
 if [[ "$RUN_AUTOMATION" == "1" ]]; then
-    . "$ROOT/scripts/visible-test-window-guard.sh"
+    . "$ROOT/scripts/verify-support.sh"
     if [[ "$MODE" == "local" ]]; then
         zsh "$ROOT/scripts/package-release.sh"
     else
