@@ -24,7 +24,7 @@ permissions:
 jobs:
   swift:
     name: Swift build and test
-    runs-on: macos-latest
+    runs-on: macos-14
 
     steps:
       - uses: actions/checkout@v4
