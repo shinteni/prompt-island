@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/ci.yml"
+      - "Package.swift"
+      - "Sources/**"
+      - "Tests/**"
+      - "scripts/run-tests.sh"
+  pull_request:
+    paths:
+      - ".github/workflows/ci.yml"
+      - "Package.swift"
+      - "Sources/**"
+      - "Tests/**"
+      - "scripts/run-tests.sh"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  swift:
+    name: Swift build and test
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Show Swift toolchain
+        run: |
+          xcode-select -p
+          swift --version
+
+      - name: Build
+        run: swift build
+
+      - name: Test
+        run: zsh scripts/run-tests.sh
