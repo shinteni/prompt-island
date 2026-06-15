@@ -47,12 +47,7 @@ final class CodexDesktopLiveClient: @unchecked Sendable {
     }
 
     private func findCodexExecutable() -> String? {
-        let candidates = [
-            "/opt/homebrew/bin/codex",
-            "/usr/local/bin/codex",
-            "/Applications/Codex.app/Contents/Resources/codex"
-        ]
-        return candidates.first { FileManager.default.isExecutableFile(atPath: $0) }
+        CodexExecutableResolver.executablePath()
     }
 
     private func runProbe(codexPath: String, timeout: TimeInterval) throws -> String {
@@ -81,6 +76,7 @@ final class CodexDesktopLiveClient: @unchecked Sendable {
 
         process.executableURL = URL(fileURLWithPath: codexPath)
         process.arguments = ["app-server", "--listen", "stdio://"]
+        process.environment = CodexExecutableResolver.processEnvironment(forExecutablePath: codexPath)
         process.standardInput = stdin
         process.standardOutput = stdout
         process.standardError = stderr

@@ -16,7 +16,7 @@ struct SettingsView: View {
                         error: store.lastError,
                         items: store.exceptionOnlyHealthChecks,
                         refresh: store.refreshDiagnostics,
-                        repairHooks: store.installSelectedHooks,
+                        repairConnections: store.repairConnections,
                         openLogs: store.openLogs
                     )
                 }
@@ -49,7 +49,7 @@ struct SettingsView: View {
                 MaintenanceSection(
                     allHealthChecks: store.healthChecks,
                     refresh: store.refreshDiagnostics,
-                    repairHooks: store.installSelectedHooks,
+                    repairConnections: store.repairConnections,
                     openLogs: store.openLogs
                 )
 
@@ -154,7 +154,7 @@ private struct IssueSummarySection: View {
     let error: String?
     let items: [HealthCheckItem]
     let refresh: () -> Void
-    let repairHooks: () -> Void
+    let repairConnections: () -> Void
     let openLogs: () -> Void
 
     var body: some View {
@@ -175,9 +175,9 @@ private struct IssueSummarySection: View {
                     Button("重新检测", action: refresh)
                         .accessibilityLabel("重新检测")
                         .accessibilityIdentifier("settings.issue.refresh")
-                    Button("修复 Hooks", action: repairHooks)
+                    Button("修复接入", action: repairConnections)
                         .buttonStyle(.borderedProminent)
-                        .accessibilityLabel("修复 Hooks")
+                        .accessibilityLabel("修复接入")
                         .accessibilityIdentifier("settings.issue.repairHooks")
                 }
 
@@ -395,7 +395,7 @@ private struct ApprovalPreferencesSection: View {
 private struct MaintenanceSection: View {
     let allHealthChecks: [HealthCheckItem]
     let refresh: () -> Void
-    let repairHooks: () -> Void
+    let repairConnections: () -> Void
     let openLogs: () -> Void
 
     var body: some View {
@@ -405,9 +405,9 @@ private struct MaintenanceSection: View {
                     Button("重新检测", action: refresh)
                         .accessibilityLabel("重新检测")
                         .accessibilityIdentifier("settings.maintenance.refresh")
-                    Button("安装/修复 Hooks", action: repairHooks)
+                    Button("修复接入", action: repairConnections)
                         .buttonStyle(.borderedProminent)
-                        .accessibilityLabel("安装/修复 Hooks")
+                        .accessibilityLabel("修复接入")
                         .accessibilityIdentifier("settings.maintenance.repairHooks")
                     Button("打开日志", action: openLogs)
                         .accessibilityLabel("打开日志")
