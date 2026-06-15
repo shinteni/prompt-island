@@ -414,7 +414,11 @@ final class IslandWindow: NSPanel {
             expanded: store.isExpanded,
             position: store.configurationStore.config.islandPosition
         )
-        let visibleFrame = targetScreen().visibleFrame
+        guard let visibleFrame = targetScreen()?.visibleFrame else {
+            logger.error("island.screen.unavailable", detail: "repairFrameIfNeeded")
+            orderOut(nil)
+            return
+        }
         guard abs(frame.minX - target.minX) > 0.5 ||
               abs(frame.minY - target.minY) > 0.5 ||
               abs(frame.width - target.width) > 0.5 ||
@@ -579,7 +583,18 @@ final class IslandWindow: NSPanel {
     }
 
     func targetFrame(expanded: Bool, position: IslandPosition) -> NSRect {
-        let screenFrame = targetScreen().visibleFrame
+        guard let screenFrame = targetScreen()?.visibleFrame else {
+            logger.error("island.screen.unavailable", detail: "targetFrame")
+            if frame.width > 1, frame.height > 1 {
+                return frame
+            }
+            return NSRect(
+                x: 0,
+                y: 0,
+                width: expanded ? 620 : IslandPresentationPolicy.idleMiniDiameter,
+                height: expanded ? 170 : IslandPresentationPolicy.idleMiniDiameter
+            )
+        }
         let previousFrame = frame
         let preferredCenterX = preferredCenterXForNextFrame
         preferredCenterXForNextFrame = nil
@@ -780,7 +795,7 @@ final class IslandWindow: NSPanel {
         }
     }
 
-    private func targetScreen() -> NSScreen {
+    private func targetScreen() -> NSScreen? {
         if frame.width > 1,
            frame.height > 1,
            let screen = NSScreen.screens.first(where: { $0.frame.intersects(frame) }) {
@@ -799,10 +814,7 @@ final class IslandWindow: NSPanel {
         if let mainScreen = NSScreen.main {
             return mainScreen
         }
-        guard let firstScreen = NSScreen.screens.first else {
-            fatalError("No available screen for island window")
-        }
-        return firstScreen
+        return NSScreen.screens.first
     }
 
     private func applyWindowMask(expanded: Bool) {

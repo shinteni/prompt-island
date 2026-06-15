@@ -61,7 +61,7 @@ The local data flow is: Claude Code / Codex CLI hooks and Codex Desktop local st
 
 ## Verification Strategy
 
-The repository includes Swift unit tests, release packaging scripts, documentation-site checks, and macOS window automation checks. The common entry points are `swift test`, `zsh scripts/run-tests.sh`, `zsh scripts/verify-docs-site.sh`, and `zsh scripts/verify-release-readiness.sh`. GitHub Actions runs Swift build plus test-target compilation/discovery for source, test, and package changes; full test execution remains the local `zsh scripts/run-tests.sh` path. Documentation changes deploy and verify GitHub Pages.
+The repository includes Swift unit tests, release packaging scripts, documentation-site checks, and macOS window automation checks. The common entry points are `zsh scripts/run-tests.sh`, `zsh scripts/verify-docs-site.sh`, and `zsh scripts/verify-release-readiness.sh`. GitHub Actions runs Swift build and tests for source, test, and package changes; on a local CommandLineTools-only setup, `scripts/run-tests.sh` explicitly falls back to test-target compilation/discovery. Documentation changes deploy and verify GitHub Pages.
 
 ## Download And Install
 
@@ -104,7 +104,7 @@ Read the full privacy note in [PRIVACY.md](PRIVACY.md).
 
 ```sh
 swift build
-swift test
+zsh scripts/run-tests.sh
 zsh scripts/package-release.sh
 ```
 

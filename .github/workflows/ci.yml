@@ -23,7 +23,7 @@ permissions:
 
 jobs:
   swift:
-    name: Swift build and test discovery
+    name: Swift build and tests
     runs-on: macos-latest
 
     steps:
@@ -40,5 +40,7 @@ jobs:
       - name: Build
         run: swift build
 
-      - name: Compile and list tests
-        run: swift test list
+      - name: Run tests
+        env:
+          VIBELSLAND_REQUIRE_TEST_EXECUTION: "1"
+        run: zsh scripts/run-tests.sh
