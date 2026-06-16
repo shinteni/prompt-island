@@ -30,15 +30,15 @@
   },
   "archive": {
     "name": "Vibelsland-Free-0.1.0-macos.zip",
-    "size_bytes": 2450295,
-    "sha256": "f8e303b771bc04839b1ed469c860d4fcae599229600c4a40dc2c8c1966626e64",
+    "size_bytes": 2450730,
+    "sha256": "b8ae6ea245d4720c1c9389c2ce95a582df9005866fda3522279058eb40b40af5",
     "download_url": "https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip",
     "github_asset_id": 422025175
   },
   "checksum_file": {
     "name": "Vibelsland-Free-0.1.0-macos.zip.sha256",
     "size_bytes": 98,
-    "sha256": "ed13e4f7af62214311fd04c586eabefba46dc559840812ef6345978dffe0041a",
+    "sha256": "414c5bfe5213e68237c44a7591277873629ca1e3738903cb14121305631a0622",
     "download_url": "https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip.sha256",
     "github_asset_id": 422025176
   }

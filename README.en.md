@@ -82,7 +82,7 @@ shasum -a 256 -c Vibelsland-Free-0.1.0-macos.zip.sha256
 Current SHA-256:
 
 ```text
-f8e303b771bc04839b1ed469c860d4fcae599229600c4a40dc2c8c1966626e64
+b8ae6ea245d4720c1c9389c2ce95a582df9005866fda3522279058eb40b40af5
 ```
 
 Install:
