@@ -68,6 +68,7 @@ struct VibelslandFreeCoreTests {
     @Test func testCodexStatePathPrefersCurrentSqliteDirectory() throws {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent("vibelsland-codex-state-\(UUID().uuidString)", isDirectory: true)
+            .standardizedFileURL
         defer { try? FileManager.default.removeItem(at: root) }
 
         let legacyURL = root.appendingPathComponent(".codex/state_5.sqlite")
