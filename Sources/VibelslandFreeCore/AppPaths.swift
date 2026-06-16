@@ -75,8 +75,12 @@ package enum AppPaths {
     ) -> URL {
         let homeURL = home(environment: environment)
         let currentURL = homeURL.appendingPathComponent(".codex/sqlite/state_5.sqlite")
-        if fileManager.fileExists(atPath: currentURL.path) {
-            return currentURL
+        return codexStateURL(homeURL: homeURL, currentExists: fileManager.fileExists(atPath: currentURL.path))
+    }
+
+    package static func codexStateURL(homeURL: URL, currentExists: Bool) -> URL {
+        if currentExists {
+            return homeURL.appendingPathComponent(".codex/sqlite/state_5.sqlite")
         }
         return homeURL.appendingPathComponent(".codex/state_5.sqlite")
     }

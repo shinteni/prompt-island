@@ -66,31 +66,17 @@ struct VibelslandFreeCoreTests {
     }
 
     @Test func testCodexStatePathPrefersCurrentSqliteDirectory() throws {
-        let root = FileManager.default.temporaryDirectory
-            .appendingPathComponent("vibelsland-codex-state-\(UUID().uuidString)", isDirectory: true)
-            .standardizedFileURL
-        defer { try? FileManager.default.removeItem(at: root) }
-
+        let root = URL(fileURLWithPath: "/tmp/vibelsland-codex-state-test", isDirectory: true)
         let legacyURL = root.appendingPathComponent(".codex/state_5.sqlite")
         let currentURL = root.appendingPathComponent(".codex/sqlite/state_5.sqlite")
-        try FileManager.default.createDirectory(
-            at: legacyURL.deletingLastPathComponent(),
-            withIntermediateDirectories: true
-        )
-        try Data("legacy".utf8).write(to: legacyURL)
         XCTAssertEqual(
-            AppPaths.codexStateURL(environment: ["VIBELSLAND_HOME": root.path]).path,
+            AppPaths.codexStateURL(homeURL: root, currentExists: false).path,
             legacyURL.path,
             "Legacy Codex state db remains the fallback"
         )
 
-        try FileManager.default.createDirectory(
-            at: currentURL.deletingLastPathComponent(),
-            withIntermediateDirectories: true
-        )
-        try Data("current".utf8).write(to: currentURL)
         XCTAssertEqual(
-            AppPaths.codexStateURL(environment: ["VIBELSLAND_HOME": root.path]).path,
+            AppPaths.codexStateURL(homeURL: root, currentExists: true).path,
             currentURL.path,
             "Current Codex state db location is preferred when available"
         )
