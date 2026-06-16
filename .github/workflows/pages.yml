@@ -44,7 +44,7 @@ jobs:
       VIBELSLAND_CUSTOM_DOMAIN: ${{ inputs.custom_domain || vars.VIBELSLAND_CUSTOM_DOMAIN || '' }}
       GITHUB_TOKEN: ${{ github.token }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Build verified site
         run: zsh scripts/build-docs-site.sh _site
