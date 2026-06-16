@@ -26,7 +26,14 @@ package struct SessionDisplaySnapshot: Equatable {
         statusText = Self.statusText(for: session, confidence: confidence, language: language)
         signals = Self.signals(for: session, language: language)
 
-        if let approval = session.approval, !approval.isExpired {
+        if let approval = session.approval,
+           approval.resolutionState != .pending || approval.isExpired {
+            primaryLine = statusText
+            secondaryLine = "\(Self.approvalLabel(language))\(Self.separator(language))\(Self.clean(approval.detail.isEmpty ? approval.tool : approval.detail, limit: 86))"
+            return
+        }
+
+        if let approval = session.approval {
             primaryLine = "\(Self.approvalLabel(language))\(Self.separator(language))\(Self.clean(approval.detail.isEmpty ? approval.tool : approval.detail, limit: 86))"
             secondaryLine = session.lastUserMessage.map { "\(Self.youLabel(language))\(Self.separator(language))\(Self.clean($0, limit: 86))" }
             return
