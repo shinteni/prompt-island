@@ -125,9 +125,15 @@ extension SessionStore {
 
     func ingest(codexDesktopApproval approval: CodexDesktopApproval) {
         pendingCodexDesktopApprovals[approval.id] = approval
+        let approvalSessionTitle = AppText.pick(
+            configurationStore.config.language,
+            english: "Codex Desktop approval",
+            japanese: "Codex Desktop 承認",
+            chinese: "Codex Desktop 审批"
+        )
         var session = sessions.first { $0.id == "codex-desktop-\(approval.threadID)" } ?? AgentSession(
             id: "codex-desktop-\(approval.threadID)",
-            title: "Codex Desktop 审批",
+            title: approvalSessionTitle,
             prompt: "Codex Desktop",
             source: .codexDesktop,
             workspace: approval.workspace ?? "",
@@ -142,6 +148,7 @@ extension SessionStore {
             lastUserMessage: nil,
             usage: nil
         )
+        session.title = approvalSessionTitle
         session.updatedAt = Date()
         session.status = .waitingApproval
         session.workspace = approval.workspace ?? session.workspace

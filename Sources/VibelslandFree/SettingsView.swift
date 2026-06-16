@@ -14,6 +14,7 @@ struct SettingsView: View {
                 if hasVisibleIssues {
                     IssueSummarySection(
                         error: store.lastError,
+                        repairMessage: store.lastRepairMessage,
                         items: store.exceptionOnlyHealthChecks,
                         refresh: store.refreshDiagnostics,
                         repairConnections: store.repairConnections,
@@ -32,6 +33,7 @@ struct SettingsView: View {
 
                 IslandPreferencesSection(
                     position: binding(\.islandPosition),
+                    language: binding(\.language),
                     launchAtLogin: launchAtLoginBinding,
                     soundsEnabled: binding(\.enableSounds),
                     soundTheme: binding(\.soundTheme),
@@ -48,6 +50,7 @@ struct SettingsView: View {
 
                 MaintenanceSection(
                     allHealthChecks: store.healthChecks,
+                    repairMessage: store.lastRepairMessage,
                     refresh: store.refreshDiagnostics,
                     repairConnections: store.repairConnections,
                     openLogs: store.openLogs
@@ -110,13 +113,23 @@ struct SettingsView: View {
                 case .success(let actual):
                     configurationStore.config.launchAtLogin = actual
                     if actual != value {
-                        store.lastError = "登录启动未能切换到请求状态，请确认当前运行的是已打包的 .app。"
+                        store.lastError = AppText.pick(
+                            configurationStore.config.language,
+                            english: "Launch at login could not switch to the requested state. Make sure you are running the packaged .app.",
+                            japanese: "ログイン時起動を要求された状態に切り替えられませんでした。パッケージ化された .app を実行しているか確認してください。",
+                            chinese: "登录启动未能切换到请求状态，请确认当前运行的是已打包的 .app。"
+                        )
                     } else {
                         store.lastError = nil
                     }
                 case .failure(let error):
                     configurationStore.config.launchAtLogin = previous
-                    store.lastError = "登录启动设置失败：\(error.localizedDescription)"
+                    store.lastError = AppText.pick(
+                        configurationStore.config.language,
+                        english: "Launch at login failed: \(error.localizedDescription)",
+                        japanese: "ログイン時起動の設定に失敗しました：\(error.localizedDescription)",
+                        chinese: "登录启动设置失败：\(error.localizedDescription)"
+                    )
                 }
             }
         )
@@ -124,24 +137,23 @@ struct SettingsView: View {
 
     private var approvalWaitText: String {
         let seconds = Int(configurationStore.config.approvalTimeoutSeconds)
-        if seconds < 3600 {
-            return "\(max(1, seconds / 60)) 分钟"
-        }
-        let hours = seconds / 3600
-        let minutes = (seconds % 3600) / 60
-        if minutes == 0 {
-            return "\(hours) 小时"
-        }
-        return "\(hours) 小时 \(minutes) 分钟"
+        return AppText.approvalWaitText(seconds: seconds, language: configurationStore.config.language)
     }
 }
 
 private struct SettingsHeader: View {
+    @EnvironmentObject private var configurationStore: AppConfigurationStore
+
     var body: some View {
         VStack(alignment: .leading, spacing: 7) {
             Text(">_ - island")
                 .font(.system(size: 28, weight: .semibold))
-            Text("管理浮岛显示、提醒来源和本机审批接入。正常状态下不显示健康检查细节。")
+            Text(AppText.pick(
+                configurationStore.config.language,
+                english: "Manage the floating island, event sources, and local approval bridge. Health details stay hidden when everything is normal.",
+                japanese: "フローティングアイランド、通知元、ローカル承認接続を管理します。正常時はヘルスチェックの詳細を表示しません。",
+                chinese: "管理浮岛显示、提醒来源和本机审批接入。正常状态下不显示健康检查细节。"
+            ))
                 .font(.system(size: 13, weight: .medium))
                 .foregroundStyle(.secondary)
         }
@@ -151,7 +163,10 @@ private struct SettingsHeader: View {
 }
 
 private struct IssueSummarySection: View {
+    @EnvironmentObject private var configurationStore: AppConfigurationStore
+
     let error: String?
+    let repairMessage: String?
     let items: [HealthCheckItem]
     let refresh: () -> Void
     let repairConnections: () -> Void
@@ -165,28 +180,57 @@ private struct IssueSummarySection: View {
                         .font(.system(size: 18, weight: .semibold))
                         .foregroundStyle(.orange)
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("需要处理")
+                        Text(AppText.pick(
+                            configurationStore.config.language,
+                            english: "Needs action",
+                            japanese: "対応が必要",
+                            chinese: "需要处理"
+                        ))
                             .font(.system(size: 16, weight: .semibold))
-                        Text("这些问题可能会影响事件接收或审批回传。")
+                        Text(AppText.pick(
+                            configurationStore.config.language,
+                            english: "These issues can affect event intake or approval responses.",
+                            japanese: "これらの問題はイベント受信や承認返送に影響する可能性があります。",
+                            chinese: "这些问题可能会影响事件接收或审批回传。"
+                        ))
                             .font(.system(size: 12, weight: .medium))
                             .foregroundStyle(.secondary)
                     }
                     Spacer()
-                    Button("重新检测", action: refresh)
-                        .accessibilityLabel("重新检测")
+                    Button(refreshTitle, action: refresh)
+                        .accessibilityLabel(refreshTitle)
                         .accessibilityIdentifier("settings.issue.refresh")
-                    Button("修复接入", action: repairConnections)
+                    Button(repairTitle, action: repairConnections)
                         .buttonStyle(.borderedProminent)
-                        .accessibilityLabel("修复接入")
+                        .accessibilityLabel(repairTitle)
                         .accessibilityIdentifier("settings.issue.repairHooks")
                 }
 
                 if let error {
                     MessageRow(
                         icon: "xmark.octagon.fill",
-                        title: "最近错误",
+                        title: AppText.pick(
+                            configurationStore.config.language,
+                            english: "Latest error",
+                            japanese: "最新のエラー",
+                            chinese: "最近错误"
+                        ),
                         detail: error,
                         color: .red
+                    )
+                }
+
+                if let repairMessage {
+                    MessageRow(
+                        icon: "checkmark.circle.fill",
+                        title: AppText.pick(
+                            configurationStore.config.language,
+                            english: "Repair ran",
+                            japanese: "修復を実行しました",
+                            chinese: "已执行修复"
+                        ),
+                        detail: repairMessage,
+                        color: .green
                     )
                 }
 
@@ -195,17 +239,31 @@ private struct IssueSummarySection: View {
                 }
 
                 HStack {
-                    Button("打开日志", action: openLogs)
-                        .accessibilityLabel("打开日志")
+                    Button(openLogsTitle, action: openLogs)
+                        .accessibilityLabel(openLogsTitle)
                         .accessibilityIdentifier("settings.issue.openLogs")
                     Spacer()
                 }
             }
         }
     }
+
+    private var refreshTitle: String {
+        AppText.pick(configurationStore.config.language, english: "Check again", japanese: "再チェック", chinese: "重新检测")
+    }
+
+    private var repairTitle: String {
+        AppText.pick(configurationStore.config.language, english: "Repair connection", japanese: "接続を修復", chinese: "修复接入")
+    }
+
+    private var openLogsTitle: String {
+        AppText.pick(configurationStore.config.language, english: "Open logs", japanese: "ログを開く", chinese: "打开日志")
+    }
 }
 
 private struct ReceiveSourcesSection: View {
+    @EnvironmentObject private var configurationStore: AppConfigurationStore
+
     @Binding var claudeEnabled: Bool
     @Binding var codexCLIEnabled: Bool
     @Binding var codexDesktopEnabled: Bool
@@ -214,11 +272,24 @@ private struct ReceiveSourcesSection: View {
     let codexDesktopHealth: HealthCheckItem?
 
     var body: some View {
-        SettingsCard(title: "接收来源", subtitle: "开关只控制接收和显示，不会卸载已经写入的 Hooks。") {
+        SettingsCard(
+            title: AppText.pick(configurationStore.config.language, english: "Sources", japanese: "受信元", chinese: "接收来源"),
+            subtitle: AppText.pick(
+                configurationStore.config.language,
+                english: "Toggles only control intake and display. They do not uninstall existing hooks.",
+                japanese: "切り替えは受信と表示だけを制御します。既存の Hooks は削除しません。",
+                chinese: "开关只控制接收和显示，不会卸载已经写入的 Hooks。"
+            )
+        ) {
             VStack(spacing: 0) {
                 SourceToggleRow(
                     title: "Claude Code",
-                    subtitle: "通过 Hooks 接收审批和事件",
+                    subtitle: AppText.pick(
+                        configurationStore.config.language,
+                        english: "Receive approvals and events through hooks",
+                        japanese: "Hooks 経由で承認とイベントを受信",
+                        chinese: "通过 Hooks 接收审批和事件"
+                    ),
                     health: claudeHealth,
                     systemImage: "sparkles",
                     isOn: $claudeEnabled
@@ -226,7 +297,12 @@ private struct ReceiveSourcesSection: View {
                 SettingsDivider()
                 SourceToggleRow(
                     title: "Codex CLI",
-                    subtitle: "通过 Hooks 接收命令行事件",
+                    subtitle: AppText.pick(
+                        configurationStore.config.language,
+                        english: "Receive command-line events through hooks",
+                        japanese: "Hooks 経由でコマンドラインイベントを受信",
+                        chinese: "通过 Hooks 接收命令行事件"
+                    ),
                     health: codexCLIHealth,
                     systemImage: "terminal",
                     isOn: $codexCLIEnabled
@@ -234,7 +310,12 @@ private struct ReceiveSourcesSection: View {
                 SettingsDivider()
                 SourceToggleRow(
                     title: "Codex Desktop",
-                    subtitle: "读取本机状态，并接收实时审批",
+                    subtitle: AppText.pick(
+                        configurationStore.config.language,
+                        english: "Read local state and receive live approvals",
+                        japanese: "ローカル状態を読み取り、リアルタイム承認を受信",
+                        chinese: "读取本机状态，并接收实时审批"
+                    ),
                     health: codexDesktopHealth,
                     systemImage: "macwindow",
                     isOn: $codexDesktopEnabled
@@ -285,7 +366,10 @@ private struct SourceToggleRow: View {
 }
 
 private struct IslandPreferencesSection: View {
+    @EnvironmentObject private var configurationStore: AppConfigurationStore
+
     @Binding var position: IslandPosition
+    @Binding var language: AppLanguage
     @Binding var launchAtLogin: Bool
     @Binding var soundsEnabled: Bool
     @Binding var soundTheme: SoundTheme
@@ -295,69 +379,93 @@ private struct IslandPreferencesSection: View {
     let playAllPreviews: () -> Void
 
     var body: some View {
-        SettingsCard(title: "浮岛与提醒", subtitle: "控制浮岛出现位置、声音和展开内容数量。") {
+        SettingsCard(
+            title: AppText.pick(configurationStore.config.language, english: "Island and alerts", japanese: "アイランドと通知", chinese: "浮岛与提醒"),
+            subtitle: AppText.pick(
+                configurationStore.config.language,
+                english: "Control island placement, sound, language, and expanded content.",
+                japanese: "アイランドの位置、サウンド、言語、展開時の内容を調整します。",
+                chinese: "控制浮岛出现位置、声音、语言和展开内容数量。"
+            )
+        ) {
             VStack(spacing: 0) {
-                SettingsRow(icon: "rectangle.inset.filled.and.person.filled", title: "浮岛位置") {
-                    Picker("", selection: $position) {
-                        ForEach(IslandPosition.allCases) { position in
-                            Text(position.title).tag(position)
+                SettingsRow(
+                    icon: "globe",
+                    title: AppText.pick(configurationStore.config.language, english: "Language", japanese: "言語", chinese: "语言")
+                ) {
+                    Picker("", selection: $language) {
+                        ForEach(AppLanguage.allCases) { language in
+                            Text(language.displayName).tag(language)
                         }
                     }
                     .labelsHidden()
                     .frame(width: 150)
                 }
                 SettingsDivider()
-                SettingsRow(icon: "power", title: "登录时启动") {
+                SettingsRow(
+                    icon: "rectangle.inset.filled.and.person.filled",
+                    title: AppText.pick(configurationStore.config.language, english: "Island position", japanese: "アイランド位置", chinese: "浮岛位置")
+                ) {
+                    Picker("", selection: $position) {
+                        ForEach(IslandPosition.allCases) { position in
+                            Text(position.title(language: configurationStore.config.language)).tag(position)
+                        }
+                    }
+                    .labelsHidden()
+                    .frame(width: 150)
+                }
+                SettingsDivider()
+                SettingsRow(icon: "power", title: AppText.pick(configurationStore.config.language, english: "Launch at login", japanese: "ログイン時に起動", chinese: "登录时启动")) {
                     Toggle("", isOn: $launchAtLogin)
                         .labelsHidden()
                 }
                 SettingsDivider()
-                SettingsRow(icon: "speaker.wave.2", title: "声音") {
+                SettingsRow(icon: "speaker.wave.2", title: AppText.pick(configurationStore.config.language, english: "Sound", japanese: "サウンド", chinese: "声音")) {
                     HStack(spacing: 8) {
                         Toggle("", isOn: $soundsEnabled)
                             .labelsHidden()
                         Picker("", selection: $soundTheme) {
                             ForEach(SoundTheme.allCases) { theme in
-                                Text(theme.title).tag(theme)
+                                Text(theme.title(language: configurationStore.config.language)).tag(theme)
                             }
                         }
                         .labelsHidden()
                         .frame(width: 112)
                         .disabled(!soundsEnabled)
-                        Menu("试听") {
-                            Button("任务开始") {
+                        Menu(AppText.pick(configurationStore.config.language, english: "Preview", japanese: "試聴", chinese: "试听")) {
+                            Button(AppText.pick(configurationStore.config.language, english: "Task started", japanese: "タスク開始", chinese: "任务开始")) {
                                 playPreview(.taskStarted)
                             }
-                            Button("工具调用") {
+                            Button(AppText.pick(configurationStore.config.language, english: "Tool call", japanese: "ツール呼び出し", chinese: "工具调用")) {
                                 playPreview(.toolTick)
                             }
-                            Button("任务完成") {
+                            Button(AppText.pick(configurationStore.config.language, english: "Task completed", japanese: "タスク完了", chinese: "任务完成")) {
                                 playPreview(.taskCompleted)
                             }
-                            Button("任务失败") {
+                            Button(AppText.pick(configurationStore.config.language, english: "Task failed", japanese: "タスク失敗", chinese: "任务失败")) {
                                 playPreview(.taskFailed)
                             }
-                            Button("审批提醒") {
+                            Button(AppText.pick(configurationStore.config.language, english: "Approval alert", japanese: "承認通知", chinese: "审批提醒")) {
                                 playPreview(.approval)
                             }
                             Divider()
-                            Button("试听全部", action: playAllPreviews)
+                            Button(AppText.pick(configurationStore.config.language, english: "Preview all", japanese: "すべて試聴", chinese: "试听全部"), action: playAllPreviews)
                         }
                         .disabled(!soundsEnabled)
                     }
                 }
                 SettingsDivider()
-                SettingsRow(icon: "moon", title: "勿扰") {
+                SettingsRow(icon: "moon", title: AppText.pick(configurationStore.config.language, english: "Do not disturb", japanese: "集中モード", chinese: "勿扰")) {
                     Toggle("", isOn: $doNotDisturb)
                         .labelsHidden()
                 }
                 SettingsDivider()
-                SettingsRow(icon: "list.bullet.rectangle", title: "展开时最多显示") {
+                SettingsRow(icon: "list.bullet.rectangle", title: AppText.pick(configurationStore.config.language, english: "Expanded limit", japanese: "展開時の表示数", chinese: "展开时最多显示")) {
                     Stepper(
                         value: $maxVisibleSessions,
                         in: DashboardSessionPolicy.minimumConfiguredVisibleSessions...DashboardSessionPolicy.maximumVisibleSessions
                     ) {
-                        Text("\(maxVisibleSessions) 个会话")
+                        Text(AppText.sessions(maxVisibleSessions, language: configurationStore.config.language))
                             .monospacedDigit()
                     }
                     .frame(width: 150)
@@ -368,13 +476,23 @@ private struct IslandPreferencesSection: View {
 }
 
 private struct ApprovalPreferencesSection: View {
+    @EnvironmentObject private var configurationStore: AppConfigurationStore
+
     @Binding var approvalTimeoutSeconds: TimeInterval
     let approvalWaitText: String
 
     var body: some View {
-        SettingsCard(title: "审批", subtitle: "只影响真实审批回传的等待时间。") {
+        SettingsCard(
+            title: AppText.pick(configurationStore.config.language, english: "Approvals", japanese: "承認", chinese: "审批"),
+            subtitle: AppText.pick(
+                configurationStore.config.language,
+                english: "Only affects how long real approval responses wait.",
+                japanese: "実際の承認返送の待機時間だけに影響します。",
+                chinese: "只影响真实审批回传的等待时间。"
+            )
+        ) {
             VStack(spacing: 0) {
-                SettingsRow(icon: "checkmark.shield", title: "等待时间") {
+                SettingsRow(icon: "checkmark.shield", title: AppText.pick(configurationStore.config.language, english: "Wait time", japanese: "待機時間", chinese: "等待时间")) {
                     Stepper(value: $approvalTimeoutSeconds, in: 60...7200, step: 300) {
                         Text(approvalWaitText)
                             .monospacedDigit()
@@ -382,7 +500,12 @@ private struct ApprovalPreferencesSection: View {
                     .frame(width: 170)
                 }
                 SettingsDivider()
-                Text("应用不可用时会立即回退；应用已接管请求后，超时不会自动允许或拒绝。")
+                Text(AppText.pick(
+                    configurationStore.config.language,
+                    english: "If the app is unavailable, requests fall back immediately. After the app takes over a request, timeout never auto-allows or auto-denies it.",
+                    japanese: "アプリが利用できない場合はすぐにフォールバックします。アプリがリクエストを引き受けた後、タイムアウトで自動許可または自動拒否することはありません。",
+                    chinese: "应用不可用时会立即回退；应用已接管请求后，超时不会自动允许或拒绝。"
+                ))
                     .font(.system(size: 12, weight: .medium))
                     .foregroundStyle(.secondary)
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -393,34 +516,59 @@ private struct ApprovalPreferencesSection: View {
 }
 
 private struct MaintenanceSection: View {
+    @EnvironmentObject private var configurationStore: AppConfigurationStore
+
     let allHealthChecks: [HealthCheckItem]
+    let repairMessage: String?
     let refresh: () -> Void
     let repairConnections: () -> Void
     let openLogs: () -> Void
 
     var body: some View {
-        SettingsCard(title: "维护", subtitle: "日常只需要在这里重新检测或修复接入。") {
+        SettingsCard(
+            title: AppText.pick(configurationStore.config.language, english: "Maintenance", japanese: "メンテナンス", chinese: "维护"),
+            subtitle: AppText.pick(
+                configurationStore.config.language,
+                english: "For normal use, check again or repair the connection here.",
+                japanese: "通常はここで再チェックまたは接続修復を行います。",
+                chinese: "日常只需要在这里重新检测或修复接入。"
+            )
+        ) {
             VStack(alignment: .leading, spacing: 12) {
                 HStack(spacing: 10) {
-                    Button("重新检测", action: refresh)
-                        .accessibilityLabel("重新检测")
+                    Button(refreshTitle, action: refresh)
+                        .accessibilityLabel(refreshTitle)
                         .accessibilityIdentifier("settings.maintenance.refresh")
-                    Button("修复接入", action: repairConnections)
+                    Button(repairTitle, action: repairConnections)
                         .buttonStyle(.borderedProminent)
-                        .accessibilityLabel("修复接入")
+                        .accessibilityLabel(repairTitle)
                         .accessibilityIdentifier("settings.maintenance.repairHooks")
-                    Button("打开日志", action: openLogs)
-                        .accessibilityLabel("打开日志")
+                    Button(openLogsTitle, action: openLogs)
+                        .accessibilityLabel(openLogsTitle)
                         .accessibilityIdentifier("settings.maintenance.openLogs")
                     Spacer()
                 }
 
                 if issueItems.isEmpty {
-                    Text(allHealthChecks.isEmpty ? "尚未运行检测。" : "未发现需要处理的问题。")
-                        .font(.system(size: 12, weight: .medium))
-                        .foregroundStyle(.secondary)
+                    if let repairMessage {
+                        MessageRow(
+                            icon: "checkmark.circle.fill",
+                            title: AppText.pick(
+                                configurationStore.config.language,
+                                english: "Repair ran",
+                                japanese: "修復を実行しました",
+                                chinese: "已执行修复"
+                            ),
+                            detail: repairMessage,
+                            color: .green
+                        )
+                    } else {
+                        Text(allHealthChecks.isEmpty ? notRunText : noIssuesText)
+                            .font(.system(size: 12, weight: .medium))
+                            .foregroundStyle(.secondary)
+                    }
                 } else {
-                    DisclosureGroup("查看需要处理的检查") {
+                    DisclosureGroup(AppText.pick(configurationStore.config.language, english: "Show checks that need action", japanese: "対応が必要なチェックを表示", chinese: "查看需要处理的检查")) {
                         VStack(spacing: 10) {
                             ForEach(issueItems) { item in
                                 HealthCheckRow(item: item, prominent: false)
@@ -436,9 +584,31 @@ private struct MaintenanceSection: View {
     private var issueItems: [HealthCheckItem] {
         allHealthChecks.filter { $0.status == .needsAction }
     }
+
+    private var refreshTitle: String {
+        AppText.pick(configurationStore.config.language, english: "Check again", japanese: "再チェック", chinese: "重新检测")
+    }
+
+    private var repairTitle: String {
+        AppText.pick(configurationStore.config.language, english: "Repair connection", japanese: "接続を修復", chinese: "修复接入")
+    }
+
+    private var openLogsTitle: String {
+        AppText.pick(configurationStore.config.language, english: "Open logs", japanese: "ログを開く", chinese: "打开日志")
+    }
+
+    private var notRunText: String {
+        AppText.pick(configurationStore.config.language, english: "Checks have not run yet.", japanese: "チェックはまだ実行されていません。", chinese: "尚未运行检测。")
+    }
+
+    private var noIssuesText: String {
+        AppText.pick(configurationStore.config.language, english: "No issues need action.", japanese: "対応が必要な問題はありません。", chinese: "未发现需要处理的问题。")
+    }
 }
 
 private struct DiagnosticsSection: View {
+    @EnvironmentObject private var configurationStore: AppConfigurationStore
+
     let codexAppServerReachable: Bool
     let codexAppServerThreadListAvailable: Bool
     let codexAppServerThreadCount: Int
@@ -449,46 +619,49 @@ private struct DiagnosticsSection: View {
     let installReport: InstallReport?
 
     var body: some View {
-        SettingsCard(title: "高级诊断", subtitle: "排查问题时再展开。") {
-            DisclosureGroup("显示技术诊断") {
+        SettingsCard(
+            title: AppText.pick(configurationStore.config.language, english: "Advanced diagnostics", japanese: "高度な診断", chinese: "高级诊断"),
+            subtitle: AppText.pick(configurationStore.config.language, english: "Expand only when troubleshooting.", japanese: "問題調査時だけ展開します。", chinese: "排查问题时再展开。")
+        ) {
+            DisclosureGroup(AppText.pick(configurationStore.config.language, english: "Show technical diagnostics", japanese: "技術診断を表示", chinese: "显示技术诊断")) {
                 VStack(alignment: .leading, spacing: 12) {
-                    DisclosureGroup("技术连接状态") {
+                    DisclosureGroup(AppText.pick(configurationStore.config.language, english: "Technical connection status", japanese: "技術的な接続状態", chinese: "技术连接状态")) {
                         VStack(spacing: 10) {
-                            DiagnosticRow(title: "App Server", value: codexAppServerReachable ? "可用" : "未连接")
+                            DiagnosticRow(title: "App Server", value: codexAppServerReachable ? availableText : disconnectedText)
                             DiagnosticRow(
                                 title: "thread/list",
-                                value: codexAppServerThreadListAvailable ? "可用，\(codexAppServerThreadCount) 条" : "不可用"
+                                value: codexAppServerThreadListAvailable ? threadListText : unavailableText
                             )
-                            DiagnosticRow(title: "Desktop IPC", value: codexIPCSocketPath ?? "未发现", monospaced: true)
-                            DiagnosticRow(title: "实时审批", value: codexDesktopApprovalConnected ? "已连接" : "未连接")
-                            DiagnosticRow(title: "最近连接", value: lastConnectedText)
-                            DiagnosticRow(title: "最近失败", value: codexDesktopLastFailureMessage ?? "无")
+                            DiagnosticRow(title: "Desktop IPC", value: codexIPCSocketPath ?? notFoundText, monospaced: true)
+                            DiagnosticRow(title: liveApprovalTitle, value: codexDesktopApprovalConnected ? connectedText : disconnectedText)
+                            DiagnosticRow(title: lastConnectedTitle, value: lastConnectedText)
+                            DiagnosticRow(title: latestFailureTitle, value: codexDesktopLastFailureMessage ?? noneText)
                         }
                         .padding(.top, 10)
                     }
 
-                    DisclosureGroup("本机路径") {
+                    DisclosureGroup(AppText.pick(configurationStore.config.language, english: "Local paths", japanese: "ローカルパス", chinese: "本机路径")) {
                         VStack(spacing: 10) {
                             PathRow(title: "Bridge", path: AppPaths.bridgeURL.path)
                             PathRow(title: "Socket", path: AppPaths.socketURL.path)
-                            PathRow(title: "配置", path: AppPaths.configURL.path)
-                            PathRow(title: "日志", path: AppPaths.logURL.path)
+                            PathRow(title: AppText.pick(configurationStore.config.language, english: "Config", japanese: "設定", chinese: "配置"), path: AppPaths.configURL.path)
+                            PathRow(title: AppText.pick(configurationStore.config.language, english: "Logs", japanese: "ログ", chinese: "日志"), path: AppPaths.logURL.path)
                         }
                         .padding(.top, 10)
                     }
 
                     if let installReport {
-                        DisclosureGroup("最近安装") {
+                        DisclosureGroup(AppText.pick(configurationStore.config.language, english: "Last install", japanese: "最近のインストール", chinese: "最近安装")) {
                             VStack(spacing: 10) {
-                                DiagnosticRow(title: "Bridge", value: installReport.bridgeInstalled ? "已安装" : "未安装")
-                                DiagnosticRow(title: "Claude", value: installReport.claudeHooksInstalled ? "已合并" : "未启用")
-                                DiagnosticRow(title: "Codex", value: installReport.codexHooksInstalled ? "已合并" : "未启用")
+                                DiagnosticRow(title: "Bridge", value: installReport.bridgeInstalled ? installedText : notInstalledText)
+                                DiagnosticRow(title: "Claude", value: installReport.claudeHooksInstalled ? mergedText : disabledText)
+                                DiagnosticRow(title: "Codex", value: installReport.codexHooksInstalled ? mergedText : disabledText)
                                 if installReport.codexHooksInstalled {
                                     DiagnosticRow(
-                                        title: "Codex hooks 开关",
+                                        title: AppText.pick(configurationStore.config.language, english: "Codex hooks flag", japanese: "Codex hooks フラグ", chinese: "Codex hooks 开关"),
                                         value: installReport.codexFeatureFlagEnabled
-                                            ? (installReport.codexFeatureFlagChanged ? "已开启" : "已开启，无需修改")
-                                            : "未开启"
+                                            ? (installReport.codexFeatureFlagChanged ? enabledText : enabledUnchangedText)
+                                            : disabledText
                                     )
                                 }
                             }
@@ -502,43 +675,85 @@ private struct DiagnosticsSection: View {
     }
 
     private var lastConnectedText: String {
-        guard let codexDesktopLastConnectedAt else { return "未连接过" }
+        guard let codexDesktopLastConnectedAt else {
+            return AppText.pick(configurationStore.config.language, english: "Never connected", japanese: "未接続", chinese: "未连接过")
+        }
         let formatter = DateFormatter()
         formatter.dateStyle = .short
         formatter.timeStyle = .medium
+        formatter.locale = AppText.locale(for: configurationStore.config.language)
         return formatter.string(from: codexDesktopLastConnectedAt)
+    }
+
+    private var availableText: String { AppText.pick(configurationStore.config.language, english: "Available", japanese: "利用可能", chinese: "可用") }
+    private var unavailableText: String { AppText.pick(configurationStore.config.language, english: "Unavailable", japanese: "利用不可", chinese: "不可用") }
+    private var connectedText: String { AppText.pick(configurationStore.config.language, english: "Connected", japanese: "接続済み", chinese: "已连接") }
+    private var disconnectedText: String { AppText.pick(configurationStore.config.language, english: "Disconnected", japanese: "未接続", chinese: "未连接") }
+    private var notFoundText: String { AppText.pick(configurationStore.config.language, english: "Not found", japanese: "未検出", chinese: "未发现") }
+    private var noneText: String { AppText.pick(configurationStore.config.language, english: "None", japanese: "なし", chinese: "无") }
+    private var liveApprovalTitle: String { AppText.pick(configurationStore.config.language, english: "Live approval", japanese: "リアルタイム承認", chinese: "实时审批") }
+    private var lastConnectedTitle: String { AppText.pick(configurationStore.config.language, english: "Last connected", japanese: "最終接続", chinese: "最近连接") }
+    private var latestFailureTitle: String { AppText.pick(configurationStore.config.language, english: "Latest failure", japanese: "最新の失敗", chinese: "最近失败") }
+    private var installedText: String { AppText.pick(configurationStore.config.language, english: "Installed", japanese: "インストール済み", chinese: "已安装") }
+    private var notInstalledText: String { AppText.pick(configurationStore.config.language, english: "Not installed", japanese: "未インストール", chinese: "未安装") }
+    private var mergedText: String { AppText.pick(configurationStore.config.language, english: "Merged", japanese: "マージ済み", chinese: "已合并") }
+    private var disabledText: String { AppText.pick(configurationStore.config.language, english: "Disabled", japanese: "無効", chinese: "未启用") }
+    private var enabledText: String { AppText.pick(configurationStore.config.language, english: "Enabled", japanese: "有効", chinese: "已开启") }
+    private var enabledUnchangedText: String { AppText.pick(configurationStore.config.language, english: "Enabled, unchanged", japanese: "有効、変更不要", chinese: "已开启，无需修改") }
+    private var threadListText: String {
+        AppText.pick(
+            configurationStore.config.language,
+            english: "Available, \(codexAppServerThreadCount) rows",
+            japanese: "利用可能、\(codexAppServerThreadCount) 件",
+            chinese: "可用，\(codexAppServerThreadCount) 条"
+        )
     }
 }
 
 private struct AdvancedActionsSection: View {
+    @EnvironmentObject private var configurationStore: AppConfigurationStore
+
     let uninstallHooks: () -> Void
     let restart: () -> Void
     let quit: () -> Void
 
     var body: some View {
-        SettingsCard(title: "应用", subtitle: "重启和退出直接可用；会改写本机接入的操作单独收起。") {
+        SettingsCard(
+            title: AppText.pick(configurationStore.config.language, english: "App", japanese: "アプリ", chinese: "应用"),
+            subtitle: AppText.pick(
+                configurationStore.config.language,
+                english: "Restart and quit are always available. Actions that rewrite local integrations are grouped separately.",
+                japanese: "再起動と終了は直接使用できます。ローカル接続を書き換える操作は別にまとめています。",
+                chinese: "重启和退出直接可用；会改写本机接入的操作单独收起。"
+            )
+        ) {
             VStack(alignment: .leading, spacing: 14) {
                 HStack(spacing: 10) {
-                    Button("重启应用", action: restart)
-                        .accessibilityLabel("重启应用")
+                    Button(restartTitle, action: restart)
+                        .accessibilityLabel(restartTitle)
                         .accessibilityIdentifier("settings.app.restart")
-                    Button("退出应用", action: quit)
-                        .accessibilityLabel("退出应用")
+                    Button(quitTitle, action: quit)
+                        .accessibilityLabel(quitTitle)
                         .accessibilityIdentifier("settings.app.quit")
                     Spacer()
                 }
 
                 SettingsDivider()
 
-                DisclosureGroup("危险操作") {
+                DisclosureGroup(AppText.pick(configurationStore.config.language, english: "Danger zone", japanese: "危険な操作", chinese: "危险操作")) {
                     VStack(alignment: .leading, spacing: 12) {
                         HStack(spacing: 10) {
-                            Button("卸载 Hooks", role: .destructive, action: uninstallHooks)
-                                .accessibilityLabel("卸载 Hooks")
+                            Button(uninstallTitle, role: .destructive, action: uninstallHooks)
+                                .accessibilityLabel(uninstallTitle)
                                 .accessibilityIdentifier("settings.danger.uninstallHooks")
                             Spacer()
                         }
-                        Text("关闭接收来源不会移除 Hooks；只有这里的卸载操作会改写本机 Claude 和 Codex hook 文件。")
+                        Text(AppText.pick(
+                            configurationStore.config.language,
+                            english: "Turning off sources does not remove hooks. Only uninstall here rewrites local Claude and Codex hook files.",
+                            japanese: "受信元をオフにしても Hooks は削除されません。ここでのアンインストールだけがローカルの Claude と Codex hook ファイルを書き換えます。",
+                            chinese: "关闭接收来源不会移除 Hooks；只有这里的卸载操作会改写本机 Claude 和 Codex hook 文件。"
+                        ))
                             .font(.system(size: 12, weight: .medium))
                             .foregroundStyle(.secondary)
                     }
@@ -546,6 +761,18 @@ private struct AdvancedActionsSection: View {
                 }
             }
         }
+    }
+
+    private var restartTitle: String {
+        AppText.pick(configurationStore.config.language, english: "Restart app", japanese: "アプリを再起動", chinese: "重启应用")
+    }
+
+    private var quitTitle: String {
+        AppText.pick(configurationStore.config.language, english: "Quit app", japanese: "アプリを終了", chinese: "退出应用")
+    }
+
+    private var uninstallTitle: String {
+        AppText.pick(configurationStore.config.language, english: "Uninstall hooks", japanese: "Hooks をアンインストール", chinese: "卸载 Hooks")
     }
 }
 
@@ -687,10 +914,12 @@ private struct HealthCheckRow: View {
 }
 
 private struct StatusPill: View {
+    @EnvironmentObject private var configurationStore: AppConfigurationStore
+
     let status: HealthCheckStatus
 
     var body: some View {
-        Text(status.title)
+        Text(status.title(language: configurationStore.config.language))
             .font(.system(size: 10, weight: .semibold))
             .foregroundStyle(color)
             .padding(.horizontal, 7)

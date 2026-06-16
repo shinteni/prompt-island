@@ -1,4 +1,5 @@
 import AppKit
+import Combine
 import VibelslandFreeCore
 import SwiftUI
 
@@ -11,6 +12,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject, NSWi
     private var launchIntroWindow: LaunchIntroWindow?
     private var settingsWindow: NSWindow?
     private var statusItem: NSStatusItem?
+    private var configCancellable: AnyCancellable?
     private var runtimeObservers: [NSObjectProtocol] = []
     private var verificationObservers: [NSObjectProtocol] = []
     private var hasPlayedLaunchIntro = false
@@ -37,6 +39,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject, NSWi
         )
         configurationStore.config.launchAtLogin = LaunchAtLoginController.isEnabled
         configureStatusItem()
+        configCancellable = configurationStore.$config
+            .dropFirst()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.refreshLocalizedChrome()
+            }
         installVerificationActionsIfNeeded()
         showIsland(launchAnimated: true)
         store.start()
@@ -155,23 +163,32 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject, NSWi
     }
 
     private func configureStatusItem() {
-        let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
+        let item = statusItem ?? NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
         if let button = item.button {
             button.image = MenuBarIconFactory.vibelslandIcon()
             button.imageScaling = .scaleProportionallyDown
             button.toolTip = ">_ - island"
         }
 
-        let menu = NSMenu()
-        menu.addItem(NSMenuItem(title: "打开面板", action: #selector(openIslandPanel), keyEquivalent: ""))
-        menu.addItem(NSMenuItem(title: "安装 Hooks", action: #selector(installHooks), keyEquivalent: "i"))
-        menu.addItem(NSMenuItem(title: "设置...", action: #selector(openSettings), keyEquivalent: ","))
-        menu.addItem(NSMenuItem(title: "打开日志", action: #selector(openLogs), keyEquivalent: "l"))
-        menu.addItem(.separator())
-        menu.addItem(NSMenuItem(title: "重启 >_ - island", action: #selector(restart), keyEquivalent: "r"))
-        menu.addItem(NSMenuItem(title: "退出 >_ - island", action: #selector(quit), keyEquivalent: "q"))
-        item.menu = menu
+        item.menu = makeStatusMenu()
         statusItem = item
+    }
+
+    private func refreshLocalizedChrome() {
+        statusItem?.menu = makeStatusMenu()
+        settingsWindow?.title = settingsWindowTitle
+    }
+
+    private func makeStatusMenu() -> NSMenu {
+        let menu = NSMenu()
+        menu.addItem(NSMenuItem(title: AppText.pick(language, english: "Open panel", japanese: "パネルを開く", chinese: "打开面板"), action: #selector(openIslandPanel), keyEquivalent: ""))
+        menu.addItem(NSMenuItem(title: AppText.pick(language, english: "Install hooks", japanese: "Hooks をインストール", chinese: "安装 Hooks"), action: #selector(installHooks), keyEquivalent: "i"))
+        menu.addItem(NSMenuItem(title: AppText.pick(language, english: "Settings...", japanese: "設定...", chinese: "设置..."), action: #selector(openSettings), keyEquivalent: ","))
+        menu.addItem(NSMenuItem(title: AppText.pick(language, english: "Open logs", japanese: "ログを開く", chinese: "打开日志"), action: #selector(openLogs), keyEquivalent: "l"))
+        menu.addItem(.separator())
+        menu.addItem(NSMenuItem(title: AppText.pick(language, english: "Restart >_ - island", japanese: ">_ - island を再起動", chinese: "重启 >_ - island"), action: #selector(restart), keyEquivalent: "r"))
+        menu.addItem(NSMenuItem(title: AppText.pick(language, english: "Quit >_ - island", japanese: ">_ - island を終了", chinese: "退出 >_ - island"), action: #selector(quit), keyEquivalent: "q"))
+        return menu
     }
 
     private func showIsland(launchAnimated: Bool = false) {
@@ -182,14 +199,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject, NSWi
             )
         }
         guard let islandWindow else { return }
-        if launchAnimated,
-           IslandPresentationPolicy.isIdleMiniPresentation(
-            sessions: store.sessions,
-            isExpanded: store.isExpanded
-           ) {
-            islandWindow.present(launchAnimated: false)
-            return
-        }
         guard launchAnimated, !hasPlayedLaunchIntro else {
             islandWindow.present(launchAnimated: false)
             return
@@ -241,7 +250,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject, NSWi
                 backing: .buffered,
                 defer: false
             )
-            window.title = "设置"
+            window.title = settingsWindowTitle
             window.center()
             window.delegate = self
             window.isReleasedWhenClosed = false
@@ -253,6 +262,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject, NSWi
             settingsWindow = window
         }
 
+        settingsWindow?.title = settingsWindowTitle
         settingsOpened()
         NSApp.activate(ignoringOtherApps: true)
         settingsWindow?.makeKeyAndOrderFront(nil)
@@ -288,7 +298,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject, NSWi
     @objc func restart() {
         let appPath = Bundle.main.bundleURL.path
         guard let command = AppRestartPolicy.command(bundlePath: appPath) else {
-            store.lastError = "重启失败：无法确定应用路径"
+            store.lastError = AppText.pick(language, english: "Restart failed: could not determine app path", japanese: "再起動に失敗しました：アプリのパスを判定できません", chinese: "重启失败：无法确定应用路径")
             openSettings()
             return
         }
@@ -299,7 +309,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject, NSWi
             try process.run()
             NSApp.terminate(nil)
         } catch {
-            store.lastError = "重启失败：\(error.localizedDescription)"
+            store.lastError = AppText.pick(language, english: "Restart failed: \(error.localizedDescription)", japanese: "再起動に失敗しました：\(error.localizedDescription)", chinese: "重启失败：\(error.localizedDescription)")
             openSettings()
         }
     }
@@ -310,6 +320,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject, NSWi
 
     @objc func openLogs() {
         store.openLogs()
+    }
+
+    private var language: AppLanguage {
+        configurationStore.config.language
+    }
+
+    private var settingsWindowTitle: String {
+        AppText.pick(language, english: "Settings", japanese: "設定", chinese: "设置")
     }
 }
 

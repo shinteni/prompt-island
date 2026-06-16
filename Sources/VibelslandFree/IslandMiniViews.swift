@@ -5,6 +5,7 @@ import SwiftUI
 struct IdleMiniContent: View {
     let status: SessionStatus
     let accentColor: Color
+    let language: AppLanguage
 
     var body: some View {
         ZStack {
@@ -16,7 +17,7 @@ struct IdleMiniContent: View {
                 .frame(width: 21, height: 18)
                 .shadow(color: Color.white.opacity(0.36), radius: 1.2, y: 0.5)
         }
-        .accessibilityLabel(">_ - island \(status.displayName)")
+        .accessibilityLabel(">_ - island \(status.displayName(language: language))")
     }
 }
 
@@ -300,6 +301,7 @@ struct CompactLoadingSpinner: View {
     let status: SessionStatus
     let color: Color
     let nsColor: NSColor
+    let language: AppLanguage
 
     var body: some View {
         Group {
@@ -314,7 +316,7 @@ struct CompactLoadingSpinner: View {
             }
         }
         .allowsHitTesting(false)
-        .accessibilityLabel(status.isActiveVisual ? "加载中" : status.displayName)
+        .accessibilityLabel(status.isActiveVisual ? loadingText : status.displayName(language: language))
     }
 
     private func spinner(rotation: Double) -> some View {
@@ -393,6 +395,10 @@ struct CompactLoadingSpinner: View {
         case .idle:
             return .tertiaryLabelColor
         }
+    }
+
+    private var loadingText: String {
+        AppText.pick(language, english: "Loading", japanese: "読み込み中", chinese: "加载中")
     }
 }
 

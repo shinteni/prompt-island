@@ -20,7 +20,12 @@ extension SessionStore {
             }
             lastError = nil
         } catch {
-            lastError = "无法打开日志：\(error.localizedDescription)"
+            lastError = AppText.pick(
+                configurationStore.config.language,
+                english: "Could not open logs: \(error.localizedDescription)",
+                japanese: "ログを開けません：\(error.localizedDescription)",
+                chinese: "无法打开日志：\(error.localizedDescription)"
+            )
             logger.error("store.logs.open.failed", detail: error.localizedDescription)
         }
     }
@@ -32,7 +37,7 @@ extension SessionStore {
     func openSession(_ session: AgentSession) {
         logger.info("session.open.request", detail: "\(session.id) \(session.source.rawValue)")
         selectedSessionID = session.id
-        switch SessionOpenPolicy.action(for: session) {
+        switch SessionOpenPolicy.action(for: session, language: configurationStore.config.language) {
         case .selectOnly:
             return
         case let .openCodexThread(threadID, logNamespace, errorMessage):
@@ -51,7 +56,7 @@ extension SessionStore {
 
     func focusApplication(for source: AgentSource) {
         guard let bundleID = source.applicationBundleIdentifier else {
-            lastError = "无法确定要打开的应用"
+            lastError = AppText.pick(configurationStore.config.language, english: "Could not determine which app to open", japanese: "開くアプリを判定できません", chinese: "无法确定要打开的应用")
             return
         }
         focusApplication(
@@ -67,7 +72,7 @@ extension SessionStore {
         }
 
         if runOpenCommand(arguments: CodexOpenCommandPolicy.focusArguments(bundleID: bundleID)) {
-            confirmApplicationFocused(bundleID: bundleID, errorMessage: "无法打开 \(displayName)")
+            confirmApplicationFocused(bundleID: bundleID, errorMessage: cannotOpenText(displayName))
             return
         }
 
@@ -75,14 +80,14 @@ extension SessionStore {
             .map(URL.init(fileURLWithPath:))
             .first { FileManager.default.fileExists(atPath: $0.path) }
         guard let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundleID) ?? fallbackURL else {
-            lastError = "无法找到 \(displayName) 应用"
+            lastError = AppText.pick(configurationStore.config.language, english: "Could not find \(displayName)", japanese: "\(displayName) が見つかりません", chinese: "无法找到 \(displayName) 应用")
             return
         }
 
         if runOpenCommand(arguments: [url.path]) {
-            confirmApplicationFocused(bundleID: bundleID, errorMessage: "无法打开 \(displayName)")
+            confirmApplicationFocused(bundleID: bundleID, errorMessage: cannotOpenText(displayName))
         } else {
-            lastError = "无法打开 \(displayName)"
+            lastError = cannotOpenText(displayName)
         }
     }
 
@@ -107,7 +112,7 @@ extension SessionStore {
         errorMessage: String
     ) {
         guard let bundleID = AgentSource.codexDesktop.applicationBundleIdentifier else {
-            lastError = "无法确定要打开的 Codex 应用"
+            lastError = AppText.pick(configurationStore.config.language, english: "Could not determine which Codex app to open", japanese: "開く Codex アプリを判定できません", chinese: "无法确定要打开的 Codex 应用")
             return
         }
 
@@ -172,7 +177,12 @@ extension SessionStore {
                         self.lastError = nil
                         self.logger.info("session.open.\(logNamespace).verified", detail: threadID)
                     } else {
-                        self.lastError = "已打开 Codex，但未确认目标对话"
+                        self.lastError = AppText.pick(
+                            self.configurationStore.config.language,
+                            english: "Codex opened, but the target thread was not confirmed",
+                            japanese: "Codex は開きましたが、対象の会話を確認できませんでした",
+                            chinese: "已打开 Codex，但未确认目标对话"
+                        )
                         self.logger.error("session.open.\(logNamespace).thread.unverified", detail: threadID)
                     }
                 }
@@ -190,12 +200,16 @@ extension SessionStore {
     func focusClaudeCodeTerminal(sessionID: String?) {
         if let bundleID = terminalBundleIdentifierForRunningClaude(sessionID: sessionID) {
             logger.info("session.open.claude.cli.terminal", detail: "\(sessionID ?? "unknown") \(bundleID)")
-            focusApplication(bundleID: bundleID, displayName: "Claude CLI 终端", fallbackPaths: [])
+            focusApplication(bundleID: bundleID, displayName: AppText.pick(configurationStore.config.language, english: "Claude CLI terminal", japanese: "Claude CLI ターミナル", chinese: "Claude CLI 终端"), fallbackPaths: [])
             return
         }
 
-        lastError = "没有找到正在运行的 Claude CLI 终端"
+        lastError = AppText.pick(configurationStore.config.language, english: "No running Claude CLI terminal was found", japanese: "実行中の Claude CLI ターミナルが見つかりません", chinese: "没有找到正在运行的 Claude CLI 终端")
         logger.error("session.open.claude.cli.terminal.notFound", detail: sessionID ?? "unknown")
+    }
+
+    private func cannotOpenText(_ displayName: String) -> String {
+        AppText.pick(configurationStore.config.language, english: "Could not open \(displayName)", japanese: "\(displayName) を開けません", chinese: "无法打开 \(displayName)")
     }
 
     func terminalBundleIdentifierForRunningClaude(sessionID: String?) -> String? {

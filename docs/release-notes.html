@@ -6,13 +6,13 @@
     <title>版本历史 | Vibelsland Free</title>
     <meta
       name="description"
-      content="Vibelsland Free 版本历史：v0.1.0 的下载、SHA-256 校验、主要功能、安装说明、产品边界和相关支持入口。"
+      content="Vibelsland Free 版本历史：v0.1.0 的下载、SHA-256 校验、主要功能、安装说明，以及当前仓库中的未发布改进。"
     >
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Vibelsland Free">
     <meta property="og:locale" content="zh_CN">
     <meta property="og:title" content="Vibelsland Free 版本历史">
-    <meta property="og:description" content="查看 Vibelsland Free v0.1.0 的发布内容、下载包、校验文件、安装说明和产品边界。">
+    <meta property="og:description" content="查看 Vibelsland Free v0.1.0 的发布内容、下载包、校验文件、安装说明和当前仓库进展。">
     <meta property="og:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
     <meta property="og:image:width" content="1672">
     <meta property="og:image:height" content="941">
@@ -20,7 +20,7 @@
     <meta property="og:url" content="https://shinteni.github.io/prompt-island/release-notes.html">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Vibelsland Free 版本历史">
-    <meta name="twitter:description" content="查看 Vibelsland Free v0.1.0 的发布内容、下载包、校验文件、安装说明和产品边界。">
+    <meta name="twitter:description" content="查看 Vibelsland Free v0.1.0 的发布内容、下载包、校验文件、安装说明和当前仓库进展。">
     <meta name="twitter:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
     <meta name="twitter:image:alt" content="Vibelsland Free macOS AI 编程状态界面">
     <meta name="theme-color" content="#070706">
@@ -61,7 +61,7 @@
           <p class="eyebrow">Release Notes</p>
           <h1 id="release-title">版本历史。</h1>
           <p>
-            Vibelsland Free 的官网版本记录。v0.1.0 是面向 macOS 14+ 的首个公开版本，提供本地优先的 AI 编程状态显示、审批处理、来源控制和可校验下载。
+            Vibelsland Free 的官网版本记录。公开下载版本仍是 v0.1.0；当前仓库在此基础上继续维护文档、CI、发布门禁和 Codex Desktop 连接体验。
           </p>
           <div class="hero-actions">
             <a class="button primary" href="download.html">查看完整下载说明</a>
@@ -81,6 +81,46 @@
             <span>分发方式</span>
             <strong>GitHub Releases</strong>
           </div>
+        </div>
+      </section>
+
+      <section class="section data-section surface-section" aria-labelledby="source-status-title">
+        <div class="section-heading align-left" data-reveal>
+          <p class="eyebrow">当前仓库</p>
+          <h2 id="source-status-title">公开下载和源码进展分开记录。</h2>
+          <p>
+            <code>docs/release.json</code> 仍然记录已经发布到 GitHub Releases 的 v0.1.0 包；当前源码树比该 tag 更新，主要包含面向下一次发布的站点、验证和本机连接改进。
+          </p>
+        </div>
+        <div class="data-grid">
+          <article data-reveal>
+            <h3>多语言文档</h3>
+            <ul>
+              <li>新增日文 README 和日文官网页面。</li>
+              <li>首页、下载、安装、隐私、FAQ、支持和版本历史都提供中文、英文、日文版本。</li>
+            </ul>
+          </article>
+          <article data-reveal>
+            <h3>自动验证</h3>
+            <ul>
+              <li>GitHub Actions 覆盖 Swift 构建和测试目标发现。</li>
+              <li>本地入口保留 <code>zsh scripts/run-tests.sh</code>、<code>zsh scripts/verify-docs-site.sh</code> 和 <code>zsh scripts/verify-release-readiness.sh</code>。</li>
+            </ul>
+          </article>
+          <article data-reveal>
+            <h3>发布门禁</h3>
+            <ul>
+              <li>维护者清单明确区分 GitHub 免费发布和后续 notarized 分发线。</li>
+              <li>下载页、安装页、FAQ 和 README 都说明当前包是 ad-hoc 签名。</li>
+            </ul>
+          </article>
+          <article data-reveal>
+            <h3>本机连接</h3>
+            <ul>
+              <li>改进从 Finder 启动的 macOS app 环境下 Codex Desktop 实时连接的启动路径。</li>
+              <li>Bridge、Hooks、日志和运行状态仍通过设置页与本地健康检查呈现。</li>
+            </ul>
+          </article>
         </div>
       </section>
 
@@ -134,7 +174,7 @@
           <article data-reveal>
             <h3>本地审批处理</h3>
             <ul>
-              <li>在 macOS 原生界面中处理允许、拒绝、继续和取消。</li>
+              <li>在 macOS 原生界面中处理允许一次、本轮允许（支持时）、拒绝和取消任务；Codex CLI Hook 审批只支持允许或拒绝。</li>
               <li>保留处理审批所需的基本上下文。</li>
               <li>减少在终端、桌面客户端和日志之间切换的频率。</li>
             </ul>
@@ -169,7 +209,7 @@
         </div>
         <div class="checksum-card" data-reveal>
           <span>SHA-256</span>
-          <code>64c7c0a4eae81042bbc3896e24a07ab5d5573aeaafa846eada2e982f887ecf81</code>
+          <code>f8e303b771bc04839b1ed469c860d4fcae599229600c4a40dc2c8c1966626e64</code>
         </div>
       </section>
 
@@ -192,7 +232,7 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="lang.js?v=2d7bd70a4d31" defer></script>
+    <script src="lang.js?v=66b67e53ed45" defer></script>
     <script src="effects.js?v=984d01b9fa2d" defer></script>
   </body>
 </html>

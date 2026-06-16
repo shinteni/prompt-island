@@ -19,46 +19,46 @@ package struct SessionDisplaySnapshot: Equatable {
     package var confidence: DisplayConfidence
     package var signals: [Signal]
 
-    package init(session: AgentSession) {
+    package init(session: AgentSession, language: AppLanguage = .chinese) {
         let project = Self.projectTitle(for: session)
         title = "\(project) · \(session.source.displayName)"
         confidence = Self.confidence(for: session)
-        statusText = Self.statusText(for: session, confidence: confidence)
-        signals = Self.signals(for: session)
+        statusText = Self.statusText(for: session, confidence: confidence, language: language)
+        signals = Self.signals(for: session, language: language)
 
         if let approval = session.approval, !approval.isExpired {
-            primaryLine = "审批：\(Self.clean(approval.detail.isEmpty ? approval.tool : approval.detail, limit: 86))"
-            secondaryLine = session.lastUserMessage.map { "你：\(Self.clean($0, limit: 86))" }
+            primaryLine = "\(Self.approvalLabel(language))\(Self.separator(language))\(Self.clean(approval.detail.isEmpty ? approval.tool : approval.detail, limit: 86))"
+            secondaryLine = session.lastUserMessage.map { "\(Self.youLabel(language))\(Self.separator(language))\(Self.clean($0, limit: 86))" }
             return
         }
 
         if session.status == .runningTool,
            let tool = Self.latestTool(from: session) {
-            primaryLine = "工具：\(tool)"
-            secondaryLine = Self.conversationLine(for: session, preferAssistant: true)
+            primaryLine = "\(Self.toolLabel(language))\(Self.separator(language))\(tool)"
+            secondaryLine = Self.conversationLine(for: session, preferAssistant: true, language: language)
             return
         }
 
         if session.status == .failed {
-            primaryLine = "出错：\(Self.latestActivityText(from: session) ?? "任务未正常完成")"
-            secondaryLine = Self.conversationLine(for: session, preferAssistant: true)
+            primaryLine = "\(Self.errorLabel(language))\(Self.separator(language))\(Self.latestActivityText(from: session) ?? Self.taskFailedFallback(language))"
+            secondaryLine = Self.conversationLine(for: session, preferAssistant: true, language: language)
             return
         }
 
         if let message = session.lastAssistantMessage, !message.isEmpty {
-            primaryLine = "AI：\(Self.clean(message, limit: 110))"
-            secondaryLine = session.lastUserMessage.map { "你：\(Self.clean($0, limit: 92))" }
+            primaryLine = "AI\(Self.separator(language))\(Self.clean(message, limit: 110))"
+            secondaryLine = session.lastUserMessage.map { "\(Self.youLabel(language))\(Self.separator(language))\(Self.clean($0, limit: 92))" }
             return
         }
 
         if let message = session.lastUserMessage, !message.isEmpty {
-            primaryLine = "你：\(Self.clean(message, limit: 110))"
-            secondaryLine = Self.latestActivityText(from: session).map { "活动：\($0)" }
+            primaryLine = "\(Self.youLabel(language))\(Self.separator(language))\(Self.clean(message, limit: 110))"
+            secondaryLine = Self.latestActivityText(from: session).map { "\(Self.activityLabel(language))\(Self.separator(language))\($0)" }
             return
         }
 
         if let activity = Self.latestActivityText(from: session) {
-            primaryLine = "活动：\(activity)"
+            primaryLine = "\(Self.activityLabel(language))\(Self.separator(language))\(activity)"
             secondaryLine = Self.workspaceLine(for: session)
             return
         }
@@ -84,27 +84,27 @@ package struct SessionDisplaySnapshot: Equatable {
         return .inferred
     }
 
-    private static func statusText(for session: AgentSession, confidence: DisplayConfidence) -> String {
+    private static func statusText(for session: AgentSession, confidence: DisplayConfidence, language: AppLanguage) -> String {
         if let approval = session.approval {
             if approval.resolutionState != .pending {
-                return approval.resolutionState.title
+                return approval.resolutionState.title(language: language)
             }
             if approval.isResolving {
-                return "正在返回审批"
+                return returningApprovalText(language)
             }
             if approval.isExpired {
-                return "审批已回退"
+                return approvalFallbackText(language)
             }
-            return "等待审批"
+            return ApprovalResolutionState.pending.title(language: language)
         }
         if confidence == .inferred {
             switch session.status {
             case .done:
-                return "可能已完成"
+                return maybeDoneText(language)
             case .thinking, .runningTool:
-                return "最近有活动"
+                return recentActivityText(language)
             case .failed:
-                return "可能异常"
+                return maybeErrorText(language)
             default:
                 break
             }
@@ -112,26 +112,26 @@ package struct SessionDisplaySnapshot: Equatable {
         if session.status == .failed,
            let latest = latestActivityText(from: session) {
             if latest.contains("拒绝") {
-                return "已拒绝"
+                return ApprovalResolutionState.declined.title(language: language)
             }
-            if latest.contains("回退") || latest.contains("超时") {
-                return "已回退"
+            if latest.contains("超时") {
+                return ApprovalResolutionState.timedOut.title(language: language)
+            }
+            if latest.contains("回退") {
+                return approvalFallbackText(language)
             }
         }
-        return session.status.displayName
+        return session.status.displayName(language: language)
     }
 
-    private static func signals(for session: AgentSession) -> [Signal] {
+    private static func signals(for session: AgentSession, language: AppLanguage) -> [Signal] {
         var result: [Signal] = []
         if let tool = latestTool(from: session) {
             result.append(Signal(symbol: "wrench.and.screwdriver", text: tool))
         }
         let activeSubagentCount = session.subagents.filter { $0.status.isActiveVisual }.count
         if activeSubagentCount > 0 {
-            let text = activeSubagentCount == session.subagents.count
-                ? "\(activeSubagentCount) 子智能体"
-                : "\(activeSubagentCount)/\(session.subagents.count) 子智能体"
-            result.append(Signal(symbol: "person.2", text: text))
+            result.append(Signal(symbol: "person.2", text: subagentSignal(active: activeSubagentCount, total: session.subagents.count, language: language)))
         }
         if let usage = session.usage {
             result.append(Signal(symbol: "chart.line.uptrend.xyaxis", text: usage.shortText))
@@ -176,17 +176,17 @@ package struct SessionDisplaySnapshot: Equatable {
         return true
     }
 
-    private static func conversationLine(for session: AgentSession, preferAssistant: Bool) -> String? {
+    private static func conversationLine(for session: AgentSession, preferAssistant: Bool, language: AppLanguage) -> String? {
         if preferAssistant,
            let message = session.lastAssistantMessage,
            !message.isEmpty {
-            return "AI：\(clean(message, limit: 92))"
+            return "AI\(separator(language))\(clean(message, limit: 92))"
         }
         if let message = session.lastUserMessage, !message.isEmpty {
-            return "你：\(clean(message, limit: 92))"
+            return "\(youLabel(language))\(separator(language))\(clean(message, limit: 92))"
         }
         if let message = session.lastAssistantMessage, !message.isEmpty {
-            return "AI：\(clean(message, limit: 92))"
+            return "AI\(separator(language))\(clean(message, limit: 92))"
         }
         return nil
     }
@@ -223,5 +223,112 @@ package struct SessionDisplaySnapshot: Equatable {
             .replacingOccurrences(of: "\n", with: " ")
             .trimmingCharacters(in: .whitespacesAndNewlines)
         return String(sanitized.prefix(limit))
+    }
+
+    private static func approvalLabel(_ language: AppLanguage) -> String {
+        switch language {
+        case .english: "Approval"
+        case .japanese: "承認"
+        case .chinese: "审批"
+        }
+    }
+
+    private static func toolLabel(_ language: AppLanguage) -> String {
+        switch language {
+        case .english: "Tool"
+        case .japanese: "ツール"
+        case .chinese: "工具"
+        }
+    }
+
+    private static func errorLabel(_ language: AppLanguage) -> String {
+        switch language {
+        case .english: "Error"
+        case .japanese: "エラー"
+        case .chinese: "出错"
+        }
+    }
+
+    private static func activityLabel(_ language: AppLanguage) -> String {
+        switch language {
+        case .english: "Activity"
+        case .japanese: "アクティビティ"
+        case .chinese: "活动"
+        }
+    }
+
+    private static func youLabel(_ language: AppLanguage) -> String {
+        switch language {
+        case .english: "You"
+        case .japanese: "あなた"
+        case .chinese: "你"
+        }
+    }
+
+    private static func separator(_ language: AppLanguage) -> String {
+        switch language {
+        case .english: ": "
+        case .japanese, .chinese: "："
+        }
+    }
+
+    private static func taskFailedFallback(_ language: AppLanguage) -> String {
+        switch language {
+        case .english: "Task did not complete normally"
+        case .japanese: "タスクは正常に完了しませんでした"
+        case .chinese: "任务未正常完成"
+        }
+    }
+
+    private static func returningApprovalText(_ language: AppLanguage) -> String {
+        switch language {
+        case .english: "Returning approval"
+        case .japanese: "承認を返送中"
+        case .chinese: "正在返回审批"
+        }
+    }
+
+    private static func approvalFallbackText(_ language: AppLanguage) -> String {
+        switch language {
+        case .english: "Approval fell back"
+        case .japanese: "承認はフォールバック済み"
+        case .chinese: "审批已回退"
+        }
+    }
+
+    private static func maybeDoneText(_ language: AppLanguage) -> String {
+        switch language {
+        case .english: "Maybe done"
+        case .japanese: "完了の可能性"
+        case .chinese: "可能已完成"
+        }
+    }
+
+    private static func recentActivityText(_ language: AppLanguage) -> String {
+        switch language {
+        case .english: "Recent activity"
+        case .japanese: "最近のアクティビティ"
+        case .chinese: "最近有活动"
+        }
+    }
+
+    private static func maybeErrorText(_ language: AppLanguage) -> String {
+        switch language {
+        case .english: "Possible issue"
+        case .japanese: "異常の可能性"
+        case .chinese: "可能异常"
+        }
+    }
+
+    private static func subagentSignal(active: Int, total: Int, language: AppLanguage) -> String {
+        let value = active == total ? "\(active)" : "\(active)/\(total)"
+        switch language {
+        case .english:
+            return active == 1 && total == 1 ? "1 subagent" : "\(value) subagents"
+        case .japanese:
+            return "\(value) サブエージェント"
+        case .chinese:
+            return "\(value) 子智能体"
+        }
     }
 }

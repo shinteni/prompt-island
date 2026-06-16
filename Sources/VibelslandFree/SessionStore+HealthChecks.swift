@@ -16,33 +16,35 @@ extension SessionStore {
         let codexHookReady = hookFileContainsBridge(AppPaths.codexHooksURL)
         let claudeRecentEventText = recentEventText(for: .claudeCode)
         let codexRecentEventText = recentEventText(for: .codexCli)
+        let language = configurationStore.config.language
 
         return [
             BridgeRuntimeHealthPolicy.item(
                 bridgeEnabled: bridgeEnabled,
                 bridgeExecutable: bridgeReady,
-                socket: socketInspection
+                socket: socketInspection,
+                language: language
             ),
             HealthCheckItem(
                 id: "claude",
                 name: "Claude Code",
                 status: configurationStore.config.enableClaude ? (claudeHookReady ? .normal : .needsAction) : .disabled,
-                detail: configurationStore.config.enableClaude ? (claudeHookReady ? claudeRecentEventText : "已启用来源，但未发现 Vibelsland hook") : "来源已关闭，不接收 Claude 事件",
-                suggestedAction: configurationStore.config.enableClaude ? "安装/修复 Hooks" : "在接收来源中启用"
+                detail: configurationStore.config.enableClaude ? (claudeHookReady ? claudeRecentEventText : missingVibelslandHookText(language)) : sourceDisabledText("Claude", language: language),
+                suggestedAction: configurationStore.config.enableClaude ? repairHooksText(language) : enableInSourcesText(language)
             ),
             HealthCheckItem(
                 id: "codex-cli",
                 name: "Codex CLI",
                 status: configurationStore.config.enableCodexCLI ? (codexHookReady ? .normal : .needsAction) : .disabled,
-                detail: configurationStore.config.enableCodexCLI ? (codexHookReady ? codexRecentEventText : "已启用来源，但未发现 Codex hook") : "来源已关闭，不接收 Codex CLI 事件",
-                suggestedAction: configurationStore.config.enableCodexCLI ? "安装/修复 Hooks" : "在接收来源中启用"
+                detail: configurationStore.config.enableCodexCLI ? (codexHookReady ? codexRecentEventText : missingCodexHookText(language)) : sourceDisabledText("Codex CLI", language: language),
+                suggestedAction: configurationStore.config.enableCodexCLI ? repairHooksText(language) : enableInSourcesText(language)
             ),
             HealthCheckItem(
                 id: "codex-desktop",
                 name: "Codex Desktop",
                 status: configurationStore.config.enableCodexDesktop ? (codexDesktopApprovalConnected ? .normal : .needsAction) : .disabled,
-                detail: configurationStore.config.enableCodexDesktop ? codexDesktopDetail : "来源已关闭，不读取 Codex Desktop 状态",
-                suggestedAction: configurationStore.config.enableCodexDesktop ? "重新连接" : "在接收来源中启用"
+                detail: configurationStore.config.enableCodexDesktop ? codexDesktopDetail : codexDesktopDisabledText(language),
+                suggestedAction: configurationStore.config.enableCodexDesktop ? reconnectText(language) : enableInSourcesText(language)
             )
         ]
     }
@@ -64,27 +66,42 @@ extension SessionStore {
     var codexDesktopDetail: String {
         if codexDesktopApprovalConnected {
             if let codexDesktopLastConnectedAt {
-                return "实时审批已连接，上次连接 \(relativeTime(from: codexDesktopLastConnectedAt))"
+                return AppText.pick(
+                    configurationStore.config.language,
+                    english: "Live approvals connected, last connected \(relativeTime(from: codexDesktopLastConnectedAt))",
+                    japanese: "リアルタイム承認は接続済み、最終接続 \(relativeTime(from: codexDesktopLastConnectedAt))",
+                    chinese: "实时审批已连接，上次连接 \(relativeTime(from: codexDesktopLastConnectedAt))"
+                )
             }
-            return "实时审批已连接"
+            return AppText.pick(configurationStore.config.language, english: "Live approvals connected", japanese: "リアルタイム承認は接続済み", chinese: "实时审批已连接")
         }
         if let codexDesktopLastFailureMessage,
            !codexDesktopLastFailureMessage.isEmpty {
-            return "实时审批未连接：\(codexDesktopLastFailureMessage)"
+            return AppText.pick(
+                configurationStore.config.language,
+                english: "Live approvals not connected: \(codexDesktopLastFailureMessage)",
+                japanese: "リアルタイム承認は未接続：\(codexDesktopLastFailureMessage)",
+                chinese: "实时审批未连接：\(codexDesktopLastFailureMessage)"
+            )
         }
         if let codexIPCSocketPath {
-            return "发现 IPC socket，但实时审批未连接：\(URL(fileURLWithPath: codexIPCSocketPath).lastPathComponent)"
+            return AppText.pick(
+                configurationStore.config.language,
+                english: "IPC socket found, but live approvals are not connected: \(URL(fileURLWithPath: codexIPCSocketPath).lastPathComponent)",
+                japanese: "IPC socket は見つかりましたが、リアルタイム承認は未接続です：\(URL(fileURLWithPath: codexIPCSocketPath).lastPathComponent)",
+                chinese: "发现 IPC socket，但实时审批未连接：\(URL(fileURLWithPath: codexIPCSocketPath).lastPathComponent)"
+            )
         }
         if codexAppServerReachable {
-            return "App Server 可用，但未发现 Desktop IPC"
+            return AppText.pick(configurationStore.config.language, english: "App Server is available, but Desktop IPC was not found", japanese: "App Server は利用可能ですが Desktop IPC が見つかりません", chinese: "App Server 可用，但未发现 Desktop IPC")
         }
-        return "未连接 Codex Desktop 实时通道"
+        return AppText.pick(configurationStore.config.language, english: "Codex Desktop live channel is not connected", japanese: "Codex Desktop のリアルタイムチャネルは未接続です", chinese: "未连接 Codex Desktop 实时通道")
     }
 
     func relativeTime(from date: Date) -> String {
         let formatter = RelativeDateTimeFormatter()
         formatter.unitsStyle = .short
-        formatter.locale = Locale.current
+        formatter.locale = AppText.locale(for: configurationStore.config.language)
         return formatter.localizedString(for: date, relativeTo: Date())
     }
 
@@ -99,7 +116,7 @@ extension SessionStore {
     func relativeText(for date: Date) -> String {
         let formatter = RelativeDateTimeFormatter()
         formatter.unitsStyle = .short
-        formatter.locale = Locale.current
+        formatter.locale = AppText.locale(for: configurationStore.config.language)
         return formatter.localizedString(for: date, relativeTo: Date())
     }
 
@@ -110,8 +127,41 @@ extension SessionStore {
             }
             return session.source == source
         })?.updatedAt else {
-            return "还没有收到事件"
+            return AppText.pick(configurationStore.config.language, english: "No events received yet", japanese: "まだイベントを受信していません", chinese: "还没有收到事件")
         }
-        return "最近事件：\(relativeText(for: recentEvent))"
+        return AppText.pick(
+            configurationStore.config.language,
+            english: "Latest event: \(relativeText(for: recentEvent))",
+            japanese: "最新イベント：\(relativeText(for: recentEvent))",
+            chinese: "最近事件：\(relativeText(for: recentEvent))"
+        )
+    }
+
+    private func missingVibelslandHookText(_ language: AppLanguage) -> String {
+        AppText.pick(language, english: "Source is enabled, but Vibelsland hook was not found", japanese: "受信元は有効ですが Vibelsland hook が見つかりません", chinese: "已启用来源，但未发现 Vibelsland hook")
+    }
+
+    private func missingCodexHookText(_ language: AppLanguage) -> String {
+        AppText.pick(language, english: "Source is enabled, but Codex hook was not found", japanese: "受信元は有効ですが Codex hook が見つかりません", chinese: "已启用来源，但未发现 Codex hook")
+    }
+
+    private func sourceDisabledText(_ source: String, language: AppLanguage) -> String {
+        AppText.pick(language, english: "Source is off. \(source) events are not received.", japanese: "受信元はオフです。\(source) イベントは受信しません。", chinese: "来源已关闭，不接收 \(source) 事件")
+    }
+
+    private func codexDesktopDisabledText(_ language: AppLanguage) -> String {
+        AppText.pick(language, english: "Source is off. Codex Desktop state is not read.", japanese: "受信元はオフです。Codex Desktop 状態は読み取りません。", chinese: "来源已关闭，不读取 Codex Desktop 状态")
+    }
+
+    private func repairHooksText(_ language: AppLanguage) -> String {
+        AppText.pick(language, english: "Install or repair hooks", japanese: "Hooks をインストールまたは修復", chinese: "安装/修复 Hooks")
+    }
+
+    private func enableInSourcesText(_ language: AppLanguage) -> String {
+        AppText.pick(language, english: "Enable in Sources", japanese: "受信元で有効化", chinese: "在接收来源中启用")
+    }
+
+    private func reconnectText(_ language: AppLanguage) -> String {
+        AppText.pick(language, english: "Reconnect", japanese: "再接続", chinese: "重新连接")
     }
 }

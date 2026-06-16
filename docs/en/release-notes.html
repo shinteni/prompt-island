@@ -6,13 +6,13 @@
     <title>Release Notes | Vibelsland Free</title>
     <meta
       name="description"
-      content="Vibelsland Free release notes for v0.1.0, including downloads, SHA-256 verification, key features, install guidance, product boundaries, and support links."
+      content="Vibelsland Free release notes for v0.1.0, including downloads, SHA-256 verification, key features, install guidance, and current source updates."
     >
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Vibelsland Free">
     <meta property="og:locale" content="en_US">
     <meta property="og:title" content="Vibelsland Free Release Notes">
-    <meta property="og:description" content="Review Vibelsland Free v0.1.0 features, download assets, checksum file, install guidance, and product boundaries.">
+    <meta property="og:description" content="Review Vibelsland Free v0.1.0 features, download assets, checksum file, install guidance, and current source progress.">
     <meta property="og:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
     <meta property="og:image:width" content="1672">
     <meta property="og:image:height" content="941">
@@ -20,7 +20,7 @@
     <meta property="og:url" content="https://shinteni.github.io/prompt-island/en/release-notes.html">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Vibelsland Free Release Notes">
-    <meta name="twitter:description" content="Review Vibelsland Free v0.1.0 features, download assets, checksum file, install guidance, and product boundaries.">
+    <meta name="twitter:description" content="Review Vibelsland Free v0.1.0 features, download assets, checksum file, install guidance, and current source progress.">
     <meta name="twitter:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
     <meta name="twitter:image:alt" content="Vibelsland Free macOS AI coding status interface">
     <meta name="theme-color" content="#070706">
@@ -61,7 +61,7 @@
           <p class="eyebrow">Release Notes</p>
           <h1 id="release-title">Release history.</h1>
           <p>
-            The official website record for Vibelsland Free releases. v0.1.0 is the first public macOS 14+ version, with local-first AI coding status, approvals, source controls, and verifiable downloads.
+            The official website record for Vibelsland Free releases. The public download is still v0.1.0; the current repository continues to update documentation, CI, release gates, and the Codex Desktop connection experience.
           </p>
           <div class="hero-actions">
             <a class="button primary" href="download.html">View full download notes</a>
@@ -81,6 +81,46 @@
             <span>Distribution</span>
             <strong>GitHub Releases</strong>
           </div>
+        </div>
+      </section>
+
+      <section class="section data-section surface-section" aria-labelledby="source-status-title">
+        <div class="section-heading align-left" data-reveal>
+          <p class="eyebrow">Current Repository</p>
+          <h2 id="source-status-title">Public downloads and source progress are tracked separately.</h2>
+          <p>
+            <code>docs/release.json</code> still describes the v0.1.0 package published on GitHub Releases. The current source tree is newer than that tag and contains site, verification, and local connection updates for the next release.
+          </p>
+        </div>
+        <div class="data-grid">
+          <article data-reveal>
+            <h3>Multilingual docs</h3>
+            <ul>
+              <li>Added a Japanese README and Japanese documentation pages.</li>
+              <li>Overview, download, install, privacy, FAQ, support, and release notes are available in Chinese, English, and Japanese.</li>
+            </ul>
+          </article>
+          <article data-reveal>
+            <h3>Automated checks</h3>
+            <ul>
+              <li>GitHub Actions covers Swift build and test-target discovery checks.</li>
+              <li>Local entry points remain <code>zsh scripts/run-tests.sh</code>, <code>zsh scripts/verify-docs-site.sh</code>, and <code>zsh scripts/verify-release-readiness.sh</code>.</li>
+            </ul>
+          </article>
+          <article data-reveal>
+            <h3>Release gates</h3>
+            <ul>
+              <li>The maintainer checklist separates the GitHub free release path from a future notarized distribution path.</li>
+              <li>Download, install, FAQ, and README pages all state that the current package is ad-hoc signed.</li>
+            </ul>
+          </article>
+          <article data-reveal>
+            <h3>Local connections</h3>
+            <ul>
+              <li>Improved Codex Desktop live connection startup when the macOS app is launched from Finder.</li>
+              <li>Bridge, Hooks, logs, and runtime status remain visible through settings and local health checks.</li>
+            </ul>
+          </article>
         </div>
       </section>
 
@@ -134,7 +174,7 @@
           <article data-reveal>
             <h3>Local approval handling</h3>
             <ul>
-              <li>Handles allow, deny, continue, and cancel actions in a native macOS surface.</li>
+              <li>Handles accept once, accept for session where supported, decline, and cancel task actions in a native macOS surface; Codex CLI hook approvals support only allow or deny.</li>
               <li>Preserves the basic context needed to handle approvals.</li>
               <li>Reduces switching between terminals, desktop clients, and logs.</li>
             </ul>
@@ -169,7 +209,7 @@
         </div>
         <div class="checksum-card" data-reveal>
           <span>SHA-256</span>
-          <code>64c7c0a4eae81042bbc3896e24a07ab5d5573aeaafa846eada2e982f887ecf81</code>
+          <code>f8e303b771bc04839b1ed469c860d4fcae599229600c4a40dc2c8c1966626e64</code>
         </div>
       </section>
 
@@ -192,7 +232,7 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="../lang.js?v=2d7bd70a4d31" defer></script>
+    <script src="../lang.js?v=66b67e53ed45" defer></script>
     <script src="../effects.js?v=984d01b9fa2d" defer></script>
   </body>
 </html>

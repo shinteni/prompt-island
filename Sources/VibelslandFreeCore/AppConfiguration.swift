@@ -44,6 +44,7 @@ package struct AppConfiguration: Codable, Equatable {
     package var doNotDisturb: Bool
     package var launchAtLogin: Bool
     package var islandPosition: IslandPosition
+    package var language: AppLanguage
     package var approvalTimeoutSeconds: TimeInterval
     package var maxVisibleSessions: Int
 
@@ -56,6 +57,7 @@ package struct AppConfiguration: Codable, Equatable {
         doNotDisturb: false,
         launchAtLogin: false,
         islandPosition: .topCenter,
+        language: .english,
         approvalTimeoutSeconds: 7_200,
         maxVisibleSessions: 5
     )
@@ -69,6 +71,7 @@ package struct AppConfiguration: Codable, Equatable {
         case doNotDisturb
         case launchAtLogin
         case islandPosition
+        case language
         case approvalTimeoutSeconds
         case maxVisibleSessions
     }
@@ -82,6 +85,7 @@ package struct AppConfiguration: Codable, Equatable {
         doNotDisturb: Bool,
         launchAtLogin: Bool,
         islandPosition: IslandPosition,
+        language: AppLanguage,
         approvalTimeoutSeconds: TimeInterval,
         maxVisibleSessions: Int
     ) {
@@ -93,6 +97,7 @@ package struct AppConfiguration: Codable, Equatable {
         self.doNotDisturb = doNotDisturb
         self.launchAtLogin = launchAtLogin
         self.islandPosition = islandPosition
+        self.language = language
         self.approvalTimeoutSeconds = approvalTimeoutSeconds
         self.maxVisibleSessions = maxVisibleSessions
     }
@@ -107,6 +112,7 @@ package struct AppConfiguration: Codable, Equatable {
         doNotDisturb = try container.decodeIfPresent(Bool.self, forKey: .doNotDisturb) ?? Self.default.doNotDisturb
         launchAtLogin = try container.decodeIfPresent(Bool.self, forKey: .launchAtLogin) ?? Self.default.launchAtLogin
         islandPosition = try container.decodeIfPresent(IslandPosition.self, forKey: .islandPosition) ?? Self.default.islandPosition
+        language = try container.decodeIfPresent(AppLanguage.self, forKey: .language) ?? Self.default.language
         approvalTimeoutSeconds = try container.decodeIfPresent(TimeInterval.self, forKey: .approvalTimeoutSeconds) ?? Self.default.approvalTimeoutSeconds
         maxVisibleSessions = try container.decodeIfPresent(Int.self, forKey: .maxVisibleSessions) ?? Self.default.maxVisibleSessions
     }

@@ -3,6 +3,8 @@ import VibelslandFreeCore
 import SwiftUI
 
 struct UsageHeaderView: View {
+    @EnvironmentObject private var configurationStore: AppConfigurationStore
+
     let usage: UsageSnapshot
 
     var body: some View {
@@ -11,13 +13,13 @@ struct UsageHeaderView: View {
                 .font(.system(size: 12, weight: .bold))
                 .foregroundStyle(Color(red: 0.45, green: 0.60, blue: 1.0))
             if usage.primaryUsedPercent == nil && usage.secondaryUsedPercent == nil {
-                Text("本轮")
+                Text(AppText.pick(configurationStore.config.language, english: "Turn", japanese: "今回", chinese: "本轮"))
                     .foregroundStyle(GlassText.secondary)
                 Text(UsageSnapshot.compactNumber(usage.lastTokens))
                     .foregroundStyle(Color(red: 0.22, green: 0.94, blue: 0.42))
                 Text("|")
                     .foregroundStyle(GlassText.faint)
-                Text("总计")
+                Text(AppText.pick(configurationStore.config.language, english: "Total", japanese: "合計", chinese: "总计"))
                     .foregroundStyle(GlassText.secondary)
                 Text(usage.totalText)
                     .foregroundStyle(GlassText.primary)
@@ -66,6 +68,8 @@ struct RateLimitHeaderPart: View {
 }
 
 struct HealthSummaryStrip: View {
+    @EnvironmentObject private var configurationStore: AppConfigurationStore
+
     let items: [HealthCheckItem]
 
     var body: some View {
@@ -80,9 +84,9 @@ struct HealthSummaryStrip: View {
                     .lineLimit(1)
                 Spacer(minLength: 6)
                 if needsActionCount > 0 {
-                    HealthCountPill(text: "\(needsActionCount) 需处理", color: .orange)
+                    HealthCountPill(text: needsActionPillText, color: .orange)
                 } else {
-                    HealthCountPill(text: "正常", color: .green)
+                    HealthCountPill(text: HealthCheckStatus.normal.title(language: configurationStore.config.language), color: .green)
                 }
             }
             .foregroundStyle(GlassText.primary)
@@ -98,7 +102,7 @@ struct HealthSummaryStrip: View {
             .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
         }
         .buttonStyle(.plain)
-        .help("打开健康检查")
+        .help(AppText.pick(configurationStore.config.language, english: "Open health checks", japanese: "ヘルスチェックを開く", chinese: "打开健康检查"))
     }
 
     private var normalCount: Int {
@@ -114,14 +118,30 @@ struct HealthSummaryStrip: View {
     }
 
     private var summaryText: String {
-        guard !items.isEmpty else { return "健康检查尚未运行" }
+        guard !items.isEmpty else {
+            return AppText.pick(configurationStore.config.language, english: "Health checks have not run yet", japanese: "ヘルスチェックはまだ実行されていません", chinese: "健康检查尚未运行")
+        }
         if needsActionCount > 0 {
-            return "健康检查：\(needsActionCount) 项需要处理"
+            return AppText.pick(
+                configurationStore.config.language,
+                english: "Health checks: \(needsActionCount) need action",
+                japanese: "ヘルスチェック：\(needsActionCount) 件の対応が必要",
+                chinese: "健康检查：\(needsActionCount) 项需要处理"
+            )
         }
         if disabledCount > 0 {
-            return "健康检查：\(normalCount) 项正常，\(disabledCount) 项未启用"
+            return AppText.pick(
+                configurationStore.config.language,
+                english: "Health checks: \(normalCount) OK, \(disabledCount) disabled",
+                japanese: "ヘルスチェック：\(normalCount) 件正常、\(disabledCount) 件無効",
+                chinese: "健康检查：\(normalCount) 项正常，\(disabledCount) 项未启用"
+            )
         }
-        return "健康检查：全部正常"
+        return AppText.pick(configurationStore.config.language, english: "Health checks: all OK", japanese: "ヘルスチェック：すべて正常", chinese: "健康检查：全部正常")
+    }
+
+    private var needsActionPillText: String {
+        AppText.pick(configurationStore.config.language, english: "\(needsActionCount) action", japanese: "\(needsActionCount) 要対応", chinese: "\(needsActionCount) 需处理")
     }
 
     private var icon: String {
@@ -152,6 +172,7 @@ struct HealthCountPill: View {
 
 struct DashboardSessionCard: View {
     @EnvironmentObject private var store: SessionStore
+    @EnvironmentObject private var configurationStore: AppConfigurationStore
     let session: AgentSession
     let isSelected: Bool
     var isCondensed = false
@@ -197,7 +218,7 @@ struct DashboardSessionCard: View {
             }
         )
         .contentShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-        .help(session.source == .unknown ? "选中会话" : "打开 \(session.source.displayName)")
+        .help(session.source == .unknown ? AppText.pick(configurationStore.config.language, english: "Select session", japanese: "セッションを選択", chinese: "选中会话") : AppText.pick(configurationStore.config.language, english: "Open \(session.source.displayName)", japanese: "\(session.source.displayName) を開く", chinese: "打开 \(session.source.displayName)"))
         .accessibilityLabel("\(display.title)，\(display.primaryLine)，\(display.secondaryLine ?? "")")
     }
 
@@ -253,7 +274,7 @@ struct DashboardSessionCard: View {
     }
 
     private var display: SessionDisplaySnapshot {
-        SessionDisplaySnapshot(session: session)
+        SessionDisplaySnapshot(session: session, language: configurationStore.config.language)
     }
 
     private var cardTint: Color {
@@ -307,6 +328,8 @@ struct DashboardSessionCard: View {
 }
 
 struct DashboardSignalLine: View {
+    @EnvironmentObject private var configurationStore: AppConfigurationStore
+
     let session: AgentSession
 
     var body: some View {
@@ -323,7 +346,7 @@ struct DashboardSignalLine: View {
     }
 
     private var display: SessionDisplaySnapshot {
-        SessionDisplaySnapshot(session: session)
+        SessionDisplaySnapshot(session: session, language: configurationStore.config.language)
     }
 
     private func signal(systemImage: String, text: String, color: Color) -> some View {
@@ -344,12 +367,13 @@ struct DashboardSignalLine: View {
     private func compact(_ text: String) -> String {
         let sanitized = DisplayTextSanitizer.sanitize(text)
             .trimmingCharacters(in: .whitespacesAndNewlines)
-        return sanitized.isEmpty ? "活动" : String(sanitized.prefix(28))
+        return sanitized.isEmpty ? AppText.pick(configurationStore.config.language, english: "Activity", japanese: "アクティビティ", chinese: "活动") : String(sanitized.prefix(28))
     }
 }
 
 struct ApprovalSummaryCard: View {
     @EnvironmentObject private var store: SessionStore
+    @EnvironmentObject private var configurationStore: AppConfigurationStore
     let session: AgentSession
     let approval: ApprovalRequest
     @Binding var showsDetail: Bool
@@ -372,7 +396,12 @@ struct ApprovalSummaryCard: View {
 
                     VStack(alignment: .leading, spacing: 5) {
                         HStack(spacing: 6) {
-                            Text("\(approval.source.shortName) 请求审批")
+                            Text(AppText.pick(
+                                configurationStore.config.language,
+                                english: "\(approval.source.shortName) requests approval",
+                                japanese: "\(approval.source.shortName) が承認を要求",
+                                chinese: "\(approval.source.shortName) 请求审批"
+                            ))
                                 .font(.system(size: 12, weight: .semibold))
                                 .foregroundStyle(GlassText.primary)
                                 .lineLimit(1)
@@ -399,20 +428,20 @@ struct ApprovalSummaryCard: View {
                 .contentShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
             }
             .buttonStyle(.plain)
-            .help("查看审批详情")
+            .help(AppText.pick(configurationStore.config.language, english: "View approval details", japanese: "承認詳細を表示", chinese: "查看审批详情"))
 
             HStack(spacing: 4) {
                 if approval.supports(.accept) {
-                    approvalButton(ApprovalDecision.accept.title, .accept, prominent: true)
+                    approvalButton(ApprovalDecision.accept.title(language: configurationStore.config.language), .accept, prominent: true)
                 }
                 if approval.supports(.acceptForSession) {
-                    approvalButton("本轮允许", .acceptForSession)
+                    approvalButton(AppText.pick(configurationStore.config.language, english: "Allow session", japanese: "セッションで許可", chinese: "本轮允许"), .acceptForSession)
                 }
                 if approval.supports(.decline) {
-                    approvalButton(ApprovalDecision.decline.title, .decline)
+                    approvalButton(ApprovalDecision.decline.title(language: configurationStore.config.language), .decline)
                 }
                 Spacer(minLength: 4)
-                Button("详情") {
+                Button(AppText.pick(configurationStore.config.language, english: "Details", japanese: "詳細", chinese: "详情")) {
                     showsDetail = true
                 }
                 .font(.system(size: 12, weight: .semibold))
@@ -472,13 +501,14 @@ struct ApprovalSummaryCard: View {
     private var createdText: String {
         let formatter = RelativeDateTimeFormatter()
         formatter.unitsStyle = .short
-        formatter.locale = Locale.current
+        formatter.locale = AppText.locale(for: configurationStore.config.language)
         return formatter.localizedString(for: approval.createdAt, relativeTo: Date())
     }
 }
 
 struct ApprovalDetailCard: View {
     @EnvironmentObject private var store: SessionStore
+    @EnvironmentObject private var configurationStore: AppConfigurationStore
     let session: AgentSession
     let approval: ApprovalRequest
     let onClose: () -> Void
@@ -486,7 +516,12 @@ struct ApprovalDetailCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(spacing: 8) {
-                Label("\(approval.source.shortName) 审批详情", systemImage: "hand.raised.fill")
+                Label(AppText.pick(
+                    configurationStore.config.language,
+                    english: "\(approval.source.shortName) approval details",
+                    japanese: "\(approval.source.shortName) 承認詳細",
+                    chinese: "\(approval.source.shortName) 审批详情"
+                ), systemImage: "hand.raised.fill")
                     .font(.system(size: 13, weight: .semibold))
                     .foregroundStyle(GlassText.primary)
                 Spacer()
@@ -496,7 +531,7 @@ struct ApprovalDetailCard: View {
                     Image(systemName: "chevron.left")
                 }
                 .buttonStyle(DashboardSmallButtonStyle())
-                .help("返回摘要")
+                .help(AppText.pick(configurationStore.config.language, english: "Back to summary", japanese: "概要に戻る", chinese: "返回摘要"))
             }
 
             HStack(spacing: 6) {
@@ -530,7 +565,12 @@ struct ApprovalDetailCard: View {
     @ViewBuilder
     private var decisionButtons: some View {
         if approval.availableDecisions.isEmpty {
-                Text("当前版本无法识别这个审批请求")
+                Text(AppText.pick(
+                    configurationStore.config.language,
+                    english: "This app version cannot recognize this approval request",
+                    japanese: "このバージョンではこの承認リクエストを認識できません",
+                    chinese: "当前版本无法识别这个审批请求"
+                ))
                     .font(.system(size: 12, weight: .medium))
                     .foregroundStyle(GlassText.secondary)
         } else {
@@ -550,7 +590,7 @@ struct ApprovalDetailCard: View {
     }
 
     private func approvalButton(_ decision: ApprovalDecision, prominent: Bool = false) -> some View {
-        Button(decision.title) {
+        Button(decision.title(language: configurationStore.config.language)) {
             store.resolveApproval(approval, decision: decision)
         }
         .font(.system(size: 12, weight: .semibold))
@@ -571,7 +611,7 @@ struct ApprovalDetailCard: View {
 
     private var workspaceText: String {
         guard let workspace = approval.workspace, !workspace.isEmpty else {
-            return "未提供目录"
+            return AppText.pick(configurationStore.config.language, english: "No folder provided", japanese: "フォルダ未指定", chinese: "未提供目录")
         }
         return URL(fileURLWithPath: workspace).lastPathComponent
     }
@@ -579,7 +619,7 @@ struct ApprovalDetailCard: View {
     private var createdText: String {
         let formatter = RelativeDateTimeFormatter()
         formatter.unitsStyle = .short
-        formatter.locale = Locale.current
+        formatter.locale = AppText.locale(for: configurationStore.config.language)
         return formatter.localizedString(for: approval.createdAt, relativeTo: Date())
     }
 }
@@ -601,16 +641,18 @@ struct DetailPill: View {
 }
 
 struct DashboardEmptyCard: View {
+    @EnvironmentObject private var configurationStore: AppConfigurationStore
+
     var body: some View {
         HStack(spacing: 12) {
             Image(systemName: "tray")
                 .font(.system(size: 16, weight: .semibold))
                 .foregroundStyle(GlassText.secondary)
             VStack(alignment: .leading, spacing: 4) {
-                Text("等待事件")
+                Text(AppText.pick(configurationStore.config.language, english: "Waiting for events", japanese: "イベント待ち", chinese: "等待事件"))
                     .font(.system(size: 13, weight: .semibold))
                     .foregroundStyle(GlassText.primary)
-                Text("Claude Code 或 Codex 活动会显示在这里。")
+                Text(AppText.pick(configurationStore.config.language, english: "Claude Code or Codex activity appears here.", japanese: "Claude Code または Codex のアクティビティがここに表示されます。", chinese: "Claude Code 或 Codex 活动会显示在这里。"))
                     .font(.system(size: 11, weight: .medium))
                     .foregroundStyle(GlassText.secondary)
             }
@@ -638,10 +680,12 @@ struct DashboardChip: View {
 }
 
 struct ConfidenceChip: View {
+    @EnvironmentObject private var configurationStore: AppConfigurationStore
+
     let confidence: DisplayConfidence
 
     var body: some View {
-        Text(confidence.title)
+        Text(confidence.title(language: configurationStore.config.language))
             .font(.system(size: 10, weight: .semibold))
             .foregroundStyle(color)
             .padding(.horizontal, 7)

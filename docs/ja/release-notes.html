@@ -6,13 +6,13 @@
     <title>リリースノート | Vibelsland Free</title>
     <meta
       name="description"
-      content="Vibelsland Free v0.1.0 のリリースノート。ダウンロード、SHA-256 確認、主要機能、インストール、製品範囲、サポートリンクを確認できます。"
+      content="Vibelsland Free v0.1.0 のリリースノート。ダウンロード、SHA-256 確認、主要機能、インストール、現在のソース更新を確認できます。"
     >
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Vibelsland Free">
     <meta property="og:locale" content="ja_JP">
     <meta property="og:title" content="Vibelsland Free リリースノート">
-    <meta property="og:description" content="Vibelsland Free v0.1.0 の機能、ダウンロード、チェックサム、インストール、製品範囲を確認できます。">
+    <meta property="og:description" content="Vibelsland Free v0.1.0 の機能、ダウンロード、チェックサム、インストール、現在のリポジトリ状況を確認できます。">
     <meta property="og:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
     <meta property="og:image:width" content="1672">
     <meta property="og:image:height" content="941">
@@ -20,7 +20,7 @@
     <meta property="og:url" content="https://shinteni.github.io/prompt-island/ja/release-notes.html">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Vibelsland Free リリースノート">
-    <meta name="twitter:description" content="Vibelsland Free v0.1.0 の機能、ダウンロード、チェックサム、インストール、製品範囲を確認できます。">
+    <meta name="twitter:description" content="Vibelsland Free v0.1.0 の機能、ダウンロード、チェックサム、インストール、現在のリポジトリ状況を確認できます。">
     <meta name="twitter:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
     <meta name="twitter:image:alt" content="Vibelsland Free macOS AI コーディング状態インターフェイス">
     <meta name="theme-color" content="#070706">
@@ -61,7 +61,7 @@
           <p class="eyebrow">Release Notes</p>
           <h1 id="release-title">リリース履歴。</h1>
           <p>
-            Vibelsland Free の公式サイト上のリリース記録です。v0.1.0 は macOS 14+ 向けの最初の公開版で、ローカルファーストな AI コーディング状態表示、承認処理、ソース制御、確認可能なダウンロードを提供します。
+            Vibelsland Free の公式サイト上のリリース記録です。公開ダウンロードは現在も v0.1.0 です。現在のリポジトリでは、ドキュメント、CI、リリース確認、Codex Desktop 接続体験の更新が続いています。
           </p>
           <div class="hero-actions">
             <a class="button primary" href="download.html">ダウンロード説明を見る</a>
@@ -81,6 +81,46 @@
             <span>配布</span>
             <strong>GitHub Releases</strong>
           </div>
+        </div>
+      </section>
+
+      <section class="section data-section surface-section" aria-labelledby="source-status-title">
+        <div class="section-heading align-left" data-reveal>
+          <p class="eyebrow">現在のリポジトリ</p>
+          <h2 id="source-status-title">公開ダウンロードとソースの進捗を分けて記録します。</h2>
+          <p>
+            <code>docs/release.json</code> は GitHub Releases で公開済みの v0.1.0 パッケージを示しています。現在のソースツリーはその tag より新しく、次回リリースに向けたサイト、検証、ローカル接続の更新を含みます。
+          </p>
+        </div>
+        <div class="data-grid">
+          <article data-reveal>
+            <h3>多言語ドキュメント</h3>
+            <ul>
+              <li>日本語 README と日本語ドキュメントページを追加しました。</li>
+              <li>概要、ダウンロード、インストール、プライバシー、FAQ、サポート、リリースノートを中国語、英語、日本語で提供します。</li>
+            </ul>
+          </article>
+          <article data-reveal>
+            <h3>自動チェック</h3>
+            <ul>
+              <li>GitHub Actions が Swift build とテストターゲット検出チェックを扱います。</li>
+              <li>ローカル入口は <code>zsh scripts/run-tests.sh</code>、<code>zsh scripts/verify-docs-site.sh</code>、<code>zsh scripts/verify-release-readiness.sh</code> です。</li>
+            </ul>
+          </article>
+          <article data-reveal>
+            <h3>リリース確認</h3>
+            <ul>
+              <li>メンテナー用チェックリストで GitHub 無料公開と将来の notarized 配布を分けています。</li>
+              <li>ダウンロード、インストール、FAQ、README で現在のパッケージが ad-hoc 署名であることを明記しています。</li>
+            </ul>
+          </article>
+          <article data-reveal>
+            <h3>ローカル接続</h3>
+            <ul>
+              <li>Finder から起動した macOS app 環境で Codex Desktop のリアルタイム接続を開始しやすくしました。</li>
+              <li>Bridge、Hooks、ログ、実行状態は設定画面とローカルヘルスチェックで確認できます。</li>
+            </ul>
+          </article>
         </div>
       </section>
 
@@ -134,7 +174,7 @@
           <article data-reveal>
             <h3>ローカル承認処理</h3>
             <ul>
-              <li>許可、拒否、続行、キャンセルを macOS ネイティブの画面で処理します。</li>
+              <li>一回許可、セッション中の許可（対応時）、拒否、タスク取消を macOS ネイティブの画面で処理します。Codex CLI Hook の承認は許可または拒否のみです。</li>
               <li>承認処理に必要な基本的な文脈を保持します。</li>
               <li>ターミナル、デスクトップクライアント、ログ間の切り替えを減らします。</li>
             </ul>
@@ -169,7 +209,7 @@
         </div>
         <div class="checksum-card" data-reveal>
           <span>SHA-256</span>
-          <code>64c7c0a4eae81042bbc3896e24a07ab5d5573aeaafa846eada2e982f887ecf81</code>
+          <code>f8e303b771bc04839b1ed469c860d4fcae599229600c4a40dc2c8c1966626e64</code>
         </div>
       </section>
 
@@ -192,7 +232,7 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="../lang.js?v=2d7bd70a4d31" defer></script>
+    <script src="../lang.js?v=66b67e53ed45" defer></script>
     <script src="../effects.js?v=984d01b9fa2d" defer></script>
   </body>
 </html>

@@ -20,6 +20,81 @@ func XCTAssertNotEqual<T: Equatable>(_ first: @autoclosure () -> T, _ second: @a
 
 @Suite
 struct VibelslandFreeCoreTests {
+    @Test func testLocalizationConfigurationDefaultsAndDisplayText() throws {
+        XCTAssertEqual(AppConfiguration.default.language, .english, "New installs default to English")
+
+        let legacyConfig = """
+        {
+          "enableClaude": true,
+          "enableCodexCLI": true,
+          "enableCodexDesktop": true,
+          "enableSounds": true,
+          "soundTheme": "soft",
+          "doNotDisturb": false,
+          "launchAtLogin": false,
+          "islandPosition": "topCenter",
+          "approvalTimeoutSeconds": 7200,
+          "maxVisibleSessions": 5
+        }
+        """.data(using: .utf8)!
+        let decoded = try JSONDecoder().decode(AppConfiguration.self, from: legacyConfig)
+        XCTAssertEqual(decoded.language, .english, "Old config files without language use English")
+
+        XCTAssertEqual(ApprovalDecision.accept.title(language: .english), "Allow once")
+        XCTAssertEqual(ApprovalDecision.accept.title(language: .japanese), "一度だけ許可")
+        XCTAssertEqual(HealthCheckStatus.needsAction.title(language: .english), "Needs action")
+        XCTAssertEqual(IslandPosition.topCenter.title(language: .japanese), "上部中央")
+
+        let session = AgentSession(
+            id: "session-localized",
+            title: "Localized task",
+            prompt: "Localized task",
+            source: .codexDesktop,
+            workspace: "/tmp/localized-task",
+            terminal: "",
+            updatedAt: Date(),
+            status: .runningTool,
+            activity: [
+                ActivityItem(symbol: "wrench.and.screwdriver", title: "工具调用", detail: "exec_command")
+            ],
+            subagents: []
+        )
+        let englishDisplay = SessionDisplaySnapshot(session: session, language: .english)
+        let japaneseDisplay = SessionDisplaySnapshot(session: session, language: .japanese)
+        XCTAssertTrue(englishDisplay.primaryLine.hasPrefix("Tool:"), "English display uses English labels")
+        XCTAssertTrue(japaneseDisplay.primaryLine.hasPrefix("ツール："), "Japanese display uses Japanese labels")
+    }
+
+    @Test func testCodexStatePathPrefersCurrentSqliteDirectory() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("vibelsland-codex-state-\(UUID().uuidString)", isDirectory: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        let legacyURL = root.appendingPathComponent(".codex/state_5.sqlite")
+        let currentURL = root.appendingPathComponent(".codex/sqlite/state_5.sqlite")
+        try FileManager.default.createDirectory(
+            at: legacyURL.deletingLastPathComponent(),
+            withIntermediateDirectories: true
+        )
+        try Data("legacy".utf8).write(to: legacyURL)
+        XCTAssertEqual(
+            AppPaths.codexStateURL(environment: ["HOME": root.path]).path,
+            legacyURL.path,
+            "Legacy Codex state db remains the fallback"
+        )
+
+        try FileManager.default.createDirectory(
+            at: currentURL.deletingLastPathComponent(),
+            withIntermediateDirectories: true
+        )
+        try Data("current".utf8).write(to: currentURL)
+        XCTAssertEqual(
+            AppPaths.codexStateURL(environment: ["HOME": root.path]).path,
+            currentURL.path,
+            "Current Codex state db location is preferred when available"
+        )
+    }
+
     @Test func testSmokeCoverage() throws {
         func jsonDictionary(_ text: String) throws -> [String: Any] {
             let data = text.data(using: .utf8)!

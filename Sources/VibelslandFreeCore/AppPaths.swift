@@ -66,7 +66,19 @@ package enum AppPaths {
     }
 
     package static var codexStateURL: URL {
-        home.appendingPathComponent(".codex/state_5.sqlite")
+        codexStateURL(environment: ProcessInfo.processInfo.environment)
+    }
+
+    package static func codexStateURL(
+        environment: [String: String],
+        fileManager: FileManager = .default
+    ) -> URL {
+        let homeURL = home(environment: environment)
+        let currentURL = homeURL.appendingPathComponent(".codex/sqlite/state_5.sqlite")
+        if fileManager.fileExists(atPath: currentURL.path) {
+            return currentURL
+        }
+        return homeURL.appendingPathComponent(".codex/state_5.sqlite")
     }
 
     package static func ensureRuntimeDirectories() throws {

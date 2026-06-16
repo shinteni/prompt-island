@@ -90,9 +90,9 @@
         },
         "release-notes": {
           title: "版本历史 | Vibelsland Free",
-          description: "Vibelsland Free 版本历史：v0.1.0 的下载、SHA-256 校验、主要功能、安装说明、产品边界和相关支持入口。",
+          description: "Vibelsland Free 版本历史：v0.1.0 的下载、SHA-256 校验、主要功能、安装说明，以及当前仓库中的未发布改进。",
           ogTitle: "Vibelsland Free 版本历史",
-          ogDescription: "查看 Vibelsland Free v0.1.0 的发布内容、下载包、校验文件、安装说明和产品边界。"
+          ogDescription: "查看 Vibelsland Free v0.1.0 的发布内容、下载包、校验文件、安装说明和当前仓库进展。"
         },
         404: {
           title: "页面未找到 | Vibelsland Free",
@@ -146,7 +146,7 @@
         "advantages.problems.item1.title": "长任务是否还在推进",
         "advantages.problems.item1.copy": "构建、搜索和工具调用常常持续数分钟。浮岛把最近状态留在屏幕顶部，不需要反复切回终端。",
         "advantages.problems.item2.title": "审批请求在哪里出现",
-        "advantages.problems.item2.copy": "允许、拒绝、继续、取消等关键动作集中处理，减少分散在多个工具中的确认成本。",
+        "advantages.problems.item2.copy": "允许一次、本轮允许（支持时）、拒绝和取消任务集中处理；Codex CLI Hook 审批只回传允许或拒绝。",
         "advantages.problems.item3.title": "多个 AI 工具谁在活动",
         "advantages.problems.item3.copy": "Claude Code、Codex CLI 和 Codex Desktop 的状态统一呈现，更适合多会话并行工作。",
         "advantages.compare.eyebrow": "定位",
@@ -331,9 +331,9 @@
         },
         "release-notes": {
           title: "Release Notes | Vibelsland Free",
-          description: "Vibelsland Free release notes for v0.1.0, including downloads, SHA-256 verification, key features, install guidance, product boundaries, and support links.",
+          description: "Vibelsland Free release notes for v0.1.0, including downloads, SHA-256 verification, key features, install guidance, and current source updates.",
           ogTitle: "Vibelsland Free Release Notes",
-          ogDescription: "Review Vibelsland Free v0.1.0 features, download assets, checksum file, install guidance, and product boundaries."
+          ogDescription: "Review Vibelsland Free v0.1.0 features, download assets, checksum file, install guidance, and current source progress."
         },
         404: {
           title: "Page Not Found | Vibelsland Free",
@@ -387,7 +387,7 @@
         "advantages.problems.item1.title": "Whether long tasks are still moving",
         "advantages.problems.item1.copy": "Builds, searches, and tool calls can run for minutes. The island keeps recent status visible without repeated terminal checks.",
         "advantages.problems.item2.title": "Where approvals appear",
-        "advantages.problems.item2.copy": "Allow, deny, continue, and cancel actions are gathered together, reducing confirmation cost across tools.",
+        "advantages.problems.item2.copy": "Accept once, accept for session where supported, decline, and cancel task actions are gathered together; Codex CLI hook approvals return only allow or deny.",
         "advantages.problems.item3.title": "Which AI tool is active",
         "advantages.problems.item3.copy": "Claude Code, Codex CLI, and Codex Desktop status is presented together for parallel-session work.",
         "advantages.compare.eyebrow": "Positioning",
@@ -572,9 +572,9 @@
         },
         "release-notes": {
           title: "リリースノート | Vibelsland Free",
-          description: "Vibelsland Free v0.1.0 のリリースノート。ダウンロード、SHA-256 確認、主要機能、インストール、製品範囲、サポートリンクを確認できます。",
+          description: "Vibelsland Free v0.1.0 のリリースノート。ダウンロード、SHA-256 確認、主要機能、インストール、現在のソース更新を確認できます。",
           ogTitle: "Vibelsland Free リリースノート",
-          ogDescription: "Vibelsland Free v0.1.0 の機能、ダウンロード、チェックサム、インストール、製品範囲を確認できます。"
+          ogDescription: "Vibelsland Free v0.1.0 の機能、ダウンロード、チェックサム、インストール、現在のリポジトリ状況を確認できます。"
         },
         404: {
           title: "ページが見つかりません | Vibelsland Free",
@@ -628,7 +628,7 @@
         "advantages.problems.item1.title": "長いタスクが進んでいるか",
         "advantages.problems.item1.copy": "ビルド、検索、ツール実行は数分続くことがあります。アイランドは最近の状態を画面上部に保ちます。",
         "advantages.problems.item2.title": "承認がどこに出るか",
-        "advantages.problems.item2.copy": "許可、拒否、続行、キャンセルをまとめ、複数ツールに散らばる確認コストを減らします。",
+        "advantages.problems.item2.copy": "一回許可、セッション中の許可（対応時）、拒否、タスク取消をまとめます。Codex CLI Hook の承認は許可または拒否のみを返します。",
         "advantages.problems.item3.title": "どの AI ツールが動いているか",
         "advantages.problems.item3.copy": "Claude Code、Codex CLI、Codex Desktop の状態をまとめて表示し、複数セッションの並行作業に合います。",
         "advantages.compare.eyebrow": "位置づけ",

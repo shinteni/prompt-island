@@ -1,7 +1,5 @@
 #!/bin/zsh
 
-. "$ROOT/scripts/verify-support.sh"
-
 vibelsland_log_path() {
     print "$1/Library/Logs/VibelslandFree/app.log"
 }

@@ -12,6 +12,7 @@ final class SessionStore: ObservableObject {
     @Published var isExpanded = false
     @Published var installReport: InstallReport?
     @Published var lastError: String?
+    @Published var lastRepairMessage: String?
     @Published var codexAppServerReachable = false
     @Published var codexAppServerUserAgent: String?
     @Published var codexAppServerThreadListAvailable = false
@@ -141,7 +142,12 @@ final class SessionStore: ObservableObject {
             }
             refreshHealthChecks()
         } catch {
-            lastError = "Bridge 启动失败：\(error.localizedDescription)"
+            lastError = AppText.pick(
+                configurationStore.config.language,
+                english: "Bridge failed to start: \(error.localizedDescription)",
+                japanese: "Bridge の起動に失敗しました：\(error.localizedDescription)",
+                chinese: "Bridge 启动失败：\(error.localizedDescription)"
+            )
             logger.error("store.bridge.start.failed", detail: error.localizedDescription)
             refreshHealthChecks()
         }
@@ -167,7 +173,12 @@ final class SessionStore: ObservableObject {
             lastError = nil
             refreshHealthChecks()
         } catch {
-            lastError = "Hook 安装失败：\(error.localizedDescription)"
+            lastError = AppText.pick(
+                configurationStore.config.language,
+                english: "Hook install failed: \(error.localizedDescription)",
+                japanese: "Hook のインストールに失敗しました：\(error.localizedDescription)",
+                chinese: "Hook 安装失败：\(error.localizedDescription)"
+            )
             logger.error("store.hooks.install.failed", detail: error.localizedDescription)
             refreshHealthChecks()
         }
@@ -175,6 +186,14 @@ final class SessionStore: ObservableObject {
 
     func repairConnections() {
         installSelectedHooks()
+        if lastError == nil {
+            lastRepairMessage = AppText.pick(
+                configurationStore.config.language,
+                english: "Connection repair ran. Hooks were installed or refreshed, and checks are running again.",
+                japanese: "接続修復を実行しました。Hooks をインストールまたは更新し、チェックを再実行しています。",
+                chinese: "已执行修复接入：Hooks 已安装或刷新，并已重新检测连接。"
+            )
+        }
         refreshDiagnostics()
     }
 
@@ -185,7 +204,12 @@ final class SessionStore: ObservableObject {
             lastError = nil
             refreshHealthChecks()
         } catch {
-            lastError = "Hook 卸载失败：\(error.localizedDescription)"
+            lastError = AppText.pick(
+                configurationStore.config.language,
+                english: "Hook uninstall failed: \(error.localizedDescription)",
+                japanese: "Hook のアンインストールに失敗しました：\(error.localizedDescription)",
+                chinese: "Hook 卸载失败：\(error.localizedDescription)"
+            )
             logger.error("store.hooks.uninstall.failed", detail: error.localizedDescription)
             refreshHealthChecks()
         }

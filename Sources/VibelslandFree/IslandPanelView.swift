@@ -50,20 +50,20 @@ struct IslandPanelView: View {
         }
         .contentShape(RoundedRectangle(cornerRadius: radius, style: .continuous))
         .contextMenu {
-            Button(store.isExpanded ? "收起浮岛" : "展开浮岛") {
+            Button(store.isExpanded ? collapseTitle : expandTitle) {
                 store.isExpanded.toggle()
             }
-            Button("设置") {
+            Button(settingsTitle) {
                 NSApp.sendAction(#selector(AppDelegate.openSettings), to: nil, from: nil)
             }
-            Button("安装 Hooks") {
+            Button(installHooksTitle) {
                 NSApp.sendAction(#selector(AppDelegate.installHooks), to: nil, from: nil)
             }
             Divider()
-            Button("重启应用") {
+            Button(restartTitle) {
                 NSApp.sendAction(#selector(AppDelegate.restart), to: nil, from: nil)
             }
-            Button("退出应用") {
+            Button(quitTitle) {
                 NSApp.sendAction(#selector(AppDelegate.quit), to: nil, from: nil)
             }
         }
@@ -191,13 +191,17 @@ struct IslandPanelView: View {
     private var compactContent: some View {
         Group {
             if isIdleMiniMode {
-                IdleMiniContent(status: idleMiniStatus, accentColor: idleMiniAccentColor)
+                IdleMiniContent(
+                    status: idleMiniStatus,
+                    accentColor: idleMiniAccentColor,
+                    language: configurationStore.config.language
+                )
                     .frame(width: IslandMetrics.idleMiniDiameter, height: IslandMetrics.idleMiniDiameter)
             } else {
                 HStack(spacing: 7) {
                     sourceDots
                     VStack(alignment: .leading, spacing: 1) {
-                        Text(compactSession.map { SessionDisplaySnapshot(session: $0).title } ?? ">_ - island")
+                        Text(compactSession.map { SessionDisplaySnapshot(session: $0, language: configurationStore.config.language).title } ?? ">_ - island")
                             .font(.system(size: 11, weight: .semibold))
                             .foregroundStyle(GlassText.primary)
                             .lineLimit(1)
@@ -210,7 +214,8 @@ struct IslandPanelView: View {
                     CompactLoadingSpinner(
                         status: compactSession?.status ?? .idle,
                         color: compactSession?.source.color ?? Color(red: 0.35, green: 0.68, blue: 1.0),
-                        nsColor: compactSession?.source.nsColor ?? NSColor(red: 0.35, green: 0.68, blue: 1.0, alpha: 1)
+                        nsColor: compactSession?.source.nsColor ?? NSColor(red: 0.35, green: 0.68, blue: 1.0, alpha: 1),
+                        language: configurationStore.config.language
                     )
                     .frame(width: 18, height: 18)
                 }
@@ -301,7 +306,7 @@ struct IslandPanelView: View {
                     UsageHeaderView(usage: usage)
                 }
                 .buttonStyle(.plain)
-                .help("查看用量设置")
+                .help(AppText.pick(configurationStore.config.language, english: "Open usage settings", japanese: "使用量設定を開く", chinese: "查看用量设置"))
             } else {
                 Button {
                     NSApp.sendAction(#selector(AppDelegate.openSettings), to: nil, from: nil)
@@ -311,7 +316,7 @@ struct IslandPanelView: View {
                         .foregroundStyle(GlassText.primary)
                 }
                 .buttonStyle(.plain)
-                .help("打开设置")
+                .help(AppText.pick(configurationStore.config.language, english: "Open settings", japanese: "設定を開く", chinese: "打开设置"))
             }
             Spacer()
             Button {
@@ -320,14 +325,14 @@ struct IslandPanelView: View {
                 Image(systemName: configurationStore.config.doNotDisturb ? "bell.slash.fill" : "bell.fill")
             }
             .buttonStyle(DashboardIconButtonStyle())
-            .help(configurationStore.config.doNotDisturb ? "关闭勿扰" : "开启勿扰")
+            .help(configurationStore.config.doNotDisturb ? AppText.pick(configurationStore.config.language, english: "Turn off Do Not Disturb", japanese: "集中モードをオフ", chinese: "关闭勿扰") : AppText.pick(configurationStore.config.language, english: "Turn on Do Not Disturb", japanese: "集中モードをオン", chinese: "开启勿扰"))
             Button {
                 NSApp.sendAction(#selector(AppDelegate.openSettings), to: nil, from: nil)
             } label: {
                 Image(systemName: "gearshape.fill")
             }
             .buttonStyle(DashboardIconButtonStyle())
-            .help("设置")
+            .help(settingsTitle)
             if let error = store.lastError {
                 Image(systemName: "exclamationmark.triangle.fill")
                     .font(.system(size: 12, weight: .semibold))
@@ -340,7 +345,7 @@ struct IslandPanelView: View {
                 Image(systemName: "chevron.up")
             }
             .buttonStyle(DashboardIconButtonStyle())
-            .help("收起")
+            .help(collapseTitle)
         }
         .frame(height: 24)
     }
@@ -366,12 +371,12 @@ struct IslandPanelView: View {
 
     private var compactDetail: String {
         guard let session = compactSession else {
-            return "等待事件"
+            return AppText.pick(configurationStore.config.language, english: "Waiting for events", japanese: "イベント待ち", chinese: "等待事件")
         }
         if session.approval != nil {
-            return "等待审批"
+            return AppText.pick(configurationStore.config.language, english: "Waiting approval", japanese: "承認待ち", chinese: "等待审批")
         }
-        let display = SessionDisplaySnapshot(session: session)
+        let display = SessionDisplaySnapshot(session: session, language: configurationStore.config.language)
         return display.primaryLine
     }
 
@@ -440,20 +445,44 @@ struct IslandPanelView: View {
             return !approval.isExpired
         }.count
         if approvals > 0 {
-            return "\(approvals) 个审批等待处理"
+            return AppText.pendingApprovals(approvals, language: configurationStore.config.language)
         }
 
         let visibleSessions = dashboardVisibleSessions
         guard !visibleSessions.isEmpty else {
-            return "暂无活动"
+            return AppText.pick(configurationStore.config.language, english: "No activity", japanese: "アクティビティなし", chinese: "暂无活动")
         }
 
         let activeCount = visibleSessions.filter(\.status.isActiveVisual).count
         if activeCount > 0 {
-            return "\(activeCount) 个任务进行中"
+            return AppText.activeTasks(activeCount, language: configurationStore.config.language)
         }
 
-        return "\(visibleSessions.count) 个最近会话"
+        return AppText.recentSessions(visibleSessions.count, language: configurationStore.config.language)
+    }
+
+    private var expandTitle: String {
+        AppText.pick(configurationStore.config.language, english: "Expand island", japanese: "アイランドを展開", chinese: "展开浮岛")
+    }
+
+    private var collapseTitle: String {
+        AppText.pick(configurationStore.config.language, english: "Collapse island", japanese: "アイランドを折りたたむ", chinese: "收起浮岛")
+    }
+
+    private var settingsTitle: String {
+        AppText.pick(configurationStore.config.language, english: "Settings", japanese: "設定", chinese: "设置")
+    }
+
+    private var installHooksTitle: String {
+        AppText.pick(configurationStore.config.language, english: "Install hooks", japanese: "Hooks をインストール", chinese: "安装 Hooks")
+    }
+
+    private var restartTitle: String {
+        AppText.pick(configurationStore.config.language, english: "Restart app", japanese: "アプリを再起動", chinese: "重启应用")
+    }
+
+    private var quitTitle: String {
+        AppText.pick(configurationStore.config.language, english: "Quit app", japanese: "アプリを終了", chinese: "退出应用")
     }
 
     private var pendingApprovalSession: AgentSession? {

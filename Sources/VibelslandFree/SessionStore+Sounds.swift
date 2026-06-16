@@ -5,7 +5,7 @@ import Foundation
 extension SessionStore {
     func playSoundPreview(_ kind: RetroSoundKind) {
         guard configurationStore.config.enableSounds else {
-            lastError = "声音已关闭"
+            lastError = soundsDisabledText
             return
         }
         RetroSoundPlayer.shared.play(kind, theme: configurationStore.config.soundTheme)
@@ -14,7 +14,7 @@ extension SessionStore {
 
     func playAllSoundPreviews() {
         guard configurationStore.config.enableSounds else {
-            lastError = "声音已关闭"
+            lastError = soundsDisabledText
             return
         }
         lastError = nil
@@ -100,5 +100,14 @@ extension SessionStore {
             guard let value, !value.isEmpty else { return nil }
             return DisplayTextSanitizer.sanitize(String(value.prefix(700)))
         }.first
+    }
+
+    private var soundsDisabledText: String {
+        AppText.pick(
+            configurationStore.config.language,
+            english: "Sounds are off",
+            japanese: "サウンドはオフです",
+            chinese: "声音已关闭"
+        )
     }
 }

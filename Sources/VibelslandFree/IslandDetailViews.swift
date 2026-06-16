@@ -3,6 +3,8 @@ import VibelslandFreeCore
 import SwiftUI
 
 struct SessionRow: View {
+    @EnvironmentObject private var configurationStore: AppConfigurationStore
+
     let session: AgentSession
     let isSelected: Bool
 
@@ -38,12 +40,13 @@ struct SessionRow: View {
     }
 
     private var display: SessionDisplaySnapshot {
-        SessionDisplaySnapshot(session: session)
+        SessionDisplaySnapshot(session: session, language: configurationStore.config.language)
     }
 }
 
 struct SessionDetailView: View {
     @EnvironmentObject private var store: SessionStore
+    @EnvironmentObject private var configurationStore: AppConfigurationStore
     let session: AgentSession
 
     var body: some View {
@@ -79,7 +82,7 @@ struct SessionDetailView: View {
                 SubagentSummaryView(subagents: session.subagents)
             }
 
-            Text("活动")
+            Text(AppText.pick(configurationStore.config.language, english: "Activity", japanese: "アクティビティ", chinese: "活动"))
                 .font(.system(size: 13, weight: .semibold))
                 .foregroundStyle(.secondary)
                 .padding(.top, 2)
@@ -92,7 +95,7 @@ struct SessionDetailView: View {
                 VStack(spacing: 8) {
                     Image(systemName: "tray")
                         .font(.system(size: 22, weight: .medium))
-                    Text("暂无可展示活动")
+                    Text(AppText.pick(configurationStore.config.language, english: "No activity to show", japanese: "表示できるアクティビティはありません", chinese: "暂无可展示活动"))
                         .font(.system(size: 12, weight: .semibold))
                 }
                 .foregroundStyle(.secondary)
@@ -121,20 +124,22 @@ struct SessionDetailView: View {
     }
 
     private var display: SessionDisplaySnapshot {
-        SessionDisplaySnapshot(session: session)
+        SessionDisplaySnapshot(session: session, language: configurationStore.config.language)
     }
 }
 
 struct UsageStrip: View {
+    @EnvironmentObject private var configurationStore: AppConfigurationStore
+
     let usage: UsageSnapshot
 
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
-                UsageMetric(title: "本轮", value: UsageSnapshot.compactNumber(usage.lastTokens))
-                UsageMetric(title: "总计", value: usage.totalText)
+                UsageMetric(title: AppText.pick(configurationStore.config.language, english: "Turn", japanese: "今回", chinese: "本轮"), value: UsageSnapshot.compactNumber(usage.lastTokens))
+                UsageMetric(title: AppText.pick(configurationStore.config.language, english: "Total", japanese: "合計", chinese: "总计"), value: usage.totalText)
                 if usage.contextWindow > 0 {
-                    UsageMetric(title: "上下文", value: UsageSnapshot.compactNumber(usage.contextWindow))
+                    UsageMetric(title: AppText.pick(configurationStore.config.language, english: "Context", japanese: "コンテキスト", chinese: "上下文"), value: UsageSnapshot.compactNumber(usage.contextWindow))
                 }
                 if let primary = usage.primaryUsedPercent {
                     UsageMetric(title: "5h", value: UsageSnapshot.percent(primary), accent: primary >= 80)
@@ -143,7 +148,7 @@ struct UsageStrip: View {
                     UsageMetric(title: "7d", value: UsageSnapshot.percent(secondary), accent: secondary >= 80)
                 }
                 if let plan = usage.planType, !plan.isEmpty {
-                    UsageMetric(title: "计划", value: plan)
+                    UsageMetric(title: AppText.pick(configurationStore.config.language, english: "Plan", japanese: "プラン", chinese: "计划"), value: plan)
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -180,11 +185,13 @@ struct UsageMetric: View {
 }
 
 struct AssistantMessageCard: View {
+    @EnvironmentObject private var configurationStore: AppConfigurationStore
+
     let message: String
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Label("最新回复", systemImage: "text.bubble")
+            Label(AppText.pick(configurationStore.config.language, english: "Latest reply", japanese: "最新の返信", chinese: "最新回复"), systemImage: "text.bubble")
                 .font(.system(size: 12, weight: .semibold))
                 .foregroundStyle(.secondary)
             Text(message)
@@ -201,14 +208,16 @@ struct AssistantMessageCard: View {
 }
 
 struct SubagentSummaryView: View {
+    @EnvironmentObject private var configurationStore: AppConfigurationStore
+
     let subagents: [SubagentItem]
 
     var body: some View {
         HStack(spacing: 8) {
             Image(systemName: "person.2")
-            Text("运行 \(activeCount) 个子智能体")
+            Text(AppText.runningSubagents(activeCount, language: configurationStore.config.language))
             if doneCount > 0 {
-                Text("完成 \(doneCount)")
+                Text(AppText.completed(doneCount, language: configurationStore.config.language))
                     .foregroundStyle(.secondary)
             }
         }
@@ -236,6 +245,7 @@ struct SubagentSummaryView: View {
 
 struct ApprovalPanel: View {
     @EnvironmentObject private var store: SessionStore
+    @EnvironmentObject private var configurationStore: AppConfigurationStore
     let approval: ApprovalRequest
 
     var body: some View {
@@ -255,11 +265,16 @@ struct ApprovalPanel: View {
 
             HStack(spacing: 8) {
                 if approval.availableDecisions.isEmpty {
-                    Text("当前版本无法识别这个审批请求")
+                    Text(AppText.pick(
+                        configurationStore.config.language,
+                        english: "This app version cannot recognize this approval request",
+                        japanese: "このバージョンではこの承認リクエストを認識できません",
+                        chinese: "当前版本无法识别这个审批请求"
+                    ))
                         .font(.system(size: 12, weight: .medium))
                         .foregroundStyle(.secondary)
                 } else if approval.supports(.accept) {
-                    Button(ApprovalDecision.accept.title) {
+                    Button(ApprovalDecision.accept.title(language: configurationStore.config.language)) {
                         store.resolveApproval(approval, decision: .accept)
                     }
                     .font(.system(size: 12, weight: .semibold))
@@ -268,7 +283,7 @@ struct ApprovalPanel: View {
                 }
 
                 if approval.supports(.acceptForSession) {
-                    Button(ApprovalDecision.acceptForSession.title) {
+                    Button(ApprovalDecision.acceptForSession.title(language: configurationStore.config.language)) {
                         store.resolveApproval(approval, decision: .acceptForSession)
                     }
                     .font(.system(size: 12, weight: .semibold))
@@ -278,7 +293,7 @@ struct ApprovalPanel: View {
                 Spacer()
 
                 if approval.supports(.decline) {
-                    Button(ApprovalDecision.decline.title) {
+                    Button(ApprovalDecision.decline.title(language: configurationStore.config.language)) {
                         store.resolveApproval(approval, decision: .decline)
                     }
                     .font(.system(size: 12, weight: .semibold))
@@ -286,7 +301,7 @@ struct ApprovalPanel: View {
                 }
 
                 if approval.supports(.cancel) {
-                    Button(ApprovalDecision.cancel.title) {
+                    Button(ApprovalDecision.cancel.title(language: configurationStore.config.language)) {
                         store.resolveApproval(approval, decision: .cancel)
                     }
                     .font(.system(size: 12, weight: .semibold))
@@ -325,6 +340,8 @@ struct ApprovalPanel: View {
 }
 
 struct ActivityRow: View {
+    @EnvironmentObject private var configurationStore: AppConfigurationStore
+
     let item: ActivityItem
 
     var body: some View {
@@ -336,7 +353,7 @@ struct ActivityRow: View {
             }
             .frame(width: 30, height: 30)
             VStack(alignment: .leading, spacing: 2) {
-                Text(item.title)
+                Text(localizedTitle)
                     .font(.system(size: 13, weight: .semibold))
                     .lineLimit(1)
                 Text(item.detail)
@@ -348,9 +365,32 @@ struct ActivityRow: View {
         }
         .padding(.vertical, 2)
     }
+
+    private var localizedTitle: String {
+        switch item.title {
+        case "工具调用":
+            return AppText.pick(configurationStore.config.language, english: "Tool call", japanese: "ツール呼び出し", chinese: "工具调用")
+        case "工具完成":
+            return AppText.pick(configurationStore.config.language, english: "Tool completed", japanese: "ツール完了", chinese: "工具完成")
+        case "修改文件":
+            return AppText.pick(configurationStore.config.language, english: "File change", japanese: "ファイル変更", chinese: "修改文件")
+        case "用户输入":
+            return AppText.pick(configurationStore.config.language, english: "User input", japanese: "ユーザー入力", chinese: "用户输入")
+        case "消息":
+            return AppText.pick(configurationStore.config.language, english: "Message", japanese: "メッセージ", chinese: "消息")
+        case "完成":
+            return AppText.pick(configurationStore.config.language, english: "Done", japanese: "完了", chinese: "完成")
+        case "子智能体":
+            return AppText.pick(configurationStore.config.language, english: "Subagent", japanese: "サブエージェント", chinese: "子智能体")
+        default:
+            return item.title
+        }
+    }
 }
 
 struct StatusBadge: View {
+    @EnvironmentObject private var configurationStore: AppConfigurationStore
+
     let status: SessionStatus
     let color: Color
 
@@ -358,7 +398,7 @@ struct StatusBadge: View {
         HStack(spacing: 6) {
             PixelBlinker(color: color, isActive: status.isActiveVisual)
                 .frame(width: 12, height: 12)
-            Text(status.displayName)
+            Text(status.displayName(language: configurationStore.config.language))
         }
         .font(.system(size: 11, weight: .semibold))
         .padding(.horizontal, 14)
@@ -382,14 +422,16 @@ struct StatusBadge: View {
 }
 
 struct EmptyStateView: View {
+    @EnvironmentObject private var configurationStore: AppConfigurationStore
+
     var body: some View {
         VStack(spacing: 10) {
             Image(systemName: "sparkles")
                 .font(.system(size: 28, weight: .medium))
                 .foregroundStyle(.secondary)
-            Text("等待事件")
+            Text(AppText.pick(configurationStore.config.language, english: "Waiting for events", japanese: "イベント待ち", chinese: "等待事件"))
                 .font(.system(size: 13, weight: .semibold))
-            Text("启动 Claude Code 或 Codex 后会自动显示。")
+            Text(AppText.pick(configurationStore.config.language, english: "Start Claude Code or Codex and activity will appear automatically.", japanese: "Claude Code または Codex を起動すると自動で表示されます。", chinese: "启动 Claude Code 或 Codex 后会自动显示。"))
                 .font(.system(size: 11, weight: .medium))
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
