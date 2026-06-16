@@ -78,7 +78,7 @@ struct VibelslandFreeCoreTests {
         )
         try Data("legacy".utf8).write(to: legacyURL)
         XCTAssertEqual(
-            AppPaths.codexStateURL(environment: ["HOME": root.path]).path,
+            AppPaths.codexStateURL(environment: ["VIBELSLAND_HOME": root.path]).path,
             legacyURL.path,
             "Legacy Codex state db remains the fallback"
         )
@@ -89,7 +89,7 @@ struct VibelslandFreeCoreTests {
         )
         try Data("current".utf8).write(to: currentURL)
         XCTAssertEqual(
-            AppPaths.codexStateURL(environment: ["HOME": root.path]).path,
+            AppPaths.codexStateURL(environment: ["VIBELSLAND_HOME": root.path]).path,
             currentURL.path,
             "Current Codex state db location is preferred when available"
         )
