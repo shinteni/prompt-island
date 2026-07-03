@@ -36,6 +36,8 @@ Logs stay on the user's Mac until the user deletes them. The app does not curren
 
 &gt;_ - island does not require an internet connection for its core features. Claude Code, Codex CLI, and Codex Desktop may use their own network connections independently of this app.
 
+The optional update check is the only network feature. It contacts the GitHub releases API (`api.github.com`) only when the user clicks "Check for updates" or enables the launch-time check in settings (off by default). The request carries no account data, no session content, and no telemetry; the response is public release metadata used to compare version numbers.
+
 Vibelsland Free is an independent project. It is not affiliated with Anthropic, OpenAI, Claude, or Codex.
 
 ## Distribution Trust

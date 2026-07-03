@@ -58,6 +58,12 @@ struct SettingsView: View {
                     openLogs: store.openLogs
                 )
 
+                UpdateSection(
+                    autoCheckUpdates: binding(\.autoCheckUpdates),
+                    state: store.updateCheckState,
+                    check: store.checkForUpdates
+                )
+
                 DiagnosticsSection(
                     codexAppServerReachable: store.codexAppServerReachable,
                     codexAppServerThreadListAvailable: store.codexAppServerThreadListAvailable,
@@ -553,6 +559,87 @@ private struct ApprovalPreferencesSection: View {
                     .padding(.top, 10)
             }
         }
+    }
+}
+
+private struct UpdateSection: View {
+    @EnvironmentObject private var configurationStore: AppConfigurationStore
+
+    @Binding var autoCheckUpdates: Bool
+    let state: UpdateCheckState
+    let check: () -> Void
+
+    var body: some View {
+        SettingsCard(
+            title: AppText.pick(configurationStore.config.language, english: "Updates", japanese: "アップデート", chinese: "更新"),
+            subtitle: AppText.pick(
+                configurationStore.config.language,
+                english: "Checks the GitHub releases page only when you ask; nothing is sent automatically.",
+                japanese: "GitHub のリリースページへの確認は手動または明示的な設定時のみ行います。",
+                chinese: "只在你主动检查或开启自动检查时访问 GitHub 发布页，不会自动上报任何数据。"
+            )
+        ) {
+            VStack(alignment: .leading, spacing: 12) {
+                HStack(spacing: 10) {
+                    Text(AppText.pick(configurationStore.config.language, english: "Current version", japanese: "現在のバージョン", chinese: "当前版本") + " \(UpdateChecker.currentVersion)")
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundStyle(.secondary)
+                    Spacer()
+                    Toggle(AppText.pick(configurationStore.config.language, english: "Check at launch", japanese: "起動時に確認", chinese: "启动时自动检查"), isOn: $autoCheckUpdates)
+                        .font(.system(size: 12, weight: .medium))
+                    Button(checkTitle, action: check)
+                        .disabled(state == .checking)
+                        .accessibilityIdentifier("settings.updates.check")
+                }
+                statusRow
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var statusRow: some View {
+        switch state {
+        case .idle:
+            EmptyView()
+        case .checking:
+            MessageRow(
+                icon: "arrow.triangle.2.circlepath",
+                title: AppText.pick(configurationStore.config.language, english: "Checking…", japanese: "確認中…", chinese: "正在检查…"),
+                detail: "",
+                color: .gray
+            )
+        case .upToDate(let current):
+            MessageRow(
+                icon: "checkmark.circle.fill",
+                title: AppText.pick(configurationStore.config.language, english: "Up to date", japanese: "最新です", chinese: "已是最新版本"),
+                detail: current,
+                color: .green
+            )
+        case .available(let release):
+            HStack(spacing: 10) {
+                MessageRow(
+                    icon: "sparkles",
+                    title: AppText.pick(configurationStore.config.language, english: "New version \(release.version)", japanese: "新しいバージョン \(release.version)", chinese: "发现新版本 \(release.version)"),
+                    detail: "",
+                    color: .blue
+                )
+                Button(AppText.pick(configurationStore.config.language, english: "Open download page", japanese: "ダウンロードページを開く", chinese: "前往下载")) {
+                    NSWorkspace.shared.open(release.pageURL)
+                }
+                .buttonStyle(.borderedProminent)
+            }
+        case .failed(let message):
+            MessageRow(
+                icon: "exclamationmark.triangle",
+                title: AppText.pick(configurationStore.config.language, english: "Check failed", japanese: "確認に失敗しました", chinese: "检查失败"),
+                detail: message,
+                color: .orange
+            )
+        }
+    }
+
+    private var checkTitle: String {
+        AppText.pick(configurationStore.config.language, english: "Check for updates", japanese: "アップデートを確認", chinese: "检查更新")
     }
 }
 
