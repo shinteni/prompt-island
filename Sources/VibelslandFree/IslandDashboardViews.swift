@@ -506,6 +506,140 @@ struct ApprovalSummaryCard: View {
     }
 }
 
+struct ApprovalQueueCard: View {
+    @EnvironmentObject private var store: SessionStore
+    @EnvironmentObject private var configurationStore: AppConfigurationStore
+    let sessions: [AgentSession]
+    let onShowDetail: (AgentSession) -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: ApprovalQueuePolicy.elementSpacing) {
+            HStack(spacing: 6) {
+                Image(systemName: "hand.raised.fill")
+                    .font(.system(size: 12, weight: .bold))
+                    .foregroundStyle(.yellow)
+                Text(AppText.pendingApprovals(ApprovalQueuePolicy.count(in: store.sessions), language: configurationStore.config.language))
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundStyle(GlassText.primary)
+                Spacer()
+            }
+            .frame(height: ApprovalQueuePolicy.headerHeight)
+
+            ForEach(visibleSessions) { session in
+                if let approval = session.approval {
+                    ApprovalQueueRow(
+                        session: session,
+                        approval: approval,
+                        onShowDetail: { onShowDetail(session) }
+                    )
+                    .environmentObject(store)
+                }
+            }
+
+            if overflowCount > 0 {
+                Text(AppText.approvalOverflow(overflowCount, language: configurationStore.config.language))
+                    .font(.system(size: 10, weight: .semibold))
+                    .foregroundStyle(GlassText.tertiary)
+                    .frame(height: ApprovalQueuePolicy.overflowFooterHeight)
+            }
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, ApprovalQueuePolicy.cardVerticalPadding)
+        .background(
+            ZStack {
+                DashboardCardBackground(highlighted: true, tint: Color.yellow.opacity(0.08))
+                StatusGlowBorder(
+                    status: .waitingApproval,
+                    accentColor: .orange,
+                    cornerRadius: 18,
+                    lineWidth: 1.1,
+                    glowRadius: 6,
+                    intensity: 0.86
+                )
+            }
+        )
+        .contentShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+    }
+
+    private var visibleSessions: [AgentSession] {
+        Array(sessions.prefix(ApprovalQueuePolicy.maximumVisibleRows))
+    }
+
+    private var overflowCount: Int {
+        max(0, sessions.count - ApprovalQueuePolicy.maximumVisibleRows)
+    }
+}
+
+private struct ApprovalQueueRow: View {
+    @EnvironmentObject private var store: SessionStore
+    @EnvironmentObject private var configurationStore: AppConfigurationStore
+    let session: AgentSession
+    let approval: ApprovalRequest
+    let onShowDetail: () -> Void
+
+    var body: some View {
+        HStack(spacing: 8) {
+            Button(action: onShowDetail) {
+                HStack(spacing: 8) {
+                    AgentSourceIconView(source: session.source, size: 26, status: .waitingApproval)
+                        .frame(width: 26, height: 26)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("\(approval.source.shortName) · \(approval.tool)")
+                            .font(.system(size: 11, weight: .semibold))
+                            .foregroundStyle(GlassText.primary)
+                            .lineLimit(1)
+                        Text(approval.detail.isEmpty ? workspaceText : approval.detail)
+                            .font(.system(size: 10, weight: .medium))
+                            .foregroundStyle(GlassText.secondary)
+                            .lineLimit(1)
+                    }
+                    Spacer(minLength: 4)
+                }
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .help(AppText.pick(configurationStore.config.language, english: "View approval details", japanese: "承認詳細を表示", chinese: "查看审批详情"))
+
+            if approval.supports(.accept) {
+                queueActionButton(ApprovalDecision.accept.title(language: configurationStore.config.language), .accept, prominent: true)
+            }
+            if approval.supports(.decline) {
+                queueActionButton(ApprovalDecision.decline.title(language: configurationStore.config.language), .decline)
+            }
+        }
+        .frame(height: ApprovalQueuePolicy.rowHeight)
+    }
+
+    private func queueActionButton(_ title: String, _ decision: ApprovalDecision, prominent: Bool = false) -> some View {
+        Button(title) {
+            store.resolveApproval(approval, decision: decision)
+        }
+        .font(.system(size: 11, weight: .semibold))
+        .lineLimit(1)
+        .minimumScaleFactor(0.82)
+        .padding(.horizontal, 8)
+        .frame(height: 24)
+        .background(
+            ClearGlassCapsuleBackground(
+                highlighted: prominent,
+                tint: prominent ? Color.white.opacity(0.16) : Color.white.opacity(0.030),
+                materialOpacity: prominent ? 0.62 : 0.42
+            )
+        )
+        .foregroundStyle(prominent ? Color(red: 0.12, green: 0.42, blue: 0.84) : GlassText.primary)
+        .clipShape(Capsule())
+        .buttonStyle(.plain)
+        .disabled(approval.isResolving || approval.isExpired)
+    }
+
+    private var workspaceText: String {
+        guard let workspace = approval.workspace, !workspace.isEmpty else {
+            return approval.tool
+        }
+        return URL(fileURLWithPath: workspace).lastPathComponent
+    }
+}
+
 struct ApprovalDetailCard: View {
     @EnvironmentObject private var store: SessionStore
     @EnvironmentObject private var configurationStore: AppConfigurationStore

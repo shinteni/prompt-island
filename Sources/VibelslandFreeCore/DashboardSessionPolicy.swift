@@ -14,12 +14,26 @@ package enum DashboardSessionPolicy {
         limit: Int = maximumVisibleSessions,
         now: Date = Date()
     ) -> [AgentSession] {
+        visibleSessions(
+            from: sessions,
+            excludingIDs: excludedID.map { [$0] } ?? [],
+            limit: limit,
+            now: now
+        )
+    }
+
+    package static func visibleSessions(
+        from sessions: [AgentSession],
+        excludingIDs excludedIDs: Set<AgentSession.ID>,
+        limit: Int = maximumVisibleSessions,
+        now: Date = Date()
+    ) -> [AgentSession] {
         let boundedLimit = max(0, min(limit, maximumVisibleSessions))
         guard boundedLimit > 0 else { return [] }
 
         let candidates = sessions
             .filter { session in
-                session.id != excludedID && isVisible(session, now: now)
+                !excludedIDs.contains(session.id) && isVisible(session, now: now)
             }
             .sorted { lhs, rhs in
                 lhs.updatedAt > rhs.updatedAt
@@ -80,10 +94,8 @@ package enum DashboardSessionPolicy {
         }
     }
 
+    /// 主审批与队列排序保持一致：等待最久的排最前。
     package static func pendingApprovalSession(in sessions: [AgentSession]) -> AgentSession? {
-        sessions.first { session in
-            guard let approval = session.approval else { return false }
-            return !approval.isExpired
-        }
+        ApprovalQueuePolicy.primarySession(in: sessions)
     }
 }
