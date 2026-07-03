@@ -378,6 +378,7 @@ package struct UsageSnapshot: Equatable {
     package var secondaryResetsAt: Date?
     package var planType: String?
     package var limitName: String?
+    package var estimatedCostUSD: Double?
 
     package init(
         lastTokens: Int,
@@ -390,7 +391,8 @@ package struct UsageSnapshot: Equatable {
         primaryResetsAt: Date? = nil,
         secondaryResetsAt: Date? = nil,
         planType: String? = nil,
-        limitName: String? = nil
+        limitName: String? = nil,
+        estimatedCostUSD: Double? = nil
     ) {
         self.lastTokens = lastTokens
         self.totalTokens = totalTokens
@@ -403,6 +405,7 @@ package struct UsageSnapshot: Equatable {
         self.secondaryResetsAt = secondaryResetsAt
         self.planType = planType
         self.limitName = limitName
+        self.estimatedCostUSD = estimatedCostUSD
     }
 
     package var shortText: String {
@@ -441,6 +444,11 @@ package struct UsageSnapshot: Equatable {
 
     package static func percent(_ value: Double) -> String {
         "\(Int(value.rounded()))%"
+    }
+
+    package static func costText(_ value: Double) -> String {
+        guard value >= 0.01 else { return "<$0.01" }
+        return String(format: "$%.2f", value)
     }
 
     package static func compactNumber(_ value: Int) -> String {
