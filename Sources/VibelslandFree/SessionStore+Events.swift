@@ -267,15 +267,7 @@ extension SessionStore {
     }
 
     var codexDesktopRefreshInterval: TimeInterval {
-        if isExpanded {
-            return 2.0
-        }
-        let now = Date()
-        let hasRecentOrActiveDesktop = sessions.contains { session in
-            session.source == .codexDesktop &&
-                (session.status.isActiveVisual || now.timeIntervalSince(session.updatedAt) < 45)
-        }
-        return hasRecentOrActiveDesktop ? 2.5 : 8.0
+        CodexRefreshCadencePolicy.interval(sessions: sessions, isExpanded: isExpanded)
     }
 
     func subagents(
@@ -364,11 +356,7 @@ extension SessionStore {
 
     func startCodexDesktopRefreshTimer() {
         guard refreshTimer == nil else { return }
-        refreshTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
-            Task { @MainActor in
-                await self?.refreshCodexDesktop()
-            }
-        }
+        scheduleNextCodexDesktopRefresh()
     }
 
     func stopCodexDesktopRefreshTimer() {
@@ -376,16 +364,48 @@ extension SessionStore {
         refreshTimer = nil
     }
 
+    /// 单发自排程：每次刷新完按当前活跃度决定下一次唤醒，替代固定 1 秒轮询。
+    func scheduleNextCodexDesktopRefresh() {
+        refreshTimer?.invalidate()
+        let interval = CodexRefreshCadencePolicy.interval(sessions: sessions, isExpanded: isExpanded)
+        let timer = Timer(timeInterval: interval, repeats: false) { [weak self] _ in
+            Task { @MainActor [weak self] in
+                guard let self else { return }
+                await self.refreshCodexDesktop()
+                guard self.refreshTimer != nil else { return }
+                self.scheduleNextCodexDesktopRefresh()
+            }
+        }
+        RunLoop.main.add(timer, forMode: .common)
+        refreshTimer = timer
+    }
+
     func startVisibilityTimer() {
-        guard visibilityTimer == nil else { return }
-        visibilityTimer = Timer.scheduledTimer(withTimeInterval: 15.0, repeats: true) { [weak self] _ in
-            Task { @MainActor in
+        scheduleVisibilityRefresh()
+    }
+
+    /// 只在真正需要的时刻唤醒：面板展开时按 15 秒刷新相对时间，折叠时只在
+    /// 会话跨可见性边界的精确时刻唤醒；无会话则完全不设定时器。
+    func scheduleVisibilityRefresh() {
+        visibilityTimer?.invalidate()
+        visibilityTimer = nil
+        guard let delay = SessionAgingSchedulePolicy.nextRefreshDelay(
+            sessions: sessions,
+            isExpanded: isExpanded
+        ) else {
+            return
+        }
+        let timer = Timer(timeInterval: delay, repeats: false) { [weak self] _ in
+            Task { @MainActor [weak self] in
                 self?.refreshVisibleSessionAging()
             }
         }
+        RunLoop.main.add(timer, forMode: .common)
+        visibilityTimer = timer
     }
 
     func refreshVisibleSessionAging() {
+        defer { scheduleVisibilityRefresh() }
         guard !sessions.isEmpty else { return }
         let visible = DashboardSessionPolicy.visibleSessions(from: sessions, limit: configuredVisibleSessionLimit)
         if let selectedSessionID,

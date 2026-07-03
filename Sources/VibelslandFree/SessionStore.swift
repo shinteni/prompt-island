@@ -7,9 +7,19 @@ import SwiftUI
 
 @MainActor
 final class SessionStore: ObservableObject {
-    @Published var sessions: [AgentSession] = []
+    @Published var sessions: [AgentSession] = [] {
+        didSet { scheduleVisibilityRefresh() }
+    }
     @Published var selectedSessionID: AgentSession.ID?
-    @Published var isExpanded = false
+    @Published var isExpanded = false {
+        didSet {
+            guard isExpanded != oldValue else { return }
+            scheduleVisibilityRefresh()
+            if refreshTimer != nil {
+                scheduleNextCodexDesktopRefresh()
+            }
+        }
+    }
     @Published var installReport: InstallReport?
     @Published var lastError: String?
     @Published var lastRepairMessage: String?
