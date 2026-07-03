@@ -92,6 +92,13 @@ b8ae6ea245d4720c1c9389c2ce95a582df9005866fda3522279058eb40b40af5
 3. 打开应用，在菜单栏或设置页安装 Hooks。
 4. 按需开启自动启动、声音、勿扰和显示位置。
 
+也可以用 Homebrew 安装（本仓库同时是一个 tap，cask 的版本与 SHA-256 由 `docs/release.json` 生成保证一致）：
+
+```sh
+brew tap shinteni/island https://github.com/shinteni/prompt-island.git
+brew install --cask shinteni/island/vibelsland-free
+```
+
 说明：当前免费发布包使用 ad-hoc codesign，首次打开需要按 Gatekeeper 说明手动确认。Developer ID 签名和 notarization 可以作为后续降低首次打开摩擦的分发改进，但当前 v0.1.0 下载、校验、源码和安装说明已经公开。
 
 ## 隐私
