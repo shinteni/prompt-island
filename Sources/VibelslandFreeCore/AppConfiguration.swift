@@ -47,6 +47,7 @@ package struct AppConfiguration: Codable, Equatable {
     package var language: AppLanguage
     package var approvalTimeoutSeconds: TimeInterval
     package var maxVisibleSessions: Int
+    package var enableGlobalHotKeys: Bool
 
     package static let `default` = AppConfiguration(
         enableClaude: true,
@@ -59,7 +60,8 @@ package struct AppConfiguration: Codable, Equatable {
         islandPosition: .topCenter,
         language: .english,
         approvalTimeoutSeconds: 7_200,
-        maxVisibleSessions: 5
+        maxVisibleSessions: 5,
+        enableGlobalHotKeys: false
     )
 
     package enum CodingKeys: String, CodingKey {
@@ -74,6 +76,7 @@ package struct AppConfiguration: Codable, Equatable {
         case language
         case approvalTimeoutSeconds
         case maxVisibleSessions
+        case enableGlobalHotKeys
     }
 
     package init(
@@ -87,7 +90,8 @@ package struct AppConfiguration: Codable, Equatable {
         islandPosition: IslandPosition,
         language: AppLanguage,
         approvalTimeoutSeconds: TimeInterval,
-        maxVisibleSessions: Int
+        maxVisibleSessions: Int,
+        enableGlobalHotKeys: Bool = false
     ) {
         self.enableClaude = enableClaude
         self.enableCodexCLI = enableCodexCLI
@@ -100,6 +104,7 @@ package struct AppConfiguration: Codable, Equatable {
         self.language = language
         self.approvalTimeoutSeconds = approvalTimeoutSeconds
         self.maxVisibleSessions = maxVisibleSessions
+        self.enableGlobalHotKeys = enableGlobalHotKeys
     }
 
     package init(from decoder: Decoder) throws {
@@ -115,6 +120,7 @@ package struct AppConfiguration: Codable, Equatable {
         language = try container.decodeIfPresent(AppLanguage.self, forKey: .language) ?? Self.default.language
         approvalTimeoutSeconds = try container.decodeIfPresent(TimeInterval.self, forKey: .approvalTimeoutSeconds) ?? Self.default.approvalTimeoutSeconds
         maxVisibleSessions = try container.decodeIfPresent(Int.self, forKey: .maxVisibleSessions) ?? Self.default.maxVisibleSessions
+        enableGlobalHotKeys = try container.decodeIfPresent(Bool.self, forKey: .enableGlobalHotKeys) ?? Self.default.enableGlobalHotKeys
     }
 }
 

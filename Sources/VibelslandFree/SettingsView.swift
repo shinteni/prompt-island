@@ -39,6 +39,7 @@ struct SettingsView: View {
                     soundTheme: binding(\.soundTheme),
                     doNotDisturb: binding(\.doNotDisturb),
                     maxVisibleSessions: binding(\.maxVisibleSessions),
+                    globalHotKeysEnabled: binding(\.enableGlobalHotKeys),
                     playPreview: store.playSoundPreview,
                     playAllPreviews: store.playAllSoundPreviews
                 )
@@ -375,6 +376,7 @@ private struct IslandPreferencesSection: View {
     @Binding var soundTheme: SoundTheme
     @Binding var doNotDisturb: Bool
     @Binding var maxVisibleSessions: Int
+    @Binding var globalHotKeysEnabled: Bool
     let playPreview: (RetroSoundKind) -> Void
     let playAllPreviews: () -> Void
 
@@ -470,8 +472,29 @@ private struct IslandPreferencesSection: View {
                     }
                     .frame(width: 150)
                 }
+                SettingsDivider()
+                SettingsRow(icon: "keyboard", title: AppText.pick(configurationStore.config.language, english: "Global hotkeys", japanese: "グローバルショートカット", chinese: "全局快捷键")) {
+                    Toggle("", isOn: $globalHotKeysEnabled)
+                        .labelsHidden()
+                }
+                Text(globalHotKeysHint)
+                    .font(.system(size: 12, weight: .medium))
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.bottom, 6)
             }
         }
+    }
+
+    private var globalHotKeysHint: String {
+        let toggle = GlobalHotKeyAction.toggleIsland.displayShortcut
+        let jump = GlobalHotKeyAction.jumpToApproval.displayShortcut
+        return AppText.pick(
+            configurationStore.config.language,
+            english: "\(toggle) expand/collapse island · \(jump) jump to pending approval",
+            japanese: "\(toggle) アイランドを展開/折りたたみ · \(jump) 承認待ちへ移動",
+            chinese: "\(toggle) 展开/收起浮岛 · \(jump) 跳转待审批"
+        )
     }
 }
 

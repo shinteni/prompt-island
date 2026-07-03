@@ -12,6 +12,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject, NSWi
     private var launchIntroWindow: LaunchIntroWindow?
     private var settingsWindow: NSWindow?
     private var statusItem: NSStatusItem?
+    private let hotKeyCenter = GlobalHotKeyCenter()
     private var configCancellable: AnyCancellable?
     private var runtimeObservers: [NSObjectProtocol] = []
     private var verificationObservers: [NSObjectProtocol] = []
@@ -44,10 +45,37 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject, NSWi
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 self?.refreshLocalizedChrome()
+                self?.applyGlobalHotKeys()
             }
+        hotKeyCenter.onAction = { [weak self] action in
+            self?.perform(hotKeyAction: action)
+        }
+        applyGlobalHotKeys()
         installVerificationActionsIfNeeded()
         showIsland(launchAnimated: true)
         store.start()
+    }
+
+    private func applyGlobalHotKeys() {
+        hotKeyCenter.apply(
+            actions: GlobalHotKeyPolicy.actions(enabled: configurationStore.config.enableGlobalHotKeys)
+        )
+    }
+
+    private func perform(hotKeyAction action: GlobalHotKeyAction) {
+        switch action {
+        case .toggleIsland:
+            if store.isExpanded {
+                store.isExpanded = false
+            } else {
+                openIslandPanel()
+            }
+        case .jumpToApproval:
+            if let targetID = GlobalHotKeyPolicy.approvalTargetSessionID(in: store.sessions) {
+                store.selectedSessionID = targetID
+            }
+            openIslandPanel()
+        }
     }
 
     private func handOffToExistingInstanceIfNeeded() -> Bool {
@@ -136,6 +164,25 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject, NSWi
                 self?.setExpandedFromVerificationValue(rawExpanded)
             }
         })
+        verificationObservers.append(center.addObserver(
+            forName: .vibelslandVerifyHotKeyAction,
+            object: nil,
+            queue: .main
+        ) { [weak self] notification in
+            let rawAction = notification.userInfo?["action"] as? String
+            Task { @MainActor [weak self] in
+                self?.performHotKeyActionFromVerificationValue(rawAction)
+            }
+        })
+    }
+
+    private func performHotKeyActionFromVerificationValue(_ rawAction: String?) {
+        guard let rawAction,
+              let action = GlobalHotKeyAction(rawValue: rawAction) else {
+            store.lastError = "验证动作无效：无法识别快捷键动作"
+            return
+        }
+        perform(hotKeyAction: action)
     }
 
     private func resolveApprovalFromVerificationDecision(_ rawDecision: String?) {
@@ -367,4 +414,5 @@ extension Notification.Name {
     static let vibelslandVerifyResolveApproval = Notification.Name("free.vibelsland.verify.resolveApproval")
     static let vibelslandVerifyRestart = Notification.Name("free.vibelsland.verify.restart")
     static let vibelslandVerifySetExpanded = Notification.Name("free.vibelsland.verify.setExpanded")
+    static let vibelslandVerifyHotKeyAction = Notification.Name("free.vibelsland.verify.hotKeyAction")
 }
