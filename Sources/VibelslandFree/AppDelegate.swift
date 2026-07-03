@@ -342,6 +342,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject, NSWi
         NSApp.terminate(nil)
     }
 
+    func applicationWillTerminate(_ notification: Notification) {
+        store.statsStore.flush()
+    }
+
     @objc func restart() {
         let appPath = Bundle.main.bundleURL.path
         guard let command = AppRestartPolicy.command(bundlePath: appPath) else {

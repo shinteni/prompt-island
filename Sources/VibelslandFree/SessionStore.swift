@@ -46,6 +46,7 @@ final class SessionStore: ObservableObject {
     let codexAppServerLiveClient: CodexAppServerLiveClient
     let transcriptReader: ConversationTranscriptReader
     let approvalNotificationCenter = ApprovalNotificationCenter()
+    let statsStore = UsageStatsStore()
     let logger: AppLogger
     var pendingReplies: [String: (String?) -> Void] = [:]
     var pendingEvents: [String: AgentEvent] = [:]
