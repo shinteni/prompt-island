@@ -111,13 +111,14 @@ extension SessionStore {
 
         upsert(session)
 
-        if approval != nil {
+        if let approval {
             selectedSessionID = session.id
             if !configurationStore.config.doNotDisturb {
                 isExpanded = true
             }
             logger.info("approval.focused", detail: "expanded=\(isExpanded) doNotDisturb=\(configurationStore.config.doNotDisturb)")
             playSound(.approval, key: "approval:\(session.id)", minimumInterval: 1.0)
+            notifyApprovalIfNeeded(approval)
         } else {
             playEventSound(event: event, previous: previousSession, current: session)
         }
@@ -164,6 +165,7 @@ extension SessionStore {
             isExpanded = true
         }
         playSound(.approval, key: "approval:\(session.id)", minimumInterval: 1.0)
+        notifyApprovalIfNeeded(approval.approvalRequest)
         logger.info("approval.focused", detail: "expanded=\(isExpanded) doNotDisturb=\(configurationStore.config.doNotDisturb)")
         logger.info("codex.desktop.approval.received", detail: approval.method)
     }
@@ -352,6 +354,10 @@ extension SessionStore {
             codexAppServerLiveClient.stop()
             stopCodexDesktopRefreshTimer()
             codexDesktopApprovalConnected = false
+        }
+        if configurationStore.config.enableApprovalNotifications {
+            // 覆盖两种情况：开关刚打开（首次激活+请求授权）、语言切换（动作按钮标题跟随语言）。
+            approvalNotificationCenter.activate(language: configurationStore.config.language)
         }
         refreshHealthChecks()
     }
