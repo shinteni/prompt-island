@@ -25,17 +25,18 @@ struct ClaudeUsagePolicyTests {
     }
 
     @Test func testCostEstimatesPerModelFamily() {
+        // 浮点乘除有舍入误差（如 1e6 × 1 × 0.1 / 1e6 = 0.09999…），成本断言一律用容差比较。
         let opus = ClaudeUsagePolicy.costUSD(inputTokens: 1_000_000, outputTokens: 0, cacheWriteTokens: 0, cacheReadTokens: 0, model: "claude-opus-4")
-        XCTAssertEqual(opus ?? 0, 15.0, "Opus input rate is 15 per MTok")
+        XCTAssertTrue(abs((opus ?? 0) - 15.0) < 1e-9, "Opus input rate is 15 per MTok")
 
         let sonnetOutput = ClaudeUsagePolicy.costUSD(inputTokens: 0, outputTokens: 1_000_000, cacheWriteTokens: 0, cacheReadTokens: 0, model: "claude-sonnet-4-5")
-        XCTAssertEqual(sonnetOutput ?? 0, 15.0, "Sonnet output rate is 15 per MTok")
+        XCTAssertTrue(abs((sonnetOutput ?? 0) - 15.0) < 1e-9, "Sonnet output rate is 15 per MTok")
 
         let haikuCacheRead = ClaudeUsagePolicy.costUSD(inputTokens: 0, outputTokens: 0, cacheWriteTokens: 0, cacheReadTokens: 1_000_000, model: "claude-haiku-4-5")
-        XCTAssertEqual(haikuCacheRead ?? 0, 0.1, "Cache reads bill at a tenth of the input rate")
+        XCTAssertTrue(abs((haikuCacheRead ?? 0) - 0.1) < 1e-9, "Cache reads bill at a tenth of the input rate")
 
         let sonnetCacheWrite = ClaudeUsagePolicy.costUSD(inputTokens: 0, outputTokens: 0, cacheWriteTokens: 1_000_000, cacheReadTokens: 0, model: "claude-sonnet-4-5")
-        XCTAssertEqual(sonnetCacheWrite ?? 0, 3.75, "Cache writes bill at 1.25x the input rate")
+        XCTAssertTrue(abs((sonnetCacheWrite ?? 0) - 3.75) < 1e-9, "Cache writes bill at 1.25x the input rate")
 
         XCTAssertTrue(
             ClaudeUsagePolicy.costUSD(inputTokens: 100, outputTokens: 100, cacheWriteTokens: 0, cacheReadTokens: 0, model: "unknown-model") == nil,
