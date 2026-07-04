@@ -643,8 +643,8 @@ final class IslandWindow: NSPanel {
 
     private func expandedPreferredHeight() -> CGFloat {
         guard let store else { return 170 }
-        let pendingApproval = DashboardSessionPolicy.pendingApprovalSession(in: store.sessions)
-        let hasPendingApproval = pendingApproval != nil
+        let approvalQueue = ApprovalQueuePolicy.queue(in: store.sessions)
+        let hasPendingApproval = !approvalQueue.isEmpty
         let hasHealthWarning = store.healthChecks.contains { $0.status == .needsAction }
         let isShowingApprovalDetail = store.isApprovalDetailVisible && hasPendingApproval
         let configuredLimit = DashboardSessionPolicy.configuredVisibleSessionLimit(
@@ -653,7 +653,7 @@ final class IslandWindow: NSPanel {
 
         let visibleSessionCount = DashboardSessionPolicy.visibleSessions(
             from: store.sessions,
-            excluding: pendingApproval?.id,
+            excludingIDs: Set(approvalQueue.map(\.id)),
             limit: hasPendingApproval
                 ? max(0, configuredLimit - 1)
                 : configuredLimit
@@ -670,6 +670,9 @@ final class IslandWindow: NSPanel {
         if hasPendingApproval {
             if isShowingApprovalDetail {
                 height += 178 + rowSpacing
+            } else if approvalQueue.count > 1 {
+                height += ApprovalQueuePolicy.cardHeight(in: store.sessions) + rowSpacing
+                height += CGFloat(visibleSessionCount) * (48 + rowSpacing)
             } else {
                 height += 88 + rowSpacing
                 height += CGFloat(visibleSessionCount) * (48 + rowSpacing)

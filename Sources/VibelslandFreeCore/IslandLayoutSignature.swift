@@ -6,6 +6,7 @@ package struct IslandLayoutSignature: Equatable {
     package var presentationMode: IslandPresentationMode
     package var hasHealthWarning: Bool
     package var pendingApprovalID: AgentSession.ID?
+    package var pendingApprovalCount: Int
     package var visibleSessionCount: Int
     package var isShowingApprovalDetail: Bool
 
@@ -18,7 +19,8 @@ package struct IslandLayoutSignature: Equatable {
         position: IslandPosition,
         now: Date = Date()
     ) {
-        let pendingApproval = DashboardSessionPolicy.pendingApprovalSession(in: sessions)
+        let approvalQueue = ApprovalQueuePolicy.queue(in: sessions)
+        let pendingApproval = approvalQueue.first
         let configuredLimit = DashboardSessionPolicy.configuredVisibleSessionLimit(maxVisibleSessions)
         self.isExpanded = isExpanded
         self.position = position
@@ -29,9 +31,10 @@ package struct IslandLayoutSignature: Equatable {
         )
         self.hasHealthWarning = healthChecks.contains { $0.status == .needsAction }
         self.pendingApprovalID = pendingApproval?.id
+        self.pendingApprovalCount = approvalQueue.count
         self.visibleSessionCount = DashboardSessionPolicy.visibleSessions(
             from: sessions,
-            excluding: pendingApproval?.id,
+            excludingIDs: Set(approvalQueue.map(\.id)),
             limit: pendingApproval == nil ? configuredLimit : max(0, configuredLimit - 1),
             now: now
         ).count

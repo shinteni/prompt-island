@@ -253,24 +253,30 @@ struct IslandPanelView: View {
                 HealthSummaryStrip(items: store.healthChecks)
             }
 
-            if let approvalSession = pendingApprovalSession,
+            if showingApprovalDetail,
+               let approvalSession = approvalDetailSession,
                let approval = approvalSession.approval {
-                if showingApprovalDetail {
-                    ApprovalDetailCard(session: approvalSession, approval: approval) {
-                        showingApprovalDetail = false
-                    }
-                    .environmentObject(store)
-                } else {
-                    ApprovalSummaryCard(
-                        session: approvalSession,
-                        approval: approval,
-                        showsDetail: $showingApprovalDetail
-                    )
-                    .environmentObject(store)
+                ApprovalDetailCard(session: approvalSession, approval: approval) {
+                    showingApprovalDetail = false
                 }
+                .environmentObject(store)
+            } else if approvalQueueSessions.count > 1 {
+                ApprovalQueueCard(sessions: approvalQueueSessions) { session in
+                    store.selectedSessionID = session.id
+                    showingApprovalDetail = true
+                }
+                .environmentObject(store)
+            } else if let approvalSession = approvalQueueSessions.first,
+                      let approval = approvalSession.approval {
+                ApprovalSummaryCard(
+                    session: approvalSession,
+                    approval: approval,
+                    showsDetail: $showingApprovalDetail
+                )
+                .environmentObject(store)
             }
 
-            if showingApprovalDetail && pendingApprovalSession != nil {
+            if showingApprovalDetail && approvalDetailSession != nil {
                 EmptyView()
             } else if dashboardSessions.isEmpty {
                 DashboardEmptyCard()
@@ -288,9 +294,9 @@ struct IslandPanelView: View {
         .padding(.horizontal, 10)
         .padding(.vertical, 8)
         .onChange(of: showingApprovalDetail) { _, value in
-            store.isApprovalDetailVisible = value && pendingApprovalSession != nil
+            store.isApprovalDetailVisible = value && approvalDetailSession != nil
         }
-        .onChange(of: pendingApprovalSession?.approval?.id) {
+        .onChange(of: approvalDetailSession?.approval?.id) {
             showingApprovalDetail = false
             store.isApprovalDetailVisible = false
         }
@@ -374,6 +380,10 @@ struct IslandPanelView: View {
             return AppText.pick(configurationStore.config.language, english: "Waiting for events", japanese: "イベント待ち", chinese: "等待事件")
         }
         if session.approval != nil {
+            let queueCount = approvalQueueSessions.count
+            if queueCount > 1 {
+                return AppText.pendingApprovals(queueCount, language: configurationStore.config.language)
+            }
             return AppText.pick(configurationStore.config.language, english: "Waiting approval", japanese: "承認待ち", chinese: "等待审批")
         }
         let display = SessionDisplaySnapshot(session: session, language: configurationStore.config.language)
@@ -489,6 +499,20 @@ struct IslandPanelView: View {
         DashboardSessionPolicy.pendingApprovalSession(in: store.sessions)
     }
 
+    private var approvalQueueSessions: [AgentSession] {
+        ApprovalQueuePolicy.queue(in: store.sessions)
+    }
+
+    /// 详情优先展示用户点选的审批，未点选时退回等待最久的主审批。
+    private var approvalDetailSession: AgentSession? {
+        if let selected = store.selectedSession,
+           let approval = selected.approval,
+           !approval.isExpired {
+            return selected
+        }
+        return pendingApprovalSession
+    }
+
     private var dashboardUsage: UsageSnapshot? {
         dashboardVisibleSessions.first { session in
             guard let usage = session.usage else { return false }
@@ -497,11 +521,11 @@ struct IslandPanelView: View {
     }
 
     private var dashboardSessions: [AgentSession] {
-        let approvalID = pendingApprovalSession?.id
-        let limit = configuredVisibleSessionLimit - (pendingApprovalSession == nil ? 0 : 1)
+        let queueIDs = Set(approvalQueueSessions.map(\.id))
+        let limit = configuredVisibleSessionLimit - (queueIDs.isEmpty ? 0 : 1)
         return DashboardSessionPolicy.visibleSessions(
             from: store.sessions,
-            excluding: approvalID,
+            excludingIDs: queueIDs,
             limit: max(0, limit)
         )
     }

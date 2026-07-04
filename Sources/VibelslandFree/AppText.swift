@@ -80,6 +80,17 @@ enum AppText {
         }
     }
 
+    static func approvalOverflow(_ count: Int, language: AppLanguage) -> String {
+        switch language {
+        case .english:
+            return count == 1 ? "+1 more waiting" : "+\(count) more waiting"
+        case .japanese:
+            return "ほか \(count) 件が待機中"
+        case .chinese:
+            return "还有 \(count) 个等待中"
+        }
+    }
+
     static func subagents(_ active: Int, total: Int, language: AppLanguage) -> String {
         let value = active == total ? "\(active)" : "\(active)/\(total)"
         switch language {

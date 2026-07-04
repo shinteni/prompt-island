@@ -45,16 +45,8 @@ package enum GlobalHotKeyPolicy {
         GlobalHotKeyAction.allCases.first { $0.carbonHotKeyID == id }
     }
 
-    /// 跳转目标：最早发起且仍未过期的审批所在会话。
+    /// 跳转目标：审批队列里等待最久的会话（与浮岛主审批一致）。
     package static func approvalTargetSessionID(in sessions: [AgentSession]) -> AgentSession.ID? {
-        sessions
-            .filter { session in
-                guard let approval = session.approval else { return false }
-                return !approval.isExpired
-            }
-            .min { lhs, rhs in
-                (lhs.approval?.createdAt ?? .distantFuture) < (rhs.approval?.createdAt ?? .distantFuture)
-            }?
-            .id
+        ApprovalQueuePolicy.primarySession(in: sessions)?.id
     }
 }
