@@ -754,10 +754,21 @@ fi
 [[ "$(/usr/bin/plutil -extract CFBundleShortVersionString raw -o - "$INFO")" == "$APP_VERSION" ]]
 [[ "$(/usr/bin/plutil -extract CFBundleVersion raw -o - "$INFO")" == "$APP_BUILD_NUMBER" ]]
 [[ "$(/usr/bin/plutil -extract CFBundleExecutable raw -o - "$INFO")" == "$APP_BINARY_NAME" ]]
-if [[ -n "$PLATFORM_ARCH" ]] && ! /usr/bin/lipo -archs "$EXECUTABLE" | tr ' ' '\n' | grep -qx "$PLATFORM_ARCH"; then
-  echo "Live check failed: release executable missing architecture $PLATFORM_ARCH" >&2
-  /usr/bin/lipo -archs "$EXECUTABLE" >&2
-  exit 1
+# architecture 为 Universal 时要求 arm64 与 x86_64 两个切片都在；
+# 否则按字面架构名匹配（如历史版本的 arm64）。
+if [[ -n "$PLATFORM_ARCH" ]]; then
+  if [[ "$PLATFORM_ARCH" == "Universal" || "$PLATFORM_ARCH" == "universal" ]]; then
+    REQUIRED_ARCHS=(arm64 x86_64)
+  else
+    REQUIRED_ARCHS=("$PLATFORM_ARCH")
+  fi
+  for required in "${REQUIRED_ARCHS[@]}"; do
+    if ! /usr/bin/lipo -archs "$EXECUTABLE" | tr ' ' '\n' | grep -qx "$required"; then
+      echo "Live check failed: release executable missing architecture $required" >&2
+      /usr/bin/lipo -archs "$EXECUTABLE" >&2
+      exit 1
+    fi
+  done
 fi
 
 echo "Live docs verification passed for $SITE_URL"
