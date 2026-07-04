@@ -47,4 +47,14 @@ SIGNATURE_INFO="$(/usr/bin/codesign -dv --verbose=4 "$APP_DIR" 2>&1)"
 [[ -x "$EXECUTABLE" ]]
 [[ -s "$ICON" ]]
 
-echo "App verification passed"
+# 与 build-app.sh 相同的架构约定：发布验证默认要求 Universal Binary。
+BUILD_ARCHS="${VIBELSLAND_BUILD_ARCHS:-arm64 x86_64}"
+BINARY_ARCHS="$(/usr/bin/lipo -archs "$EXECUTABLE")"
+for arch in ${=BUILD_ARCHS}; do
+    if [[ " $BINARY_ARCHS " != *" $arch "* ]]; then
+        echo "verify-app: missing architecture $arch (got: $BINARY_ARCHS)" >&2
+        exit 1
+    fi
+done
+
+echo "App verification passed (archs: $BINARY_ARCHS)"

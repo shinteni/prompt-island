@@ -20,19 +20,41 @@ APP_NAME="${APP_BUNDLE_NAME%.app}"
 BUNDLE_ID="$metadata[2]"
 APP_VERSION="$metadata[3]"
 BUILD_NUMBER="$metadata[4]"
-BUILD_DIR="$ROOT/.build/release"
 DIST_DIR="$ROOT/dist"
 APP_DIR="$DIST_DIR/$APP_BUNDLE_NAME"
 CONTENTS="$APP_DIR/Contents"
 MACOS="$CONTENTS/MacOS"
 RESOURCES="$CONTENTS/Resources"
 
+# 发布包默认构建 Universal Binary（Apple Silicon + Intel）。
+# 本地想加速可用 VIBELSLAND_BUILD_ARCHS=arm64 只出单架构。
+# 注意：一次传多个 --arch 需要完整 Xcode 的 xcbuild，CommandLineTools
+# 环境不可用，所以逐架构编译后用 lipo 合并。
+BUILD_ARCHS="${VIBELSLAND_BUILD_ARCHS:-arm64 x86_64}"
+
 cd "$ROOT"
-swift build -c release
+ARCH_BINARIES=()
+for arch in ${=BUILD_ARCHS}; do
+    swift build -c release --arch "$arch"
+    ARCH_BINARIES+=("$(swift build -c release --arch "$arch" --show-bin-path)/VibelslandFree")
+done
 
 rm -rf "$APP_DIR"
 mkdir -p "$MACOS" "$RESOURCES"
-cp "$BUILD_DIR/VibelslandFree" "$MACOS/VibelslandFree"
+if (( ${#ARCH_BINARIES[@]} == 1 )); then
+    cp "${ARCH_BINARIES[1]}" "$MACOS/VibelslandFree"
+else
+    /usr/bin/lipo -create "${ARCH_BINARIES[@]}" -output "$MACOS/VibelslandFree"
+fi
+
+# 断言二进制包含请求的所有架构，防止发布包悄悄退化成单架构。
+BINARY_ARCHS="$(/usr/bin/lipo -archs "$MACOS/VibelslandFree")"
+for arch in ${=BUILD_ARCHS}; do
+    if [[ " $BINARY_ARCHS " != *" $arch "* ]]; then
+        echo "build-app: missing architecture $arch (got: $BINARY_ARCHS)" >&2
+        exit 1
+    fi
+done
 
 ICON_TMP="$(mktemp -d "${TMPDIR:-/tmp}/vibelsland-icon.XXXXXX")"
 trap 'rm -rf "$ICON_TMP"' EXIT
