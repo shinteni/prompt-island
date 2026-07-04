@@ -8,8 +8,8 @@ final class IslandWindow: NSPanel {
     private var cancellables: Set<AnyCancellable> = []
     private var outsideClickMonitor: Any?
     private var outsideClickArmedAt: Date?
-    private var outsideMouseTimer: Timer?
-    private var outsideMouseTicks = 0
+    private var autoCollapseTimer: Timer?
+    private var autoCollapseWatchActive = false
     private var systemOverviewTriggerMonitor: Any?
     private var systemOverviewDetectionTimer: Timer?
     private var systemOverviewDetectionTicks = 0
@@ -66,6 +66,12 @@ final class IslandWindow: NSPanel {
         hostingView.wantsLayer = true
         hostingView.layer?.backgroundColor = NSColor.clear.cgColor
         contentView = hostingView
+        hostingView.addTrackingArea(NSTrackingArea(
+            rect: .zero,
+            options: [.mouseEnteredAndExited, .activeAlways, .inVisibleRect],
+            owner: self,
+            userInfo: nil
+        ))
 
         observeLayout()
         applyFrame(
@@ -100,7 +106,7 @@ final class IslandWindow: NSPanel {
         if suppressed {
             orderOut(nil)
             stopOutsideClickMonitor()
-            stopOutsideMouseTimer()
+            stopAutoCollapseWatch()
             stopSystemOverviewDetectionTimer()
             stopSystemOverviewTimer()
             stopSystemOverviewEventMonitor()
@@ -285,7 +291,7 @@ final class IslandWindow: NSPanel {
         setFrame(systemOverviewHiddenFrame(), display: false)
         orderOut(nil)
         stopOutsideClickMonitor()
-        stopOutsideMouseTimer()
+        stopAutoCollapseWatch()
     }
 
     private func systemOverviewHiddenFrame() -> NSRect {
@@ -703,19 +709,19 @@ final class IslandWindow: NSPanel {
     private func updateOutsideClickMonitor(expanded: Bool) {
         if hiddenForSystemOverview {
             stopOutsideClickMonitor()
-            stopOutsideMouseTimer()
+            stopAutoCollapseWatch()
             return
         }
         if expanded {
             startOutsideClickMonitor()
             if hasPendingApproval {
-                stopOutsideMouseTimer()
+                stopAutoCollapseWatch()
             } else {
-                startOutsideMouseTimer()
+                startAutoCollapseWatch()
             }
         } else {
             stopOutsideClickMonitor()
-            stopOutsideMouseTimer()
+            stopAutoCollapseWatch()
         }
     }
 
@@ -755,39 +761,52 @@ final class IslandWindow: NSPanel {
         store.isExpanded = false
     }
 
-    private func startOutsideMouseTimer() {
-        guard outsideMouseTimer == nil else { return }
-        outsideMouseTicks = 0
-        outsideMouseTimer = Timer.scheduledTimer(withTimeInterval: 0.22, repeats: true) { [weak self] _ in
+    /// 事件驱动的离开收起：tracking area 的进出事件代替旧的 0.22 秒鼠标轮询。
+    /// 鼠标离开（或启动监视时就在窗外）后启动一次性宽限定时器，重新进入即取消。
+    private func startAutoCollapseWatch() {
+        autoCollapseWatchActive = true
+        if !frame.insetBy(dx: -12, dy: -12).contains(NSEvent.mouseLocation) {
+            armAutoCollapseTimer()
+        }
+    }
+
+    private func stopAutoCollapseWatch() {
+        autoCollapseWatchActive = false
+        autoCollapseTimer?.invalidate()
+        autoCollapseTimer = nil
+    }
+
+    override func mouseEntered(with event: NSEvent) {
+        autoCollapseTimer?.invalidate()
+        autoCollapseTimer = nil
+        super.mouseEntered(with: event)
+    }
+
+    override func mouseExited(with event: NSEvent) {
+        if autoCollapseWatchActive {
+            armAutoCollapseTimer()
+        }
+        super.mouseExited(with: event)
+    }
+
+    private func armAutoCollapseTimer() {
+        guard autoCollapseWatchActive, store?.isExpanded == true, !hasPendingApproval else { return }
+        autoCollapseTimer?.invalidate()
+        let timer = Timer(timeInterval: IslandAutoCollapsePolicy.graceDuration, repeats: false) { [weak self] _ in
             DispatchQueue.main.async {
-                self?.collapseIfMouseStayedOutside()
+                self?.fireAutoCollapse()
             }
         }
+        RunLoop.main.add(timer, forMode: .common)
+        autoCollapseTimer = timer
     }
 
-    private func stopOutsideMouseTimer() {
-        outsideMouseTimer?.invalidate()
-        outsideMouseTimer = nil
-        outsideMouseTicks = 0
-    }
-
-    private func collapseIfMouseStayedOutside() {
-        guard let store, store.isExpanded else {
-            stopOutsideMouseTimer()
-            return
-        }
-        if hasPendingApproval {
-            stopOutsideMouseTimer()
-            return
-        }
-        if frame.insetBy(dx: -12, dy: -12).contains(NSEvent.mouseLocation) {
-            outsideMouseTicks = 0
-            return
-        }
-        outsideMouseTicks += 1
-        if outsideMouseTicks >= 30 {
-            collapseIfExpanded()
-        }
+    private func fireAutoCollapse() {
+        autoCollapseTimer = nil
+        guard autoCollapseWatchActive, let store, store.isExpanded, !hasPendingApproval else { return }
+        // 窗口动画期间可能漏掉进入事件，收起前再确认鼠标确实在窗外。
+        guard !frame.insetBy(dx: -12, dy: -12).contains(NSEvent.mouseLocation) else { return }
+        collapseIfExpanded()
     }
 
     private var hasPendingApproval: Bool {
