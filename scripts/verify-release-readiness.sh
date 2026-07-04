@@ -115,6 +115,7 @@ if [[ "$RUN_AUTOMATION" == "1" ]]; then
         restore_public_release_assets
     fi
     VIBELSLAND_VERIFY_DIST=1 zsh "$ROOT/scripts/verify-docs-site.sh"
+    zsh "$ROOT/scripts/verify-cask.sh"
     zsh "$ROOT/scripts/verify-idle-window.sh"
     zsh "$ROOT/scripts/verify-single-instance.sh"
     zsh "$ROOT/scripts/verify-menu-settings.sh"

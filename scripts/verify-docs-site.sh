@@ -842,7 +842,7 @@ for script_path, expected_values in {
             if value and value not in script_text and "release.json" not in script_text:
                 errors.append(f"{script_path.name} missing expected release metadata value: {value}")
 
-for path in [root / "README.md", root / "README.en.md"]:
+for path in [root / "README.md", root / "README.en.md", root / "README.ja.md"]:
     if path.exists():
         text = path.read_text(encoding="utf-8")
         for phrase in [release_label, release_archive_name, release_archive_hash, release_archive_url, release_checksum_url, "docs/release.json"]:
@@ -881,6 +881,7 @@ if verify_dist and checksum_path.exists():
             docs / "ja" / "download.html",
             root / "README.md",
             root / "README.en.md",
+            root / "README.ja.md",
         ]:
             if path.exists() and parts[0] not in path.read_text(encoding="utf-8"):
                 errors.append(f"Download page checksum does not match dist checksum: {display(path)}")
