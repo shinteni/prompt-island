@@ -295,6 +295,10 @@ struct PressableButtonStyle: ButtonStyle {
 
 /// 悬停高亮：轻微放大 + 提亮 + 小手光标，让可点元素在悬停时有明确的可点感。
 /// Reduce Motion 时跳过缩放，保留提亮与光标。
+///
+/// 不用 SwiftUI 的 .onHover：它的 tracking area 只在应用激活时生效，而浮岛是
+/// 常驻辅助面板，用户悬停时应用几乎总是非激活的。这里用 .activeAlways 的
+/// 显式 NSTrackingArea（与浮岛离开自动收起相同的机制）保证任何状态都有反馈。
 struct IslandHoverHighlight: ViewModifier {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var isHovering = false
@@ -306,24 +310,72 @@ struct IslandHoverHighlight: ViewModifier {
             .scaleEffect(isHovering && !reduceMotion ? scale : 1)
             .brightness(isHovering ? IslandMotionPolicy.InteractionFeedback.hoverBrightness : 0)
             .animation(IslandMotion.hoverEase, value: isHovering)
-            .onHover { hovering in
-                guard hovering != isHovering else { return }
-                isHovering = hovering
-                guard usesPointingHand else { return }
-                if hovering {
-                    NSCursor.pointingHand.push()
-                } else {
-                    NSCursor.pop()
+            .overlay(
+                AlwaysOnHoverView(usesPointingHand: usesPointingHand) { hovering in
+                    isHovering = hovering
                 }
-            }
+            )
             .onDisappear {
                 if isHovering {
                     if usesPointingHand {
-                        NSCursor.pop()
+                        NSCursor.arrow.set()
                     }
                     isHovering = false
                 }
             }
+    }
+}
+
+/// 应用非激活时也能收到进出事件的悬停探测层；对点击完全透明。
+private struct AlwaysOnHoverView: NSViewRepresentable {
+    let usesPointingHand: Bool
+    let onHoverChanged: (Bool) -> Void
+
+    func makeNSView(context: Context) -> TrackingView {
+        let view = TrackingView()
+        view.usesPointingHand = usesPointingHand
+        view.onHoverChanged = onHoverChanged
+        return view
+    }
+
+    func updateNSView(_ view: TrackingView, context: Context) {
+        view.usesPointingHand = usesPointingHand
+        view.onHoverChanged = onHoverChanged
+    }
+
+    final class TrackingView: NSView {
+        var usesPointingHand = true
+        var onHoverChanged: ((Bool) -> Void)?
+
+        override func updateTrackingAreas() {
+            super.updateTrackingAreas()
+            for area in trackingAreas {
+                removeTrackingArea(area)
+            }
+            addTrackingArea(NSTrackingArea(
+                rect: .zero,
+                options: [.mouseEnteredAndExited, .activeAlways, .inVisibleRect],
+                owner: self,
+                userInfo: nil
+            ))
+        }
+
+        // 悬停探测不拦截任何鼠标事件，点击照常落到下面的按钮/手势上。
+        override func hitTest(_ point: NSPoint) -> NSView? { nil }
+
+        override func mouseEntered(with event: NSEvent) {
+            onHoverChanged?(true)
+            if usesPointingHand {
+                NSCursor.pointingHand.set()
+            }
+        }
+
+        override func mouseExited(with event: NSEvent) {
+            onHoverChanged?(false)
+            if usesPointingHand {
+                NSCursor.arrow.set()
+            }
+        }
     }
 }
 

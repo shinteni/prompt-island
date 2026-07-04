@@ -27,6 +27,7 @@ final class IslandWindow: NSPanel {
     private var frameDisplayLink: CADisplayLink?
     private var frameAnimationContext: FrameAnimationContext?
     private var hasPresented = false
+    private weak var swiftUIHostingView: NSView?
 
     private struct FrameAnimationContext {
         let start: NSRect
@@ -75,12 +76,22 @@ final class IslandWindow: NSPanel {
         hostingView.wantsLayer = true
         hostingView.layer?.backgroundColor = NSColor.clear.cgColor
         contentView = hostingView
-        hostingView.addTrackingArea(NSTrackingArea(
-            rect: .zero,
-            options: [.mouseEnteredAndExited, .activeAlways, .inVisibleRect],
-            owner: self,
-            userInfo: nil
-        ))
+        swiftUIHostingView = hostingView
+
+        // 自动收起的进出追踪不能直接 addTrackingArea 到 NSHostingView：
+        // SwiftUI 重建自身 tracking areas 时会把外来区域清掉且不会恢复，
+        // 事件随之静默失效。用自愈式追踪视图（每次 updateTrackingAreas 都
+        // 重新注册自己的区域）作为子视图覆盖整个内容区。
+        let tracker = WindowHoverTrackingView()
+        tracker.onEntered = { [weak self] in
+            self?.autoCollapseMouseEntered()
+        }
+        tracker.onExited = { [weak self] in
+            self?.autoCollapseMouseExited()
+        }
+        tracker.frame = hostingView.bounds
+        tracker.autoresizingMask = [.width, .height]
+        hostingView.addSubview(tracker)
 
         observeLayout()
         applyFrame(
