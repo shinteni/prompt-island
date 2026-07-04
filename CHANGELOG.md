@@ -10,6 +10,7 @@
 
 ## Unreleased
 
+- Added optional global hotkeys: ⌃⌥I toggles the island and ⌃⌥A jumps to the pending approval (off by default, no extra permissions required).
 - Added Japanese README and Japanese documentation pages.
 - Added GitHub Actions checks for Swift build and test-target discovery.
 - Added maintainer release gate improvements and clearer ad-hoc signing documentation.
