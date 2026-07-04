@@ -46,6 +46,7 @@ struct SettingsView: View {
 
                 ApprovalPreferencesSection(
                     approvalTimeoutSeconds: binding(\.approvalTimeoutSeconds),
+                    approvalNotificationsEnabled: binding(\.enableApprovalNotifications),
                     approvalWaitText: approvalWaitText
                 )
 
@@ -502,6 +503,7 @@ private struct ApprovalPreferencesSection: View {
     @EnvironmentObject private var configurationStore: AppConfigurationStore
 
     @Binding var approvalTimeoutSeconds: TimeInterval
+    @Binding var approvalNotificationsEnabled: Bool
     let approvalWaitText: String
 
     var body: some View {
@@ -523,6 +525,22 @@ private struct ApprovalPreferencesSection: View {
                     .frame(width: 170)
                 }
                 SettingsDivider()
+                SettingsRow(icon: "bell.badge", title: AppText.pick(configurationStore.config.language, english: "System notifications", japanese: "システム通知", chinese: "系统通知")) {
+                    Toggle("", isOn: $approvalNotificationsEnabled)
+                        .labelsHidden()
+                }
+                Text(AppText.pick(
+                    configurationStore.config.language,
+                    english: "Posts a notification with Allow/Decline actions when an approval arrives, so requests are not missed while you are away. Respects Do Not Disturb. Requires macOS notification permission on first use.",
+                    japanese: "承認リクエスト到着時に許可/拒否アクション付きの通知を送り、離席中の見逃しを防ぎます。集中モード中は送信しません。初回は macOS の通知許可が必要です。",
+                    chinese: "审批到达时发送带允许/拒绝按钮的系统通知，人不在电脑前也不会错过；勿扰模式下不发送。首次使用需授予 macOS 通知权限。"
+                ))
+                    .font(.system(size: 12, weight: .medium))
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.top, 8)
+                SettingsDivider()
+                    .padding(.top, 8)
                 Text(AppText.pick(
                     configurationStore.config.language,
                     english: "If the app is unavailable, requests fall back immediately. After the app takes over a request, timeout never auto-allows or auto-denies it.",

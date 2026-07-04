@@ -10,6 +10,7 @@
 
 ## Unreleased
 
+- Added optional approval notifications: macOS Notification Center banners with Allow/Decline actions as a fallback when you are away from the island (off by default, withdrawn once the approval resolves, suppressed by Do Not Disturb).
 - Added optional global hotkeys: ⌃⌥I toggles the island and ⌃⌥A jumps to the pending approval (off by default, no extra permissions required).
 - Added Japanese README and Japanese documentation pages.
 - Added GitHub Actions checks for Swift build and test-target discovery.

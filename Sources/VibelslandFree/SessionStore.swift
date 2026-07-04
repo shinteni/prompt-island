@@ -34,6 +34,7 @@ final class SessionStore: ObservableObject {
     let codexLiveClient: CodexDesktopLiveClient
     let codexAppServerLiveClient: CodexAppServerLiveClient
     let transcriptReader: ConversationTranscriptReader
+    let approvalNotificationCenter = ApprovalNotificationCenter()
     let logger: AppLogger
     var pendingReplies: [String: (String?) -> Void] = [:]
     var pendingEvents: [String: AgentEvent] = [:]
@@ -129,6 +130,35 @@ final class SessionStore: ObservableObject {
             .sink { [weak self] _ in
                 self?.handleConfigurationChanged()
             }
+
+        approvalNotificationCenter.approvalProvider = { [weak self] approvalID in
+            self?.pendingApproval(withID: approvalID)
+        }
+        approvalNotificationCenter.onDecision = { [weak self] approvalID, decision in
+            guard let self, let approval = self.pendingApproval(withID: approvalID) else { return }
+            self.resolveApproval(approval, decision: decision)
+        }
+        approvalNotificationCenter.onOpenApproval = { [weak self] approvalID in
+            guard let self else { return }
+            if let session = self.sessions.first(where: { $0.approval?.id == approvalID }) {
+                self.selectedSessionID = session.id
+            }
+            NSApp.activate(ignoringOtherApps: true)
+            self.isExpanded = true
+        }
+    }
+
+    func pendingApproval(withID id: String) -> ApprovalRequest? {
+        sessions.compactMap(\.approval).first { $0.id == id }
+    }
+
+    func notifyApprovalIfNeeded(_ approval: ApprovalRequest) {
+        guard ApprovalNotificationPolicy.shouldNotify(
+            enabled: configurationStore.config.enableApprovalNotifications,
+            doNotDisturb: configurationStore.config.doNotDisturb,
+            approval: approval
+        ) else { return }
+        approvalNotificationCenter.post(approval: approval, language: configurationStore.config.language)
     }
 
     func start() {
@@ -162,6 +192,9 @@ final class SessionStore: ObservableObject {
             startCodexDesktopRefreshTimer()
         } else {
             stopCodexDesktopRefreshTimer()
+        }
+        if configurationStore.config.enableApprovalNotifications {
+            approvalNotificationCenter.activate(language: configurationStore.config.language)
         }
         startVisibilityTimer()
     }

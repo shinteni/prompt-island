@@ -109,6 +109,7 @@ extension SessionStore {
         logger.info("approval.resolved.marked", detail: id)
         pendingCodexDesktopApprovals.removeValue(forKey: id)
         pendingCodexDesktopDecisions.removeValue(forKey: id)
+        approvalNotificationCenter.withdraw(approvalID: id)
     }
 
     func markApprovalFailed(
@@ -127,6 +128,7 @@ extension SessionStore {
         if expired {
             pendingCodexDesktopApprovals.removeValue(forKey: id)
             pendingCodexDesktopDecisions.removeValue(forKey: id)
+            approvalNotificationCenter.withdraw(approvalID: id)
         }
     }
 
@@ -146,6 +148,7 @@ extension SessionStore {
         logger.info("approval.timedOut", detail: id)
         pendingCodexDesktopApprovals.removeValue(forKey: id)
         pendingCodexDesktopDecisions.removeValue(forKey: id)
+        approvalNotificationCenter.withdraw(approvalID: id)
     }
 
     func markCodexDesktopRequestResolved(_ requestKey: String) {
@@ -164,6 +167,7 @@ extension SessionStore {
         }
         pendingCodexDesktopApprovals.removeValue(forKey: approvalID)
         pendingCodexDesktopDecisions.removeValue(forKey: approvalID)
+        approvalNotificationCenter.withdraw(approvalID: approvalID)
         logger.info("codex.desktop.approval.resolved", detail: requestKey)
     }
 

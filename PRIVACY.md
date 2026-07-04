@@ -26,6 +26,8 @@ The app writes:
 
 Hook payloads are filtered before they are sent to the app. The bridge keeps only known metadata fields such as session ids, event type, workspace, transcript path, approval id, and selected tool information. Nested tool input is limited to small descriptive fields such as command, path, pattern, URL, and tool name.
 
+When the optional approval notification setting is enabled, the app posts approval summaries (source, tool, and truncated command detail) to macOS Notification Center with Allow/Decline actions. These notifications never leave the Mac, are withdrawn when the approval resolves, and follow the user's macOS notification and lock screen settings. The setting is off by default.
+
 Logs are intentionally conservative. They record connection state, event types, timestamps, local paths, thread/request ids, and error reasons, but do not intentionally store full transcript text or full sensitive command output.
 
 Logs stay on the user's Mac until the user deletes them. The app does not currently claim automatic log upload, automatic retention limits, or automatic log cleanup.
