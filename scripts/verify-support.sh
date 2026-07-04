@@ -1,5 +1,9 @@
 #!/bin/zsh
 
+# 验证运行统一跳过启动开场动画：开场窗口会干扰"空闲应隐藏"等窗口断言，
+# 且平白拖慢每个脚本约 2.2 秒。所有窗口脚本都 source 本文件，子进程继承此环境。
+export VIBELSLAND_SKIP_LAUNCH_INTRO=1
+
 vibelsland_log_path() {
     print "$1/Library/Logs/VibelslandFree/app.log"
 }

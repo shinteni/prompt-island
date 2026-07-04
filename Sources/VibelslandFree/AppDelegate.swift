@@ -52,8 +52,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject, NSWi
         }
         applyGlobalHotKeys()
         installVerificationActionsIfNeeded()
-        showIsland(launchAnimated: true)
+        // 先完成 store 启动的同步 IO（装 Hook、起 bridge、健康检查），
+        // 开场动画在更安静的主线程上播放，减少掉帧。
         store.start()
+        showIsland(launchAnimated: true)
     }
 
     private func applyGlobalHotKeys() {
@@ -246,7 +248,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject, NSWi
             )
         }
         guard let islandWindow else { return }
-        guard launchAnimated, !hasPlayedLaunchIntro else {
+        // 跳过开场：系统减弱动态效果时；以及窗口自动化验证时（开场窗口会
+        // 干扰"空闲应隐藏"这类断言，且平白拖慢每个脚本 2.2 秒）。
+        let skipIntro = NSWorkspace.shared.accessibilityDisplayShouldReduceMotion
+            || ProcessInfo.processInfo.environment["VIBELSLAND_SKIP_LAUNCH_INTRO"] == "1"
+        guard launchAnimated, !hasPlayedLaunchIntro, !skipIntro else {
+            hasPlayedLaunchIntro = true
             islandWindow.present(launchAnimated: false)
             return
         }
