@@ -15,7 +15,7 @@
 <p align="center">
   <a href="https://shinteni.github.io/prompt-island/">官网</a>
   ·
-  <a href="https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip">下载 v0.1.0</a>
+  <a href="https://github.com/shinteni/prompt-island/releases/download/v0.2.0/Vibelsland-Free-0.2.0-macos.zip">下载 v0.2.0</a>
   ·
   <a href="https://shinteni.github.io/prompt-island/install.html">安装与信任</a>
   ·
@@ -65,29 +65,29 @@ Vibelsland Free 是一个 Swift Package 组织的 macOS 原生应用，界面层
 
 ## 下载与安装
 
-v0.1.0 可从 GitHub Releases 下载。当前发布包使用 ad-hoc 签名，首次打开前请阅读安装与信任说明：
+v0.2.0 可从 GitHub Releases 下载。当前发布包使用 ad-hoc 签名，首次打开前请阅读安装与信任说明：
 
-[Download v0.1.0](https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip)
+[Download v0.2.0](https://github.com/shinteni/prompt-island/releases/download/v0.2.0/Vibelsland-Free-0.2.0-macos.zip)
 
 [安装与信任说明](https://shinteni.github.io/prompt-island/install.html)
 
 校验下载包：
 
 ```sh
-curl -LO https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip
-curl -LO https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip.sha256
-shasum -a 256 -c Vibelsland-Free-0.1.0-macos.zip.sha256
+curl -LO https://github.com/shinteni/prompt-island/releases/download/v0.2.0/Vibelsland-Free-0.2.0-macos.zip
+curl -LO https://github.com/shinteni/prompt-island/releases/download/v0.2.0/Vibelsland-Free-0.2.0-macos.zip.sha256
+shasum -a 256 -c Vibelsland-Free-0.2.0-macos.zip.sha256
 ```
 
 当前 SHA-256：
 
 ```text
-b8ae6ea245d4720c1c9389c2ce95a582df9005866fda3522279058eb40b40af5
+ce3ce10b8ba7b0e388962d660c5c416cd6c246405462c2a578be46aeadd3fab4
 ```
 
 安装方式：
 
-1. 下载 `Vibelsland-Free-0.1.0-macos.zip`。
+1. 下载 `Vibelsland-Free-0.2.0-macos.zip`。
 2. 解压后将 `>_ - island.app` 拖到 `Applications`。
 3. 打开应用，在菜单栏或设置页安装 Hooks。
 4. 按需开启自动启动、声音、勿扰和显示位置。
@@ -99,7 +99,7 @@ brew tap shinteni/island https://github.com/shinteni/prompt-island.git
 brew install --cask shinteni/island/vibelsland-free
 ```
 
-说明：当前免费发布包使用 ad-hoc codesign，首次打开需要按 Gatekeeper 说明手动确认。Developer ID 签名和 notarization 可以作为后续降低首次打开摩擦的分发改进，但当前 v0.1.0 下载、校验、源码和安装说明已经公开。
+说明：当前免费发布包使用 ad-hoc codesign，首次打开需要按 Gatekeeper 说明手动确认。Developer ID 签名和 notarization 可以作为后续降低首次打开摩擦的分发改进，但当前 v0.2.0 下载、校验、源码和安装说明已经公开。
 
 ## 隐私
 
@@ -128,7 +128,7 @@ VIBELSLAND_VERIFY_DIST=1 zsh scripts/verify-docs-live.sh
 
 ## 项目状态
 
-Vibelsland Free v0.1.0 已经具备可下载的本机版本，包含浮岛展示、设置页、Hook 安装、审批窗口、运行状态检查、单实例保护、重启恢复和发布打包脚本。当前免费发布包使用 ad-hoc 签名，并提供公开下载、SHA-256 校验、源码、安装说明和支持入口。
+Vibelsland Free v0.2.0 已经具备可下载的本机版本，包含浮岛展示、设置页、Hook 安装、审批窗口、运行状态检查、单实例保护、重启恢复和发布打包脚本。当前免费发布包使用 ad-hoc 签名，并提供公开下载、SHA-256 校验、源码、安装说明和支持入口。
 
 ## 许可证
 

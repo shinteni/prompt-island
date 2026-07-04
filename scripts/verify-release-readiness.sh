@@ -3,7 +3,7 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 APP_DIR="$ROOT/dist/>_ - island.app"
-ARCHIVE="$ROOT/dist/Vibelsland-Free-0.1.0-macos.zip"
+ARCHIVE="$ROOT/dist/$(python3 -c "import json;print(json.load(open('$ROOT/docs/release.json'))['archive']['name'])")"
 CHECKSUM="$ARCHIVE.sha256"
 CHECKLIST="$ROOT/MAINTAINER_RELEASE_CHECKLIST.md"
 

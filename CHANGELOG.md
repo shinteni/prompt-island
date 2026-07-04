@@ -8,8 +8,10 @@
 - Added settings, hook installation, runtime health checks, single-instance protection, and restart recovery.
 - Published the GitHub Pages documentation site, install notes, privacy note, checksum metadata, and release packaging scripts.
 
-## Unreleased
+## 0.2.0 - 2026-07-04
 
+- Smoothed the launch intro: display-link driven GPU layers replace the per-frame CPU redraw, the launch sound is prewarmed, and startup IO completes before the animation begins. Reduce Motion skips the intro.
+- Fixed the Japanese README showing a stale SHA-256, and hardened release gates: the Japanese README joins the metadata consistency checks and the readiness gate now includes the Homebrew cask check.
 - Added one-click in-app updates: "Check & update" in settings downloads the new release, verifies its SHA-256 against the published checksum, verifies the code signature structure, atomically swaps the app bundle (with rollback on failure), and relaunches. Falls back to the release page for dev builds or releases without self-update assets.
 - Polished island motion and interaction feedback: the expand/collapse frame animation is now display-link driven (full frame rate on ProMotion) with a snappier ease-out expansion curve, content crossfades gain subtle depth scaling, approval cards spring in and out, and every clickable island element gets hover highlighting with a pointing-hand cursor plus press feedback. The system Reduce Motion setting disables all scaling and transitions.
 - Added Homebrew Cask support: the repository doubles as a tap (`brew tap shinteni/island https://github.com/shinteni/prompt-island.git && brew install --cask shinteni/island/vibelsland-free`); the cask is generated from docs/release.json and verify-cask.sh gates version/SHA-256 consistency.

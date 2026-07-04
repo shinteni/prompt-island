@@ -7,15 +7,15 @@ Vibelsland Free keeps local AI coding status, tool activity, status summaries, a
 ## Product Facts
 
 - Product: Vibelsland Free
-- Current public download: v0.1.0
-- Current source status: newer than the v0.1.0 tag, with Japanese docs, GitHub Actions checks, release-gate documentation, and Codex Desktop live connection startup improvements
+- Current public download: v0.2.0
+- Current source status: matches the v0.2.0 tag
 - Platform: macOS 14+
 - Distribution: GitHub Releases
-- Package: Vibelsland-Free-0.1.0-macos.zip
-- SHA-256: b8ae6ea245d4720c1c9389c2ce95a582df9005866fda3522279058eb40b40af5
+- Package: Vibelsland-Free-0.2.0-macos.zip
+- SHA-256: ce3ce10b8ba7b0e388962d660c5c416cd6c246405462c2a578be46aeadd3fab4
 - Signing: ad-hoc signed; first launch may require Gatekeeper confirmation
 - Source: https://github.com/shinteni/prompt-island
-- Download: https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip
+- Download: https://github.com/shinteni/prompt-island/releases/download/v0.2.0/Vibelsland-Free-0.2.0-macos.zip
 - Release metadata: https://shinteni.github.io/prompt-island/release.json
 - Release notes: https://shinteni.github.io/prompt-island/release-notes.html
 
@@ -43,5 +43,5 @@ Vibelsland Free keeps local AI coding status, tool activity, status summaries, a
 - Core status display, source control, and approval handling are local-first.
 - Claude Code, Codex CLI, and Codex Desktop may have their own account, network, and session behavior independent of Vibelsland Free.
 - Vibelsland Free is independent and is not affiliated with Anthropic, OpenAI, Claude, or Codex.
-- v0.1.0 is not Developer ID notarized; SHA-256 verifies asset integrity, not developer identity.
+- v0.2.0 is not Developer ID notarized; SHA-256 verifies asset integrity, not developer identity.
 - Security-sensitive details should not be posted in public GitHub Issues; start with a minimal impact summary.

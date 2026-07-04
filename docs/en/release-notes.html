@@ -6,13 +6,13 @@
     <title>Release Notes | Vibelsland Free</title>
     <meta
       name="description"
-      content="Vibelsland Free release notes for v0.1.0, including downloads, SHA-256 verification, key features, install guidance, and current source updates."
+      content="Vibelsland Free release notes for v0.2.0, including downloads, SHA-256 verification, key features, install guidance, and current source updates."
     >
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Vibelsland Free">
     <meta property="og:locale" content="en_US">
     <meta property="og:title" content="Vibelsland Free Release Notes">
-    <meta property="og:description" content="Review Vibelsland Free v0.1.0 features, download assets, checksum file, install guidance, and current source progress.">
+    <meta property="og:description" content="Review Vibelsland Free v0.2.0 features, download assets, checksum file, install guidance, and current source progress.">
     <meta property="og:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
     <meta property="og:image:width" content="1672">
     <meta property="og:image:height" content="941">
@@ -20,7 +20,7 @@
     <meta property="og:url" content="https://shinteni.github.io/prompt-island/en/release-notes.html">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Vibelsland Free Release Notes">
-    <meta name="twitter:description" content="Review Vibelsland Free v0.1.0 features, download assets, checksum file, install guidance, and current source progress.">
+    <meta name="twitter:description" content="Review Vibelsland Free v0.2.0 features, download assets, checksum file, install guidance, and current source progress.">
     <meta name="twitter:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
     <meta name="twitter:image:alt" content="Vibelsland Free macOS AI coding status interface">
     <meta name="theme-color" content="#070706">
@@ -61,17 +61,17 @@
           <p class="eyebrow">Release Notes</p>
           <h1 id="release-title">Release history.</h1>
           <p>
-            The official website record for Vibelsland Free releases. The public download is still v0.1.0; the current repository continues to update documentation, CI, release gates, and the Codex Desktop connection experience.
+            The official website record for Vibelsland Free releases. The current public download is v0.2.0: one-click updates, an approval queue, global hotkeys, local statistics, and a Universal (Apple Silicon & Intel) package.
           </p>
           <div class="hero-actions">
             <a class="button primary" href="download.html">View full download notes</a>
-            <a class="button secondary" href="https://github.com/shinteni/prompt-island/releases/tag/v0.1.0">Open GitHub Release</a>
+            <a class="button secondary" href="https://github.com/shinteni/prompt-island/releases/tag/v0.2.0">Open GitHub Release</a>
           </div>
         </div>
         <div class="privacy-summary" aria-label="Release summary" data-reveal>
           <div>
             <span>Current version</span>
-            <strong>v0.1.0</strong>
+            <strong>v0.2.0</strong>
           </div>
           <div>
             <span>System</span>
@@ -86,41 +86,74 @@
 
       <section class="section data-section surface-section" aria-labelledby="source-status-title">
         <div class="section-heading align-left" data-reveal>
-          <p class="eyebrow">Current Repository</p>
-          <h2 id="source-status-title">Public downloads and source progress are tracked separately.</h2>
+          <p class="eyebrow">New in v0.2.0</p>
+          <h2 id="source-status-title">One-click updates, an approval queue, and a more polished desktop feel.</h2>
           <p>
-            <code>docs/release.json</code> still describes the v0.1.0 package published on GitHub Releases. The current source tree is newer than that tag and contains site, verification, and local connection updates for the next release.
+            <code>docs/release.json</code> records the v0.2.0 package currently published on GitHub Releases; the download, checksum, and Homebrew cask are all generated from the same metadata.
           </p>
         </div>
         <div class="data-grid">
           <article data-reveal>
-            <h3>Multilingual docs</h3>
+            <h3>Updates &amp; distribution</h3>
             <ul>
-              <li>Added a Japanese README and Japanese documentation pages.</li>
-              <li>Overview, download, install, privacy, FAQ, support, and release notes are available in Chinese, English, and Japanese.</li>
+              <li>One-click "Check &amp; update" in settings: download, SHA-256 verification, atomic swap, relaunch.</li>
+              <li>The package is now Universal for Apple Silicon and Intel, and the repository doubles as a Homebrew tap.</li>
             </ul>
           </article>
           <article data-reveal>
-            <h3>Automated checks</h3>
+            <h3>Approvals</h3>
             <ul>
-              <li>GitHub Actions covers Swift build and test-target discovery checks.</li>
-              <li>Local entry points remain <code>zsh scripts/run-tests.sh</code>, <code>zsh scripts/verify-docs-site.sh</code>, and <code>zsh scripts/verify-release-readiness.sh</code>.</li>
+              <li>Concurrent approvals queue oldest-first with inline Allow/Decline per row.</li>
+              <li>Optional Notification Center fallback with Allow/Decline actions, plus global hotkeys ⌃⌥I / ⌃⌥A.</li>
             </ul>
           </article>
           <article data-reveal>
-            <h3>Release gates</h3>
+            <h3>Usage &amp; statistics</h3>
             <ul>
-              <li>The maintainer checklist separates the GitHub free release path from a future notarized distribution path.</li>
-              <li>Download, install, FAQ, and README pages all state that the current package is ad-hoc signed.</li>
+              <li>Claude Code sessions show per-turn/cumulative tokens with an estimated API-equivalent cost.</li>
+              <li>A local-only statistics card covers today and the last 7 days, clearable anytime.</li>
             </ul>
           </article>
           <article data-reveal>
-            <h3>Local connections</h3>
+            <h3>Performance &amp; feel</h3>
             <ul>
-              <li>Improved Codex Desktop live connection startup when the macOS app is launched from Finder.</li>
-              <li>Bridge, Hooks, logs, and runtime status remain visible through settings and local health checks.</li>
+              <li>Expand/collapse and launch animations are GPU-rendered at the display's refresh rate, with hover and press feedback everywhere.</li>
+              <li>Background timers wake on demand for lower idle power; the system Reduce Motion setting is fully respected.</li>
             </ul>
           </article>
+        </div>
+      </section>
+
+      <section class="section split-section" aria-labelledby="v020-title">
+        <div class="split-copy" data-reveal>
+          <p class="eyebrow">v0.2.0</p>
+          <h2 id="v020-title">The current release.</h2>
+          <p>
+            On top of v0.1.0's local status display and approval handling, this release adds an upgrade path (in-app one-click updates and Homebrew), concurrent approval handling, token usage and cost visibility, and desktop-grade motion and interaction feedback.
+          </p>
+          <a class="text-link" href="download.html">See full download notes</a>
+        </div>
+        <div class="release-card" aria-label="v0.2.0 assets" data-reveal>
+          <span>Release file</span>
+          <strong>Vibelsland-Free-0.2.0-macos.zip</strong>
+          <dl>
+            <div>
+              <dt>Version</dt>
+              <dd>v0.2.0</dd>
+            </div>
+            <div>
+              <dt>Size</dt>
+              <dd>About 3.8 MB</dd>
+            </div>
+            <div>
+              <dt>Signing</dt>
+              <dd>ad-hoc</dd>
+            </div>
+            <div>
+              <dt>Verification</dt>
+              <dd>SHA-256</dd>
+            </div>
+          </dl>
         </div>
       </section>
 
@@ -209,7 +242,7 @@
         </div>
         <div class="checksum-card" data-reveal>
           <span>SHA-256</span>
-          <code>b8ae6ea245d4720c1c9389c2ce95a582df9005866fda3522279058eb40b40af5</code>
+          <code>ce3ce10b8ba7b0e388962d660c5c416cd6c246405462c2a578be46aeadd3fab4</code>
         </div>
       </section>
 
@@ -232,7 +265,7 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="../lang.js?v=66b67e53ed45" defer></script>
+    <script src="../lang.js?v=0ef00efbfcc1" defer></script>
     <script src="../effects.js?v=984d01b9fa2d" defer></script>
   </body>
 </html>

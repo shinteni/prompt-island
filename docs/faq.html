@@ -44,7 +44,7 @@
             "name": "Vibelsland Free 是免费的吗？",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "v0.1.0 免费下载，源码以 MIT License 开源。下载包通过 GitHub Releases 分发。"
+              "text": "v0.2.0 免费下载，源码以 MIT License 开源。下载包通过 GitHub Releases 分发。"
             }
           },
           {
@@ -52,7 +52,7 @@
             "name": "首次打开为什么需要额外确认？",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "v0.1.0 采用 ad-hoc 签名，因此首次打开时 macOS 可能要求额外确认。若出现 Apple 无法验证的提示，请点“完成”，再到系统设置的“隐私与安全性”里选择“仍要打开”。"
+              "text": "v0.2.0 采用 ad-hoc 签名，因此首次打开时 macOS 可能要求额外确认。若出现 Apple 无法验证的提示，请点“完成”，再到系统设置的“隐私与安全性”里选择“仍要打开”。"
             }
           },
           {
@@ -60,7 +60,7 @@
             "name": "为什么不是 Developer ID notarized？",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "v0.1.0 是 ad-hoc 签名，不是 Developer ID notarization。Gatekeeper 会要求在系统设置里手动允许；spctl 显示 rejected 或 not accepted 对当前包是预期结果。SHA-256 只能确认下载文件与 GitHub Release 一致，不能证明开发者身份。"
+              "text": "v0.2.0 是 ad-hoc 签名，不是 Developer ID notarization。Gatekeeper 会要求在系统设置里手动允许；spctl 显示 rejected 或 not accepted 对当前包是预期结果。SHA-256 只能确认下载文件与 GitHub Release 一致，不能证明开发者身份。"
             }
           },
           {
@@ -68,7 +68,7 @@
             "name": "Intel Mac 可以使用吗？",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "v0.1.0 发布包面向 Apple Silicon / arm64 和 macOS 14+。Intel Mac 不在当前支持范围内。"
+              "text": "v0.2.0 起提供 Universal 发布包，Apple Silicon 和 Intel 的 macOS 14+ 都可以使用。"
             }
           },
           {
@@ -76,7 +76,7 @@
             "name": "如何确认下载包没有被替换？",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "下载 zip 和同名 .sha256 文件后，在同一目录运行 shasum -a 256 -c Vibelsland-Free-0.1.0-macos.zip.sha256。官网展示的 SHA-256 与 GitHub Release 文件一致。"
+              "text": "下载 zip 和同名 .sha256 文件后，在同一目录运行 shasum -a 256 -c Vibelsland-Free-0.2.0-macos.zip.sha256。官网展示的 SHA-256 与 GitHub Release 文件一致。"
             }
           },
           {
@@ -84,7 +84,7 @@
             "name": "支持哪些 AI 编程工具？",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "v0.1.0 支持 Claude Code、Codex CLI 和 Codex Desktop 的本地状态展示、工具调用摘要和审批请求处理。"
+              "text": "v0.2.0 支持 Claude Code、Codex CLI 和 Codex Desktop 的本地状态展示、工具调用摘要和审批请求处理。"
             }
           },
           {
@@ -161,7 +161,7 @@
             把安装、校验、隐私和支持范围提前说清楚。Vibelsland Free 专注于本地状态显示，不包含云同步或完整 IDE 功能。
           </p>
           <div class="hero-actions">
-            <a class="button primary" href="download.html">下载 v0.1.0</a>
+            <a class="button primary" href="download.html">下载 v0.2.0</a>
             <a class="button secondary" href="privacy.html">查看隐私边界</a>
           </div>
         </div>
@@ -189,23 +189,23 @@
         <div class="faq-list">
           <article data-reveal>
             <h3>Vibelsland Free 是免费的吗？</h3>
-            <p>是。v0.1.0 免费下载，源码以 MIT License 开源，安装包放在 GitHub Releases。</p>
+            <p>是。v0.2.0 免费下载，源码以 MIT License 开源，安装包放在 GitHub Releases。</p>
           </article>
           <article data-reveal>
             <h3>首次打开为什么需要额外确认？</h3>
-            <p>v0.1.0 采用 ad-hoc 签名，因此首次打开时 macOS 可能要求额外确认。若出现 Apple 无法验证的提示，请点“完成”，再到系统设置的“隐私与安全性”里选择“仍要打开”。</p>
+            <p>v0.2.0 采用 ad-hoc 签名，因此首次打开时 macOS 可能要求额外确认。若出现 Apple 无法验证的提示，请点“完成”，再到系统设置的“隐私与安全性”里选择“仍要打开”。</p>
           </article>
           <article data-reveal>
             <h3>为什么不是 Developer ID notarized？</h3>
-            <p>v0.1.0 是 ad-hoc 签名，不是 Developer ID notarization。Gatekeeper 会要求在系统设置里手动允许；<code>spctl</code> 显示 rejected 或 not accepted 对当前包是预期结果。SHA-256 只能确认下载文件与 GitHub Release 一致，不能证明开发者身份。</p>
+            <p>v0.2.0 是 ad-hoc 签名，不是 Developer ID notarization。Gatekeeper 会要求在系统设置里手动允许；<code>spctl</code> 显示 rejected 或 not accepted 对当前包是预期结果。SHA-256 只能确认下载文件与 GitHub Release 一致，不能证明开发者身份。</p>
           </article>
           <article data-reveal>
             <h3>Intel Mac 可以使用吗？</h3>
-            <p>v0.1.0 发布包面向 Apple Silicon / arm64 和 macOS 14+。Intel Mac 不在当前支持范围内。</p>
+            <p>v0.2.0 起提供 Universal 发布包，Apple Silicon 和 Intel 的 macOS 14+ 都可以使用。</p>
           </article>
           <article data-reveal>
             <h3>如何确认下载包没有被替换？</h3>
-            <p>把 zip 和同名 <code>.sha256</code> 文件放在同一目录后，运行 <code>shasum -a 256 -c Vibelsland-Free-0.1.0-macos.zip.sha256</code> 校验。</p>
+            <p>把 zip 和同名 <code>.sha256</code> 文件放在同一目录后，运行 <code>shasum -a 256 -c Vibelsland-Free-0.2.0-macos.zip.sha256</code> 校验。</p>
           </article>
         </div>
       </section>
@@ -218,7 +218,7 @@
         <div class="faq-list">
           <article data-reveal>
             <h3>支持哪些 AI 编程工具？</h3>
-            <p>v0.1.0 支持 Claude Code、Codex CLI 和 Codex Desktop 的本地状态展示、工具调用摘要和审批请求处理。</p>
+            <p>v0.2.0 支持 Claude Code、Codex CLI 和 Codex Desktop 的本地状态展示、工具调用摘要和审批请求处理。</p>
           </article>
           <article data-reveal>
             <h3>它会把内容发给 Anthropic 或 OpenAI 吗？</h3>
@@ -261,7 +261,7 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="lang.js?v=66b67e53ed45" defer></script>
+    <script src="lang.js?v=0ef00efbfcc1" defer></script>
     <script src="effects.js?v=984d01b9fa2d" defer></script>
   </body>
 </html>

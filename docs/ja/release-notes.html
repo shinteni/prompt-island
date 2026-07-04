@@ -6,13 +6,13 @@
     <title>リリースノート | Vibelsland Free</title>
     <meta
       name="description"
-      content="Vibelsland Free v0.1.0 のリリースノート。ダウンロード、SHA-256 確認、主要機能、インストール、現在のソース更新を確認できます。"
+      content="Vibelsland Free v0.2.0 のリリースノート。ダウンロード、SHA-256 確認、主要機能、インストール、現在のソース更新を確認できます。"
     >
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Vibelsland Free">
     <meta property="og:locale" content="ja_JP">
     <meta property="og:title" content="Vibelsland Free リリースノート">
-    <meta property="og:description" content="Vibelsland Free v0.1.0 の機能、ダウンロード、チェックサム、インストール、現在のリポジトリ状況を確認できます。">
+    <meta property="og:description" content="Vibelsland Free v0.2.0 の機能、ダウンロード、チェックサム、インストール、現在のリポジトリ状況を確認できます。">
     <meta property="og:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
     <meta property="og:image:width" content="1672">
     <meta property="og:image:height" content="941">
@@ -20,7 +20,7 @@
     <meta property="og:url" content="https://shinteni.github.io/prompt-island/ja/release-notes.html">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Vibelsland Free リリースノート">
-    <meta name="twitter:description" content="Vibelsland Free v0.1.0 の機能、ダウンロード、チェックサム、インストール、現在のリポジトリ状況を確認できます。">
+    <meta name="twitter:description" content="Vibelsland Free v0.2.0 の機能、ダウンロード、チェックサム、インストール、現在のリポジトリ状況を確認できます。">
     <meta name="twitter:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
     <meta name="twitter:image:alt" content="Vibelsland Free macOS AI コーディング状態インターフェイス">
     <meta name="theme-color" content="#070706">
@@ -61,17 +61,17 @@
           <p class="eyebrow">Release Notes</p>
           <h1 id="release-title">リリース履歴。</h1>
           <p>
-            Vibelsland Free の公式サイト上のリリース記録です。公開ダウンロードは現在も v0.1.0 です。現在のリポジトリでは、ドキュメント、CI、リリース確認、Codex Desktop 接続体験の更新が続いています。
+            Vibelsland Free の公式サイト上のリリース記録です。現在の公開ダウンロードは v0.2.0：ワンクリック更新、承認キュー、グローバルショートカット、ローカル統計、そして Universal（Apple Silicon と Intel）パッケージ。
           </p>
           <div class="hero-actions">
             <a class="button primary" href="download.html">ダウンロード説明を見る</a>
-            <a class="button secondary" href="https://github.com/shinteni/prompt-island/releases/tag/v0.1.0">GitHub Release を開く</a>
+            <a class="button secondary" href="https://github.com/shinteni/prompt-island/releases/tag/v0.2.0">GitHub Release を開く</a>
           </div>
         </div>
         <div class="privacy-summary" aria-label="リリース概要" data-reveal>
           <div>
             <span>現在の版</span>
-            <strong>v0.1.0</strong>
+            <strong>v0.2.0</strong>
           </div>
           <div>
             <span>システム</span>
@@ -86,41 +86,74 @@
 
       <section class="section data-section surface-section" aria-labelledby="source-status-title">
         <div class="section-heading align-left" data-reveal>
-          <p class="eyebrow">現在のリポジトリ</p>
-          <h2 id="source-status-title">公開ダウンロードとソースの進捗を分けて記録します。</h2>
+          <p class="eyebrow">v0.2.0 の新機能</p>
+          <h2 id="source-status-title">ワンクリック更新、承認キュー、より磨かれたデスクトップ体験。</h2>
           <p>
-            <code>docs/release.json</code> は GitHub Releases で公開済みの v0.1.0 パッケージを示しています。現在のソースツリーはその tag より新しく、次回リリースに向けたサイト、検証、ローカル接続の更新を含みます。
+            <code>docs/release.json</code> は GitHub Releases に公開中の v0.2.0 パッケージを記録し、ダウンロード、チェックサム、Homebrew cask は同じメタデータから生成されます。
           </p>
         </div>
         <div class="data-grid">
           <article data-reveal>
-            <h3>多言語ドキュメント</h3>
+            <h3>更新と配布</h3>
             <ul>
-              <li>日本語 README と日本語ドキュメントページを追加しました。</li>
-              <li>概要、ダウンロード、インストール、プライバシー、FAQ、サポート、リリースノートを中国語、英語、日本語で提供します。</li>
+              <li>設定画面の「確認して更新」ワンクリックで、ダウンロード、SHA-256 検証、置き換え、再起動まで完了。</li>
+              <li>パッケージは Apple Silicon と Intel 両対応の Universal になり、リポジトリは Homebrew tap を兼ねます。</li>
             </ul>
           </article>
           <article data-reveal>
-            <h3>自動チェック</h3>
+            <h3>承認体験</h3>
             <ul>
-              <li>GitHub Actions が Swift build とテストターゲット検出チェックを扱います。</li>
-              <li>ローカル入口は <code>zsh scripts/run-tests.sh</code>、<code>zsh scripts/verify-docs-site.sh</code>、<code>zsh scripts/verify-release-readiness.sh</code> です。</li>
+              <li>複数の承認は待ち時間順のキューで表示し、行ごとに許可/拒否できます。</li>
+              <li>許可/拒否ボタン付きの通知センター連携（任意）と、グローバルショートカット ⌃⌥I / ⌃⌥A。</li>
             </ul>
           </article>
           <article data-reveal>
-            <h3>リリース確認</h3>
+            <h3>使用量と統計</h3>
             <ul>
-              <li>メンテナー用チェックリストで GitHub 無料公開と将来の notarized 配布を分けています。</li>
-              <li>ダウンロード、インストール、FAQ、README で現在のパッケージが ad-hoc 署名であることを明記しています。</li>
+              <li>Claude Code セッションに今回/累計トークンと API 換算コストの目安を表示。</li>
+              <li>ローカルのみに保存される「今日 / 直近 7 日」の統計カードを設定画面に追加。いつでも消去できます。</li>
             </ul>
           </article>
           <article data-reveal>
-            <h3>ローカル接続</h3>
+            <h3>パフォーマンスと手触り</h3>
             <ul>
-              <li>Finder から起動した macOS app 環境で Codex Desktop のリアルタイム接続を開始しやすくしました。</li>
-              <li>Bridge、Hooks、ログ、実行状態は設定画面とローカルヘルスチェックで確認できます。</li>
+              <li>展開/折りたたみと起動アニメーションはディスプレイのリフレッシュレートに追従する GPU 描画になり、ホバー/押下フィードバックを全面追加。</li>
+              <li>バックグラウンドのタイマーは必要時のみ起動し、アイドル時の消費を削減。システムの「視差効果を減らす」にも完全対応。</li>
             </ul>
           </article>
+        </div>
+      </section>
+
+      <section class="section split-section" aria-labelledby="v020-title">
+        <div class="split-copy" data-reveal>
+          <p class="eyebrow">v0.2.0</p>
+          <h2 id="v020-title">現在のバージョン。</h2>
+          <p>
+            v0.1.0 のローカル状態表示と承認処理に加えて、このバージョンではアップグレード経路（アプリ内ワンクリック更新と Homebrew）、複数承認の同時処理、トークン使用量とコストの可視化、そしてデスクトップ品質のモーションと操作フィードバックを追加しました。
+          </p>
+          <a class="text-link" href="download.html">ダウンロード手順を見る</a>
+        </div>
+        <div class="release-card" aria-label="v0.2.0 アセット" data-reveal>
+          <span>リリースファイル</span>
+          <strong>Vibelsland-Free-0.2.0-macos.zip</strong>
+          <dl>
+            <div>
+              <dt>バージョン</dt>
+              <dd>v0.2.0</dd>
+            </div>
+            <div>
+              <dt>サイズ</dt>
+              <dd>約 3.8 MB</dd>
+            </div>
+            <div>
+              <dt>署名</dt>
+              <dd>ad-hoc 署名</dd>
+            </div>
+            <div>
+              <dt>検証</dt>
+              <dd>SHA-256</dd>
+            </div>
+          </dl>
         </div>
       </section>
 
@@ -209,7 +242,7 @@
         </div>
         <div class="checksum-card" data-reveal>
           <span>SHA-256</span>
-          <code>b8ae6ea245d4720c1c9389c2ce95a582df9005866fda3522279058eb40b40af5</code>
+          <code>ce3ce10b8ba7b0e388962d660c5c416cd6c246405462c2a578be46aeadd3fab4</code>
         </div>
       </section>
 
@@ -232,7 +265,7 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="../lang.js?v=66b67e53ed45" defer></script>
+    <script src="../lang.js?v=0ef00efbfcc1" defer></script>
     <script src="../effects.js?v=984d01b9fa2d" defer></script>
   </body>
 </html>

@@ -44,7 +44,7 @@
             "name": "Vibelsland Free は無料ですか？",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "v0.1.0 は無料でダウンロードでき、MIT License のオープンソースです。パッケージは GitHub Releases で配布しています。"
+              "text": "v0.2.0 は無料でダウンロードでき、MIT License のオープンソースです。パッケージは GitHub Releases で配布しています。"
             }
           },
           {
@@ -52,7 +52,7 @@
             "name": "初回起動時に追加確認が必要なのはなぜですか？",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "v0.1.0 は ad-hoc 署名を採用しているため、初回起動時に macOS が追加確認を求める場合があります。Apple が検証できないという表示が出たら「完了」を選び、システム設定の「プライバシーとセキュリティ」で「このまま開く」を選んでください。"
+              "text": "v0.2.0 は ad-hoc 署名を採用しているため、初回起動時に macOS が追加確認を求める場合があります。Apple が検証できないという表示が出たら「完了」を選び、システム設定の「プライバシーとセキュリティ」で「このまま開く」を選んでください。"
             }
           },
           {
@@ -60,7 +60,7 @@
             "name": "Developer ID notarization がないのはなぜですか？",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "v0.1.0 は ad-hoc 署名で、Developer ID notarization ではありません。Gatekeeper はシステム設定での手動許可を求めます。現在のパッケージでは spctl の rejected または not accepted は想定される結果です。SHA-256 は GitHub Release の配布物と一致することを確認するもので、開発者本人性を証明しません。"
+              "text": "v0.2.0 は ad-hoc 署名で、Developer ID notarization ではありません。Gatekeeper はシステム設定での手動許可を求めます。現在のパッケージでは spctl の rejected または not accepted は想定される結果です。SHA-256 は GitHub Release の配布物と一致することを確認するもので、開発者本人性を証明しません。"
             }
           },
           {
@@ -68,7 +68,7 @@
             "name": "Intel Mac で使えますか？",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "v0.1.0 の配布パッケージは Apple Silicon / arm64 と macOS 14+ 向けです。Intel Mac は現在のサポート範囲に含まれません。"
+              "text": "v0.2.0 からは Universal ビルドになり、Apple Silicon と Intel の両方の macOS 14+ に対応しています。"
             }
           },
           {
@@ -76,7 +76,7 @@
             "name": "ダウンロードをどう検証しますか？",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "zip と同名の .sha256 ファイルを同じフォルダに置き、shasum -a 256 -c Vibelsland-Free-0.1.0-macos.zip.sha256 を実行します。サイトの SHA-256 は GitHub リリースファイルと一致します。"
+              "text": "zip と同名の .sha256 ファイルを同じフォルダに置き、shasum -a 256 -c Vibelsland-Free-0.2.0-macos.zip.sha256 を実行します。サイトの SHA-256 は GitHub リリースファイルと一致します。"
             }
           },
           {
@@ -84,7 +84,7 @@
             "name": "どの AI コーディングツールに対応していますか？",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "v0.1.0 は Claude Code、Codex CLI、Codex Desktop のローカル状態表示、ツール実行サマリー、承認処理に対応しています。"
+              "text": "v0.2.0 は Claude Code、Codex CLI、Codex Desktop のローカル状態表示、ツール実行サマリー、承認処理に対応しています。"
             }
           },
           {
@@ -161,7 +161,7 @@
             インストール、チェックサム、プライバシー、対応範囲をダウンロード前に確認できます。Vibelsland Free はローカル状態表示に特化し、クラウド同期や完全な IDE 機能は含みません。
           </p>
           <div class="hero-actions">
-            <a class="button primary" href="download.html">v0.1.0 をダウンロード</a>
+            <a class="button primary" href="download.html">v0.2.0 をダウンロード</a>
             <a class="button secondary" href="privacy.html">プライバシー境界を見る</a>
           </div>
         </div>
@@ -189,23 +189,23 @@
         <div class="faq-list">
           <article data-reveal="">
             <h3>Vibelsland Free は無料ですか？</h3>
-            <p>はい。v0.1.0 は無料でダウンロードでき、MIT License のオープンソースです。配布は GitHub Releases です。</p>
+            <p>はい。v0.2.0 は無料でダウンロードでき、MIT License のオープンソースです。配布は GitHub Releases です。</p>
           </article>
           <article data-reveal="">
             <h3>初回起動時に追加確認が必要なのはなぜですか？</h3>
-            <p>v0.1.0 は ad-hoc 署名を採用しているため、初回起動時に macOS が追加確認を求める場合があります。Apple が検証できないという表示が出たら「完了」を選び、システム設定の「プライバシーとセキュリティ」で「このまま開く」を選んでください。</p>
+            <p>v0.2.0 は ad-hoc 署名を採用しているため、初回起動時に macOS が追加確認を求める場合があります。Apple が検証できないという表示が出たら「完了」を選び、システム設定の「プライバシーとセキュリティ」で「このまま開く」を選んでください。</p>
           </article>
           <article data-reveal="">
             <h3>Developer ID notarization がないのはなぜですか？</h3>
-            <p>v0.1.0 は ad-hoc 署名で、Developer ID notarization ではありません。Gatekeeper はシステム設定での手動許可を求めます。現在のパッケージでは <code>spctl</code> の rejected または not accepted は想定される結果です。SHA-256 は GitHub Release の配布物と一致することを確認するもので、開発者本人性を証明しません。</p>
+            <p>v0.2.0 は ad-hoc 署名で、Developer ID notarization ではありません。Gatekeeper はシステム設定での手動許可を求めます。現在のパッケージでは <code>spctl</code> の rejected または not accepted は想定される結果です。SHA-256 は GitHub Release の配布物と一致することを確認するもので、開発者本人性を証明しません。</p>
           </article>
           <article data-reveal="">
             <h3>Intel Mac で使えますか？</h3>
-            <p>v0.1.0 の配布パッケージは Apple Silicon / arm64 と macOS 14+ 向けです。Intel Mac は現在のサポート範囲に含まれません。</p>
+            <p>v0.2.0 からは Universal ビルドになり、Apple Silicon と Intel の両方の macOS 14+ に対応しています。</p>
           </article>
           <article data-reveal="">
             <h3>ダウンロードをどう検証しますか？</h3>
-            <p>zip と同名の <code>.sha256</code> ファイルを同じフォルダに置き、<code>shasum -a 256 -c Vibelsland-Free-0.1.0-macos.zip.sha256</code> を実行します。</p>
+            <p>zip と同名の <code>.sha256</code> ファイルを同じフォルダに置き、<code>shasum -a 256 -c Vibelsland-Free-0.2.0-macos.zip.sha256</code> を実行します。</p>
           </article>
         </div>
       </section>
@@ -218,7 +218,7 @@
         <div class="faq-list">
           <article data-reveal="">
             <h3>どの AI コーディングツールに対応していますか？</h3>
-            <p>v0.1.0 は Claude Code、Codex CLI、Codex Desktop のローカル状態表示、ツール実行サマリー、承認処理に対応しています。</p>
+            <p>v0.2.0 は Claude Code、Codex CLI、Codex Desktop のローカル状態表示、ツール実行サマリー、承認処理に対応しています。</p>
           </article>
           <article data-reveal="">
             <h3>Anthropic や OpenAI に内容を送信しますか？</h3>
@@ -261,7 +261,7 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="../lang.js?v=66b67e53ed45" defer></script>
+    <script src="../lang.js?v=0ef00efbfcc1" defer></script>
     <script src="../effects.js?v=984d01b9fa2d" defer></script>
   </body>
 </html>

@@ -15,7 +15,7 @@
 <p align="center">
   <a href="https://shinteni.github.io/prompt-island/ja/">公式サイト</a>
   ·
-  <a href="https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip">v0.1.0 をダウンロード</a>
+  <a href="https://github.com/shinteni/prompt-island/releases/download/v0.2.0/Vibelsland-Free-0.2.0-macos.zip">v0.2.0 をダウンロード</a>
   ·
   <a href="https://shinteni.github.io/prompt-island/ja/install.html">インストールと信頼</a>
   ·
@@ -65,29 +65,29 @@ Vibelsland Free は Swift Package ベースの macOS ネイティブアプリで
 
 ## ダウンロードとインストール
 
-v0.1.0 は GitHub Releases からダウンロードできます。現在のリリースは ad-hoc 署名のため、初回起動前にインストールと信頼の説明を確認してください。
+v0.2.0 は GitHub Releases からダウンロードできます。現在のリリースは ad-hoc 署名のため、初回起動前にインストールと信頼の説明を確認してください。
 
-[v0.1.0 をダウンロード](https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip)
+[v0.2.0 をダウンロード](https://github.com/shinteni/prompt-island/releases/download/v0.2.0/Vibelsland-Free-0.2.0-macos.zip)
 
 [インストールと信頼](https://shinteni.github.io/prompt-island/ja/install.html)
 
 ダウンロードを検証します。
 
 ```sh
-curl -LO https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip
-curl -LO https://github.com/shinteni/prompt-island/releases/download/v0.1.0/Vibelsland-Free-0.1.0-macos.zip.sha256
-shasum -a 256 -c Vibelsland-Free-0.1.0-macos.zip.sha256
+curl -LO https://github.com/shinteni/prompt-island/releases/download/v0.2.0/Vibelsland-Free-0.2.0-macos.zip
+curl -LO https://github.com/shinteni/prompt-island/releases/download/v0.2.0/Vibelsland-Free-0.2.0-macos.zip.sha256
+shasum -a 256 -c Vibelsland-Free-0.2.0-macos.zip.sha256
 ```
 
 現在の SHA-256:
 
 ```text
-b8ae6ea245d4720c1c9389c2ce95a582df9005866fda3522279058eb40b40af5
+ce3ce10b8ba7b0e388962d660c5c416cd6c246405462c2a578be46aeadd3fab4
 ```
 
 インストール手順:
 
-1. `Vibelsland-Free-0.1.0-macos.zip` をダウンロードします。
+1. `Vibelsland-Free-0.2.0-macos.zip` をダウンロードします。
 2. 解凍し、`>_ - island.app` を `Applications` に移動します。
 3. アプリを開き、メニューバーまたは設定画面から Hooks をインストールします。
 4. 必要に応じてログイン時起動、サウンド、おやすみモード、表示位置を設定します。
@@ -99,7 +99,7 @@ brew tap shinteni/island https://github.com/shinteni/prompt-island.git
 brew install --cask shinteni/island/vibelsland-free
 ```
 
-注記：現在の無料リリースは ad-hoc codesign を使用しているため、初回起動時に Gatekeeper の確認が必要です。Developer ID 署名と notarization は今後の配布改善として対応できますが、現在の v0.1.0 はダウンロード、チェックサム、ソース、インストール手順を公開しています。
+注記：現在の無料リリースは ad-hoc codesign を使用しているため、初回起動時に Gatekeeper の確認が必要です。Developer ID 署名と notarization は今後の配布改善として対応できますが、現在の v0.2.0 はダウンロード、チェックサム、ソース、インストール手順を公開しています。
 
 ## プライバシー
 
@@ -128,7 +128,7 @@ VIBELSLAND_VERIFY_DIST=1 zsh scripts/verify-docs-live.sh
 
 ## プロジェクト状態
 
-Vibelsland Free v0.1.0 は、画面上部のフローティング表示、設定画面、Hook インストール、承認 UI、ランタイムヘルスチェック、単一インスタンス保護、再起動復旧、リリースパッケージングスクリプトを含みます。現在の無料リリースは ad-hoc 署名で、公開ダウンロード、SHA-256 検証、ソース、インストール手順、サポート入口を提供しています。
+Vibelsland Free v0.2.0 は、画面上部のフローティング表示、設定画面、Hook インストール、承認 UI、ランタイムヘルスチェック、単一インスタンス保護、再起動復旧、リリースパッケージングスクリプトを含みます。現在の無料リリースは ad-hoc 署名で、公開ダウンロード、SHA-256 検証、ソース、インストール手順、サポート入口を提供しています。
 
 ## ライセンス
 

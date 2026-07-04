@@ -44,7 +44,7 @@
             "name": "Is Vibelsland Free free?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "v0.1.0 is free to download and open source under the MIT License. The package is distributed through GitHub Releases."
+              "text": "v0.2.0 is free to download and open source under the MIT License. The package is distributed through GitHub Releases."
             }
           },
           {
@@ -52,7 +52,7 @@
             "name": "Why does first launch require an extra step?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "v0.1.0 uses ad-hoc signing, so macOS may require an extra confirmation on first launch. If macOS says Apple cannot verify the app, click Done, then allow it from System Settings > Privacy & Security with Open Anyway."
+              "text": "v0.2.0 uses ad-hoc signing, so macOS may require an extra confirmation on first launch. If macOS says Apple cannot verify the app, click Done, then allow it from System Settings > Privacy & Security with Open Anyway."
             }
           },
           {
@@ -60,7 +60,7 @@
             "name": "Why is it not Developer ID notarized?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "v0.1.0 is ad-hoc signed, not Developer ID notarized. Gatekeeper requires manual approval in System Settings; spctl rejected or not accepted is expected for the current package. SHA-256 verifies that the downloaded file matches the GitHub Release asset; it does not prove developer identity."
+              "text": "v0.2.0 is ad-hoc signed, not Developer ID notarized. Gatekeeper requires manual approval in System Settings; spctl rejected or not accepted is expected for the current package. SHA-256 verifies that the downloaded file matches the GitHub Release asset; it does not prove developer identity."
             }
           },
           {
@@ -68,7 +68,7 @@
             "name": "Does it work on Intel Macs?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "The v0.1.0 package targets Apple Silicon / arm64 and macOS 14+. Intel Macs are not in the current support scope."
+              "text": "Starting with v0.2.0 the package is a Universal build: both Apple Silicon and Intel Macs on macOS 14+ are supported."
             }
           },
           {
@@ -76,7 +76,7 @@
             "name": "How do I verify the download?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Download the zip and matching .sha256 file into the same folder, then run shasum -a 256 -c Vibelsland-Free-0.1.0-macos.zip.sha256. The SHA-256 shown on the website matches the GitHub Release file."
+              "text": "Download the zip and matching .sha256 file into the same folder, then run shasum -a 256 -c Vibelsland-Free-0.2.0-macos.zip.sha256. The SHA-256 shown on the website matches the GitHub Release file."
             }
           },
           {
@@ -84,7 +84,7 @@
             "name": "Which AI coding tools are supported?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "v0.1.0 supports local status display, tool-call summaries, and approval handling for Claude Code, Codex CLI, and Codex Desktop."
+              "text": "v0.2.0 supports local status display, tool-call summaries, and approval handling for Claude Code, Codex CLI, and Codex Desktop."
             }
           },
           {
@@ -161,7 +161,7 @@
             Install, checksum, privacy, and support boundaries should be clear before download. Vibelsland Free focuses on local status display, without cloud sync or full IDE features.
           </p>
           <div class="hero-actions">
-            <a class="button primary" href="download.html">Download v0.1.0</a>
+            <a class="button primary" href="download.html">Download v0.2.0</a>
             <a class="button secondary" href="privacy.html">View privacy boundary</a>
           </div>
         </div>
@@ -189,23 +189,23 @@
         <div class="faq-list">
           <article data-reveal="">
             <h3>Is Vibelsland Free free?</h3>
-            <p>Yes. v0.1.0 is free to download, open source under the MIT License, and distributed through GitHub Releases.</p>
+            <p>Yes. v0.2.0 is free to download, open source under the MIT License, and distributed through GitHub Releases.</p>
           </article>
           <article data-reveal="">
             <h3>Why does first launch require an extra step?</h3>
-            <p>v0.1.0 uses ad-hoc signing, so macOS may require an extra confirmation on first launch. If macOS says Apple cannot verify the app, click Done, then allow it from System Settings &gt; Privacy &amp; Security with Open Anyway.</p>
+            <p>v0.2.0 uses ad-hoc signing, so macOS may require an extra confirmation on first launch. If macOS says Apple cannot verify the app, click Done, then allow it from System Settings &gt; Privacy &amp; Security with Open Anyway.</p>
           </article>
           <article data-reveal="">
             <h3>Why is it not Developer ID notarized?</h3>
-            <p>v0.1.0 is ad-hoc signed, not Developer ID notarized. Gatekeeper requires manual approval in System Settings; <code>spctl</code> rejected or not accepted is expected for the current package. SHA-256 verifies that the downloaded file matches the GitHub Release asset; it does not prove developer identity.</p>
+            <p>v0.2.0 is ad-hoc signed, not Developer ID notarized. Gatekeeper requires manual approval in System Settings; <code>spctl</code> rejected or not accepted is expected for the current package. SHA-256 verifies that the downloaded file matches the GitHub Release asset; it does not prove developer identity.</p>
           </article>
           <article data-reveal="">
             <h3>Does it work on Intel Macs?</h3>
-            <p>The v0.1.0 package targets Apple Silicon / arm64 and macOS 14+. Intel Macs are not in the current support scope.</p>
+            <p>Starting with v0.2.0 the package is a Universal build: both Apple Silicon and Intel Macs on macOS 14+ are supported.</p>
           </article>
           <article data-reveal="">
             <h3>How do I verify the download?</h3>
-            <p>Put the zip and matching <code>.sha256</code> file in one folder, then run <code>shasum -a 256 -c Vibelsland-Free-0.1.0-macos.zip.sha256</code>.</p>
+            <p>Put the zip and matching <code>.sha256</code> file in one folder, then run <code>shasum -a 256 -c Vibelsland-Free-0.2.0-macos.zip.sha256</code>.</p>
           </article>
         </div>
       </section>
@@ -218,7 +218,7 @@
         <div class="faq-list">
           <article data-reveal="">
             <h3>Which AI coding tools are supported?</h3>
-            <p>v0.1.0 supports local status display, tool-call summaries, and approval handling for Claude Code, Codex CLI, and Codex Desktop.</p>
+            <p>v0.2.0 supports local status display, tool-call summaries, and approval handling for Claude Code, Codex CLI, and Codex Desktop.</p>
           </article>
           <article data-reveal="">
             <h3>Does it send content to Anthropic or OpenAI?</h3>
@@ -261,7 +261,7 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="../lang.js?v=66b67e53ed45" defer></script>
+    <script src="../lang.js?v=0ef00efbfcc1" defer></script>
     <script src="../effects.js?v=984d01b9fa2d" defer></script>
   </body>
 </html>
