@@ -27,7 +27,6 @@ final class IslandWindow: NSPanel {
     private var frameDisplayLink: CADisplayLink?
     private var frameAnimationContext: FrameAnimationContext?
     private var hasPresented = false
-    private weak var swiftUIHostingView: NSView?
 
     private struct FrameAnimationContext {
         let start: NSRect
@@ -76,7 +75,6 @@ final class IslandWindow: NSPanel {
         hostingView.wantsLayer = true
         hostingView.layer?.backgroundColor = NSColor.clear.cgColor
         contentView = hostingView
-        swiftUIHostingView = hostingView
 
         // 自动收起的进出追踪不能直接 addTrackingArea 到 NSHostingView：
         // SwiftUI 重建自身 tracking areas 时会把外来区域清掉且不会恢复，
