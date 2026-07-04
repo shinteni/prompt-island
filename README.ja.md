@@ -92,6 +92,13 @@ shasum -a 256 -c Vibelsland-Free-0.1.0-macos.zip.sha256
 3. アプリを開き、メニューバーまたは設定画面から Hooks をインストールします。
 4. 必要に応じてログイン時起動、サウンド、おやすみモード、表示位置を設定します。
 
+Homebrew でもインストールできます（このリポジトリは tap を兼ねており、cask のバージョンと SHA-256 は `docs/release.json` から生成されます）:
+
+```sh
+brew tap shinteni/island https://github.com/shinteni/prompt-island.git
+brew install --cask shinteni/island/vibelsland-free
+```
+
 注記：現在の無料リリースは ad-hoc codesign を使用しているため、初回起動時に Gatekeeper の確認が必要です。Developer ID 署名と notarization は今後の配布改善として対応できますが、現在の v0.1.0 はダウンロード、チェックサム、ソース、インストール手順を公開しています。
 
 ## プライバシー

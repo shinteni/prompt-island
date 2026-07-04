@@ -92,6 +92,13 @@ Install:
 3. Open the app and install Hooks from the menu bar or settings window.
 4. Configure launch at login, sound, Do Not Disturb, and display position as needed.
 
+Or install with Homebrew (this repository doubles as a tap; the cask version and SHA-256 are generated from `docs/release.json`):
+
+```sh
+brew tap shinteni/island https://github.com/shinteni/prompt-island.git
+brew install --cask shinteni/island/vibelsland-free
+```
+
 Note: the current free release uses ad-hoc codesign, so first launch requires the Gatekeeper confirmation above. Developer ID signing and notarization can reduce first-launch friction in a future distribution path, but the current v0.1.0 download, checksum, source, and install notes are public.
 
 ## Privacy

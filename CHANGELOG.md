@@ -10,6 +10,7 @@
 
 ## Unreleased
 
+- Added Homebrew Cask support: the repository doubles as a tap (`brew tap shinteni/island https://github.com/shinteni/prompt-island.git && brew install --cask shinteni/island/vibelsland-free`); the cask is generated from docs/release.json and verify-cask.sh gates version/SHA-256 consistency.
 - Added a local statistics card in settings: today/last-7-days session, approval, and token/cost counters with a per-day token mini chart. Counters are aggregate-only (no session content), stay on this Mac, keep 30 days, and can be cleared anytime.
 - Release packaging now builds a Universal Binary (Apple Silicon + Intel): each architecture compiles separately and merges via lipo so the flow works without full Xcode, and build/verify scripts assert both slices are present. Applies from the next release; the published v0.1.0 package remains arm64-only.
 - Reduced background wakeups: the Codex Desktop poller now self-schedules at its adaptive cadence instead of ticking every second, session-aging refresh only wakes at actual visibility boundaries (and not at all when idle and collapsed), and the expanded island's mouse-leave auto-collapse is driven by tracking-area events instead of a 0.22s mouse poll. Refresh rates and collapse timing are unchanged.
