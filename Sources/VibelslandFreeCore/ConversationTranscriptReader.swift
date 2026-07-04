@@ -7,6 +7,18 @@ package final class ConversationTranscriptReader: @unchecked Sendable {
     private let tailLineLimit = SessionMemoryPolicy.transcriptTailLineLimit
     private let dateParser = ISO8601Parser()
 
+    /// Claude 用量按文件增量累加：记录已解析到的字节位置，事件到来时只读
+    /// 追加部分。首次遇到超大文件时只回溯尾部一段，保证读取始终有界。
+    private struct ClaudeUsageCacheEntry {
+        var parsedBytes: UInt64
+        var aggregate: ClaudeUsageAggregate
+    }
+
+    private static let claudeUsageInitialScanBytes: UInt64 = 10 * 1024 * 1024
+    private static let claudeUsageMarker = Data("\"usage\"".utf8)
+    private let usageCacheLock = NSLock()
+    private var claudeUsageCache: [String: ClaudeUsageCacheEntry] = [:]
+
     package init(fileManager: FileManager = .default, homeURL: URL = AppPaths.home) {
         self.fileManager = fileManager
         self.homeURL = homeURL
@@ -63,6 +75,12 @@ package final class ConversationTranscriptReader: @unchecked Sendable {
             }
         }
 
+        if source == .claudeCode,
+           let aggregate = claudeUsageAggregate(for: url),
+           let snapshot = ClaudeUsagePolicy.usageSnapshot(from: aggregate) {
+            usage = snapshot
+        }
+
         return AgentTranscriptSnapshot(
             activities: Array(transcriptActivities.suffix(limit)),
             usage: usage,
@@ -72,6 +90,83 @@ package final class ConversationTranscriptReader: @unchecked Sendable {
             completedAt: completedAt,
             latestActiveAt: latestActiveAt
         )
+    }
+
+    package func claudeUsageAggregate(for url: URL) -> ClaudeUsageAggregate? {
+        guard let attributes = try? fileManager.attributesOfItem(atPath: url.path),
+              let size = (attributes[.size] as? NSNumber)?.uint64Value else {
+            return nil
+        }
+
+        usageCacheLock.lock()
+        var entry = claudeUsageCache[url.path]
+        usageCacheLock.unlock()
+
+        // 文件被截断或轮转时重来。
+        if let cached = entry, cached.parsedBytes > size {
+            entry = nil
+        }
+        if let cached = entry, cached.parsedBytes == size {
+            return cached.aggregate
+        }
+
+        var aggregate = entry?.aggregate ?? ClaudeUsageAggregate()
+        var offset = entry?.parsedBytes ?? 0
+        var skipsPartialFirstLine = false
+        // 无缓存且文件太大时，只回溯尾部一段；增量意外过大时同样重置回溯，
+        // 保证单次读取有界。
+        if size - offset > Self.claudeUsageInitialScanBytes {
+            aggregate = ClaudeUsageAggregate()
+            offset = size - Self.claudeUsageInitialScanBytes
+            skipsPartialFirstLine = true
+        }
+
+        guard let handle = try? FileHandle(forReadingFrom: url) else { return nil }
+        defer { try? handle.close() }
+        guard (try? handle.seek(toOffset: offset)) != nil,
+              let data = try? handle.readToEnd(), !data.isEmpty else {
+            return aggregate.turns > 0 ? aggregate : nil
+        }
+
+        var body = data
+        if skipsPartialFirstLine {
+            if let firstNewline = body.firstIndex(of: 0x0A) {
+                let dropped = body.distance(from: body.startIndex, to: firstNewline) + 1
+                offset += UInt64(dropped)
+                body = body[body.index(after: firstNewline)...]
+            } else {
+                return aggregate.turns > 0 ? aggregate : nil
+            }
+        }
+
+        // 只消费到最后一个完整行，写到一半的行留给下次。
+        guard let lastNewline = body.lastIndex(of: 0x0A) else {
+            storeClaudeUsage(ClaudeUsageCacheEntry(parsedBytes: offset, aggregate: aggregate), for: url.path)
+            return aggregate.turns > 0 ? aggregate : nil
+        }
+        let complete = body[body.startIndex...lastNewline]
+        let consumedBytes = UInt64(complete.count)
+
+        for line in complete.split(separator: 0x0A) {
+            guard line.range(of: Self.claudeUsageMarker) != nil,
+                  let object = try? JSONSerialization.jsonObject(with: Data(line)) as? [String: Any],
+                  let turn = ClaudeUsagePolicy.parseTurn(from: object) else {
+                continue
+            }
+            aggregate.add(turn)
+        }
+
+        storeClaudeUsage(
+            ClaudeUsageCacheEntry(parsedBytes: offset + consumedBytes, aggregate: aggregate),
+            for: url.path
+        )
+        return aggregate.turns > 0 ? aggregate : nil
+    }
+
+    private func storeClaudeUsage(_ entry: ClaudeUsageCacheEntry, for path: String) {
+        usageCacheLock.lock()
+        claudeUsageCache[path] = entry
+        usageCacheLock.unlock()
     }
 
     private func transcriptURLs(for event: AgentEvent) -> [URL] {

@@ -137,7 +137,12 @@ struct UsageStrip: View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
                 UsageMetric(title: AppText.pick(configurationStore.config.language, english: "Turn", japanese: "今回", chinese: "本轮"), value: UsageSnapshot.compactNumber(usage.lastTokens))
-                UsageMetric(title: AppText.pick(configurationStore.config.language, english: "Total", japanese: "合計", chinese: "总计"), value: usage.totalText)
+                if usage.totalTokens > 0 {
+                    UsageMetric(title: AppText.pick(configurationStore.config.language, english: "Total", japanese: "合計", chinese: "总计"), value: usage.totalText)
+                }
+                if let cost = usage.estimatedCostUSD {
+                    UsageMetric(title: AppText.pick(configurationStore.config.language, english: "Est.", japanese: "概算", chinese: "估算"), value: UsageSnapshot.costText(cost))
+                }
                 if usage.contextWindow > 0 {
                     UsageMetric(title: AppText.pick(configurationStore.config.language, english: "Context", japanese: "コンテキスト", chinese: "上下文"), value: UsageSnapshot.compactNumber(usage.contextWindow))
                 }

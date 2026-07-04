@@ -10,6 +10,7 @@
 
 ## Unreleased
 
+- Added Claude Code token usage to session details: per-turn and cumulative token counts parsed incrementally from local transcripts, plus an estimated API-equivalent cost for recognized model families.
 - Added an update checker in settings: a manual "Check for updates" button plus an optional launch-time check (off by default); the GitHub releases API is contacted only on explicit user action, keeping the local-first promise.
 - Added an approval queue in the expanded island: when several tools wait at once, approvals are listed oldest-first with inline Allow/Decline per row, an overflow count, and a pending-approval count on the compact pill.
 - Added optional approval notifications: macOS Notification Center banners with Allow/Decline actions as a fallback when you are away from the island (off by default, withdrawn once the approval resolves, suppressed by Do Not Disturb).
