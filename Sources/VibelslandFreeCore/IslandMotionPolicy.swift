@@ -104,12 +104,54 @@ package enum IslandMotionPolicy {
             expanded ? expansionDuration : collapseDuration
         }
 
+        /// 尊重系统「减弱动态效果」：直接落到目标帧，不做过渡。
+        package static func duration(expanded: Bool, reduceMotion: Bool) -> TimeInterval {
+            reduceMotion ? 0 : duration(expanded: expanded)
+        }
+
         package static func resetDelay(expanded: Bool) -> UInt64 {
             UInt64((duration(expanded: expanded) + resetPadding) * 1_000_000_000)
+        }
+
+        /// 帧动画缓动。展开用 ease-out-cubic：起步快（跟手感），落定柔和；
+        /// 收起保留 smoothstep 的对称节奏，避免收起显得急促。
+        package static func easedProgress(_ progress: Double, expanded: Bool) -> Double {
+            let t = min(max(progress, 0), 1)
+            if expanded {
+                let inverse = 1 - t
+                return 1 - inverse * inverse * inverse
+            }
+            return t * t * (3 - 2 * t)
         }
     }
 
     package enum ContentTransition {
         package static let crossfadeDuration: TimeInterval = 0.18
+        /// 交叉淡化时给两层内容一点纵深缩放，让展开/收起读作「形变」而非「替换」。
+        package static let expandedLayerInitialScale: CGFloat = 0.98
+        package static let compactLayerLiftedScale: CGFloat = 1.03
+
+        package static func crossfadeDuration(reduceMotion: Bool) -> TimeInterval {
+            reduceMotion ? 0 : crossfadeDuration
+        }
+    }
+
+    package enum InteractionFeedback {
+        package static let hoverScale: CGFloat = 1.015
+        package static let pressedScale: CGFloat = 0.97
+        package static let cardPressedScale: CGFloat = 0.985
+        package static let hoverBrightness: Double = 0.05
+        package static let pressedOpacity: Double = 0.86
+        package static let hoverDuration: TimeInterval = 0.12
+        package static let pressDuration: TimeInterval = 0.10
+
+        /// Reduce Motion 下不做几何缩放，只保留亮度/不透明度反馈。
+        package static func hoverScale(reduceMotion: Bool) -> CGFloat {
+            reduceMotion ? 1 : hoverScale
+        }
+
+        package static func pressedScale(_ scale: CGFloat = pressedScale, reduceMotion: Bool) -> CGFloat {
+            reduceMotion ? 1 : scale
+        }
     }
 }

@@ -276,7 +276,121 @@ struct DashboardRowBackground: View {
     }
 }
 
+/// 胶囊/卡片操作的按压反馈：轻微缩放 + 变淡。Reduce Motion 时不缩放，只保留不透明度变化。
+struct PressableButtonStyle: ButtonStyle {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    var pressedScale: CGFloat = IslandMotionPolicy.InteractionFeedback.pressedScale
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .scaleEffect(
+                configuration.isPressed
+                    ? IslandMotionPolicy.InteractionFeedback.pressedScale(pressedScale, reduceMotion: reduceMotion)
+                    : 1
+            )
+            .opacity(configuration.isPressed ? IslandMotionPolicy.InteractionFeedback.pressedOpacity : 1)
+            .animation(IslandMotion.pressEase, value: configuration.isPressed)
+    }
+}
+
+/// 悬停高亮：轻微放大 + 提亮 + 小手光标，让可点元素在悬停时有明确的可点感。
+/// Reduce Motion 时跳过缩放，保留提亮与光标。
+///
+/// 不用 SwiftUI 的 .onHover：它的 tracking area 只在应用激活时生效，而浮岛是
+/// 常驻辅助面板，用户悬停时应用几乎总是非激活的。这里用 .activeAlways 的
+/// 显式 NSTrackingArea（与浮岛离开自动收起相同的机制）保证任何状态都有反馈。
+struct IslandHoverHighlight: ViewModifier {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var isHovering = false
+    var scale: CGFloat = IslandMotionPolicy.InteractionFeedback.hoverScale
+    var usesPointingHand = true
+
+    func body(content: Content) -> some View {
+        content
+            .scaleEffect(isHovering && !reduceMotion ? scale : 1)
+            .brightness(isHovering ? IslandMotionPolicy.InteractionFeedback.hoverBrightness : 0)
+            .animation(IslandMotion.hoverEase, value: isHovering)
+            .overlay(
+                AlwaysOnHoverView(usesPointingHand: usesPointingHand) { hovering in
+                    isHovering = hovering
+                }
+            )
+            .onDisappear {
+                if isHovering {
+                    if usesPointingHand {
+                        NSCursor.arrow.set()
+                    }
+                    isHovering = false
+                }
+            }
+    }
+}
+
+/// 应用非激活时也能收到进出事件的悬停探测层；对点击完全透明。
+private struct AlwaysOnHoverView: NSViewRepresentable {
+    let usesPointingHand: Bool
+    let onHoverChanged: (Bool) -> Void
+
+    func makeNSView(context: Context) -> TrackingView {
+        let view = TrackingView()
+        view.usesPointingHand = usesPointingHand
+        view.onHoverChanged = onHoverChanged
+        return view
+    }
+
+    func updateNSView(_ view: TrackingView, context: Context) {
+        view.usesPointingHand = usesPointingHand
+        view.onHoverChanged = onHoverChanged
+    }
+
+    final class TrackingView: NSView {
+        var usesPointingHand = true
+        var onHoverChanged: ((Bool) -> Void)?
+
+        override func updateTrackingAreas() {
+            super.updateTrackingAreas()
+            for area in trackingAreas {
+                removeTrackingArea(area)
+            }
+            addTrackingArea(NSTrackingArea(
+                rect: .zero,
+                options: [.mouseEnteredAndExited, .activeAlways, .inVisibleRect],
+                owner: self,
+                userInfo: nil
+            ))
+        }
+
+        // 悬停探测不拦截任何鼠标事件，点击照常落到下面的按钮/手势上。
+        override func hitTest(_ point: NSPoint) -> NSView? { nil }
+
+        override func mouseEntered(with event: NSEvent) {
+            onHoverChanged?(true)
+            if usesPointingHand {
+                NSCursor.pointingHand.set()
+            }
+        }
+
+        override func mouseExited(with event: NSEvent) {
+            onHoverChanged?(false)
+            if usesPointingHand {
+                NSCursor.arrow.set()
+            }
+        }
+    }
+}
+
+extension View {
+    func islandHoverHighlight(
+        scale: CGFloat = IslandMotionPolicy.InteractionFeedback.hoverScale,
+        usesPointingHand: Bool = true
+    ) -> some View {
+        modifier(IslandHoverHighlight(scale: scale, usesPointingHand: usesPointingHand))
+    }
+}
+
 struct DashboardIconButtonStyle: ButtonStyle {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(.system(size: 15, weight: .bold))
@@ -290,10 +404,18 @@ struct DashboardIconButtonStyle: ButtonStyle {
                     materialOpacity: configuration.isPressed ? 0.48 : 0.34
                 )
             )
+            .scaleEffect(
+                configuration.isPressed
+                    ? IslandMotionPolicy.InteractionFeedback.pressedScale(reduceMotion: reduceMotion)
+                    : 1
+            )
+            .animation(IslandMotion.pressEase, value: configuration.isPressed)
     }
 }
 
 struct DashboardSmallButtonStyle: ButtonStyle {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(.system(size: 12, weight: .bold))
@@ -307,6 +429,12 @@ struct DashboardSmallButtonStyle: ButtonStyle {
                     materialOpacity: configuration.isPressed ? 0.48 : 0.32
                 )
             )
+            .scaleEffect(
+                configuration.isPressed
+                    ? IslandMotionPolicy.InteractionFeedback.pressedScale(reduceMotion: reduceMotion)
+                    : 1
+            )
+            .animation(IslandMotion.pressEase, value: configuration.isPressed)
     }
 }
 

@@ -61,8 +61,12 @@ extension IslandWindow {
 
     /// 事件驱动的离开收起：tracking area 的进出事件代替旧的 0.22 秒鼠标轮询。
     /// 鼠标离开（或启动监视时就在窗外）后启动一次性宽限定时器，重新进入即取消。
+    /// 幂等：布局刷新会反复调用这里（applyLayout → updateOutsideClickMonitor），
+    /// 已在监视中时不得重置倒计时，否则周期性刷新会把收起无限推迟。
     private func startAutoCollapseWatch() {
+        let wasActive = autoCollapseWatchActive
         autoCollapseWatchActive = true
+        guard !wasActive else { return }
         if !frame.insetBy(dx: -12, dy: -12).contains(NSEvent.mouseLocation) {
             armAutoCollapseTimer()
         }
@@ -74,17 +78,15 @@ extension IslandWindow {
         autoCollapseTimer = nil
     }
 
-    override func mouseEntered(with event: NSEvent) {
+    func autoCollapseMouseEntered() {
         autoCollapseTimer?.invalidate()
         autoCollapseTimer = nil
-        super.mouseEntered(with: event)
     }
 
-    override func mouseExited(with event: NSEvent) {
+    func autoCollapseMouseExited() {
         if autoCollapseWatchActive {
             armAutoCollapseTimer()
         }
-        super.mouseExited(with: event)
     }
 
     private func armAutoCollapseTimer() {
@@ -113,5 +115,36 @@ extension IslandWindow {
             guard let approval = session.approval else { return false }
             return !approval.isExpired
         }
+    }
+}
+
+/// 覆盖整个浮岛内容区的自愈式进出追踪视图。
+/// 自己的 updateTrackingAreas 每次都重新注册区域，SwiftUI 的 tracking 重建
+/// 清不掉它；对点击完全透明。
+final class WindowHoverTrackingView: NSView {
+    var onEntered: (() -> Void)?
+    var onExited: (() -> Void)?
+
+    override func updateTrackingAreas() {
+        super.updateTrackingAreas()
+        for area in trackingAreas {
+            removeTrackingArea(area)
+        }
+        addTrackingArea(NSTrackingArea(
+            rect: .zero,
+            options: [.mouseEnteredAndExited, .activeAlways, .inVisibleRect],
+            owner: self,
+            userInfo: nil
+        ))
+    }
+
+    override func hitTest(_ point: NSPoint) -> NSView? { nil }
+
+    override func mouseEntered(with event: NSEvent) {
+        onEntered?()
+    }
+
+    override func mouseExited(with event: NSEvent) {
+        onExited?()
     }
 }

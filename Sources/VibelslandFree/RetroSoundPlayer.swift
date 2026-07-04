@@ -19,12 +19,39 @@ final class RetroSoundPlayer {
     private var players: [AVAudioPlayer] = []
     private var generatedDataCache: [SoundCacheKey: Data] = [:]
     private var systemSoundCache: [RetroSoundKind: NSSound] = [:]
+    private var preparedPlayers: [SoundCacheKey: AVAudioPlayer] = [:]
 
     private init() {}
+
+    /// 预热：提前生成波形并让播放器完成缓冲，避免首次播放时的
+    /// 音频引擎初始化卡顿（启动动画中途播声音会掉帧就是这个原因）。
+    func prepare(_ kind: RetroSoundKind, theme: SoundTheme = .soft) {
+        if theme == .system {
+            if systemSoundCache[kind] == nil, let sound = NSSound(named: kind.systemSoundName) {
+                systemSoundCache[kind] = sound
+            }
+            return
+        }
+        let key = SoundCacheKey(kind: kind, theme: theme.rawValue)
+        guard preparedPlayers[key] == nil else { return }
+        let data = generatedData(for: kind, theme: theme)
+        guard let player = try? AVAudioPlayer(data: data) else { return }
+        player.volume = kind.volume(for: theme)
+        player.prepareToPlay()
+        preparedPlayers[key] = player
+    }
 
     func play(_ kind: RetroSoundKind, theme: SoundTheme = .soft) {
         if theme == .system {
             playSystemSound(kind)
+            return
+        }
+
+        let key = SoundCacheKey(kind: kind, theme: theme.rawValue)
+        if let prepared = preparedPlayers.removeValue(forKey: key) {
+            players.removeAll { !$0.isPlaying }
+            players.append(prepared)
+            prepared.play()
             return
         }
 
