@@ -164,8 +164,10 @@ final class SessionStore: ObservableObject {
         sessions.compactMap(\.approval).first { $0.id == id }
     }
 
-    func checkForUpdates() {
-        guard updateCheckState != .checking else { return }
+    /// installIfAvailable = true 时是"一键检测并更新"：发现新版本直接进入
+    /// 下载→校验→安装→重启管线；false 时只报告结果（启动时自动检查用）。
+    func checkForUpdates(installIfAvailable: Bool = false) {
+        guard !updateCheckState.isBusy else { return }
         updateCheckState = .checking
         let checker = UpdateChecker()
         Task { @MainActor [weak self] in
@@ -175,8 +177,12 @@ final class SessionStore: ObservableObject {
             switch result {
             case .success(let release):
                 if UpdateCheckPolicy.isNewer(remote: release.version, current: current) {
-                    self.updateCheckState = .available(release)
                     self.logger.info("update.check.available", detail: release.version)
+                    if installIfAvailable {
+                        self.startSelfUpdate(release)
+                    } else {
+                        self.updateCheckState = .available(release)
+                    }
                 } else {
                     self.updateCheckState = .upToDate(current: current)
                     self.logger.info("update.check.upToDate", detail: current)
@@ -184,6 +190,32 @@ final class SessionStore: ObservableObject {
             case .failure(let error):
                 self.updateCheckState = .failed(message: error.localizedDescription)
                 self.logger.info("update.check.failed", detail: error.localizedDescription)
+            }
+        }
+    }
+
+    func startSelfUpdate(_ release: RemoteRelease) {
+        guard UpdateInstaller.isRunningFromAppBundle else {
+            updateCheckState = .updateFailed(message: "开发构建不支持应用内更新，请从发布页下载", release: release)
+            return
+        }
+        guard release.supportsSelfUpdate else {
+            updateCheckState = .updateFailed(message: "该发布缺少自更新资产，请从发布页下载", release: release)
+            return
+        }
+        updateCheckState = .updating(.downloading, release)
+        Task { @MainActor [weak self] in
+            do {
+                try await UpdateInstaller.install(release: release) { [weak self] stage in
+                    self?.updateCheckState = .updating(stage, release)
+                }
+                guard let self else { return }
+                self.updateCheckState = .updating(.restarting, release)
+                self.statsStore.flush()
+                NSApp.sendAction(#selector(AppDelegate.restart), to: nil, from: nil)
+            } catch {
+                self?.updateCheckState = .updateFailed(message: error.localizedDescription, release: release)
+                self?.logger.error("update.install.failed", detail: error.localizedDescription)
             }
         }
     }

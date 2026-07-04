@@ -174,6 +174,48 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject, NSWi
                 self?.performHotKeyActionFromVerificationValue(rawAction)
             }
         })
+        verificationObservers.append(center.addObserver(
+            forName: .vibelslandVerifySelfUpdate,
+            object: nil,
+            queue: .main
+        ) { [weak self] notification in
+            // userInfo 非 Sendable，先在回调里取出字符串再跳 MainActor。
+            let version = notification.userInfo?["version"] as? String
+            let archiveName = notification.userInfo?["archiveName"] as? String
+            let archiveURL = notification.userInfo?["archiveURL"] as? String
+            let checksumURL = notification.userInfo?["checksumURL"] as? String
+            Task { @MainActor [weak self] in
+                self?.startSelfUpdateFromVerificationValues(
+                    version: version,
+                    archiveName: archiveName,
+                    archiveURL: archiveURL,
+                    checksumURL: checksumURL
+                )
+            }
+        })
+    }
+
+    private func startSelfUpdateFromVerificationValues(
+        version: String?,
+        archiveName: String?,
+        archiveURL: String?,
+        checksumURL: String?
+    ) {
+        guard let version,
+              let archiveName,
+              let archiveURL = archiveURL.flatMap(URL.init(string:)),
+              let checksumURL = checksumURL.flatMap(URL.init(string:)) else {
+            store.lastError = "验证动作无效：自更新参数不完整"
+            return
+        }
+        let release = RemoteRelease(
+            version: version,
+            pageURL: UpdateCheckPolicy.releasesPageURL,
+            archiveName: archiveName,
+            archiveURL: archiveURL,
+            checksumURL: checksumURL
+        )
+        store.startSelfUpdate(release)
     }
 
     private func performHotKeyActionFromVerificationValue(_ rawAction: String?) {
@@ -419,4 +461,5 @@ extension Notification.Name {
     static let vibelslandVerifyRestart = Notification.Name("free.vibelsland.verify.restart")
     static let vibelslandVerifySetExpanded = Notification.Name("free.vibelsland.verify.setExpanded")
     static let vibelslandVerifyHotKeyAction = Notification.Name("free.vibelsland.verify.hotKeyAction")
+    static let vibelslandVerifySelfUpdate = Notification.Name("free.vibelsland.verify.selfUpdate")
 }

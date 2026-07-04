@@ -302,16 +302,17 @@ struct UpdateSection: View {
 
     @Binding var autoCheckUpdates: Bool
     let state: UpdateCheckState
-    let check: () -> Void
+    let checkAndUpdate: () -> Void
+    let installUpdate: (RemoteRelease) -> Void
 
     var body: some View {
         SettingsCard(
             title: AppText.pick(configurationStore.config.language, english: "Updates", japanese: "アップデート", chinese: "更新"),
             subtitle: AppText.pick(
                 configurationStore.config.language,
-                english: "Checks the GitHub releases page only when you ask; nothing is sent automatically.",
-                japanese: "GitHub のリリースページへの確認は手動または明示的な設定時のみ行います。",
-                chinese: "只在你主动检查或开启自动检查时访问 GitHub 发布页，不会自动上报任何数据。"
+                english: "Contacts GitHub only when you ask. One-click update downloads the release, verifies its SHA-256 against the published checksum, then installs and relaunches.",
+                japanese: "GitHub への接続は明示的な操作時のみ。ワンクリック更新はリリースをダウンロードし、公開チェックサムと SHA-256 を照合してからインストール・再起動します。",
+                chinese: "只在你主动操作时访问 GitHub。一键更新会下载发布包、对照公开校验和验证 SHA-256，然后安装并自动重启。"
             )
         ) {
             VStack(alignment: .leading, spacing: 12) {
@@ -322,8 +323,9 @@ struct UpdateSection: View {
                     Spacer()
                     Toggle(AppText.pick(configurationStore.config.language, english: "Check at launch", japanese: "起動時に確認", chinese: "启动时自动检查"), isOn: $autoCheckUpdates)
                         .font(.system(size: 12, weight: .medium))
-                    Button(checkTitle, action: check)
-                        .disabled(state == .checking)
+                    Button(checkTitle, action: checkAndUpdate)
+                        .buttonStyle(.borderedProminent)
+                        .disabled(state.isBusy)
                         .accessibilityIdentifier("settings.updates.check")
                 }
                 statusRow
@@ -358,10 +360,34 @@ struct UpdateSection: View {
                     detail: "",
                     color: .blue
                 )
-                Button(AppText.pick(configurationStore.config.language, english: "Open download page", japanese: "ダウンロードページを開く", chinese: "前往下载")) {
+                if release.supportsSelfUpdate {
+                    Button(AppText.pick(configurationStore.config.language, english: "Update now", japanese: "今すぐ更新", chinese: "立即更新")) {
+                        installUpdate(release)
+                    }
+                    .buttonStyle(.borderedProminent)
+                }
+                Button(AppText.pick(configurationStore.config.language, english: "Release page", japanese: "リリースページ", chinese: "发布页")) {
                     NSWorkspace.shared.open(release.pageURL)
                 }
-                .buttonStyle(.borderedProminent)
+            }
+        case .updating(let stage, let release):
+            MessageRow(
+                icon: "arrow.down.circle",
+                title: stageText(stage, version: release.version),
+                detail: AppText.pick(configurationStore.config.language, english: "Do not quit the app", japanese: "アプリを終了しないでください", chinese: "请勿退出应用"),
+                color: .blue
+            )
+        case .updateFailed(let message, let release):
+            HStack(spacing: 10) {
+                MessageRow(
+                    icon: "exclamationmark.triangle",
+                    title: AppText.pick(configurationStore.config.language, english: "Update failed", japanese: "更新に失敗しました", chinese: "更新失败"),
+                    detail: message,
+                    color: .orange
+                )
+                Button(AppText.pick(configurationStore.config.language, english: "Release page", japanese: "リリースページ", chinese: "前往发布页")) {
+                    NSWorkspace.shared.open(release.pageURL)
+                }
             }
         case .failed(let message):
             MessageRow(
@@ -373,7 +399,20 @@ struct UpdateSection: View {
         }
     }
 
+    private func stageText(_ stage: UpdateStage, version: String) -> String {
+        switch stage {
+        case .downloading:
+            AppText.pick(configurationStore.config.language, english: "Downloading \(version)…", japanese: "\(version) をダウンロード中…", chinese: "正在下载 \(version)…")
+        case .verifying:
+            AppText.pick(configurationStore.config.language, english: "Verifying SHA-256…", japanese: "SHA-256 を検証中…", chinese: "正在校验 SHA-256…")
+        case .installing:
+            AppText.pick(configurationStore.config.language, english: "Installing…", japanese: "インストール中…", chinese: "正在安装…")
+        case .restarting:
+            AppText.pick(configurationStore.config.language, english: "Restarting…", japanese: "再起動中…", chinese: "正在重启…")
+        }
+    }
+
     private var checkTitle: String {
-        AppText.pick(configurationStore.config.language, english: "Check for updates", japanese: "アップデートを確認", chinese: "检查更新")
+        AppText.pick(configurationStore.config.language, english: "Check & update", japanese: "確認して更新", chinese: "检查并更新")
     }
 }

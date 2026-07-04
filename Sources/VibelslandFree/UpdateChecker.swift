@@ -6,7 +6,18 @@ enum UpdateCheckState: Equatable {
     case checking
     case upToDate(current: String)
     case available(RemoteRelease)
+    case updating(UpdateStage, RemoteRelease)
+    case updateFailed(message: String, release: RemoteRelease)
     case failed(message: String)
+
+    var isBusy: Bool {
+        switch self {
+        case .checking, .updating:
+            return true
+        case .idle, .upToDate, .available, .updateFailed, .failed:
+            return false
+        }
+    }
 }
 
 /// 更新检查的网络调用。只在用户手动触发或显式开启自动检查时被调用，

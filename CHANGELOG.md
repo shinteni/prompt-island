@@ -10,6 +10,7 @@
 
 ## Unreleased
 
+- Added one-click in-app updates: "Check & update" in settings downloads the new release, verifies its SHA-256 against the published checksum, verifies the code signature structure, atomically swaps the app bundle (with rollback on failure), and relaunches. Falls back to the release page for dev builds or releases without self-update assets.
 - Added Homebrew Cask support: the repository doubles as a tap (`brew tap shinteni/island https://github.com/shinteni/prompt-island.git && brew install --cask shinteni/island/vibelsland-free`); the cask is generated from docs/release.json and verify-cask.sh gates version/SHA-256 consistency.
 - Added a local statistics card in settings: today/last-7-days session, approval, and token/cost counters with a per-day token mini chart. Counters are aggregate-only (no session content), stay on this Mac, keep 30 days, and can be cleared anytime.
 - Release packaging now builds a Universal Binary (Apple Silicon + Intel): each architecture compiles separately and merges via lipo so the flow works without full Xcode, and build/verify scripts assert both slices are present. Applies from the next release; the published v0.1.0 package remains arm64-only.
