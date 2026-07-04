@@ -276,7 +276,69 @@ struct DashboardRowBackground: View {
     }
 }
 
+/// 胶囊/卡片操作的按压反馈：轻微缩放 + 变淡。Reduce Motion 时不缩放，只保留不透明度变化。
+struct PressableButtonStyle: ButtonStyle {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    var pressedScale: CGFloat = IslandMotionPolicy.InteractionFeedback.pressedScale
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .scaleEffect(
+                configuration.isPressed
+                    ? IslandMotionPolicy.InteractionFeedback.pressedScale(pressedScale, reduceMotion: reduceMotion)
+                    : 1
+            )
+            .opacity(configuration.isPressed ? IslandMotionPolicy.InteractionFeedback.pressedOpacity : 1)
+            .animation(IslandMotion.pressEase, value: configuration.isPressed)
+    }
+}
+
+/// 悬停高亮：轻微放大 + 提亮 + 小手光标，让可点元素在悬停时有明确的可点感。
+/// Reduce Motion 时跳过缩放，保留提亮与光标。
+struct IslandHoverHighlight: ViewModifier {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var isHovering = false
+    var scale: CGFloat = IslandMotionPolicy.InteractionFeedback.hoverScale
+    var usesPointingHand = true
+
+    func body(content: Content) -> some View {
+        content
+            .scaleEffect(isHovering && !reduceMotion ? scale : 1)
+            .brightness(isHovering ? IslandMotionPolicy.InteractionFeedback.hoverBrightness : 0)
+            .animation(IslandMotion.hoverEase, value: isHovering)
+            .onHover { hovering in
+                guard hovering != isHovering else { return }
+                isHovering = hovering
+                guard usesPointingHand else { return }
+                if hovering {
+                    NSCursor.pointingHand.push()
+                } else {
+                    NSCursor.pop()
+                }
+            }
+            .onDisappear {
+                if isHovering {
+                    if usesPointingHand {
+                        NSCursor.pop()
+                    }
+                    isHovering = false
+                }
+            }
+    }
+}
+
+extension View {
+    func islandHoverHighlight(
+        scale: CGFloat = IslandMotionPolicy.InteractionFeedback.hoverScale,
+        usesPointingHand: Bool = true
+    ) -> some View {
+        modifier(IslandHoverHighlight(scale: scale, usesPointingHand: usesPointingHand))
+    }
+}
+
 struct DashboardIconButtonStyle: ButtonStyle {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(.system(size: 15, weight: .bold))
@@ -290,10 +352,18 @@ struct DashboardIconButtonStyle: ButtonStyle {
                     materialOpacity: configuration.isPressed ? 0.48 : 0.34
                 )
             )
+            .scaleEffect(
+                configuration.isPressed
+                    ? IslandMotionPolicy.InteractionFeedback.pressedScale(reduceMotion: reduceMotion)
+                    : 1
+            )
+            .animation(IslandMotion.pressEase, value: configuration.isPressed)
     }
 }
 
 struct DashboardSmallButtonStyle: ButtonStyle {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(.system(size: 12, weight: .bold))
@@ -307,6 +377,12 @@ struct DashboardSmallButtonStyle: ButtonStyle {
                     materialOpacity: configuration.isPressed ? 0.48 : 0.32
                 )
             )
+            .scaleEffect(
+                configuration.isPressed
+                    ? IslandMotionPolicy.InteractionFeedback.pressedScale(reduceMotion: reduceMotion)
+                    : 1
+            )
+            .animation(IslandMotion.pressEase, value: configuration.isPressed)
     }
 }
 

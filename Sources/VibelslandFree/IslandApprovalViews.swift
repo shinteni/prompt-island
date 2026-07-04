@@ -59,6 +59,7 @@ struct ApprovalSummaryCard: View {
                 .contentShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
             }
             .buttonStyle(.plain)
+            .islandHoverHighlight(scale: 1.0)
             .help(AppText.pick(configurationStore.config.language, english: "View approval details", japanese: "承認詳細を表示", chinese: "查看审批详情"))
 
             HStack(spacing: 4) {
@@ -76,7 +77,8 @@ struct ApprovalSummaryCard: View {
                     showsDetail = true
                 }
                 .font(.system(size: 12, weight: .semibold))
-                .buttonStyle(.plain)
+                .buttonStyle(PressableButtonStyle())
+                .islandHoverHighlight(scale: 1.0)
                 .foregroundStyle(GlassText.secondary)
                 .disabled(approval.isResolving || approval.isExpired)
             }
@@ -101,24 +103,28 @@ struct ApprovalSummaryCard: View {
     }
 
     private func approvalButton(_ title: String, _ decision: ApprovalDecision, prominent: Bool = false) -> some View {
-        Button(title) {
+        Button {
             store.resolveApproval(approval, decision: decision)
+        } label: {
+            // 视觉层放在 label 内，按压缩放才会作用于整个胶囊而不是只有文字。
+            Text(title)
+                .font(.system(size: 12, weight: .semibold))
+                .lineLimit(1)
+                .minimumScaleFactor(0.82)
+                .padding(.horizontal, 8)
+                .frame(height: 26)
+                .background(
+                    ClearGlassCapsuleBackground(
+                        highlighted: prominent,
+                        tint: prominent ? Color.white.opacity(0.16) : Color.white.opacity(0.030),
+                        materialOpacity: prominent ? 0.62 : 0.42
+                    )
+                )
+                .foregroundStyle(prominent ? Color(red: 0.12, green: 0.42, blue: 0.84) : GlassText.primary)
+                .clipShape(Capsule())
         }
-        .font(.system(size: 12, weight: .semibold))
-        .lineLimit(1)
-        .minimumScaleFactor(0.82)
-        .padding(.horizontal, 8)
-        .frame(height: 26)
-        .background(
-            ClearGlassCapsuleBackground(
-                highlighted: prominent,
-                tint: prominent ? Color.white.opacity(0.16) : Color.white.opacity(0.030),
-                materialOpacity: prominent ? 0.62 : 0.42
-            )
-        )
-        .foregroundStyle(prominent ? Color(red: 0.12, green: 0.42, blue: 0.84) : GlassText.primary)
-        .clipShape(Capsule())
-        .buttonStyle(.plain)
+        .buttonStyle(PressableButtonStyle())
+        .islandHoverHighlight()
         .disabled(approval.isResolving || approval.isExpired)
     }
 
@@ -229,6 +235,7 @@ private struct ApprovalQueueRow: View {
                 .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
+            .islandHoverHighlight(scale: 1.0)
             .help(AppText.pick(configurationStore.config.language, english: "View approval details", japanese: "承認詳細を表示", chinese: "查看审批详情"))
 
             if approval.supports(.accept) {
@@ -242,24 +249,27 @@ private struct ApprovalQueueRow: View {
     }
 
     private func queueActionButton(_ title: String, _ decision: ApprovalDecision, prominent: Bool = false) -> some View {
-        Button(title) {
+        Button {
             store.resolveApproval(approval, decision: decision)
+        } label: {
+            Text(title)
+                .font(.system(size: 11, weight: .semibold))
+                .lineLimit(1)
+                .minimumScaleFactor(0.82)
+                .padding(.horizontal, 8)
+                .frame(height: 24)
+                .background(
+                    ClearGlassCapsuleBackground(
+                        highlighted: prominent,
+                        tint: prominent ? Color.white.opacity(0.16) : Color.white.opacity(0.030),
+                        materialOpacity: prominent ? 0.62 : 0.42
+                    )
+                )
+                .foregroundStyle(prominent ? Color(red: 0.12, green: 0.42, blue: 0.84) : GlassText.primary)
+                .clipShape(Capsule())
         }
-        .font(.system(size: 11, weight: .semibold))
-        .lineLimit(1)
-        .minimumScaleFactor(0.82)
-        .padding(.horizontal, 8)
-        .frame(height: 24)
-        .background(
-            ClearGlassCapsuleBackground(
-                highlighted: prominent,
-                tint: prominent ? Color.white.opacity(0.16) : Color.white.opacity(0.030),
-                materialOpacity: prominent ? 0.62 : 0.42
-            )
-        )
-        .foregroundStyle(prominent ? Color(red: 0.12, green: 0.42, blue: 0.84) : GlassText.primary)
-        .clipShape(Capsule())
-        .buttonStyle(.plain)
+        .buttonStyle(PressableButtonStyle())
+        .islandHoverHighlight()
         .disabled(approval.isResolving || approval.isExpired)
     }
 
@@ -355,22 +365,25 @@ struct ApprovalDetailCard: View {
     }
 
     private func approvalButton(_ decision: ApprovalDecision, prominent: Bool = false) -> some View {
-        Button(decision.title(language: configurationStore.config.language)) {
+        Button {
             store.resolveApproval(approval, decision: decision)
+        } label: {
+            Text(decision.title(language: configurationStore.config.language))
+                .font(.system(size: 12, weight: .semibold))
+                .padding(.horizontal, 10)
+                .frame(height: 28)
+                .background(
+                    ClearGlassCapsuleBackground(
+                        highlighted: prominent,
+                        tint: prominent ? Color.white.opacity(0.16) : Color.white.opacity(0.030),
+                        materialOpacity: prominent ? 0.62 : 0.42
+                    )
+                )
+                .foregroundStyle(prominent ? Color(red: 0.12, green: 0.42, blue: 0.84) : GlassText.primary)
+                .clipShape(Capsule())
         }
-        .font(.system(size: 12, weight: .semibold))
-        .padding(.horizontal, 10)
-        .frame(height: 28)
-        .background(
-            ClearGlassCapsuleBackground(
-                highlighted: prominent,
-                tint: prominent ? Color.white.opacity(0.16) : Color.white.opacity(0.030),
-                materialOpacity: prominent ? 0.62 : 0.42
-            )
-        )
-        .foregroundStyle(prominent ? Color(red: 0.12, green: 0.42, blue: 0.84) : GlassText.primary)
-        .clipShape(Capsule())
-        .buttonStyle(.plain)
+        .buttonStyle(PressableButtonStyle())
+        .islandHoverHighlight()
         .disabled(approval.isResolving || approval.isExpired)
     }
 

@@ -102,6 +102,7 @@ struct HealthSummaryStrip: View {
             .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
         }
         .buttonStyle(.plain)
+        .islandHoverHighlight(scale: 1.0)
         .help(AppText.pick(configurationStore.config.language, english: "Open health checks", japanese: "ヘルスチェックを開く", chinese: "打开健康检查"))
     }
 
@@ -218,6 +219,7 @@ struct DashboardSessionCard: View {
             }
         )
         .contentShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .islandHoverHighlight(scale: 1.004)
         .help(session.source == .unknown ? AppText.pick(configurationStore.config.language, english: "Select session", japanese: "セッションを選択", chinese: "选中会话") : AppText.pick(configurationStore.config.language, english: "Open \(session.source.displayName)", japanese: "\(session.source.displayName) を開く", chinese: "打开 \(session.source.displayName)"))
         .accessibilityLabel("\(display.title)，\(display.primaryLine)，\(display.secondaryLine ?? "")")
     }

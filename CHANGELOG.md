@@ -10,6 +10,7 @@
 
 ## Unreleased
 
+- Polished island motion and interaction feedback: the expand/collapse frame animation is now display-link driven (full frame rate on ProMotion) with a snappier ease-out expansion curve, content crossfades gain subtle depth scaling, approval cards spring in and out, and every clickable island element gets hover highlighting with a pointing-hand cursor plus press feedback. The system Reduce Motion setting disables all scaling and transitions.
 - Added Homebrew Cask support: the repository doubles as a tap (`brew tap shinteni/island https://github.com/shinteni/prompt-island.git && brew install --cask shinteni/island/vibelsland-free`); the cask is generated from docs/release.json and verify-cask.sh gates version/SHA-256 consistency.
 - Added a local statistics card in settings: today/last-7-days session, approval, and token/cost counters with a per-day token mini chart. Counters are aggregate-only (no session content), stay on this Mac, keep 30 days, and can be cleared anytime.
 - Release packaging now builds a Universal Binary (Apple Silicon + Intel): each architecture compiles separately and merges via lipo so the flow works without full Xcode, and build/verify scripts assert both slices are present. Applies from the next release; the published v0.1.0 package remains arm64-only.
