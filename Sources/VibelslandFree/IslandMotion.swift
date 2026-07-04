@@ -2,8 +2,22 @@ import SwiftUI
 import VibelslandFreeCore
 
 enum IslandMotion {
-    static let expansionSpring = Animation.spring(response: 0.32, dampingFraction: 0.86)
     static let contentCrossfade = Animation.easeInOut(duration: IslandMotionPolicy.ContentTransition.crossfadeDuration)
+
+    /// Reduce Motion 时返回 nil（不做动画，直接切换）。
+    static func contentCrossfade(reduceMotion: Bool) -> Animation? {
+        reduceMotion ? nil : contentCrossfade
+    }
+
+    /// 审批卡片进出场：轻快弹簧，落定不晃。
+    static let approvalCardSpring = Animation.spring(response: 0.34, dampingFraction: 0.84)
+
+    static func approvalCardSpring(reduceMotion: Bool) -> Animation? {
+        reduceMotion ? nil : approvalCardSpring
+    }
+
+    static let hoverEase = Animation.easeOut(duration: IslandMotionPolicy.InteractionFeedback.hoverDuration)
+    static let pressEase = Animation.easeOut(duration: IslandMotionPolicy.InteractionFeedback.pressDuration)
 
     enum MiniProgressRing {
         static func refreshInterval(for status: SessionStatus) -> TimeInterval {

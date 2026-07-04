@@ -5,6 +5,7 @@ import SwiftUI
 struct IslandPanelView: View {
     @EnvironmentObject private var store: SessionStore
     @EnvironmentObject private var configurationStore: AppConfigurationStore
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var showingApprovalDetail = false
     @State private var contentPresentationExpanded = false
     @State private var showExpandedContentLayer = false
@@ -20,17 +21,29 @@ struct IslandPanelView: View {
 
             ZStack {
                 if showsExpandedLayer {
+                    // 交叉淡化叠加细微缩放：展开内容从 0.98 生长到位，读作形变而非替换。
                     expandedContent
                         .opacity(contentPresentationExpanded ? 1 : 0)
+                        .scaleEffect(
+                            reduceMotion || contentPresentationExpanded
+                                ? 1
+                                : IslandMotionPolicy.ContentTransition.expandedLayerInitialScale,
+                            anchor: .top
+                        )
                         .allowsHitTesting(contentPresentationExpanded)
                 }
                 if showsCompactLayer {
                     compactContent
                         .opacity(contentPresentationExpanded ? 0 : 1)
+                        .scaleEffect(
+                            !reduceMotion && contentPresentationExpanded
+                                ? IslandMotionPolicy.ContentTransition.compactLayerLiftedScale
+                                : 1
+                        )
                         .allowsHitTesting(!contentPresentationExpanded)
                 }
             }
-            .animation(IslandMotion.contentCrossfade, value: contentPresentationExpanded)
+            .animation(IslandMotion.contentCrossfade(reduceMotion: reduceMotion), value: contentPresentationExpanded)
             .zIndex(1)
         }
         .background(Color.clear)
@@ -77,7 +90,7 @@ struct IslandPanelView: View {
             let transitionID = contentTransitionID
             showExpandedContentLayer = true
             showCompactContentLayer = true
-            withAnimation(IslandMotion.contentCrossfade) {
+            withAnimation(IslandMotion.contentCrossfade(reduceMotion: reduceMotion)) {
                 contentPresentationExpanded = isExpanded
             }
             DispatchQueue.main.asyncAfter(
@@ -224,6 +237,7 @@ struct IslandPanelView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .contentShape(Rectangle())
+        .islandHoverHighlight(scale: 1.01)
         .onTapGesture {
             guard !store.shouldSuppressCompactTap() else { return }
             NSApp.activate(ignoringOtherApps: true)
@@ -253,28 +267,38 @@ struct IslandPanelView: View {
                 HealthSummaryStrip(items: store.healthChecks)
             }
 
-            if showingApprovalDetail,
-               let approvalSession = approvalDetailSession,
-               let approval = approvalSession.approval {
-                ApprovalDetailCard(session: approvalSession, approval: approval) {
-                    showingApprovalDetail = false
+            // 审批区的摘要/队列/详情三态切换用轻弹簧 + 缩放过渡，新审批到达时卡片「生长」出现。
+            Group {
+                if showingApprovalDetail,
+                   let approvalSession = approvalDetailSession,
+                   let approval = approvalSession.approval {
+                    ApprovalDetailCard(session: approvalSession, approval: approval) {
+                        showingApprovalDetail = false
+                    }
+                    .environmentObject(store)
+                    .transition(approvalCardTransition)
+                } else if approvalQueueSessions.count > 1 {
+                    ApprovalQueueCard(sessions: approvalQueueSessions) { session in
+                        store.selectedSessionID = session.id
+                        showingApprovalDetail = true
+                    }
+                    .environmentObject(store)
+                    .transition(approvalCardTransition)
+                } else if let approvalSession = approvalQueueSessions.first,
+                          let approval = approvalSession.approval {
+                    ApprovalSummaryCard(
+                        session: approvalSession,
+                        approval: approval,
+                        showsDetail: $showingApprovalDetail
+                    )
+                    .environmentObject(store)
+                    .transition(approvalCardTransition)
                 }
-                .environmentObject(store)
-            } else if approvalQueueSessions.count > 1 {
-                ApprovalQueueCard(sessions: approvalQueueSessions) { session in
-                    store.selectedSessionID = session.id
-                    showingApprovalDetail = true
-                }
-                .environmentObject(store)
-            } else if let approvalSession = approvalQueueSessions.first,
-                      let approval = approvalSession.approval {
-                ApprovalSummaryCard(
-                    session: approvalSession,
-                    approval: approval,
-                    showsDetail: $showingApprovalDetail
-                )
-                .environmentObject(store)
             }
+            .animation(
+                IslandMotion.approvalCardSpring(reduceMotion: reduceMotion),
+                value: approvalAreaSignature
+            )
 
             if showingApprovalDetail && approvalDetailSession != nil {
                 EmptyView()
@@ -312,6 +336,7 @@ struct IslandPanelView: View {
                     UsageHeaderView(usage: usage)
                 }
                 .buttonStyle(.plain)
+                .islandHoverHighlight(scale: 1.0)
                 .help(AppText.pick(configurationStore.config.language, english: "Open usage settings", japanese: "使用量設定を開く", chinese: "查看用量设置"))
             } else {
                 Button {
@@ -322,6 +347,7 @@ struct IslandPanelView: View {
                         .foregroundStyle(GlassText.primary)
                 }
                 .buttonStyle(.plain)
+                .islandHoverHighlight(scale: 1.0)
                 .help(AppText.pick(configurationStore.config.language, english: "Open settings", japanese: "設定を開く", chinese: "打开设置"))
             }
             Spacer()
@@ -493,6 +519,17 @@ struct IslandPanelView: View {
 
     private var quitTitle: String {
         AppText.pick(configurationStore.config.language, english: "Quit app", japanese: "アプリを終了", chinese: "退出应用")
+    }
+
+    private var approvalCardTransition: AnyTransition {
+        reduceMotion
+            ? .opacity
+            : .opacity.combined(with: .scale(scale: 0.97, anchor: .top))
+    }
+
+    /// 审批区状态签名：详情开关 + 队列成员变化都触发弹簧过渡。
+    private var approvalAreaSignature: String {
+        "\(showingApprovalDetail)|\(approvalQueueSessions.map(\.id).joined(separator: ","))"
     }
 
     private var pendingApprovalSession: AgentSession? {

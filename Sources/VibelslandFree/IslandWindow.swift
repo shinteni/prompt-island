@@ -24,8 +24,17 @@ final class IslandWindow: NSPanel {
     private var lastLayoutSignature: IslandLayoutSignature?
     var lastVisibleFrame: NSRect?
     private var transitionResetTask: Task<Void, Never>?
-    private var frameAnimationTimer: Timer?
+    private var frameDisplayLink: CADisplayLink?
+    private var frameAnimationContext: FrameAnimationContext?
     private var hasPresented = false
+
+    private struct FrameAnimationContext {
+        let start: NSRect
+        let target: NSRect
+        let startedAt: CFTimeInterval
+        let duration: TimeInterval
+        let expanded: Bool
+    }
     var hiddenForSystemOverview = false
     var suppressedForSettings = false
     weak var store: SessionStore?
@@ -66,12 +75,21 @@ final class IslandWindow: NSPanel {
         hostingView.wantsLayer = true
         hostingView.layer?.backgroundColor = NSColor.clear.cgColor
         contentView = hostingView
-        hostingView.addTrackingArea(NSTrackingArea(
-            rect: .zero,
-            options: [.mouseEnteredAndExited, .activeAlways, .inVisibleRect],
-            owner: self,
-            userInfo: nil
-        ))
+
+        // 自动收起的进出追踪不能直接 addTrackingArea 到 NSHostingView：
+        // SwiftUI 重建自身 tracking areas 时会把外来区域清掉且不会恢复，
+        // 事件随之静默失效。用自愈式追踪视图（每次 updateTrackingAreas 都
+        // 重新注册自己的区域）作为子视图覆盖整个内容区。
+        let tracker = WindowHoverTrackingView()
+        tracker.onEntered = { [weak self] in
+            self?.autoCollapseMouseEntered()
+        }
+        tracker.onExited = { [weak self] in
+            self?.autoCollapseMouseExited()
+        }
+        tracker.frame = hostingView.bounds
+        tracker.autoresizingMask = [.width, .height]
+        hostingView.addSubview(tracker)
 
         observeLayout()
         applyFrame(
@@ -248,7 +266,11 @@ final class IslandWindow: NSPanel {
             abs(frame.width - target.width) > 0.5 ||
             abs(frame.height - target.height) > 0.5
         let presentationChanged = lastAppliedExpanded != expanded
-        let shouldAnimateFrame = animated && hasPresented && frameWillChange
+        let transitionDuration = IslandMotionPolicy.WindowTransition.duration(
+            expanded: expanded,
+            reduceMotion: NSWorkspace.shared.accessibilityDisplayShouldReduceMotion
+        )
+        let shouldAnimateFrame = animated && hasPresented && frameWillChange && transitionDuration > 0
 
         if shouldAnimateFrame {
             store?.isIslandTransitioning = true
@@ -278,7 +300,7 @@ final class IslandWindow: NSPanel {
         }
 
         if shouldAnimateFrame {
-            animateFrame(to: target, duration: IslandMotionPolicy.WindowTransition.duration(expanded: expanded))
+            animateFrame(to: target, duration: transitionDuration, expanded: expanded)
         } else if frameWillChange {
             stopFrameAnimation()
             setFrame(target, display: true)
@@ -308,38 +330,42 @@ final class IslandWindow: NSPanel {
     }
 
     private func stopFrameAnimation() {
-        frameAnimationTimer?.invalidate()
-        frameAnimationTimer = nil
+        frameDisplayLink?.invalidate()
+        frameDisplayLink = nil
+        frameAnimationContext = nil
     }
 
-    private func animateFrame(to target: NSRect, duration: TimeInterval) {
+    /// 帧动画由 CADisplayLink 驱动：跟随显示器实际刷新率（ProMotion 下满 120Hz），
+    /// 替代旧的固定 60Hz Timer；缓动曲线在 IslandMotionPolicy 中按展开/收起区分。
+    private func animateFrame(to target: NSRect, duration: TimeInterval, expanded: Bool) {
         stopFrameAnimation()
-        let start = frame
-        let startedAt = CACurrentMediaTime()
-        let timer = Timer(timeInterval: 1.0 / 60.0, repeats: true) { [weak self] timer in
-            guard timer.isValid else { return }
-            MainActor.assumeIsolated {
-                self?.stepFrameAnimation(
-                    start: start,
-                    target: target,
-                    startedAt: startedAt,
-                    duration: duration
-                )
-            }
+        guard duration > 0, let contentView else {
+            setFrame(target, display: true)
+            rememberVisibleFrame()
+            return
         }
-        frameAnimationTimer = timer
-        RunLoop.main.add(timer, forMode: .common)
+        frameAnimationContext = FrameAnimationContext(
+            start: frame,
+            target: target,
+            startedAt: CACurrentMediaTime(),
+            duration: duration,
+            expanded: expanded
+        )
+        let link = contentView.displayLink(target: self, selector: #selector(stepFrameDisplayLink(_:)))
+        link.add(to: .main, forMode: .common)
+        frameDisplayLink = link
     }
 
-    private func stepFrameAnimation(
-        start: NSRect,
-        target: NSRect,
-        startedAt: CFTimeInterval,
-        duration: TimeInterval
-    ) {
-        let elapsed = CACurrentMediaTime() - startedAt
-        let progress = min(max(elapsed / max(duration, 0.001), 0), 1)
-        let eased = progress * progress * (3 - 2 * progress)
+    @objc private func stepFrameDisplayLink(_ link: CADisplayLink) {
+        guard let context = frameAnimationContext else {
+            stopFrameAnimation()
+            return
+        }
+        let elapsed = CACurrentMediaTime() - context.startedAt
+        let progress = min(max(elapsed / max(context.duration, 0.001), 0), 1)
+        let eased = IslandMotionPolicy.WindowTransition.easedProgress(progress, expanded: context.expanded)
+        let start = context.start
+        let target = context.target
         let next = NSRect(
             x: start.minX + (target.minX - start.minX) * eased,
             y: start.minY + (target.minY - start.minY) * eased,
@@ -348,8 +374,7 @@ final class IslandWindow: NSPanel {
         )
         setFrame(next, display: true)
         if progress >= 1 {
-            frameAnimationTimer?.invalidate()
-            frameAnimationTimer = nil
+            stopFrameAnimation()
             setFrame(target, display: true)
             rememberVisibleFrame()
         }
