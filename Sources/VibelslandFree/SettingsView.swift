@@ -61,7 +61,8 @@ struct SettingsView: View {
                 UpdateSection(
                     autoCheckUpdates: binding(\.autoCheckUpdates),
                     state: store.updateCheckState,
-                    check: store.checkForUpdates
+                    checkAndUpdate: { store.checkForUpdates(installIfAvailable: true) },
+                    installUpdate: store.startSelfUpdate
                 )
 
                 StatsSection(statsStore: store.statsStore)
