@@ -25,6 +25,7 @@ final class SessionStore: ObservableObject {
     @Published var isApprovalDetailVisible = false
     @Published var healthChecks: [HealthCheckItem] = []
     @Published var sessionVisibilityRefreshToken = 0
+    @Published var updateCheckState: UpdateCheckState = .idle
 
     let configurationStore: AppConfigurationStore
 
@@ -152,6 +153,30 @@ final class SessionStore: ObservableObject {
         sessions.compactMap(\.approval).first { $0.id == id }
     }
 
+    func checkForUpdates() {
+        guard updateCheckState != .checking else { return }
+        updateCheckState = .checking
+        let checker = UpdateChecker()
+        Task { @MainActor [weak self] in
+            let result = await checker.fetchLatestRelease()
+            guard let self else { return }
+            let current = UpdateChecker.currentVersion
+            switch result {
+            case .success(let release):
+                if UpdateCheckPolicy.isNewer(remote: release.version, current: current) {
+                    self.updateCheckState = .available(release)
+                    self.logger.info("update.check.available", detail: release.version)
+                } else {
+                    self.updateCheckState = .upToDate(current: current)
+                    self.logger.info("update.check.upToDate", detail: current)
+                }
+            case .failure(let error):
+                self.updateCheckState = .failed(message: error.localizedDescription)
+                self.logger.info("update.check.failed", detail: error.localizedDescription)
+            }
+        }
+    }
+
     func notifyApprovalIfNeeded(_ approval: ApprovalRequest) {
         guard ApprovalNotificationPolicy.shouldNotify(
             enabled: configurationStore.config.enableApprovalNotifications,
@@ -195,6 +220,9 @@ final class SessionStore: ObservableObject {
         }
         if configurationStore.config.enableApprovalNotifications {
             approvalNotificationCenter.activate(language: configurationStore.config.language)
+        }
+        if configurationStore.config.autoCheckUpdates {
+            checkForUpdates()
         }
         startVisibilityTimer()
     }
