@@ -45,6 +45,10 @@ package enum AppPaths {
         applicationSupportDirectory.appendingPathComponent("config.json")
     }
 
+    package static var statsURL: URL {
+        applicationSupportDirectory.appendingPathComponent("stats.json")
+    }
+
     package static var logsDirectory: URL {
         home.appendingPathComponent("Library/Logs/VibelslandFree", isDirectory: true)
     }

@@ -20,6 +20,7 @@ The app may read:
 The app writes:
 
 - Configuration at `~/Library/Application Support/VibelslandFree/config.json`.
+- Local statistics at `~/Library/Application Support/VibelslandFree/stats.json`: per-day aggregate counters only (session, approval, and token/cost totals). It never contains prompts, commands, file paths, or any session content, keeps at most 30 days, and can be cleared from the settings page at any time.
 - Logs at `~/Library/Logs/VibelslandFree/app.log`.
 - Runtime bridge files under `~/.vibelsland-free`, including the local Unix socket and a local bridge token.
 - Hook configuration changes only when the user installs, repairs, or uninstalls hooks.

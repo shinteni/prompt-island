@@ -64,6 +64,8 @@ struct SettingsView: View {
                     check: store.checkForUpdates
                 )
 
+                StatsSection(statsStore: store.statsStore)
+
                 DiagnosticsSection(
                     codexAppServerReachable: store.codexAppServerReachable,
                     codexAppServerThreadListAvailable: store.codexAppServerThreadListAvailable,
@@ -558,6 +560,112 @@ private struct ApprovalPreferencesSection: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.top, 10)
             }
+        }
+    }
+}
+
+private struct StatsSection: View {
+    @EnvironmentObject private var configurationStore: AppConfigurationStore
+    @ObservedObject var statsStore: UsageStatsStore
+
+    var body: some View {
+        SettingsCard(
+            title: AppText.pick(configurationStore.config.language, english: "Statistics", japanese: "統計", chinese: "统计"),
+            subtitle: AppText.pick(
+                configurationStore.config.language,
+                english: "Aggregate counters kept only on this Mac — no prompts, commands, or session content. Last 30 days.",
+                japanese: "この Mac にのみ保存される集計カウンターです。プロンプトや会話内容は含まれません。直近 30 日分。",
+                chinese: "仅保存在本机的聚合计数，不含任何提示词、命令或会话内容；保留最近 30 天。"
+            )
+        ) {
+            VStack(alignment: .leading, spacing: 12) {
+                statsRow(
+                    label: AppText.pick(configurationStore.config.language, english: "Today", japanese: "今日", chinese: "今日"),
+                    stats: statsStore.todayStats()
+                )
+                SettingsDivider()
+                statsRow(
+                    label: AppText.pick(configurationStore.config.language, english: "Last 7 days", japanese: "直近 7 日", chinese: "近 7 天"),
+                    stats: statsStore.weekStats()
+                )
+                tokenBars
+                HStack {
+                    Spacer()
+                    Button(AppText.pick(configurationStore.config.language, english: "Clear statistics", japanese: "統計を消去", chinese: "清除统计")) {
+                        statsStore.clearAll()
+                    }
+                    .font(.system(size: 12, weight: .medium))
+                }
+            }
+        }
+    }
+
+    private func statsRow(label: String, stats: DailyStats) -> some View {
+        HStack(spacing: 14) {
+            Text(label)
+                .font(.system(size: 13, weight: .semibold))
+                .frame(width: 76, alignment: .leading)
+            statMetric(
+                AppText.pick(configurationStore.config.language, english: "Sessions", japanese: "セッション", chinese: "会话"),
+                "\(stats.sessionsStartedTotal)"
+            )
+            statMetric(
+                AppText.pick(configurationStore.config.language, english: "Done", japanese: "完了", chinese: "完成"),
+                "\(stats.sessionsCompleted)"
+            )
+            statMetric(
+                AppText.pick(configurationStore.config.language, english: "Approvals", japanese: "承認", chinese: "审批"),
+                approvalSummary(stats)
+            )
+            statMetric("Token", UsageSnapshot.compactNumber(stats.tokens))
+            if stats.estimatedCostUSD > 0 {
+                statMetric(
+                    AppText.pick(configurationStore.config.language, english: "Est.", japanese: "概算", chinese: "估算"),
+                    UsageSnapshot.costText(stats.estimatedCostUSD)
+                )
+            }
+            Spacer()
+        }
+    }
+
+    private func approvalSummary(_ stats: DailyStats) -> String {
+        guard stats.approvalsReceived > 0 else { return "0" }
+        return "\(stats.approvalsReceived) (✓\(stats.approvalsAccepted) ✕\(stats.approvalsDeclined))"
+    }
+
+    private func statMetric(_ title: String, _ value: String) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(title)
+                .font(.system(size: 10, weight: .medium))
+                .foregroundStyle(.secondary)
+            Text(value)
+                .font(.system(size: 12, weight: .semibold))
+                .monospacedDigit()
+        }
+    }
+
+    private var tokenBars: some View {
+        let days = statsStore.recentDays()
+        let maxTokens = max(1, days.map(\.stats.tokens).max() ?? 1)
+        return VStack(alignment: .leading, spacing: 4) {
+            Text(AppText.pick(configurationStore.config.language, english: "Tokens per day", japanese: "日別トークン", chinese: "每日 Token"))
+                .font(.system(size: 10, weight: .medium))
+                .foregroundStyle(.secondary)
+            HStack(alignment: .bottom, spacing: 10) {
+                ForEach(days, id: \.key) { day in
+                    VStack(spacing: 3) {
+                        RoundedRectangle(cornerRadius: 2, style: .continuous)
+                            .fill(day.stats.tokens > 0 ? Color.accentColor.opacity(0.75) : Color.secondary.opacity(0.25))
+                            .frame(width: 26, height: max(3, CGFloat(day.stats.tokens) / CGFloat(maxTokens) * 44))
+                            .help("\(day.key): \(UsageSnapshot.compactNumber(day.stats.tokens))")
+                        Text(String(day.key.suffix(2)))
+                            .font(.system(size: 9, weight: .medium))
+                            .foregroundStyle(.tertiary)
+                    }
+                }
+                Spacer()
+            }
+            .frame(height: 62, alignment: .bottom)
         }
     }
 }

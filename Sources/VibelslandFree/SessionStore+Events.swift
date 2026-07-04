@@ -319,6 +319,7 @@ extension SessionStore {
 
     func upsert(_ session: AgentSession) {
         let session = SessionMemoryPolicy.compact(session)
+        recordStatsTransition(previous: sessions.first { $0.id == session.id }, current: session)
         if let index = sessions.firstIndex(where: { $0.id == session.id }) {
             sessions[index] = session
         } else {
@@ -330,6 +331,34 @@ extension SessionStore {
         sessions.sort { $0.updatedAt > $1.updatedAt }
         sessions = Array(sessions.prefix(configuredVisibleSessionLimit))
         selectedSessionID = selectedSessionID ?? sessions.first?.id
+    }
+
+    /// 只记录状态转移与增量，upsert 的重复回放（如 Codex 刷新重建会话）不会重复计数。
+    func recordStatsTransition(previous: AgentSession?, current: AgentSession) {
+        let delta = UsageStatsPolicy.usageDelta(previous: previous?.usage, current: current.usage)
+        let started = previous == nil
+        let completed = previous?.status != .done && current.status == .done
+        let failed = previous?.status != .failed && current.status == .failed
+        let approvalReceived = current.approval != nil && previous?.approval?.id != current.approval?.id
+        guard started || completed || failed || approvalReceived || delta.tokens > 0 || delta.costUSD > 0 else {
+            return
+        }
+        statsStore.record { day in
+            if started {
+                day.recordSessionStarted(source: current.source)
+            }
+            if completed {
+                day.sessionsCompleted += 1
+            }
+            if failed {
+                day.sessionsFailed += 1
+            }
+            if approvalReceived {
+                day.approvalsReceived += 1
+            }
+            day.tokens += delta.tokens
+            day.estimatedCostUSD += delta.costUSD
+        }
     }
 
     func handleConfigurationChanged() {

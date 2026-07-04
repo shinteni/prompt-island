@@ -93,6 +93,8 @@ extension SessionStore {
     }
 
     func markApprovalResolved(_ id: String, decision: ApprovalDecision) {
+        let resolutionState = approvalResolutionState(for: decision)
+        statsStore.record { $0.recordApprovalResolution(resolutionState) }
         for index in sessions.indices {
             if sessions[index].approval?.id == id {
                 let state = approvalResolutionState(for: decision)
@@ -155,6 +157,7 @@ extension SessionStore {
         let approvalID = "codex-desktop-approval-\(requestKey)"
         let decision = pendingCodexDesktopDecisions[approvalID] ?? .accept
         let state = approvalResolutionState(for: decision)
+        statsStore.record { $0.recordApprovalResolution(state) }
         for index in sessions.indices where sessions[index].approval?.id == approvalID {
             sessions[index].activity.append(ActivityItem(
                 symbol: approvalResolutionSymbol(for: state),
