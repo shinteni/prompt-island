@@ -1,6 +1,6 @@
 cask "vibelsland-free" do
-  version "0.2.0"
-  sha256 "ce3ce10b8ba7b0e388962d660c5c416cd6c246405462c2a578be46aeadd3fab4"
+  version "0.2.1"
+  sha256 "cb19ce0cf320ff016d7426f6edcaef7f5438e237a37ddca7884f65650df29dbb"
 
   url "https://github.com/shinteni/prompt-island/releases/download/v#{version}/Vibelsland-Free-#{version}-macos.zip"
   name "Vibelsland Free"
@@ -20,7 +20,7 @@ cask "vibelsland-free" do
   ]
 
   caveats <<~EOS
-    Vibelsland Free 0.2.0 is ad-hoc signed and not notarized, so macOS
+    Vibelsland Free 0.2.1 is ad-hoc signed and not notarized, so macOS
     Gatekeeper asks for manual confirmation on first launch. Steps:
     https://shinteni.github.io/prompt-island/install.html
   EOS

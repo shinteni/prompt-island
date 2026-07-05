@@ -6,13 +6,13 @@
     <title>リリースノート | Vibelsland Free</title>
     <meta
       name="description"
-      content="Vibelsland Free v0.2.0 のリリースノート。ダウンロード、SHA-256 確認、主要機能、インストール、現在のソース更新を確認できます。"
+      content="Vibelsland Free v0.2.1 のリリースノート。ダウンロード、SHA-256 確認、主要機能、インストール、現在のソース更新を確認できます。"
     >
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Vibelsland Free">
     <meta property="og:locale" content="ja_JP">
     <meta property="og:title" content="Vibelsland Free リリースノート">
-    <meta property="og:description" content="Vibelsland Free v0.2.0 の機能、ダウンロード、チェックサム、インストール、現在のリポジトリ状況を確認できます。">
+    <meta property="og:description" content="Vibelsland Free v0.2.1 の機能、ダウンロード、チェックサム、インストール、現在のリポジトリ状況を確認できます。">
     <meta property="og:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
     <meta property="og:image:width" content="1672">
     <meta property="og:image:height" content="941">
@@ -20,7 +20,7 @@
     <meta property="og:url" content="https://shinteni.github.io/prompt-island/ja/release-notes.html">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Vibelsland Free リリースノート">
-    <meta name="twitter:description" content="Vibelsland Free v0.2.0 の機能、ダウンロード、チェックサム、インストール、現在のリポジトリ状況を確認できます。">
+    <meta name="twitter:description" content="Vibelsland Free v0.2.1 の機能、ダウンロード、チェックサム、インストール、現在のリポジトリ状況を確認できます。">
     <meta name="twitter:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
     <meta name="twitter:image:alt" content="Vibelsland Free macOS AI コーディング状態インターフェイス">
     <meta name="theme-color" content="#070706">
@@ -61,17 +61,17 @@
           <p class="eyebrow">Release Notes</p>
           <h1 id="release-title">リリース履歴。</h1>
           <p>
-            Vibelsland Free の公式サイト上のリリース記録です。現在の公開ダウンロードは v0.2.0：ワンクリック更新、承認キュー、グローバルショートカット、ローカル統計、そして Universal（Apple Silicon と Intel）パッケージ。
+            Vibelsland Free の公式サイト上のリリース記録です。現在の公開ダウンロードは v0.2.1：カスタマイズ可能なショートカット（Space で許可 / Backspace で拒否）、起動時の表示、そして 20% 小さくなったアイランド。
           </p>
           <div class="hero-actions">
             <a class="button primary" href="download.html">ダウンロード説明を見る</a>
-            <a class="button secondary" href="https://github.com/shinteni/prompt-island/releases/tag/v0.2.0">GitHub Release を開く</a>
+            <a class="button secondary" href="https://github.com/shinteni/prompt-island/releases/tag/v0.2.1">GitHub Release を開く</a>
           </div>
         </div>
         <div class="privacy-summary" aria-label="リリース概要" data-reveal>
           <div>
             <span>現在の版</span>
-            <strong>v0.2.0</strong>
+            <strong>v0.2.1</strong>
           </div>
           <div>
             <span>システム</span>
@@ -86,48 +86,81 @@
 
       <section class="section data-section surface-section" aria-labelledby="source-status-title">
         <div class="section-heading align-left" data-reveal>
-          <p class="eyebrow">v0.2.0 の新機能</p>
-          <h2 id="source-status-title">ワンクリック更新、承認キュー、より磨かれたデスクトップ体験。</h2>
+          <p class="eyebrow">v0.2.1 の新機能</p>
+          <h2 id="source-status-title">カスタマイズ可能なショートカット、起動時の表示、よりコンパクトなアイランド。</h2>
           <p>
-            <code>docs/release.json</code> は GitHub Releases に公開中の v0.2.0 パッケージを記録し、ダウンロード、チェックサム、Homebrew cask は同じメタデータから生成されます。
+            <code>docs/release.json</code> は GitHub Releases に公開中の v0.2.1 パッケージを記録し、ダウンロード、チェックサム、Homebrew cask は同じメタデータから生成されます。
           </p>
         </div>
         <div class="data-grid">
           <article data-reveal>
-            <h3>更新と配布</h3>
+            <h3>ショートカット</h3>
             <ul>
-              <li>設定画面の「確認して更新」ワンクリックで、ダウンロード、SHA-256 検証、置き換え、再起動まで完了。</li>
-              <li>パッケージは Apple Silicon と Intel 両対応の Universal になり、リポジトリは Homebrew tap を兼ねます。</li>
+              <li>すべてのアクションを設定画面のレコーダーで再割り当てできます。重複は拒否、デフォルトへ即復元。</li>
+              <li>デフォルトは Space が許可、Backspace が拒否。修飾なしキーは承認待ちの間だけ有効です。</li>
             </ul>
           </article>
           <article data-reveal>
-            <h3>承認体験</h3>
+            <h3>起動時の表示</h3>
             <ul>
-              <li>複数の承認は待ち時間順のキューで表示し、行ごとに許可/拒否できます。</li>
-              <li>許可/拒否ボタン付きの通知センター連携（任意）と、グローバルショートカット ⌃⌥I / ⌃⌥A。</li>
+              <li>起動のたびにアイランドが約 8 秒表示され、アプリの起動を確認できます。</li>
+              <li>検証実行と「視差効果を減らす」の挙動は従来どおりです。</li>
             </ul>
           </article>
           <article data-reveal>
-            <h3>使用量と統計</h3>
+            <h3>よりコンパクトなアイランド</h3>
             <ul>
-              <li>Claude Code セッションに今回/累計トークンと API 換算コストの目安を表示。</li>
-              <li>ローカルのみに保存される「今日 / 直近 7 日」の統計カードを設定画面に追加。いつでも消去できます。</li>
+              <li>全体を 20% 縮小：ピルは 196×34、展開パネルは幅 496。</li>
+              <li>フォントと余白は等比で縮小し、レイアウトと情報密度は変わりません。</li>
             </ul>
           </article>
           <article data-reveal>
-            <h3>パフォーマンスと手触り</h3>
+            <h3>v0.2.0 から継続</h3>
             <ul>
-              <li>展開/折りたたみと起動アニメーションはディスプレイのリフレッシュレートに追従する GPU 描画になり、ホバー/押下フィードバックを全面追加。</li>
-              <li>バックグラウンドのタイマーは必要時のみ起動し、アイドル時の消費を削減。システムの「視差効果を減らす」にも完全対応。</li>
+              <li>ワンクリック更新、承認キュー、通知、ローカル統計、Universal パッケージはすべて継続。</li>
+              <li>v0.2.0 からは設定画面からワンクリックで本バージョンへ更新できます。</li>
             </ul>
           </article>
+        </div>
+      </section>
+
+      <section class="section split-section" aria-labelledby="v021-title">
+        <div class="split-copy" data-reveal>
+          <p class="eyebrow">v0.2.1</p>
+          <h2 id="v021-title">現在のバージョン。</h2>
+          <p>
+            ショートカットはアクションごとにカスタマイズできるようになりました。デフォルトでは Space が承認を許可、Backspace が拒否します。修飾キーなしのキーは承認待ちの間だけ有効になるため、普段の入力には影響しません。起動時にはアイランドが約 8 秒間表示され、全体のサイズは 20% 小さくなりました。
+          </p>
+          <a class="text-link" href="download.html">ダウンロード手順を見る</a>
+        </div>
+        <div class="release-card" aria-label="v0.2.1 アセット" data-reveal>
+          <span>リリースファイル</span>
+          <strong>Vibelsland-Free-0.2.1-macos.zip</strong>
+          <dl>
+            <div>
+              <dt>バージョン</dt>
+              <dd>v0.2.1</dd>
+            </div>
+            <div>
+              <dt>サイズ</dt>
+              <dd>約 3.8 MB</dd>
+            </div>
+            <div>
+              <dt>署名</dt>
+              <dd>ad-hoc 署名</dd>
+            </div>
+            <div>
+              <dt>検証</dt>
+              <dd>SHA-256</dd>
+            </div>
+          </dl>
         </div>
       </section>
 
       <section class="section split-section" aria-labelledby="v020-title">
         <div class="split-copy" data-reveal>
           <p class="eyebrow">v0.2.0</p>
-          <h2 id="v020-title">現在のバージョン。</h2>
+          <h2 id="v020-title">前バージョン：アップグレード経路と承認体験。</h2>
           <p>
             v0.1.0 のローカル状態表示と承認処理に加えて、このバージョンではアップグレード経路（アプリ内ワンクリック更新と Homebrew）、複数承認の同時処理、トークン使用量とコストの可視化、そしてデスクトップ品質のモーションと操作フィードバックを追加しました。
           </p>
@@ -242,7 +275,7 @@
         </div>
         <div class="checksum-card" data-reveal>
           <span>SHA-256</span>
-          <code>ce3ce10b8ba7b0e388962d660c5c416cd6c246405462c2a578be46aeadd3fab4</code>
+          <code>cb19ce0cf320ff016d7426f6edcaef7f5438e237a37ddca7884f65650df29dbb</code>
         </div>
       </section>
 
@@ -265,7 +298,7 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="../lang.js?v=0ef00efbfcc1" defer></script>
+    <script src="../lang.js?v=ba22c3c97c83" defer></script>
     <script src="../effects.js?v=984d01b9fa2d" defer></script>
   </body>
 </html>

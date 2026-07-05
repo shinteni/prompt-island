@@ -15,7 +15,7 @@
 <p align="center">
   <a href="https://shinteni.github.io/prompt-island/">Website</a>
   ·
-  <a href="https://github.com/shinteni/prompt-island/releases/download/v0.2.0/Vibelsland-Free-0.2.0-macos.zip">Download v0.2.0</a>
+  <a href="https://github.com/shinteni/prompt-island/releases/download/v0.2.1/Vibelsland-Free-0.2.1-macos.zip">Download v0.2.1</a>
   ·
   <a href="https://shinteni.github.io/prompt-island/en/install.html">Install &amp; Trust</a>
   ·
@@ -65,29 +65,29 @@ The repository includes Swift unit tests, release packaging scripts, documentati
 
 ## Download And Install
 
-Download v0.2.0 from GitHub Releases. This release uses ad-hoc signing, so read the install and trust notes before first launch:
+Download v0.2.1 from GitHub Releases. This release uses ad-hoc signing, so read the install and trust notes before first launch:
 
-[Download v0.2.0](https://github.com/shinteni/prompt-island/releases/download/v0.2.0/Vibelsland-Free-0.2.0-macos.zip)
+[Download v0.2.1](https://github.com/shinteni/prompt-island/releases/download/v0.2.1/Vibelsland-Free-0.2.1-macos.zip)
 
 [Install & Trust](https://shinteni.github.io/prompt-island/en/install.html)
 
 Verify the download:
 
 ```sh
-curl -LO https://github.com/shinteni/prompt-island/releases/download/v0.2.0/Vibelsland-Free-0.2.0-macos.zip
-curl -LO https://github.com/shinteni/prompt-island/releases/download/v0.2.0/Vibelsland-Free-0.2.0-macos.zip.sha256
-shasum -a 256 -c Vibelsland-Free-0.2.0-macos.zip.sha256
+curl -LO https://github.com/shinteni/prompt-island/releases/download/v0.2.1/Vibelsland-Free-0.2.1-macos.zip
+curl -LO https://github.com/shinteni/prompt-island/releases/download/v0.2.1/Vibelsland-Free-0.2.1-macos.zip.sha256
+shasum -a 256 -c Vibelsland-Free-0.2.1-macos.zip.sha256
 ```
 
 Current SHA-256:
 
 ```text
-ce3ce10b8ba7b0e388962d660c5c416cd6c246405462c2a578be46aeadd3fab4
+cb19ce0cf320ff016d7426f6edcaef7f5438e237a37ddca7884f65650df29dbb
 ```
 
 Install:
 
-1. Download `Vibelsland-Free-0.2.0-macos.zip`.
+1. Download `Vibelsland-Free-0.2.1-macos.zip`.
 2. Unzip it and move `>_ - island.app` to `Applications`.
 3. Open the app and install Hooks from the menu bar or settings window.
 4. Configure launch at login, sound, Do Not Disturb, and display position as needed.
@@ -99,7 +99,7 @@ brew tap shinteni/island https://github.com/shinteni/prompt-island.git
 brew install --cask shinteni/island/vibelsland-free
 ```
 
-Note: the current free release uses ad-hoc codesign, so first launch requires the Gatekeeper confirmation above. Developer ID signing and notarization can reduce first-launch friction in a future distribution path, but the current v0.2.0 download, checksum, source, and install notes are public.
+Note: the current free release uses ad-hoc codesign, so first launch requires the Gatekeeper confirmation above. Developer ID signing and notarization can reduce first-launch friction in a future distribution path, but the current v0.2.1 download, checksum, source, and install notes are public.
 
 ## Privacy
 
@@ -128,7 +128,7 @@ Note: the repository originally used `prompt-island` as its repository name. The
 
 ## Project Status
 
-Vibelsland Free v0.2.0 already includes the downloadable local app experience: floating island UI, settings, hook installation, approval UI, runtime health checks, single-instance protection, restart recovery, and release packaging scripts. The current free release uses ad-hoc signing and provides public download, SHA-256 verification, source, install notes, and support entry points.
+Vibelsland Free v0.2.1 already includes the downloadable local app experience: floating island UI, settings, hook installation, approval UI, runtime health checks, single-instance protection, restart recovery, and release packaging scripts. The current free release uses ad-hoc signing and provides public download, SHA-256 verification, source, install notes, and support entry points.
 
 ## License
 

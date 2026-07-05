@@ -28,7 +28,7 @@
 - Added maintainer release gate improvements and clearer ad-hoc signing documentation.
 - Improved Codex Desktop live connection startup from Finder-launched macOS app environments.
 
-## Unreleased
+## 0.2.1 - 2026-07-05
 
 - The island is 20% smaller overall: window frames scale to 0.8 while content lays out at design size and scales down uniformly, so fonts and spacing shrink proportionally without breaking layouts.
 - The island now shows itself (idle-mini) for about eight seconds on every launch so you can tell the app started, then hides as usual when idle.

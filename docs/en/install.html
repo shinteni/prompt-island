@@ -45,7 +45,7 @@
           "@type": "SoftwareApplication",
           "name": "Vibelsland Free",
           "operatingSystem": "macOS 14+",
-          "softwareVersion": "0.2.0"
+          "softwareVersion": "0.2.1"
         }
       }
     </script>
@@ -109,7 +109,7 @@
           <li data-reveal>
             <span>01</span>
             <strong>Move it to Applications</strong>
-            <p>Unzip <code>Vibelsland-Free-0.2.0-macos.zip</code>, drag <code>&gt;_ - island.app</code> into Applications, then launch it from Applications.</p>
+            <p>Unzip <code>Vibelsland-Free-0.2.1-macos.zip</code>, drag <code>&gt;_ - island.app</code> into Applications, then launch it from Applications.</p>
           </li>
           <li data-reveal>
             <span>02</span>
@@ -134,7 +134,7 @@
           <p class="eyebrow">Signing meaning</p>
           <h2 id="signing-title">ad-hoc signing is an intentional trust step.</h2>
           <p>
-            v0.2.0 has no Developer ID notarization, so macOS asks you to confirm the source on first launch.
+            v0.2.1 has no Developer ID notarization, so macOS asks you to confirm the source on first launch.
           </p>
           <p>
             SHA-256 verification only confirms the package matches the GitHub Release asset; it does not prove developer identity. For this ad-hoc package, <code>spctl</code> may show rejected or not accepted, and that does not mean the checksum failed.
@@ -160,14 +160,14 @@
           <p>
             Download the zip and its matching <code>.sha256</code> file into the same folder, then run the checksum check. The value shown on the website, the GitHub Release checksum file, and your local result should match.
           </p>
-          <a class="text-link" href="https://github.com/shinteni/prompt-island/releases/tag/v0.2.0">Open v0.2.0 Release</a>
+          <a class="text-link" href="https://github.com/shinteni/prompt-island/releases/tag/v0.2.1">Open v0.2.1 Release</a>
         </div>
         <div class="checksum-card" data-reveal>
           <span>Current SHA-256</span>
-          <code>ce3ce10b8ba7b0e388962d660c5c416cd6c246405462c2a578be46aeadd3fab4</code>
+          <code>cb19ce0cf320ff016d7426f6edcaef7f5438e237a37ddca7884f65650df29dbb</code>
           <code>cd ~/Downloads</code>
-          <code>shasum -a 256 Vibelsland-Free-0.2.0-macos.zip</code>
-          <code>shasum -a 256 -c Vibelsland-Free-0.2.0-macos.zip.sha256</code>
+          <code>shasum -a 256 Vibelsland-Free-0.2.1-macos.zip</code>
+          <code>shasum -a 256 -c Vibelsland-Free-0.2.1-macos.zip.sha256</code>
         </div>
       </section>
 
@@ -222,7 +222,7 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="../lang.js?v=0ef00efbfcc1" defer></script>
+    <script src="../lang.js?v=ba22c3c97c83" defer></script>
     <script src="../effects.js?v=984d01b9fa2d" defer></script>
   </body>
 </html>
