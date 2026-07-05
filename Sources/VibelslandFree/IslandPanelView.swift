@@ -13,6 +13,19 @@ struct IslandPanelView: View {
     @State private var contentTransitionID = 0
 
     var body: some View {
+        // 窗口是设计尺寸的 0.8 倍；内容按设计尺寸布局后整体缩放，
+        // 字体与间距等比缩小、版式不变（与 IslandWindow.targetFrame 配对）。
+        GeometryReader { proxy in
+            islandContent
+                .frame(
+                    width: proxy.size.width / IslandMetrics.windowScale,
+                    height: proxy.size.height / IslandMetrics.windowScale
+                )
+                .scaleEffect(IslandMetrics.windowScale, anchor: .topLeading)
+        }
+    }
+
+    private var islandContent: some View {
         let radius: CGFloat = store.isExpanded ? 22 : (isIdleMiniPresentation ? IslandMetrics.idleMiniRadius : 21)
         return ZStack {
             islandBackground(radius: radius)

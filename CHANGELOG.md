@@ -30,5 +30,6 @@
 
 ## Unreleased
 
+- The island is 20% smaller overall: window frames scale to 0.8 while content lays out at design size and scales down uniformly, so fonts and spacing shrink proportionally without breaking layouts.
 - The island now shows itself (idle-mini) for about eight seconds on every launch so you can tell the app started, then hides as usual when idle.
 - Global hotkeys are now customizable per action (record any key combo in settings), and gain two new actions with bare-key defaults: Space approves the pending approval and Backspace declines it. Bare keys register only while an approval is pending and release immediately after, so normal typing is never captured.

@@ -22,6 +22,7 @@ enum ClearGlass {
 enum IslandMetrics {
     static let idleMiniDiameter: CGFloat = IslandPresentationPolicy.idleMiniDiameter
     static let idleMiniRadius: CGFloat = idleMiniDiameter / 2
+    static let windowScale: CGFloat = IslandPresentationPolicy.windowScale
 }
 
 extension AgentSource {

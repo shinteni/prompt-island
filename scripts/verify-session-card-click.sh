@@ -94,10 +94,10 @@ SMOKE_WORKSPACE="${TMPDIR:-/tmp}/$SMOKE_ID"
 wait_for_window "Task before card click" 180 320 32 70
 
 post_expanded_state true
-wait_for_window "Expanded before card click" 500 700 110 380
+wait_for_window "Expanded before card click" 380 560 90 310
 
 FRAME="$(
-    /usr/bin/swift "$WINDOW_FRAME" "$APP_PID" 500 700 110 380 "Expanded card click"
+    /usr/bin/swift "$WINDOW_FRAME" "$APP_PID" 380 560 90 310 "Expanded card click"
 )"
 read -r X Y W H <<< "$FRAME"
 CLICK_X="$(/usr/bin/awk -v x="$X" -v w="$W" 'BEGIN { printf "%.0f", x + (w * 0.45) }')"
