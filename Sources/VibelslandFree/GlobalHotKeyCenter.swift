@@ -18,16 +18,16 @@ final class GlobalHotKeyCenter {
         self.logger = logger
     }
 
-    func apply(actions: [GlobalHotKeyAction]) {
+    func apply(bindings: [(action: GlobalHotKeyAction, binding: HotKeyBinding)]) {
         unregisterAll()
-        guard !actions.isEmpty else { return }
+        guard !bindings.isEmpty else { return }
         installEventHandlerIfNeeded()
-        for action in actions {
+        for entry in bindings {
             var hotKeyRef: EventHotKeyRef?
-            let hotKeyID = EventHotKeyID(signature: Self.signature, id: action.carbonHotKeyID)
+            let hotKeyID = EventHotKeyID(signature: Self.signature, id: entry.action.carbonHotKeyID)
             let status = RegisterEventHotKey(
-                action.keyCode,
-                action.carbonModifiers,
+                entry.binding.keyCode,
+                entry.binding.carbonModifiers,
                 hotKeyID,
                 GetEventDispatcherTarget(),
                 0,
@@ -35,9 +35,9 @@ final class GlobalHotKeyCenter {
             )
             if status == noErr, let hotKeyRef {
                 registeredHotKeys.append(hotKeyRef)
-                logger.info("hotkey.registered", detail: "\(action.rawValue) \(action.displayShortcut)")
+                logger.info("hotkey.registered", detail: "\(entry.action.rawValue) \(GlobalHotKeyPolicy.displayText(for: entry.binding))")
             } else {
-                logger.error("hotkey.register.failed", detail: "\(action.rawValue) status=\(status)")
+                logger.error("hotkey.register.failed", detail: "\(entry.action.rawValue) status=\(status)")
             }
         }
     }

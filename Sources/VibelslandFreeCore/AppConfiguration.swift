@@ -50,6 +50,8 @@ package struct AppConfiguration: Codable, Equatable {
     package var enableGlobalHotKeys: Bool
     package var enableApprovalNotifications: Bool
     package var autoCheckUpdates: Bool
+    /// 全局快捷键的自定义绑定，键为 GlobalHotKeyAction.rawValue；缺省用策略默认值。
+    package var hotKeyBindings: [String: HotKeyBinding]
 
     package static let `default` = AppConfiguration(
         enableClaude: true,
@@ -65,7 +67,8 @@ package struct AppConfiguration: Codable, Equatable {
         maxVisibleSessions: 5,
         enableGlobalHotKeys: false,
         enableApprovalNotifications: false,
-        autoCheckUpdates: false
+        autoCheckUpdates: false,
+        hotKeyBindings: [:]
     )
 
     package enum CodingKeys: String, CodingKey {
@@ -83,6 +86,7 @@ package struct AppConfiguration: Codable, Equatable {
         case enableGlobalHotKeys
         case enableApprovalNotifications
         case autoCheckUpdates
+        case hotKeyBindings
     }
 
     package init(
@@ -99,7 +103,8 @@ package struct AppConfiguration: Codable, Equatable {
         maxVisibleSessions: Int,
         enableGlobalHotKeys: Bool = false,
         enableApprovalNotifications: Bool = false,
-        autoCheckUpdates: Bool = false
+        autoCheckUpdates: Bool = false,
+        hotKeyBindings: [String: HotKeyBinding] = [:]
     ) {
         self.enableClaude = enableClaude
         self.enableCodexCLI = enableCodexCLI
@@ -115,6 +120,7 @@ package struct AppConfiguration: Codable, Equatable {
         self.enableGlobalHotKeys = enableGlobalHotKeys
         self.enableApprovalNotifications = enableApprovalNotifications
         self.autoCheckUpdates = autoCheckUpdates
+        self.hotKeyBindings = hotKeyBindings
     }
 
     package init(from decoder: Decoder) throws {
@@ -133,6 +139,7 @@ package struct AppConfiguration: Codable, Equatable {
         enableGlobalHotKeys = try container.decodeIfPresent(Bool.self, forKey: .enableGlobalHotKeys) ?? Self.default.enableGlobalHotKeys
         enableApprovalNotifications = try container.decodeIfPresent(Bool.self, forKey: .enableApprovalNotifications) ?? Self.default.enableApprovalNotifications
         autoCheckUpdates = try container.decodeIfPresent(Bool.self, forKey: .autoCheckUpdates) ?? Self.default.autoCheckUpdates
+        hotKeyBindings = try container.decodeIfPresent([String: HotKeyBinding].self, forKey: .hotKeyBindings) ?? Self.default.hotKeyBindings
     }
 }
 

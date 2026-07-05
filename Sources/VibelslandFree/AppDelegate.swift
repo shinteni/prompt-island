@@ -14,6 +14,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject, NSWi
     private var statusItem: NSStatusItem?
     private let hotKeyCenter = GlobalHotKeyCenter()
     private var configCancellable: AnyCancellable?
+    private var sessionsCancellable: AnyCancellable?
     private var runtimeObservers: [NSObjectProtocol] = []
     private var verificationObservers: [NSObjectProtocol] = []
     private var hasPlayedLaunchIntro = false
@@ -50,6 +51,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject, NSWi
         hotKeyCenter.onAction = { [weak self] action in
             self?.perform(hotKeyAction: action)
         }
+        sessionsCancellable = store.$sessions
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] sessions in
+                self?.refreshApprovalHotKeyScope(sessions: sessions)
+            }
         applyGlobalHotKeys()
         installVerificationActionsIfNeeded()
         // 先完成 store 启动的同步 IO（装 Hook、起 bridge、健康检查），
@@ -58,10 +64,33 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject, NSWi
         showIsland(launchAnimated: true)
     }
 
+    private var registeredApprovalScope = false
+
     private func applyGlobalHotKeys() {
-        hotKeyCenter.apply(
-            actions: GlobalHotKeyPolicy.actions(enabled: configurationStore.config.enableGlobalHotKeys)
+        applyGlobalHotKeys(sessions: store.sessions)
+    }
+
+    /// 审批允许/拒绝默认是裸键（空格/退格），只在存在待审批时注册，
+    /// 处理完立即释放，避免占用日常输入。
+    private func applyGlobalHotKeys(sessions: [AgentSession]) {
+        let config = configurationStore.config
+        let hasPendingApproval = ApprovalQueuePolicy.count(in: sessions) > 0
+        registeredApprovalScope = hasPendingApproval
+        let actions = GlobalHotKeyPolicy.actions(
+            enabled: config.enableGlobalHotKeys,
+            hasPendingApproval: hasPendingApproval
         )
+        hotKeyCenter.apply(bindings: actions.map { action in
+            (action: action, binding: GlobalHotKeyPolicy.binding(for: action, overrides: config.hotKeyBindings))
+        })
+    }
+
+    /// 待审批的出现/消失需要即时切换裸键注册状态。
+    /// 注意：@Published 在 willSet 时机发布，必须用回调里的新值。
+    private func refreshApprovalHotKeyScope(sessions: [AgentSession]) {
+        let hasPendingApproval = ApprovalQueuePolicy.count(in: sessions) > 0
+        guard hasPendingApproval != registeredApprovalScope else { return }
+        applyGlobalHotKeys(sessions: sessions)
     }
 
     private func perform(hotKeyAction action: GlobalHotKeyAction) {
@@ -77,6 +106,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject, NSWi
                 store.selectedSessionID = targetID
             }
             openIslandPanel()
+        case .approveApproval:
+            if let approval = ApprovalQueuePolicy.primarySession(in: store.sessions)?.approval,
+               approval.supports(.accept) {
+                store.resolveApproval(approval, decision: .accept)
+            }
+        case .declineApproval:
+            if let approval = ApprovalQueuePolicy.primarySession(in: store.sessions)?.approval,
+               approval.supports(.decline) {
+                store.resolveApproval(approval, decision: .decline)
+            }
         }
     }
 
