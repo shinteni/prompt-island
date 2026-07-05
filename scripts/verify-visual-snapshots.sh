@@ -136,8 +136,8 @@ wait_for_window "Task visual" "$MIN_TASK_WIDTH" "$MAX_TASK_WIDTH" "$MIN_TASK_HEI
 capture_window "Task visual" "$TEMP_HOME/task.png" "$MIN_TASK_WIDTH" "$MAX_TASK_WIDTH" "$MIN_TASK_HEIGHT" "$MAX_TASK_HEIGHT"
 
 post_expanded_state true
-wait_for_window "Expanded visual" 500 700 110 380
-capture_window "Expanded visual" "$TEMP_HOME/expanded.png" 500 700 110 380
+wait_for_window "Expanded visual" 380 560 90 310
+capture_window "Expanded visual" "$TEMP_HOME/expanded.png" 380 560 90 310
 
 if [[ -f "$LOG" ]] && /usr/bin/grep -E '\[error\]|codex\.sqlite\.read\.failed' "$LOG" >/dev/null; then
     echo "Visual snapshot verification failed: isolated log contains errors" >&2

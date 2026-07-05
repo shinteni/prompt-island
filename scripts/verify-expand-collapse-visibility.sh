@@ -113,8 +113,8 @@ SMOKE_WORKSPACE="${TMPDIR:-/tmp}/$SMOKE_ID"
 wait_for_window "Task before expand" "$MIN_TASK_WIDTH" "$MAX_TASK_WIDTH" "$MIN_TASK_HEIGHT" "$MAX_TASK_HEIGHT"
 
 post_expanded_state true
-wait_for_window "Expanded" 500 700 110 380
-EXPANDED_FRAME="$(/usr/bin/swift "$WINDOW_FRAME" "$APP_PID" 500 700 110 380 "Expanded frame")"
+wait_for_window "Expanded" 380 560 90 310
+EXPANDED_FRAME="$(/usr/bin/swift "$WINDOW_FRAME" "$APP_PID" 380 560 90 310 "Expanded frame")"
 EXPANDED_WIDTH="$(printf '%s\n' "$EXPANDED_FRAME" | /usr/bin/awk '{print $3}')"
 
 COLLAPSE_SAMPLES="$TEMP_HOME/collapse-frames.txt"

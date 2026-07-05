@@ -411,8 +411,8 @@ final class IslandWindow: NSPanel {
             return NSRect(
                 x: 0,
                 y: 0,
-                width: expanded ? 620 : IslandPresentationPolicy.idleMiniDiameter,
-                height: expanded ? 170 : IslandPresentationPolicy.idleMiniDiameter
+                width: (expanded ? 620 : IslandPresentationPolicy.idleMiniDiameter) * IslandPresentationPolicy.windowScale,
+                height: (expanded ? 170 : IslandPresentationPolicy.idleMiniDiameter) * IslandPresentationPolicy.windowScale
             )
         }
         let previousFrame = frame
@@ -421,9 +421,15 @@ final class IslandWindow: NSPanel {
         let canReuseCurrentCenter = previousFrame.width > 1 &&
             previousFrame.height > 1 &&
             lastAppliedPosition == position
-        let compactSize = compactPreferredSize()
-        let preferredSize = expanded ? CGSize(width: 620, height: expandedPreferredHeight()) : compactSize
-        let minSize = expanded ? CGSize(width: 500, height: 118) : compactSize
+        // 尺寸在设计空间计算，最后统一乘 windowScale；面板内容以设计尺寸
+        // 布局后整体缩放（见 IslandPanelView），两侧保持一致。
+        let compactSize = IslandPresentationPolicy.scaled(compactPreferredSize())
+        let preferredSize = expanded
+            ? IslandPresentationPolicy.scaled(CGSize(width: 620, height: expandedPreferredHeight()))
+            : compactSize
+        let minSize = expanded
+            ? IslandPresentationPolicy.scaled(CGSize(width: 500, height: 118))
+            : compactSize
         let size = CGSize(
             width: min(preferredSize.width, max(minSize.width, screenFrame.width - 48)),
             height: min(preferredSize.height, max(minSize.height, screenFrame.height - 32))
@@ -549,7 +555,7 @@ final class IslandWindow: NSPanel {
                 isExpanded: expanded
             )
         } ?? false
-        let radius: CGFloat = expanded ? 22 : (isIdleMini ? frame.height / 2 : 21)
+        let radius: CGFloat = (expanded ? 22 : (isIdleMini ? frame.height / 2 / IslandPresentationPolicy.windowScale : 21)) * IslandPresentationPolicy.windowScale
         contentView?.wantsLayer = true
         contentView?.layer?.backgroundColor = NSColor.clear.cgColor
         contentView?.layer?.masksToBounds = true
