@@ -36,6 +36,12 @@ final class SessionStore: ObservableObject {
     @Published var healthChecks: [HealthCheckItem] = []
     @Published var sessionVisibilityRefreshToken = 0
     @Published var updateCheckState: UpdateCheckState = .idle
+    /// 启动亮相截止时间：此前即使空闲也不隐藏浮岛，让用户看到应用已启动。
+    var launchPresenceUntil: Date?
+
+    var isLaunchPresenceActive: Bool {
+        IslandPresentationPolicy.isLaunchPresenceActive(until: launchPresenceUntil)
+    }
 
     let configurationStore: AppConfigurationStore
 
@@ -267,7 +273,28 @@ final class SessionStore: ObservableObject {
         if configurationStore.config.autoCheckUpdates {
             checkForUpdates()
         }
+        beginLaunchPresenceIfNeeded()
         startVisibilityTimer()
+    }
+
+    /// 启动亮相：宽限期内空闲也显示 idle-mini；到期后 bump 可见性 token
+    /// 让布局签名变化、窗口按常规策略隐藏。验证运行沿用跳过开场的环境变量。
+    private func beginLaunchPresenceIfNeeded() {
+        guard ProcessInfo.processInfo.environment["VIBELSLAND_SKIP_LAUNCH_INTRO"] != "1" else { return }
+        let duration = IslandPresentationPolicy.launchPresenceDuration
+        launchPresenceUntil = Date().addingTimeInterval(duration)
+        let timer = Timer(timeInterval: duration + 0.3, repeats: false) { [weak self] _ in
+            Task { @MainActor [weak self] in
+                guard let self else { return }
+                self.launchPresenceUntil = nil
+                // 直接 bump token 触发布局签名重算（refreshVisibleSessionAging
+                // 在无会话时会提前返回，不能依赖它）。
+                self.sessionVisibilityRefreshToken = self.sessionVisibilityRefreshToken == Int.max
+                    ? 0
+                    : self.sessionVisibilityRefreshToken + 1
+            }
+        }
+        RunLoop.main.add(timer, forMode: .common)
     }
 
     func installSelectedHooks() {

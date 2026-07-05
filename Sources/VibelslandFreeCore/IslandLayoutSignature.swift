@@ -9,6 +9,7 @@ package struct IslandLayoutSignature: Equatable {
     package var pendingApprovalCount: Int
     package var visibleSessionCount: Int
     package var isShowingApprovalDetail: Bool
+    package var isLaunchPresenceActive: Bool
 
     package init(
         sessions: [AgentSession],
@@ -17,6 +18,7 @@ package struct IslandLayoutSignature: Equatable {
         isApprovalDetailVisible: Bool,
         maxVisibleSessions: Int,
         position: IslandPosition,
+        isLaunchPresenceActive: Bool = false,
         now: Date = Date()
     ) {
         let approvalQueue = ApprovalQueuePolicy.queue(in: sessions)
@@ -39,5 +41,6 @@ package struct IslandLayoutSignature: Equatable {
             now: now
         ).count
         self.isShowingApprovalDetail = isApprovalDetailVisible && pendingApproval != nil
+        self.isLaunchPresenceActive = isLaunchPresenceActive
     }
 }
