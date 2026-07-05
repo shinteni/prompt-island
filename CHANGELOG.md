@@ -8,10 +8,6 @@
 - Added settings, hook installation, runtime health checks, single-instance protection, and restart recovery.
 - Published the GitHub Pages documentation site, install notes, privacy note, checksum metadata, and release packaging scripts.
 
-## Unreleased
-
-- Global hotkeys are now customizable per action (record any key combo in settings), and gain two new actions with bare-key defaults: Space approves the pending approval and Backspace declines it. Bare keys register only while an approval is pending and release immediately after, so normal typing is never captured.
-
 ## 0.2.0 - 2026-07-04
 
 - Smoothed the launch intro: display-link driven GPU layers replace the per-frame CPU redraw, the launch sound is prewarmed, and startup IO completes before the animation begins. Reduce Motion skips the intro.
@@ -31,3 +27,7 @@
 - Added GitHub Actions checks for Swift build and test-target discovery.
 - Added maintainer release gate improvements and clearer ad-hoc signing documentation.
 - Improved Codex Desktop live connection startup from Finder-launched macOS app environments.
+
+## Unreleased
+
+- Global hotkeys are now customizable per action (record any key combo in settings), and gain two new actions with bare-key defaults: Space approves the pending approval and Backspace declines it. Bare keys register only while an approval is pending and release immediately after, so normal typing is never captured.
