@@ -164,7 +164,8 @@ final class IslandWindow: NSPanel {
                     isExpanded: isExpanded,
                     isApprovalDetailVisible: content.2,
                     maxVisibleSessions: config.maxVisibleSessions,
-                    position: config.islandPosition
+                    position: config.islandPosition,
+                    isLaunchPresenceActive: self?.store?.isLaunchPresenceActive ?? false
                 )
                 self?.applyLayout(signature, animated: true)
             }
@@ -323,6 +324,10 @@ final class IslandWindow: NSPanel {
 
     private func shouldHideIdlePresentation(expanded: Bool) -> Bool {
         guard let store, !expanded else { return false }
+        // 启动亮相期内空闲也不隐藏，让用户看到应用已启动。
+        if store.isLaunchPresenceActive {
+            return false
+        }
         return IslandPresentationPolicy.isIdleMiniPresentation(
             sessions: store.sessions,
             isExpanded: false
