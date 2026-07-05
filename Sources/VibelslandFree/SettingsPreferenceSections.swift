@@ -113,24 +113,134 @@ struct IslandPreferencesSection: View {
                     Toggle("", isOn: $globalHotKeysEnabled)
                         .labelsHidden()
                 }
+                if globalHotKeysEnabled {
+                    VStack(spacing: 6) {
+                        ForEach(GlobalHotKeyAction.allCases) { action in
+                            HotKeyRecorderRow(action: action)
+                        }
+                    }
+                    .padding(.top, 2)
+                }
                 Text(globalHotKeysHint)
                     .font(.system(size: 12, weight: .medium))
                     .foregroundStyle(.secondary)
                     .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.top, 6)
                     .padding(.bottom, 6)
             }
         }
     }
 
     private var globalHotKeysHint: String {
-        let toggle = GlobalHotKeyAction.toggleIsland.displayShortcut
-        let jump = GlobalHotKeyAction.jumpToApproval.displayShortcut
-        return AppText.pick(
+        AppText.pick(
             configurationStore.config.language,
-            english: "\(toggle) expand/collapse island · \(jump) jump to pending approval",
-            japanese: "\(toggle) アイランドを展開/折りたたみ · \(jump) 承認待ちへ移動",
-            chinese: "\(toggle) 展开/收起浮岛 · \(jump) 跳转待审批"
+            english: "Approve/Decline keys are captured only while an approval is pending, then released immediately — bare keys like Space stay usable everywhere else.",
+            japanese: "許可/拒否キーは承認待ちがある間だけ有効になり、処理後すぐ解放されます。Space などの単独キーも普段どおり使えます。",
+            chinese: "允许/拒绝按键只在存在待审批时生效，处理完立即释放——空格等裸键平时不受影响。"
         )
+    }
+}
+
+/// 单个快捷键动作的录制行：显示当前绑定，支持录制新键与恢复默认。
+private struct HotKeyRecorderRow: View {
+    @EnvironmentObject private var configurationStore: AppConfigurationStore
+    let action: GlobalHotKeyAction
+    @State private var isRecording = false
+    @State private var conflictMessage: String?
+    @State private var keyMonitor: Any?
+
+    var body: some View {
+        HStack(spacing: 10) {
+            Text(actionTitle)
+                .font(.system(size: 12, weight: .medium))
+            Spacer()
+            if let conflictMessage {
+                Text(conflictMessage)
+                    .font(.system(size: 11, weight: .medium))
+                    .foregroundStyle(.orange)
+            }
+            Text(GlobalHotKeyPolicy.displayText(for: currentBinding))
+                .font(.system(size: 12, weight: .semibold, design: .monospaced))
+                .padding(.horizontal, 8)
+                .padding(.vertical, 3)
+                .background(RoundedRectangle(cornerRadius: 6).fill(Color.secondary.opacity(0.12)))
+            Button(isRecording
+                ? AppText.pick(configurationStore.config.language, english: "Press a key…", japanese: "キーを押す…", chinese: "请按键…")
+                : AppText.pick(configurationStore.config.language, english: "Record", japanese: "録画", chinese: "录制")) {
+                isRecording ? stopRecording() : startRecording()
+            }
+            .font(.system(size: 11, weight: .medium))
+            Button(AppText.pick(configurationStore.config.language, english: "Reset", japanese: "リセット", chinese: "重置")) {
+                configurationStore.config.hotKeyBindings.removeValue(forKey: action.rawValue)
+                conflictMessage = nil
+            }
+            .font(.system(size: 11, weight: .medium))
+            .disabled(configurationStore.config.hotKeyBindings[action.rawValue] == nil)
+        }
+        .padding(.leading, 36)
+        .onDisappear { stopRecording() }
+    }
+
+    private var currentBinding: HotKeyBinding {
+        GlobalHotKeyPolicy.binding(for: action, overrides: configurationStore.config.hotKeyBindings)
+    }
+
+    private var actionTitle: String {
+        switch action {
+        case .toggleIsland:
+            AppText.pick(configurationStore.config.language, english: "Toggle island", japanese: "アイランド開閉", chinese: "展开/收起浮岛")
+        case .jumpToApproval:
+            AppText.pick(configurationStore.config.language, english: "Jump to approval", japanese: "承認待ちへ移動", chinese: "跳转待审批")
+        case .approveApproval:
+            AppText.pick(configurationStore.config.language, english: "Approve pending", japanese: "承認を許可", chinese: "允许当前审批")
+        case .declineApproval:
+            AppText.pick(configurationStore.config.language, english: "Decline pending", japanese: "承認を拒否", chinese: "拒绝当前审批")
+        }
+    }
+
+    private func startRecording() {
+        conflictMessage = nil
+        isRecording = true
+        keyMonitor = NSEvent.addLocalMonitorForEvents(matching: [.keyDown]) { event in
+            capture(event)
+            return nil // 录制期间吞掉按键，避免触发设置窗口里的其它控件
+        }
+    }
+
+    private func stopRecording() {
+        isRecording = false
+        if let keyMonitor {
+            NSEvent.removeMonitor(keyMonitor)
+            self.keyMonitor = nil
+        }
+    }
+
+    private func capture(_ event: NSEvent) {
+        defer { stopRecording() }
+        let keyCode = UInt32(event.keyCode)
+        if keyCode == 53 { // ESC 取消录制
+            return
+        }
+        var modifiers: UInt32 = 0
+        if event.modifierFlags.contains(.control) { modifiers |= GlobalHotKeyPolicy.controlKeyMask }
+        if event.modifierFlags.contains(.option) { modifiers |= GlobalHotKeyPolicy.optionKeyMask }
+        if event.modifierFlags.contains(.shift) { modifiers |= GlobalHotKeyPolicy.shiftKeyMask }
+        if event.modifierFlags.contains(.command) { modifiers |= GlobalHotKeyPolicy.commandKeyMask }
+        let binding = HotKeyBinding(keyCode: keyCode, carbonModifiers: modifiers)
+        if let conflict = GlobalHotKeyPolicy.conflictingAction(
+            binding: binding,
+            excluding: action,
+            overrides: configurationStore.config.hotKeyBindings
+        ) {
+            conflictMessage = AppText.pick(
+                configurationStore.config.language,
+                english: "Already used by \(conflict.rawValue)",
+                japanese: "\(conflict.rawValue) と重複",
+                chinese: "与 \(conflict.rawValue) 冲突"
+            )
+            return
+        }
+        configurationStore.config.hotKeyBindings[action.rawValue] = binding
     }
 }
 
