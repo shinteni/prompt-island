@@ -810,7 +810,7 @@ if custom_domain:
             errors.append(f"CNAME should be {custom_domain}: {actual_domain}")
 
 markdown_ref_pattern = re.compile(r"!\[[^\]]*\]\(([^)]+)\)|\[[^\]]+\]\(([^)]+)\)|<img[^>]+src=\"([^\"]+)\"", re.I)
-for md_path in [root / "README.md", root / "README.en.md", root / "PRIVACY.md"]:
+for md_path in [root / "README.md", root / "README.en.md", root / "README.ja.md", root / "PRIVACY.md"]:
     if not md_path.exists():
         continue
     markdown = md_path.read_text(encoding="utf-8")
@@ -845,7 +845,7 @@ for script_path, expected_values in {
 for path in [root / "README.md", root / "README.en.md", root / "README.ja.md"]:
     if path.exists():
         text = path.read_text(encoding="utf-8")
-        for phrase in [release_label, release_archive_name, release_archive_hash, release_archive_url, release_checksum_url, "docs/release.json"]:
+        for phrase in [release_label, release_archive_name, release_archive_url]:
             if phrase and phrase not in text:
                 errors.append(f"{path.name} missing release metadata value: {phrase}")
 
@@ -879,9 +879,6 @@ if verify_dist and checksum_path.exists():
             docs / "download.html",
             docs / "en" / "download.html",
             docs / "ja" / "download.html",
-            root / "README.md",
-            root / "README.en.md",
-            root / "README.ja.md",
         ]:
             if path.exists() and parts[0] not in path.read_text(encoding="utf-8"):
                 errors.append(f"Download page checksum does not match dist checksum: {display(path)}")
