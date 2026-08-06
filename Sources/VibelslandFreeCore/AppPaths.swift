@@ -78,15 +78,19 @@ package enum AppPaths {
         fileManager: FileManager = .default
     ) -> URL {
         let homeURL = home(environment: environment)
-        let currentURL = homeURL.appendingPathComponent(".codex/sqlite/state_5.sqlite")
-        return codexStateURL(homeURL: homeURL, currentExists: fileManager.fileExists(atPath: currentURL.path))
-    }
-
-    package static func codexStateURL(homeURL: URL, currentExists: Bool) -> URL {
-        if currentExists {
-            return homeURL.appendingPathComponent(".codex/sqlite/state_5.sqlite")
+        let rootURL = homeURL.appendingPathComponent(".codex/state_5.sqlite")
+        let sqliteURL = homeURL.appendingPathComponent(".codex/sqlite/state_5.sqlite")
+        let candidates = [rootURL, sqliteURL].compactMap { url -> (url: URL, activityDate: Date)? in
+            guard fileManager.fileExists(atPath: url.path) else { return nil }
+            let relatedURLs = [url, URL(fileURLWithPath: url.path + "-wal")]
+            let activityDate = relatedURLs.compactMap { relatedURL in
+                (try? fileManager.attributesOfItem(atPath: relatedURL.path)[.modificationDate]) as? Date
+            }.max() ?? .distantPast
+            return (url, activityDate)
         }
-        return homeURL.appendingPathComponent(".codex/state_5.sqlite")
+        return candidates.max { lhs, rhs in
+            lhs.activityDate < rhs.activityDate
+        }?.url ?? rootURL
     }
 
     package static func ensureRuntimeDirectories() throws {

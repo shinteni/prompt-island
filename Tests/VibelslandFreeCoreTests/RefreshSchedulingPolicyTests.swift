@@ -38,6 +38,18 @@ struct RefreshSchedulingPolicyTests {
             "Stale desktop session backs off"
         )
 
+        let staleActive = schedulingSession(
+            id: "stale-active",
+            source: .codexDesktop,
+            status: .thinking,
+            updatedAt: now.addingTimeInterval(-(CodexRefreshCadencePolicy.maximumActiveAge + 1))
+        )
+        XCTAssertEqual(
+            CodexRefreshCadencePolicy.interval(sessions: [staleActive], isExpanded: false, now: now),
+            8.0,
+            "A stale activity marker cannot keep background polling in the fast lane forever"
+        )
+
         let claudeOnly = schedulingSession(id: "c", source: .claudeCode, status: .runningTool, updatedAt: now)
         XCTAssertEqual(
             CodexRefreshCadencePolicy.interval(sessions: [claudeOnly], isExpanded: false, now: now),
@@ -92,6 +104,34 @@ struct RefreshSchedulingPolicyTests {
             IslandAutoCollapsePolicy.graceDuration,
             6.6,
             "Grace duration preserves the old 30 ticks at 0.22s"
+        )
+    }
+
+    @Test func testCodexReconnectBackoffSurvivesRapidProcessExits() {
+        var failures = 0
+        var delays: [TimeInterval] = []
+        for _ in 0..<6 {
+            failures = CodexReconnectPolicy.failureCount(
+                afterPreviousFailures: failures,
+                connectionUptime: 0.2
+            )
+            delays.append(CodexReconnectPolicy.delay(forFailureCount: failures))
+        }
+        XCTAssertEqual(
+            delays,
+            [2, 4, 8, 16, 30, 30],
+            "A proxy that starts and immediately exits must reach the capped backoff"
+        )
+
+        let recoveredFailures = CodexReconnectPolicy.failureCount(
+            afterPreviousFailures: failures,
+            connectionUptime: CodexReconnectPolicy.stableConnectionDuration
+        )
+        XCTAssertEqual(recoveredFailures, 1, "A stable connection resets the failure streak")
+        XCTAssertEqual(
+            CodexReconnectPolicy.delay(forFailureCount: recoveredFailures),
+            2,
+            "The first failure after a stable connection returns to the initial delay"
         )
     }
 

@@ -68,6 +68,7 @@ package final class CodexAppServerLiveClient: @unchecked Sendable {
     private let logger: AppLogger
     private let fileManager: FileManager
     private let queue = DispatchQueue(label: "free.vibelsland.codex-appserver-live")
+    private let socketDiscoveryLock = NSLock()
 
     private var shouldRun = false
     private var process: Process?
@@ -79,9 +80,14 @@ package final class CodexAppServerLiveClient: @unchecked Sendable {
     private var socketPath: String?
     private var cachedSocketURL: URL?
     private var lastDeepSocketScanAt: Date?
+    private var failedSocketRetryAfter: [String: Date] = [:]
     private var reconnectAttempt = 0
+    private var reconnectWorkItem: DispatchWorkItem?
+    private var reconnectGeneration = 0
+    private var connectionStartedAt: Date?
     private var pendingThreadLoadedChecks: [Int: (threadID: String, completion: ThreadLoadedHandler)] = [:]
     private let deepSocketScanInterval: TimeInterval = 60
+    private let maximumStdoutBufferBytes = 1_048_576
 
     package var onApproval: ApprovalHandler?
     package var onResolved: ResolvedHandler?
@@ -115,6 +121,8 @@ package final class CodexAppServerLiveClient: @unchecked Sendable {
             guard let self else { return }
             self.shouldRun = true
             guard self.process == nil else { return }
+            self.cancelScheduledReconnect()
+            self.reconnectAttempt = 0
             self.startLocked()
         }
     }
@@ -178,7 +186,12 @@ package final class CodexAppServerLiveClient: @unchecked Sendable {
     }
 
     package func codexIPCSocketCandidates(forceDeepScan: Bool = false) -> [URL] {
+        socketDiscoveryLock.lock()
+        defer { socketDiscoveryLock.unlock() }
+
         let uid = getuid()
+        let now = Date()
+        failedSocketRetryAfter = failedSocketRetryAfter.filter { $0.value > now }
         var candidates: [URL] = []
 
         if let override = ProcessInfo.processInfo.environment["VIBELSLAND_CODEX_IPC_SOCKET"],
@@ -197,7 +210,13 @@ package final class CodexAppServerLiveClient: @unchecked Sendable {
                 .appendingPathComponent("ipc-\(uid).sock")
         )
 
-        let now = Date()
+        let directCandidates = existingSocketCandidates(in: candidates)
+        if !forceDeepScan, let first = directCandidates.first {
+            cachedSocketURL = first
+            return directCandidates
+        }
+
+        var discoveredCandidates: [URL] = []
         let shouldDeepScan = forceDeepScan
             || lastDeepSocketScanAt == nil
             || now.timeIntervalSince(lastDeepSocketScanAt ?? .distantPast) >= deepSocketScanInterval
@@ -211,21 +230,29 @@ package final class CodexAppServerLiveClient: @unchecked Sendable {
             ) {
                 let suffix = "/T/codex-ipc/ipc-\(uid).sock"
                 for case let url as URL in enumerator where url.path.hasSuffix(suffix) {
-                    candidates.append(url)
+                    discoveredCandidates.append(url)
                 }
             }
         }
 
+        let orderedCandidates = forceDeepScan
+            ? discoveredCandidates + candidates
+            : candidates + discoveredCandidates
+        let existing = existingSocketCandidates(in: orderedCandidates)
+        cachedSocketURL = existing.first
+        return existing
+    }
+
+    private func existingSocketCandidates(in candidates: [URL]) -> [URL] {
         var seen = Set<String>()
-        let existing = candidates.filter { url in
+        return candidates.filter { url in
             guard fileManager.fileExists(atPath: url.path),
+                  failedSocketRetryAfter[url.path] == nil,
                   seen.insert(url.path).inserted else {
                 return false
             }
             return true
         }
-        cachedSocketURL = existing.first
-        return existing
     }
 
     private func startLocked() {
@@ -257,29 +284,30 @@ package final class CodexAppServerLiveClient: @unchecked Sendable {
         process.standardOutput = stdout
         process.standardError = stderr
 
-        stdout.fileHandleForReading.readabilityHandler = { [weak self] handle in
-            guard let client = self else { return }
-            let data = handle.availableData
-            guard !data.isEmpty else { return }
+        stdout.fileHandleForReading.readabilityHandler = { [weak self, weak process] handle in
+            guard let client = self, let process else { return }
+            guard let data = Self.readAvailablePipeData(from: handle) else { return }
             client.queue.async { [weak client] in
-                client?.handleStdout(data)
+                guard let client, client.process === process else { return }
+                client.handleStdout(data)
             }
         }
-        stderr.fileHandleForReading.readabilityHandler = { [weak self] handle in
-            let data = handle.availableData
-            guard !data.isEmpty else { return }
+        stderr.fileHandleForReading.readabilityHandler = { [weak self, weak process] handle in
+            guard let client = self, let process else { return }
+            guard let data = Self.readAvailablePipeData(from: handle) else { return }
             let detail = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
             if !detail.isEmpty {
-                self?.queue.async { [weak self] in
-                    self?.lastFailureMessage = detail
+                client.queue.async { [weak client] in
+                    guard let client, client.process === process else { return }
+                    client.lastFailureMessage = detail
                 }
-                self?.logger.error("codex.desktop.live.stderr", detail: detail)
+                client.logger.error("codex.desktop.live.stderr", detail: detail)
             }
         }
-        process.terminationHandler = { [weak self] _ in
+        process.terminationHandler = { [weak self] terminatedProcess in
             guard let client = self else { return }
-            client.queue.async { [weak client] in
-                client?.handleTermination()
+            client.queue.async { [weak client, terminatedProcess] in
+                client?.handleTermination(of: terminatedProcess)
             }
         }
 
@@ -290,13 +318,13 @@ package final class CodexAppServerLiveClient: @unchecked Sendable {
             self.stdout = stdout
             self.stderr = stderr
             self.socketPath = socketURL.path
-            self.cachedSocketURL = socketURL
+            self.connectionStartedAt = Date()
+            self.stdoutBuffer.removeAll()
+            guard sendInitialize() else { return }
+            markSocketConnected(socketURL)
             self.lastConnectedAt = Date()
             self.lastFailureMessage = nil
-            self.reconnectAttempt = 0
-            self.stdoutBuffer.removeAll()
             publishStatus(true, socketURL.path)
-            sendInitialize()
             logger.info("codex.desktop.live.connected", detail: socketURL.path)
         } catch {
             stdout.fileHandleForReading.readabilityHandler = nil
@@ -309,70 +337,126 @@ package final class CodexAppServerLiveClient: @unchecked Sendable {
     }
 
     private func stopLocked() {
-        stdout?.fileHandleForReading.readabilityHandler = nil
-        stderr?.fileHandleForReading.readabilityHandler = nil
-        try? stdin?.fileHandleForWriting.close()
-        if process?.isRunning == true {
-            process?.terminate()
-        }
-        process = nil
-        stdin = nil
-        stdout = nil
-        stderr = nil
-        socketPath = nil
-        stdoutBuffer.removeAll()
-        failPendingThreadLoadedChecks()
+        cancelScheduledReconnect()
+        reconnectAttempt = 0
+        clearCurrentProcess(terminateIfRunning: true)
         publishStatus(false, nil)
     }
 
-    private func handleTermination() {
-        process = nil
-        stdin = nil
-        stdout?.fileHandleForReading.readabilityHandler = nil
-        stderr?.fileHandleForReading.readabilityHandler = nil
-        stdout = nil
-        stderr = nil
-        socketPath = nil
-        stdoutBuffer.removeAll()
-        failPendingThreadLoadedChecks()
-        if shouldRun {
-            if lastFailureMessage?.isEmpty != false {
-                lastFailureMessage = "Codex Desktop 实时审批连接已断开"
-            }
+    private func handleTermination(of terminatedProcess: Process) {
+        guard let currentProcess = process, currentProcess === terminatedProcess else {
+            return
+        }
+        let uptime = connectionStartedAt.map { Date().timeIntervalSince($0) }
+        let failedSocketPath = socketPath
+        clearCurrentProcess(terminateIfRunning: false)
+        invalidateCachedSocket(failedSocketPath)
+        reconnectAttempt = CodexReconnectPolicy.failureCount(
+            afterPreviousFailures: reconnectAttempt,
+            connectionUptime: uptime
+        ) - 1
+        if shouldRun, lastFailureMessage?.isEmpty != false {
+            lastFailureMessage = "Codex Desktop 实时审批连接已断开"
         }
         publishStatus(false, nil)
         scheduleReconnect()
     }
 
-    private func scheduleReconnect() {
-        guard shouldRun else { return }
-        reconnectAttempt += 1
-        let delay = reconnectDelay(for: reconnectAttempt)
-        queue.asyncAfter(deadline: .now() + delay) { [weak self] in
-            self?.startLocked()
+    private func clearCurrentProcess(terminateIfRunning: Bool) {
+        let currentProcess = process
+        currentProcess?.terminationHandler = nil
+        stdout?.fileHandleForReading.readabilityHandler = nil
+        stderr?.fileHandleForReading.readabilityHandler = nil
+        try? stdin?.fileHandleForWriting.close()
+        process = nil
+        stdin = nil
+        stdout = nil
+        stderr = nil
+        socketPath = nil
+        connectionStartedAt = nil
+        stdoutBuffer.removeAll()
+        failPendingThreadLoadedChecks()
+        if terminateIfRunning, currentProcess?.isRunning == true {
+            currentProcess?.terminate()
         }
     }
 
-    private func reconnectDelay(for attempt: Int) -> TimeInterval {
-        min(30, pow(2.0, Double(min(max(attempt - 1, 0), 4))) * 2.0)
+    private func scheduleReconnect() {
+        guard shouldRun, reconnectWorkItem == nil else { return }
+        reconnectAttempt += 1
+        let delay = CodexReconnectPolicy.delay(forFailureCount: reconnectAttempt)
+        let generation = reconnectGeneration
+        let workItem = DispatchWorkItem { [weak self] in
+            guard let self, self.reconnectGeneration == generation else { return }
+            self.reconnectWorkItem = nil
+            self.startLocked()
+        }
+        reconnectWorkItem = workItem
+        queue.asyncAfter(deadline: .now() + delay, execute: workItem)
     }
 
-    private func sendInitialize() {
+    private func cancelScheduledReconnect() {
+        reconnectGeneration += 1
+        reconnectWorkItem?.cancel()
+        reconnectWorkItem = nil
+    }
+
+    private func invalidateCachedSocket(_ failedPath: String?) {
+        guard let failedPath else { return }
+        socketDiscoveryLock.lock()
+        if cachedSocketURL?.path == failedPath {
+            cachedSocketURL = nil
+        }
+        failedSocketRetryAfter[failedPath] = Date().addingTimeInterval(CodexReconnectPolicy.maximumDelay)
+        lastDeepSocketScanAt = nil
+        socketDiscoveryLock.unlock()
+    }
+
+    private func markSocketConnected(_ socketURL: URL) {
+        socketDiscoveryLock.lock()
+        cachedSocketURL = socketURL
+        failedSocketRetryAfter.removeValue(forKey: socketURL.path)
+        socketDiscoveryLock.unlock()
+    }
+
+    private func sendInitialize() -> Bool {
         let id = nextRequestID
         nextRequestID += 1
-        _ = writeJSONObject([
+        guard case .success = writeJSONObject([
             "id": id,
             "method": "initialize",
             "params": [
                 "clientInfo": ["name": "prompt-island", "version": "2"],
                 "capabilities": [:]
             ]
-        ])
-        _ = writeJSONObject(["method": "initialized"])
+        ]) else {
+            return false
+        }
+        guard case .success = writeJSONObject(["method": "initialized"]) else {
+            return false
+        }
+        return true
+    }
+
+    /// FileHandle may keep invoking its readability handler after EOF unless the
+    /// handler removes itself. Returning nil makes both pipe readers stop cleanly.
+    package static func readAvailablePipeData(from handle: FileHandle) -> Data? {
+        let data = handle.availableData
+        guard !data.isEmpty else {
+            handle.readabilityHandler = nil
+            return nil
+        }
+        return data
     }
 
     private func handleStdout(_ data: Data) {
         stdoutBuffer.append(data)
+        if stdoutBuffer.count > maximumStdoutBufferBytes {
+            lastFailureMessage = "Codex Desktop 实时通道返回了过大的未分帧数据"
+            logger.error("codex.desktop.live.stdout.too_large", detail: "\(stdoutBuffer.count) bytes")
+            failCurrentConnection()
+            return
+        }
         while let newlineIndex = stdoutBuffer.firstIndex(of: 0x0A) {
             let line = stdoutBuffer[..<newlineIndex]
             stdoutBuffer.removeSubrange(...newlineIndex)
@@ -450,9 +534,24 @@ package final class CodexAppServerLiveClient: @unchecked Sendable {
             return .success(())
         } catch {
             logger.error("codex.desktop.live.write.failed", detail: error.localizedDescription)
-            handleTermination()
+            lastFailureMessage = error.localizedDescription
+            failCurrentConnection()
             return .failure(.writeFailed(error.localizedDescription))
         }
+    }
+
+    private func failCurrentConnection() {
+        guard process != nil else { return }
+        let uptime = connectionStartedAt.map { Date().timeIntervalSince($0) }
+        let failedSocketPath = socketPath
+        clearCurrentProcess(terminateIfRunning: true)
+        invalidateCachedSocket(failedSocketPath)
+        reconnectAttempt = CodexReconnectPolicy.failureCount(
+            afterPreviousFailures: reconnectAttempt,
+            connectionUptime: uptime
+        ) - 1
+        publishStatus(false, nil)
+        scheduleReconnect()
     }
 
     private func publishResponse(

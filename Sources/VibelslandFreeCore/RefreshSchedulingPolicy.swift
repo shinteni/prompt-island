@@ -8,6 +8,7 @@ package enum CodexRefreshCadencePolicy {
     package static let recentActivityInterval: TimeInterval = 2.5
     package static let idleInterval: TimeInterval = 8.0
     package static let recentActivityWindow: TimeInterval = 45
+    package static let maximumActiveAge = DashboardSessionPolicy.activeHideAfter
 
     package static func interval(
         sessions: [AgentSession],
@@ -18,10 +19,34 @@ package enum CodexRefreshCadencePolicy {
             return expandedInterval
         }
         let hasRecentOrActiveDesktop = sessions.contains { session in
-            session.source == .codexDesktop &&
-                (session.status.isActiveVisual || now.timeIntervalSince(session.updatedAt) < recentActivityWindow)
+            guard session.source == .codexDesktop else { return false }
+            let age = now.timeIntervalSince(session.updatedAt)
+            return age < recentActivityWindow ||
+                (session.status.isActiveVisual && age < maximumActiveAge)
         }
         return hasRecentOrActiveDesktop ? recentActivityInterval : idleInterval
+    }
+}
+
+/// Codex app-server proxy 的失败退避。连接只在稳定存活一段时间后才视为恢复，
+/// 避免“进程能启动但立即退出”把重试永久卡在最短间隔。
+package enum CodexReconnectPolicy {
+    package static let stableConnectionDuration: TimeInterval = 15
+    package static let maximumDelay: TimeInterval = 30
+
+    package static func failureCount(
+        afterPreviousFailures previousFailures: Int,
+        connectionUptime: TimeInterval?
+    ) -> Int {
+        if let connectionUptime, connectionUptime >= stableConnectionDuration {
+            return 1
+        }
+        return min(max(previousFailures, 0) + 1, 5)
+    }
+
+    package static func delay(forFailureCount failureCount: Int) -> TimeInterval {
+        let exponent = Double(min(max(failureCount - 1, 0), 4))
+        return min(maximumDelay, pow(2.0, exponent) * 2.0)
     }
 }
 
