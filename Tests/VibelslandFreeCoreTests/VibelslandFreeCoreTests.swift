@@ -65,21 +65,56 @@ struct VibelslandFreeCoreTests {
         XCTAssertTrue(japaneseDisplay.primaryLine.hasPrefix("ツール："), "Japanese display uses Japanese labels")
     }
 
-    @Test func testCodexStatePathPrefersCurrentSqliteDirectory() throws {
-        let root = URL(fileURLWithPath: "/tmp/vibelsland-codex-state-test", isDirectory: true)
+    @Test func testCodexStatePathPrefersTheActivelyUpdatedDatabase() throws {
+        let manager = FileManager.default
+        let root = manager.temporaryDirectory
+            .appendingPathComponent("vibelsland-codex-state-\(UUID().uuidString)", isDirectory: true)
         let legacyURL = root.appendingPathComponent(".codex/state_5.sqlite")
-        let currentURL = root.appendingPathComponent(".codex/sqlite/state_5.sqlite")
+        let sqliteDirectoryURL = root.appendingPathComponent(".codex/sqlite", isDirectory: true)
+        let sqliteURL = sqliteDirectoryURL.appendingPathComponent("state_5.sqlite")
+        defer { try? manager.removeItem(at: root) }
+
+        try manager.createDirectory(at: sqliteDirectoryURL, withIntermediateDirectories: true)
         XCTAssertEqual(
-            AppPaths.codexStateURL(homeURL: root, currentExists: false).path,
+            AppPaths.codexStateURL(environment: ["VIBELSLAND_HOME": root.path], fileManager: manager).path,
             legacyURL.path,
-            "Legacy Codex state db remains the fallback"
+            "The root state database remains the fallback when neither candidate exists"
         )
 
+        try Data().write(to: legacyURL)
+        try manager.setAttributes([.modificationDate: Date(timeIntervalSince1970: 200)], ofItemAtPath: legacyURL.path)
+        try Data().write(to: sqliteURL)
+        try manager.setAttributes([.modificationDate: Date(timeIntervalSince1970: 100)], ofItemAtPath: sqliteURL.path)
         XCTAssertEqual(
-            AppPaths.codexStateURL(homeURL: root, currentExists: true).path,
-            currentURL.path,
-            "Current Codex state db location is preferred when available"
+            AppPaths.codexStateURL(environment: ["VIBELSLAND_HOME": root.path], fileManager: manager).path,
+            legacyURL.path,
+            "A stale sqlite-directory database must not shadow the actively updated root database"
         )
+
+        let sqliteWALURL = URL(fileURLWithPath: sqliteURL.path + "-wal")
+        try Data().write(to: sqliteWALURL)
+        try manager.setAttributes([.modificationDate: Date(timeIntervalSince1970: 300)], ofItemAtPath: sqliteWALURL.path)
+        XCTAssertEqual(
+            AppPaths.codexStateURL(environment: ["VIBELSLAND_HOME": root.path], fileManager: manager).path,
+            sqliteURL.path,
+            "Recent WAL activity identifies the database Codex is currently writing"
+        )
+    }
+
+    @Test func testCodexPipeReaderUnregistersAtEOF() throws {
+        let pipe = Pipe()
+        let reader = pipe.fileHandleForReading
+        reader.readabilityHandler = { handle in
+            _ = CodexAppServerLiveClient.readAvailablePipeData(from: handle)
+        }
+        try pipe.fileHandleForWriting.close()
+
+        let deadline = Date().addingTimeInterval(1)
+        while reader.readabilityHandler != nil, Date() < deadline {
+            Thread.sleep(forTimeInterval: 0.01)
+        }
+        XCTAssertTrue(reader.readabilityHandler == nil, "EOF must stop FileHandle from delivering empty callbacks forever")
+        try reader.close()
     }
 
     @Test func testSmokeCoverage() throws {
