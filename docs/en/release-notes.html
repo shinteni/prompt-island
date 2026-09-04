@@ -6,13 +6,13 @@
     <title>Release Notes | Vibelsland Free</title>
     <meta
       name="description"
-      content="Vibelsland Free release notes for v0.2.1, including downloads, SHA-256 verification, key features, install guidance, and current source updates."
+      content="Vibelsland Free release notes for v0.2.2, including downloads, SHA-256 verification, key features, and install guidance."
     >
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Vibelsland Free">
     <meta property="og:locale" content="en_US">
     <meta property="og:title" content="Vibelsland Free Release Notes">
-    <meta property="og:description" content="Review Vibelsland Free v0.2.1 features, download assets, checksum file, install guidance, and current source progress.">
+    <meta property="og:description" content="Review Vibelsland Free v0.2.2 features, download assets, checksum file, and install guidance.">
     <meta property="og:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
     <meta property="og:image:width" content="1672">
     <meta property="og:image:height" content="941">
@@ -20,7 +20,7 @@
     <meta property="og:url" content="https://shinteni.github.io/prompt-island/en/release-notes.html">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Vibelsland Free Release Notes">
-    <meta name="twitter:description" content="Review Vibelsland Free v0.2.1 features, download assets, checksum file, install guidance, and current source progress.">
+    <meta name="twitter:description" content="Review Vibelsland Free v0.2.2 features, download assets, checksum file, and install guidance.">
     <meta name="twitter:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
     <meta name="twitter:image:alt" content="Vibelsland Free macOS AI coding status interface">
     <meta name="theme-color" content="#070706">
@@ -61,17 +61,17 @@
           <p class="eyebrow">Release Notes</p>
           <h1 id="release-title">Release history.</h1>
           <p>
-            The official website record for Vibelsland Free releases. The current public download is v0.2.1: customizable hotkeys (Space approves / Backspace declines), a launch presence, and a 20% smaller island.
+            The official website record for Vibelsland Free releases. The current public download is v0.2.2: Codex Desktop live approvals are restored for current builds, with lower background load during long-running use.
           </p>
           <div class="hero-actions">
             <a class="button primary" href="download.html">View full download notes</a>
-            <a class="button secondary" href="https://github.com/shinteni/prompt-island/releases/tag/v0.2.1">Open GitHub Release</a>
+            <a class="button secondary" href="https://github.com/shinteni/prompt-island/releases/tag/v0.2.2">Open GitHub Release</a>
           </div>
         </div>
         <div class="privacy-summary" aria-label="Release summary" data-reveal>
           <div>
             <span>Current version</span>
-            <strong>v0.2.1</strong>
+            <strong>v0.2.2</strong>
           </div>
           <div>
             <span>System</span>
@@ -86,52 +86,84 @@
 
       <section class="section data-section surface-section" aria-labelledby="source-status-title">
         <div class="section-heading align-left" data-reveal>
-          <p class="eyebrow">New in v0.2.1</p>
-          <h2 id="source-status-title">Customizable hotkeys, a launch presence, and a more compact island.</h2>
+          <p class="eyebrow">New in v0.2.2</p>
+          <h2 id="source-status-title">Restored Codex Desktop connectivity with lower background load.</h2>
           <p>
-            <code>docs/release.json</code> records the v0.2.1 package currently published on GitHub Releases; the download, checksum, and Homebrew cask are all generated from the same metadata.
+            <code>docs/release.json</code> records the v0.2.2 package currently published on GitHub Releases; the download, checksum, and Homebrew cask are all generated from the same metadata.
           </p>
         </div>
         <div class="data-grid">
           <article data-reveal>
-            <h3>Hotkeys</h3>
+            <h3>Current Codex IPC</h3>
             <ul>
-              <li>Every action can be rebound from settings with a key recorder; conflicts are rejected and defaults restore in one click.</li>
-              <li>Space approves and Backspace declines by default; bare keys are active only while an approval is pending.</li>
+              <li>Prefers the <code>~/.codex/ipc/ipc.sock</code> endpoint used by current ChatGPT/Codex builds.</li>
+              <li>Legacy temporary sockets remain available as a compatibility fallback.</li>
             </ul>
           </article>
           <article data-reveal>
-            <h3>Launch presence</h3>
+            <h3>Reconnect control</h3>
             <ul>
-              <li>The island shows itself for about eight seconds on every launch so you can tell the app started.</li>
-              <li>Verification and Reduce Motion behavior stay unchanged.</li>
+              <li>Avoids repeated deep socket scans and duplicate reconnects.</li>
+              <li>Recently failed endpoints are skipped briefly to reduce idle work.</li>
             </ul>
           </article>
           <article data-reveal>
-            <h3>A more compact island</h3>
+            <h3>Resource cleanup</h3>
             <ul>
-              <li>Everything is 20% smaller: the pill is 196×34 and the expanded panel 496 wide.</li>
-              <li>Fonts and spacing shrink proportionally without changing layout or density.</li>
+              <li>EOF handlers are removed after a connection closes.</li>
+              <li>The app-server output buffer is bounded for long-running sessions.</li>
             </ul>
           </article>
           <article data-reveal>
-            <h3>Carried over from v0.2.0</h3>
+            <h3>Active state database</h3>
             <ul>
-              <li>One-click updates, the approval queue, notifications, local statistics, and the Universal package all remain.</li>
+              <li>The current Codex state database is selected using recent database and WAL activity.</li>
               <li>From v0.2.0 you can upgrade to this release directly from settings.</li>
             </ul>
           </article>
         </div>
       </section>
 
+      <section class="section split-section" aria-labelledby="v022-title">
+        <div class="split-copy" data-reveal>
+          <p class="eyebrow">v0.2.2</p>
+          <h2 id="v022-title">The current release.</h2>
+          <p>
+            Restores live approval connectivity with current ChatGPT/Codex Desktop builds, reduces socket discovery, reconnect, and buffering overhead during long-running use, and selects the active Codex state database more reliably.
+          </p>
+          <a class="text-link" href="download.html">See full download notes</a>
+        </div>
+        <div class="release-card" aria-label="v0.2.2 assets" data-reveal>
+          <span>Release file</span>
+          <strong>Vibelsland-Free-0.2.2-macos.zip</strong>
+          <dl>
+            <div>
+              <dt>Version</dt>
+              <dd>v0.2.2</dd>
+            </div>
+            <div>
+              <dt>Size</dt>
+              <dd>About 3.8 MB</dd>
+            </div>
+            <div>
+              <dt>Signing</dt>
+              <dd>ad-hoc</dd>
+            </div>
+            <div>
+              <dt>Verification</dt>
+              <dd>SHA-256</dd>
+            </div>
+          </dl>
+        </div>
+      </section>
+
       <section class="section split-section" aria-labelledby="v021-title">
         <div class="split-copy" data-reveal>
           <p class="eyebrow">v0.2.1</p>
-          <h2 id="v021-title">The current release.</h2>
+          <h2 id="v021-title">Previous release: hotkeys and a compact island.</h2>
           <p>
-            Hotkeys are now customizable per action: Space approves and Backspace declines the pending approval by default, and bare keys are captured only while an approval is pending so normal typing is never affected. The island also shows itself for about eight seconds on every launch, and the whole island is 20% smaller.
+            Hotkeys became customizable per action, with Space approving and Backspace declining by default while bare keys stayed active only for pending approvals. The island gained an eight-second launch presence and became 20% smaller.
           </p>
-          <a class="text-link" href="download.html">See full download notes</a>
         </div>
         <div class="release-card" aria-label="v0.2.1 assets" data-reveal>
           <span>Release file</span>
@@ -275,7 +307,7 @@
         </div>
         <div class="checksum-card" data-reveal>
           <span>SHA-256</span>
-          <code>cb19ce0cf320ff016d7426f6edcaef7f5438e237a37ddca7884f65650df29dbb</code>
+          <code>9a3971677e9c9dbf5dc78f32e1f603d46f83128958f07b2ec3155ab63b7dc654</code>
         </div>
       </section>
 
@@ -298,7 +330,7 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="../lang.js?v=ba22c3c97c83" defer></script>
+    <script src="../lang.js?v=99fea880a93c" defer></script>
     <script src="../effects.js?v=984d01b9fa2d" defer></script>
   </body>
 </html>

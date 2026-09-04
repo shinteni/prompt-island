@@ -39,12 +39,12 @@ GitHub 免费发布或后续 notarized 分发前，必须同时完成自动验�
 - [ ] 运行 `zsh scripts/verify-release-readiness.sh --github`，确认 GitHub 免费发布门禁会先阻止本地 dist / 官网元数据 / 线上 Release 不一致，再明确列出未完成的人工回归；如果日常实例正在运行，应先提示退出而不是制造第二个浮岛；所有人工项完成后再要求该脚本通过。
 - [ ] 若走 Developer ID/notarization 分发线，运行 `zsh scripts/verify-release-readiness.sh --notarized`，确认正式签名、notarization 和下载后首次启动验证已经完成。
 - [ ] 确认产物位于 `dist/>_ - island.app`。
-- [ ] 确认下载包位于 `dist/Vibelsland-Free-0.2.1-macos.zip`。
+- [ ] 确认下载包位于 `dist/Vibelsland-Free-0.2.2-macos.zip`。
 - [ ] 确认 GitHub 免费发布包的 ad-hoc 签名、Gatekeeper 首次打开说明、SHA-256 校验、源码和 Release 说明保持一致；如果本地重新打包产生不同 hash，必须同时上传匹配的 GitHub Release 资产、更新 `docs/release.json`、同步下载页/README 后再发布；如果要走 notarized 分发线，再另行完成 Developer ID 签名和 notarization。
 
 ## 人工回归
 
-- [ ] 公众下载信任链：在干净目录下载 zip 和 `.sha256`，运行 `cd ~/Downloads && shasum -a 256 -c Vibelsland-Free-0.2.1-macos.zip.sha256`，解压后拖入 Applications；若出现 Apple 无法验证提示，点“完成”，到“系统设置 → 隐私与安全性”点“仍要打开”，再安装或修复 hooks，并确认设置页健康检查正常。
+- [ ] 公众下载信任链：在干净目录下载 zip 和 `.sha256`，运行 `cd ~/Downloads && shasum -a 256 -c Vibelsland-Free-0.2.2-macos.zip.sha256`，解压后拖入 Applications；若出现 Apple 无法验证提示，点“完成”，到“系统设置 → 隐私与安全性”点“仍要打开”，再安装或修复 hooks，并确认设置页健康检查正常。
 - [ ] ad-hoc 签名说明：下载页、安装页、FAQ 和 README 都明确当前包不是 Developer ID notarized；SHA-256 只证明文件匹配 GitHub Release 资产，不证明开发者身份；`spctl` 对 ad-hoc 包显示 rejected 或 not accepted 不应被解释成 checksum 失败。
 - [ ] 公开报告边界：支持页和 `security.txt` 明确普通 bug 走公开 issue 且必须脱敏；安全漏洞不在公开 issue 中发布利用细节、token、路径、prompt、会话内容或完整日志。
 - [ ] 404 与移动端站点体验：真实访问根路径、`/en/not-found-*.html`、`/ja/not-found-*.html` 均返回站点 404；360px、390px 和 1024px 宽度下主导航、下载首屏、FAQ/隐私首屏不遮挡正文。

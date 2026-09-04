@@ -77,6 +77,7 @@ vibelsland_write_test_config() {
   "doNotDisturb": $do_not_disturb,
   "launchAtLogin": $launch_at_login,
   "islandPosition": "$island_position",
+  "language": "chinese",
   "approvalTimeoutSeconds": $approval_timeout_seconds,
   "maxVisibleSessions": $max_visible_sessions
 }

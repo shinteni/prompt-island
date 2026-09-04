@@ -199,6 +199,10 @@ package final class CodexAppServerLiveClient: @unchecked Sendable {
             candidates.append(URL(fileURLWithPath: override))
         }
 
+        candidates.append(
+            AppPaths.home.appendingPathComponent(".codex/ipc/ipc.sock")
+        )
+
         if let cachedSocketURL {
             candidates.append(cachedSocketURL)
         }
