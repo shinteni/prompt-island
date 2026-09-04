@@ -117,6 +117,42 @@ struct VibelslandFreeCoreTests {
         try reader.close()
     }
 
+    @Test func testCodexDesktopPrefersCurrentStableIPCSocket() throws {
+        let manager = FileManager.default
+        let root = manager.temporaryDirectory
+            .appendingPathComponent("vibelsland-codex-ipc-\(UUID().uuidString)", isDirectory: true)
+        let socketURL = root.appendingPathComponent(".codex/ipc/ipc.sock")
+        let homeVariable = "VIBELSLAND_HOME"
+        let socketVariable = "VIBELSLAND_CODEX_IPC_SOCKET"
+        let previousHome = ProcessInfo.processInfo.environment[homeVariable]
+        let previousSocket = ProcessInfo.processInfo.environment[socketVariable]
+        defer {
+            try? manager.removeItem(at: root)
+            if let previousHome {
+                setenv(homeVariable, previousHome, 1)
+            } else {
+                unsetenv(homeVariable)
+            }
+            if let previousSocket {
+                setenv(socketVariable, previousSocket, 1)
+            } else {
+                unsetenv(socketVariable)
+            }
+        }
+
+        try manager.createDirectory(at: socketURL.deletingLastPathComponent(), withIntermediateDirectories: true)
+        try Data().write(to: socketURL)
+        setenv(homeVariable, root.path, 1)
+        unsetenv(socketVariable)
+
+        let client = CodexAppServerLiveClient(fileManager: manager)
+        XCTAssertEqual(
+            client.codexIPCSocketCandidates().first?.path,
+            socketURL.path,
+            "The current ~/.codex/ipc/ipc.sock endpoint must take precedence over legacy temporary sockets"
+        )
+    }
+
     @Test func testSmokeCoverage() throws {
         func jsonDictionary(_ text: String) throws -> [String: Any] {
             let data = text.data(using: .utf8)!

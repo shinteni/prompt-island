@@ -33,3 +33,9 @@
 - The island is 20% smaller overall: window frames scale to 0.8 while content lays out at design size and scales down uniformly, so fonts and spacing shrink proportionally without breaking layouts.
 - The island now shows itself (idle-mini) for about eight seconds on every launch so you can tell the app started, then hides as usual when idle.
 - Global hotkeys are now customizable per action (record any key combo in settings), and gain two new actions with bare-key defaults: Space approves the pending approval and Backspace declines it. Bare keys register only while an approval is pending and release immediately after, so normal typing is never captured.
+
+## 0.2.2 - 2026-09-04
+
+- Restored Codex Desktop live approvals for current ChatGPT/Codex builds by preferring the stable `~/.codex/ipc/ipc.sock` endpoint while retaining the legacy temporary-socket fallback.
+- Reduced long-running background work by avoiding repeated deep socket scans and duplicate reconnects, cleaning up EOF handlers, and bounding the app-server output buffer.
+- Improved Codex state database selection by preferring the database with current WAL activity.
