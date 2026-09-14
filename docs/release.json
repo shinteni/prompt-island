@@ -7,10 +7,10 @@
   "release_url": "https://github.com/shinteni/prompt-island/releases/tag/v0.3.4",
   "release_api_url": "https://api.github.com/repos/shinteni/prompt-island/releases/tags/v0.3.4",
   "release_notes_url": "https://shinteni.github.io/prompt-island/release-notes.html",
-  "published_at": "2026-09-14T10:57:22Z",
+  "published_at": "2026-09-14T11:15:24Z",
   "source": {
     "ref": "refs/tags/v0.3.4",
-    "sha": "bca93546424a73af006eb279ac22b15b74cfaf20"
+    "sha": "ffe6d3eaa3a9002c3b73e45ed5a3736855ccc3e7"
   },
   "platform": {
     "name": "macOS",
@@ -32,12 +32,14 @@
     "name": "Vibelsland-Free-0.3.4-macos.zip",
     "size_bytes": 3957683,
     "sha256": "45999d9117eaf0cd804b842201a6a9972d9f49fedcc4a4d2cde589695f3a878f",
-    "download_url": "https://github.com/shinteni/prompt-island/releases/download/v0.3.4/Vibelsland-Free-0.3.4-macos.zip"
+    "download_url": "https://github.com/shinteni/prompt-island/releases/download/v0.3.4/Vibelsland-Free-0.3.4-macos.zip",
+    "github_asset_id": 563234506
   },
   "checksum_file": {
     "name": "Vibelsland-Free-0.3.4-macos.zip.sha256",
     "size_bytes": 98,
     "sha256": "5df0533199dc903121cc8140045e01da46ce2523101cf7e5dcbaf6fcf3ce3d33",
-    "download_url": "https://github.com/shinteni/prompt-island/releases/download/v0.3.4/Vibelsland-Free-0.3.4-macos.zip.sha256"
+    "download_url": "https://github.com/shinteni/prompt-island/releases/download/v0.3.4/Vibelsland-Free-0.3.4-macos.zip.sha256",
+    "github_asset_id": 563234505
   }
 }
