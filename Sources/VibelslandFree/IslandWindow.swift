@@ -101,6 +101,10 @@ final class IslandWindow: NSPanel {
 
     func present(launchAnimated: Bool) {
         guard !suppressedForSettings else { return }
+        let animateEntrance = launchAnimated && !hasPresented
+            && store?.isExpanded != true
+            && !NSWorkspace.shared.accessibilityDisplayShouldReduceMotion
+        stopLaunchEntrance()
         hasPresented = true
         guard !shouldHideIdlePresentation(expanded: store?.isExpanded ?? false) else {
             alphaValue = 0
@@ -110,11 +114,61 @@ final class IslandWindow: NSPanel {
         if hiddenForSystemOverview {
             restoreAfterSystemOverviewIfNeeded(force: true)
         }
+        alphaValue = 1
+        if animateEntrance {
+            if let config = store?.configurationStore.config,
+               config.enableSounds, !config.doNotDisturb {
+                RetroSoundPlayer.shared.prepare(.launch, theme: config.soundTheme)
+                RetroSoundPlayer.shared.play(.launch, theme: config.soundTheme)
+            }
+            animateLaunchEntrance()
+        }
         if store?.isExpanded == true {
             makeKeyAndOrderFront(nil)
         } else {
             orderFrontRegardless()
         }
+    }
+
+    /// Animate the real island at its final position. Core Animation owns the
+    /// short entrance; no extra window, display link, or delayed hand-off.
+    private func animateLaunchEntrance() {
+        contentView?.layoutSubtreeIfNeeded()
+        guard let layer = contentView?.layer else { return }
+        let scale: CGFloat = 0.88
+        var transform = CATransform3DMakeScale(scale, scale, 1)
+        // AppKit can use a noncentral layer anchor. Keep the visible island centered.
+        transform.m41 = (layer.bounds.midX - layer.bounds.width * layer.anchorPoint.x) * (1 - scale)
+        transform.m42 = (layer.bounds.midY - layer.bounds.height * layer.anchorPoint.y) * (1 - scale)
+        let settle = CASpringAnimation(keyPath: "transform")
+        settle.fromValue = NSValue(caTransform3D: transform)
+        settle.toValue = NSValue(caTransform3D: CATransform3DIdentity)
+        settle.mass = 1
+        settle.stiffness = 320
+        settle.damping = 36
+        settle.duration = 0.48
+
+        let fade = CABasicAnimation(keyPath: "opacity")
+        fade.fromValue = 0
+        fade.toValue = 1
+        fade.duration = 0.24
+        fade.timingFunction = CAMediaTimingFunction(name: .easeOut)
+
+        let entrance = CAAnimationGroup()
+        entrance.animations = [settle, fade]
+        entrance.duration = settle.duration
+        layer.add(entrance, forKey: "island.launchEntrance")
+    }
+
+    private func stopLaunchEntrance() {
+        contentView?.layer?.removeAnimation(forKey: "island.launchEntrance")
+    }
+
+    override func sendEvent(_ event: NSEvent) {
+        if event.type == .leftMouseDown || event.type == .rightMouseDown || event.type == .keyDown {
+            stopLaunchEntrance()
+        }
+        super.sendEvent(event)
     }
 
     func setSuppressedForSettings(_ suppressed: Bool) {
@@ -265,6 +319,9 @@ final class IslandWindow: NSPanel {
             abs(frame.width - target.width) > 0.5 ||
             abs(frame.height - target.height) > 0.5
         let presentationChanged = lastAppliedExpanded != expanded
+        if frameWillChange || presentationChanged {
+            stopLaunchEntrance()
+        }
         let transitionDuration = IslandMotionPolicy.WindowTransition.duration(
             expanded: expanded,
             reduceMotion: NSWorkspace.shared.accessibilityDisplayShouldReduceMotion
@@ -317,6 +374,7 @@ final class IslandWindow: NSPanel {
     }
 
     override func orderOut(_ sender: Any?) {
+        stopLaunchEntrance()
         stopFrameAnimation()
         super.orderOut(sender)
     }
@@ -440,12 +498,14 @@ final class IslandWindow: NSPanel {
                 x = screenFrame.maxX - size.width - 24
             }
         }
+        // AppKit rounds window frames to whole points. Compare against that same
+        // frame so idle layout publications do not restart or cancel animations.
         return NSRect(
             x: min(max(x, screenFrame.minX + 12), screenFrame.maxX - size.width - 12),
             y: screenFrame.maxY - size.height - 10,
             width: size.width,
             height: size.height
-        )
+        ).integral
     }
 
     private func compactPreferredSize() -> CGSize {

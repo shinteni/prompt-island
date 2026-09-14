@@ -6,13 +6,13 @@
     <title>版本历史 | Vibelsland Free</title>
     <meta
       name="description"
-      content="Vibelsland Free 版本历史：v0.3.0 的下载、SHA-256 校验、主要功能和安装说明。"
+      content="Vibelsland Free 版本历史：v0.3.1 的下载、SHA-256 校验、主要功能和安装说明。"
     >
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Vibelsland Free">
     <meta property="og:locale" content="zh_CN">
     <meta property="og:title" content="Vibelsland Free 版本历史">
-    <meta property="og:description" content="查看 Vibelsland Free v0.3.0 的发布内容、下载包、校验文件和安装说明。">
+    <meta property="og:description" content="查看 Vibelsland Free v0.3.1 的发布内容、下载包、校验文件和安装说明。">
     <meta property="og:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
     <meta property="og:image:width" content="1672">
     <meta property="og:image:height" content="941">
@@ -20,7 +20,7 @@
     <meta property="og:url" content="https://shinteni.github.io/prompt-island/release-notes.html">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Vibelsland Free 版本历史">
-    <meta name="twitter:description" content="查看 Vibelsland Free v0.3.0 的发布内容、下载包、校验文件和安装说明。">
+    <meta name="twitter:description" content="查看 Vibelsland Free v0.3.1 的发布内容、下载包、校验文件和安装说明。">
     <meta name="twitter:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
     <meta name="twitter:image:alt" content="Vibelsland Free macOS AI 编程状态界面">
     <meta name="theme-color" content="#070706">
@@ -61,17 +61,17 @@
           <p class="eyebrow">Release Notes</p>
           <h1 id="release-title">版本历史。</h1>
           <p>
-            当前公开下载版本是 v0.3.0：会话文件在后台读取，状态按批次更新；隐藏窗口会停止动画，待处理审批不受显示数量上限影响。
+            当前公开版本是 v0.3.1：启动时直接在顶部显示真实浮岛，用短暂淡入和轻微缩放完成入场；同时包含 v0.3.0 的界面、动画和后台性能优化。
           </p>
           <div class="hero-actions">
             <a class="button primary" href="download.html">查看完整下载说明</a>
-            <a class="button secondary" href="https://github.com/shinteni/prompt-island/releases/tag/v0.3.0">打开 GitHub Release</a>
+            <a class="button secondary" href="https://github.com/shinteni/prompt-island/releases/tag/v0.3.1">打开 GitHub Release</a>
           </div>
         </div>
         <div class="privacy-summary" aria-label="版本摘要" data-reveal>
           <div>
             <span>当前版本</span>
-            <strong>v0.3.0</strong>
+            <strong>v0.3.1</strong>
           </div>
           <div>
             <span>系统要求</span>
@@ -86,10 +86,10 @@
 
       <section class="section data-section surface-section" aria-labelledby="source-status-title">
         <div class="section-heading align-left" data-reveal>
-          <p class="eyebrow">v0.3.0 新增</p>
+          <p class="eyebrow">v0.3.1 与 v0.3.0 的改进</p>
           <h2 id="source-status-title">减少主线程工作，保持动画连续。</h2>
           <p>
-            <code>docs/release.json</code> 记录当前发布到 GitHub Releases 的 v0.3.0 包；下载、校验和与 Homebrew cask 均由同一份元数据生成。
+            <code>docs/release.json</code> 记录当前发布到 GitHub Releases 的 v0.3.1 包；下载、校验和与 Homebrew cask 均由同一份元数据生成。
           </p>
         </div>
         <div class="data-grid">
@@ -126,10 +126,43 @@
         </div>
       </section>
 
+      <section class="section split-section" aria-labelledby="v031-title">
+        <div class="split-copy" data-reveal>
+          <p class="eyebrow">v0.3.1</p>
+          <h2 id="v031-title">当前版本。</h2>
+          <p>
+            重新设计启动动画：真实浮岛在最终位置淡入并轻微放大，约半秒内稳定显示。移除屏幕中央的开场窗口和 2.2 秒等待；点击、审批和打开设置可立即中断入场。保留 v0.3.0 的淡蓝紫渐变、后台读取与状态更新优化。
+          </p>
+          <a class="text-link" href="download.html">查看完整下载说明</a>
+        </div>
+        <div class="release-card" aria-label="v0.3.1 资产" data-reveal>
+          <span>发布文件</span>
+          <strong>Vibelsland-Free-0.3.1-macos.zip</strong>
+          <dl>
+            <div>
+              <dt>版本</dt>
+              <dd>v0.3.1</dd>
+            </div>
+            <div>
+              <dt>大小</dt>
+              <dd>约 3.7 MB</dd>
+            </div>
+            <div>
+              <dt>签名</dt>
+              <dd>ad-hoc 签名</dd>
+            </div>
+            <div>
+              <dt>校验</dt>
+              <dd>SHA-256</dd>
+            </div>
+          </dl>
+        </div>
+      </section>
+
       <section class="section split-section" aria-labelledby="v030-title">
         <div class="split-copy" data-reveal>
           <p class="eyebrow">v0.3.0</p>
-          <h2 id="v030-title">当前版本。</h2>
+          <h2 id="v030-title">v0.3.0：界面与后台性能优化。</h2>
           <p>
             重新设计浮岛、任务列表和审批界面，使用可中断的阻尼动画。进程内读取 Codex 数据库，后台读取会话文件，并合并状态更新；保留超过显示上限的待处理审批。
           </p>
@@ -365,7 +398,7 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="lang.js?v=725b9a48ca36" defer></script>
+    <script src="lang.js?v=f5a6c7c0f2fb" defer></script>
     <script src="effects.js?v=984d01b9fa2d" defer></script>
   </body>
 </html>
