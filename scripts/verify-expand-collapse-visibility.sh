@@ -119,14 +119,19 @@ EXPANDED_WIDTH="$(printf '%s\n' "$EXPANDED_FRAME" | /usr/bin/awk '{print $3}')"
 
 COLLAPSE_SAMPLES="$TEMP_HOME/collapse-frames.txt"
 : > "$COLLAPSE_SAMPLES"
-/usr/bin/swift "$WINDOW_FRAME_SAMPLES" "$APP_PID" 1.0 0.016 "Collapse frames" > "$COLLAPSE_SAMPLES" &
+/usr/bin/swift "$WINDOW_FRAME_SAMPLES" "$APP_PID" 2.0 0.016 "Collapse frames" > "$COLLAPSE_SAMPLES" &
 SAMPLE_PID="$!"
-(
-    sleep 0.08
-    post_expanded_state false
-) &
-POST_COLLAPSE_PID="$!"
-wait "$POST_COLLAPSE_PID"
+# The Swift sampler must finish compiling and record its first frame before
+# collapse starts; a fixed shell delay can miss the start of a healthy animation.
+while [[ ! -s "$COLLAPSE_SAMPLES" ]]; do
+    if ! /bin/kill -0 "$SAMPLE_PID" 2>/dev/null; then
+        wait "$SAMPLE_PID"
+        echo "Collapse sampler exited before recording its first frame" >&2
+        exit 1
+    fi
+    sleep 0.02
+done
+post_expanded_state false
 wait "$SAMPLE_PID"
 INTERMEDIATE_FRAME_COUNT="$(/usr/bin/awk -v compactMax="$MAX_TASK_WIDTH" -v expanded="$EXPANDED_WIDTH" '
     $4 > compactMax + 4 && $4 < expanded - 4 { count += 1 }
