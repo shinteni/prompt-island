@@ -658,7 +658,10 @@ require_status "$RELEASE_API_URL" "$TMP_DIR/release-api.json"
 REPOSITORY_PATH="${REPOSITORY_URL#https://github.com/}"
 TAG_REF_API="https://api.github.com/repos/$REPOSITORY_PATH/git/ref/${SOURCE_REF#refs/}"
 require_status "$TAG_REF_API" "$TMP_DIR/release-tag-ref.json"
-python3 - "$TMP_DIR/release.json" "$TMP_DIR/release-api.json" "$TMP_DIR/release-tag-ref.json" <<'PY'
+# Resolve the full tag ref through the commits API, which also dereferences
+# annotated tags without confusing the tag object's SHA with its commit SHA.
+require_status "https://api.github.com/repos/$REPOSITORY_PATH/commits/$SOURCE_REF" "$TMP_DIR/release-tag-commit.json"
+python3 - "$TMP_DIR/release.json" "$TMP_DIR/release-api.json" "$TMP_DIR/release-tag-ref.json" "$TMP_DIR/release-tag-commit.json" <<'PY'
 import json
 import sys
 from pathlib import Path
@@ -666,6 +669,7 @@ from pathlib import Path
 metadata = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
 release = json.loads(Path(sys.argv[2]).read_text(encoding="utf-8"))
 tag_ref = json.loads(Path(sys.argv[3]).read_text(encoding="utf-8"))
+tag_commit = json.loads(Path(sys.argv[4]).read_text(encoding="utf-8"))
 if release.get("tag_name") != metadata["tag"]:
     raise SystemExit(f"Live check failed: release tag mismatch: {release.get('tag_name')}")
 if release.get("draft") or release.get("prerelease"):
@@ -673,10 +677,10 @@ if release.get("draft") or release.get("prerelease"):
 if tag_ref.get("ref") != metadata["source"]["ref"]:
     raise SystemExit(f"Live check failed: tag ref mismatch: {tag_ref.get('ref')}")
 tag_object = tag_ref.get("object", {})
-if tag_object.get("type") != "commit":
-    raise SystemExit(f"Live check failed: release tag should resolve directly to a commit: {tag_object.get('type')}")
-if tag_object.get("sha") != metadata["source"]["sha"]:
-    raise SystemExit(f"Live check failed: release tag commit mismatch: {tag_object.get('sha')}")
+if tag_object.get("type") not in {"commit", "tag"}:
+    raise SystemExit(f"Live check failed: unsupported release tag object: {tag_object.get('type')}")
+if tag_commit.get("sha") != metadata["source"]["sha"]:
+    raise SystemExit(f"Live check failed: release tag commit mismatch: {tag_commit.get('sha')}")
 assets = {asset.get("name"): asset for asset in release.get("assets", [])}
 expected_names = {metadata["archive"]["name"], metadata["checksum_file"]["name"]}
 actual_names = set(assets)
