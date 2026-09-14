@@ -12,6 +12,14 @@ struct IslandDockingTests {
         #expect(IslandDockingPolicy.edge(for: CGRect(x: -900, y: 1110, width: 240, height: 40), in: screen) == nil)
     }
 
+    @Test func draggingPastEitherEdgeStillSnaps() {
+        let screen = CGRect(x: -1512, y: 200, width: 1512, height: 950)
+        #expect(IslandDockingPolicy.edge(for: CGRect(x: -1612, y: 500, width: 240, height: 40), in: screen) == .left)
+        #expect(IslandDockingPolicy.edge(for: CGRect(x: -100, y: 500, width: 240, height: 40), in: screen) == .right)
+        #expect(IslandDockingPolicy.edge(for: CGRect(x: screen.minX + 25, y: 500, width: 240, height: 40), in: screen) == nil)
+        #expect(IslandDockingPolicy.edge(for: CGRect(x: screen.maxX - 265, y: 500, width: 240, height: 40), in: screen) == nil)
+    }
+
     @Test func tabAndExpandedPanelStayOnTheirScreenAndRestoreTheirAnchor() {
         let screen = CGRect(x: -1512, y: -900, width: 1512, height: 900)
         for edge in [IslandDockEdge.left, .right] {
@@ -93,6 +101,41 @@ struct IslandDockingTests {
             window.sendEvent(try event(.leftMouseUp, NSPoint(x: 100, y: 20)))
             #expect(!window.isDragging)
             #expect(store.configurationStore.config.islandDockPlacement?.edge == .left)
+        }
+    }
+
+    @Test func droppingThePointerAtEitherScreenEdgeDocksCompactAndExpandedWindows() async throws {
+        try await withWindow { window, store in
+            let screen = try #require(NSScreen.main?.visibleFrame)
+            for expanded in [false, true] {
+                for edge in [IslandDockEdge.left, .right] {
+                    store.configurationStore.config.islandDockPlacement = nil
+                    store.isExpanded = expanded
+                    let size = expanded ? CGSize(width: 496, height: 200) : CGSize(width: 240, height: 40)
+                    let initial = CGRect(x: screen.midX - size.width / 2, y: screen.midY - size.height / 2,
+                        width: size.width, height: size.height)
+                    window.setFrame(initial, display: true)
+                    let grab = NSPoint(x: expanded ? 300 : 100, y: size.height - 12)
+                    let dropX = edge == .left ? screen.minX + 1 : screen.maxX - 1
+                    let windowNumber = window.windowNumber
+                    func event(_ type: NSEvent.EventType, _ point: NSPoint) throws -> NSEvent {
+                        try #require(NSEvent.mouseEvent(with: type, location: point, modifierFlags: [],
+                            timestamp: ProcessInfo.processInfo.systemUptime, windowNumber: windowNumber,
+                            context: nil, eventNumber: 0, clickCount: 1, pressure: 1))
+                    }
+                    window.sendEvent(try event(.leftMouseDown, grab))
+                    window.sendEvent(try event(.leftMouseDragged, NSPoint(x: dropX - initial.minX, y: grab.y)))
+                    #expect(window.isDragging)
+                    #expect(edge == .left ? window.frame.minX < screen.minX : window.frame.maxX > screen.maxX)
+                    window.sendEvent(try event(.leftMouseUp, grab))
+                    #expect(!window.isDragging)
+                    #expect(store.configurationStore.config.islandDockPlacement?.edge == edge)
+                    store.isExpanded = false
+                    window.applyFrame(expanded: false, position: .topCenter, animated: false)
+                    #expect(window.frame.width <= 30 && window.frame.height <= 60)
+                    #expect(edge == .left ? window.frame.minX == screen.minX : window.frame.maxX == screen.maxX)
+                }
+            }
         }
     }
 

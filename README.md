@@ -15,7 +15,7 @@
 <p align="center">
   <a href="https://shinteni.github.io/prompt-island/">官网</a>
   ·
-  <a href="https://github.com/shinteni/prompt-island/releases/download/v0.3.3/Vibelsland-Free-0.3.3-macos.zip">下载 v0.3.3</a>
+  <a href="https://github.com/shinteni/prompt-island/releases/download/v0.3.4/Vibelsland-Free-0.3.4-macos.zip">下载 v0.3.4</a>
   ·
   <a href="https://shinteni.github.io/prompt-island/install.html">安装说明</a>
   ·
@@ -43,7 +43,7 @@ Vibelsland Free 把 Claude Code、Codex CLI 和 Codex Desktop 的任务状态、
 
 ## 下载与安装
 
-[下载 Vibelsland Free v0.3.3](https://github.com/shinteni/prompt-island/releases/download/v0.3.3/Vibelsland-Free-0.3.3-macos.zip)，解压后将 `>_ - island.app` 移到“应用程序”文件夹。
+[下载 Vibelsland Free v0.3.4](https://github.com/shinteni/prompt-island/releases/download/v0.3.4/Vibelsland-Free-0.3.4-macos.zip)，解压后将 `>_ - island.app` 移到“应用程序”文件夹。
 
 当前版本使用 ad-hoc 签名。首次打开时如被 macOS 阻止，请按照[安装与信任说明](https://shinteni.github.io/prompt-island/install.html)操作。
 
