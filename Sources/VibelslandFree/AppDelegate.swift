@@ -9,7 +9,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject, NSWi
     lazy var store = SessionStore(configurationStore: configurationStore)
 
     private var islandWindow: IslandWindow?
-    private var launchIntroWindow: LaunchIntroWindow?
     private var settingsWindow: NSWindow?
     private var statusItem: NSStatusItem?
     private let hotKeyCenter = GlobalHotKeyCenter()
@@ -17,7 +16,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject, NSWi
     private var sessionsCancellable: AnyCancellable?
     private var runtimeObservers: [NSObjectProtocol] = []
     private var verificationObservers: [NSObjectProtocol] = []
-    private var hasPlayedLaunchIntro = false
     private var settingsSuppressionActive = false
     private var restoreIslandAfterSettings = false
 
@@ -329,27 +327,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject, NSWi
             )
         }
         guard let islandWindow else { return }
-        // 跳过开场：系统减弱动态效果时；以及窗口自动化验证时（开场窗口会
-        // 干扰"空闲应隐藏"这类断言，且平白拖慢每个脚本 2.2 秒）。
-        let skipIntro = NSWorkspace.shared.accessibilityDisplayShouldReduceMotion
-            || ProcessInfo.processInfo.environment["VIBELSLAND_SKIP_LAUNCH_INTRO"] == "1"
-        guard launchAnimated, !hasPlayedLaunchIntro, !skipIntro else {
-            hasPlayedLaunchIntro = true
-            islandWindow.present(launchAnimated: false)
-            return
-        }
-
-        hasPlayedLaunchIntro = true
-        let finalFrame = islandWindow.targetFrame(
-            expanded: store.isExpanded,
-            position: configurationStore.config.islandPosition
+        islandWindow.present(
+            launchAnimated: launchAnimated
+                && ProcessInfo.processInfo.environment["VIBELSLAND_SKIP_LAUNCH_INTRO"] != "1"
         )
-        let introWindow = LaunchIntroWindow(finalFrame: finalFrame, store: store) { [weak self] in
-            self?.launchIntroWindow = nil
-            self?.islandWindow?.present(launchAnimated: false)
-        }
-        launchIntroWindow = introWindow
-        introWindow.start()
     }
 
     private func initialIslandFrame() -> NSRect {
