@@ -127,7 +127,15 @@ struct IslandPanelView: View {
             RoundedRectangle(cornerRadius: radius, style: .continuous)
                 .fill(Color(red: 0.075, green: 0.080, blue: 0.095).opacity(0.94))
             RoundedRectangle(cornerRadius: radius, style: .continuous)
-                .fill(LinearGradient(colors: [.white.opacity(0.045), .clear], startPoint: .top, endPoint: .bottom))
+                .fill(LinearGradient(
+                    colors: [
+                        Color(red: 0.16, green: 0.33, blue: 0.55).opacity(0.24),
+                        .white.opacity(0.018),
+                        Color(red: 0.32, green: 0.20, blue: 0.43).opacity(0.16)
+                    ],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                ))
             RoundedRectangle(cornerRadius: radius, style: .continuous)
                 .strokeBorder(.white.opacity(0.16), lineWidth: 0.75)
         }

@@ -42,7 +42,7 @@
 
 ## 0.3.0 - 2026-09-14
 
-- Redesigned the island with a dark graphite surface, a single backdrop blur, lighter task rows, clearer typography, and a high-contrast approval action. Removed stacked glass effects and colored glow borders to reduce compositing work.
+- Redesigned the island with a dark graphite surface, subtle static blue-to-violet gradients, a single backdrop blur, lighter task rows, clearer typography, and a high-contrast approval action. Removed stacked glass effects and colored glow borders to reduce compositing work.
 - Expand/collapse now uses a display-synchronized, critically damped spring that retains velocity when interrupted. Content keeps a fixed layout while the window resizes, avoiding text reflow during transitions.
 - Replaced 3–4 `sqlite3` subprocesses per Codex refresh with native read-only SQLite queries in one read transaction. Failed reads preserve the last good session state instead of clearing the island.
 - Hook events appear immediately; a serial background worker enriches them from transcripts and coalesces pending events for each session. Explicit transcript paths no longer scan the whole history tree, and stale reads cannot overwrite newer events.
@@ -51,4 +51,4 @@
 - Window transitions finish when their display link finishes, without a separate reset timer. Hiding the island cancels the active frame transition; hidden spinners stop animating. Mini rings, breathing lights, pixel indicators and compact spinners honor Reduce Motion.
 - Disabled Codex Desktop integrations no longer launch a connection probe at startup.
 - Synthetic optimized-build benchmark on the same Apple Silicon Mac (Swift 6.3.3): 100 explicit-path reads with 5,000 history files took 2.259 s before and 0.012 s after; 100 refreshes of a 5,000-thread database took 22.619 s before and 0.266 s after. These are reader timings, not whole-machine CPU savings. Reproduce with `scripts/benchmark-readers.swift`.
-- Isolated native-app comparison on the same Mac: with 5,000 history files and four Hooks per second for 15 seconds, app CPU time averaged 18.16% before and 3.75% after, peak sampled RSS was 91.9/85.2 MB, and median Hook acknowledgement was 38.81/2.33 ms. Fifteen-second idle samples were 0.07%/0.00%; 0.00% means below sampling resolution, not zero energy use. Reproduce with `python3 scripts/benchmark-runtime.py <baseline-binary> <candidate-binary>`.
+- Isolated native-app comparison on the same Mac: with 5,000 history files and four Hooks per second for 15 seconds, app CPU time averaged 19.08% before and 3.81% after, peak sampled RSS was 95.0/85.1 MB, and median Hook acknowledgement was 42.43/2.32 ms. Fifteen-second idle samples were 0.00%/0.00%; 0.00% means below sampling resolution, not zero energy use. Reproduce with `python3 scripts/benchmark-runtime.py <baseline-binary> <candidate-binary>`.

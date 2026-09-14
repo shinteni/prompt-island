@@ -12,7 +12,7 @@ Vibelsland Free keeps local AI coding status, tool activity, status summaries, a
 - Platform: macOS 14+
 - Distribution: GitHub Releases
 - Package: Vibelsland-Free-0.3.0-macos.zip
-- SHA-256: 112785a11d7ccd9e6c3a6dd60ebf4815605037c5a5fcfe473a30ce16ffed49ee
+- SHA-256: 01387eee3133efb8c927205e7be8456114b6cdd87573bee36c714a8a0783d048
 - Signing: ad-hoc signed; first launch may require Gatekeeper confirmation
 - Source: https://github.com/shinteni/prompt-island
 - Download: https://github.com/shinteni/prompt-island/releases/download/v0.3.0/Vibelsland-Free-0.3.0-macos.zip

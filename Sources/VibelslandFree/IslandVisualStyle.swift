@@ -40,7 +40,7 @@ extension AgentSource {
     }
 }
 
-// A single material belongs to the window. Cards use inexpensive, flat fills.
+// A single material belongs to the window. Cards use static gradient fills.
 struct ClearGlassRoundedBackground: View {
     let cornerRadius: CGFloat
     var highlighted = false
@@ -48,7 +48,14 @@ struct ClearGlassRoundedBackground: View {
 
     var body: some View {
         RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-            .fill(Color.white.opacity(highlighted ? 0.075 : 0.035))
+            .fill(LinearGradient(
+                colors: [
+                    .white.opacity(highlighted ? 0.085 : 0.04),
+                    .white.opacity(highlighted ? 0.035 : 0.018)
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            ))
             .overlay {
                 RoundedRectangle(cornerRadius: cornerRadius, style: .continuous).fill(tint)
             }
