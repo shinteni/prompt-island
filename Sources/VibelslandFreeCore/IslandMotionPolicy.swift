@@ -98,7 +98,6 @@ package enum IslandMotionPolicy {
     package enum WindowTransition {
         package static let expansionDuration: TimeInterval = 0.32
         package static let collapseDuration: TimeInterval = 0.42
-        package static let resetPadding: TimeInterval = 0.10
 
         package static func duration(expanded: Bool) -> TimeInterval {
             expanded ? expansionDuration : collapseDuration
@@ -109,20 +108,19 @@ package enum IslandMotionPolicy {
             reduceMotion ? 0 : duration(expanded: expanded)
         }
 
-        package static func resetDelay(expanded: Bool) -> UInt64 {
-            UInt64((duration(expanded: expanded) + resetPadding) * 1_000_000_000)
+        /// A critically damped spring carries velocity across interruptions.
+        package static func sample(start: Double, target: Double, velocity: Double = 0,
+                                   elapsed: TimeInterval, duration: TimeInterval) -> (value: Double, velocity: Double) {
+            guard duration > 0, elapsed < duration else { return (target, 0) }
+            let time = max(0, elapsed)
+            let frequency = 10 / duration
+            let displacement = start - target
+            let coefficient = velocity + frequency * displacement
+            let decay = exp(-frequency * time)
+            return (target + (displacement + coefficient * time) * decay,
+                    (velocity - frequency * coefficient * time) * decay)
         }
 
-        /// 帧动画缓动。展开用 ease-out-cubic：起步快（跟手感），落定柔和；
-        /// 收起保留 smoothstep 的对称节奏，避免收起显得急促。
-        package static func easedProgress(_ progress: Double, expanded: Bool) -> Double {
-            let t = min(max(progress, 0), 1)
-            if expanded {
-                let inverse = 1 - t
-                return 1 - inverse * inverse * inverse
-            }
-            return t * t * (3 - 2 * t)
-        }
     }
 
     package enum ContentTransition {

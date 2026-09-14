@@ -23,7 +23,6 @@ final class IslandWindow: NSPanel {
     private var lastAppliedExpanded: Bool?
     private var lastLayoutSignature: IslandLayoutSignature?
     var lastVisibleFrame: NSRect?
-    private var transitionResetTask: Task<Void, Never>?
     private var frameDisplayLink: CADisplayLink?
     private var frameAnimationContext: FrameAnimationContext?
     private var hasPresented = false
@@ -33,7 +32,7 @@ final class IslandWindow: NSPanel {
         let target: NSRect
         let startedAt: CFTimeInterval
         let duration: TimeInterval
-        let expanded: Bool
+        let velocity: [Double]
     }
     var hiddenForSystemOverview = false
     var suppressedForSettings = false
@@ -250,7 +249,6 @@ final class IslandWindow: NSPanel {
         shouldOrder: Bool = true
     ) {
         if shouldHideIdlePresentation(expanded: expanded) {
-            transitionResetTask?.cancel()
             stopFrameAnimation()
             store?.isIslandTransitioning = false
             alphaValue = 0
@@ -272,23 +270,7 @@ final class IslandWindow: NSPanel {
             reduceMotion: NSWorkspace.shared.accessibilityDisplayShouldReduceMotion
         )
         let shouldAnimateFrame = animated && hasPresented && frameWillChange && transitionDuration > 0
-
-        if shouldAnimateFrame {
-            store?.isIslandTransitioning = true
-            transitionResetTask?.cancel()
-            let resetDelay = IslandMotionPolicy.WindowTransition.resetDelay(expanded: expanded)
-            transitionResetTask = Task { [weak store] in
-                try? await Task.sleep(nanoseconds: resetDelay)
-                guard !Task.isCancelled else { return }
-                await MainActor.run {
-                    store?.isIslandTransitioning = false
-                }
-            }
-        } else {
-            transitionResetTask?.cancel()
-            stopFrameAnimation()
-            store?.isIslandTransitioning = false
-        }
+            && !hiddenForSystemOverview && !suppressedForSettings
 
         let shouldRefreshOrdering = presentationChanged || frameWillChange || !isVisible || alphaValue < 0.99
         if shouldOrder && hasPresented && shouldRefreshOrdering && !hiddenForSystemOverview && !suppressedForSettings {
@@ -301,7 +283,7 @@ final class IslandWindow: NSPanel {
         }
 
         if shouldAnimateFrame {
-            animateFrame(to: target, duration: transitionDuration, expanded: expanded)
+            animateFrame(to: target, duration: transitionDuration)
         } else if frameWillChange {
             stopFrameAnimation()
             setFrame(target, display: true)
@@ -334,27 +316,37 @@ final class IslandWindow: NSPanel {
         )
     }
 
+    override func orderOut(_ sender: Any?) {
+        stopFrameAnimation()
+        super.orderOut(sender)
+    }
+
     private func stopFrameAnimation() {
         frameDisplayLink?.invalidate()
         frameDisplayLink = nil
         frameAnimationContext = nil
+        if store?.isIslandTransitioning == true { store?.isIslandTransitioning = false }
     }
 
-    /// 帧动画由 CADisplayLink 驱动：跟随显示器实际刷新率（ProMotion 下满 120Hz），
-    /// 替代旧的固定 60Hz Timer；缓动曲线在 IslandMotionPolicy 中按展开/收起区分。
-    private func animateFrame(to target: NSRect, duration: TimeInterval, expanded: Bool) {
+    /// Display-synchronized, critically damped motion. Retarget from the visible
+    /// frame and carry the previous spring velocity, even when clicks reverse it.
+    private func animateFrame(to target: NSRect, duration: TimeInterval) {
+        let velocity = frameAnimationContext.map {
+            frameSample($0, elapsed: CACurrentMediaTime() - $0.startedAt).velocity
+        } ?? [0, 0, 0, 0]
         stopFrameAnimation()
         guard duration > 0, let contentView else {
             setFrame(target, display: true)
             rememberVisibleFrame()
             return
         }
+        store?.isIslandTransitioning = true
         frameAnimationContext = FrameAnimationContext(
             start: frame,
             target: target,
             startedAt: CACurrentMediaTime(),
             duration: duration,
-            expanded: expanded
+            velocity: velocity
         )
         let link = contentView.displayLink(target: self, selector: #selector(stepFrameDisplayLink(_:)))
         link.add(to: .main, forMode: .common)
@@ -362,27 +354,29 @@ final class IslandWindow: NSPanel {
     }
 
     @objc private func stepFrameDisplayLink(_ link: CADisplayLink) {
-        guard let context = frameAnimationContext else {
+        guard isVisible, !hiddenForSystemOverview, !suppressedForSettings,
+              let context = frameAnimationContext else {
             stopFrameAnimation()
             return
         }
         let elapsed = CACurrentMediaTime() - context.startedAt
-        let progress = min(max(elapsed / max(context.duration, 0.001), 0), 1)
-        let eased = IslandMotionPolicy.WindowTransition.easedProgress(progress, expanded: context.expanded)
-        let start = context.start
-        let target = context.target
-        let next = NSRect(
-            x: start.minX + (target.minX - start.minX) * eased,
-            y: start.minY + (target.minY - start.minY) * eased,
-            width: start.width + (target.width - start.width) * eased,
-            height: start.height + (target.height - start.height) * eased
-        )
-        setFrame(next, display: true)
-        if progress >= 1 {
+        setFrame(frameSample(context, elapsed: elapsed).frame, display: true)
+        if elapsed >= context.duration {
             stopFrameAnimation()
-            setFrame(target, display: true)
+            setFrame(context.target, display: true)
             rememberVisibleFrame()
         }
+    }
+
+    private func frameSample(_ context: FrameAnimationContext, elapsed: TimeInterval) -> (frame: NSRect, velocity: [Double]) {
+        let start = [context.start.minX, context.start.minY, context.start.width, context.start.height]
+        let target = [context.target.minX, context.target.minY, context.target.width, context.target.height]
+        let samples = zip(start.indices, zip(start, target)).map { index, values in
+            IslandMotionPolicy.WindowTransition.sample(start: values.0, target: values.1,
+                velocity: context.velocity[index], elapsed: elapsed, duration: context.duration)
+        }
+        return (NSRect(x: samples[0].value, y: samples[1].value, width: samples[2].value, height: samples[3].value),
+                samples.map(\.velocity))
     }
 
     private func applyLayout(_ signature: IslandLayoutSignature, animated: Bool) {
@@ -390,10 +384,7 @@ final class IslandWindow: NSPanel {
         lastLayoutSignature = signature
         updateOutsideClickMonitor(expanded: signature.isExpanded)
 
-        guard previousSignature != signature else {
-            contentView?.needsDisplay = true
-            return
-        }
+        guard previousSignature != signature else { return }
 
         applyFrame(
             expanded: signature.isExpanded,
@@ -484,9 +475,9 @@ final class IslandWindow: NSPanel {
                 ? max(0, configuredLimit - 1)
                 : configuredLimit
         ).count
-        let headerHeight: CGFloat = 24
-        let verticalPadding: CGFloat = 16
-        let rowSpacing: CGFloat = 6
+        let headerHeight: CGFloat = 32
+        let verticalPadding: CGFloat = 24
+        let rowSpacing: CGFloat = 8
         var height = headerHeight + verticalPadding
 
         if hasHealthWarning {
@@ -498,32 +489,24 @@ final class IslandWindow: NSPanel {
                 height += 178 + rowSpacing
             } else if approvalQueue.count > 1 {
                 height += ApprovalQueuePolicy.cardHeight(in: store.sessions) + rowSpacing
-                height += CGFloat(visibleSessionCount) * (48 + rowSpacing)
+                height += CGFloat(visibleSessionCount) * (56 + rowSpacing)
             } else {
-                height += 88 + rowSpacing
-                height += CGFloat(visibleSessionCount) * (48 + rowSpacing)
+                height += 108 + rowSpacing
+                height += CGFloat(visibleSessionCount) * (56 + rowSpacing)
             }
         } else {
             switch visibleSessionCount {
             case 0:
-                height += 62 + rowSpacing
+                height += 76 + rowSpacing
             case 1:
-                height += 62 + rowSpacing
+                height += 76 + rowSpacing
             default:
-                height += CGFloat(visibleSessionCount) * (48 + rowSpacing)
+                height += CGFloat(visibleSessionCount) * (56 + rowSpacing)
             }
         }
 
         height += 8
-        let maximumHeight: CGFloat
-        if isShowingApprovalDetail {
-            maximumHeight = hasHealthWarning ? 430 : 394
-        } else if hasPendingApproval {
-            maximumHeight = hasHealthWarning ? 410 : 374
-        } else {
-            maximumHeight = hasHealthWarning ? 376 : 342
-        }
-        return min(max(height, 126), maximumHeight)
+        return max(height, 126)
     }
 
     private func targetScreen() -> NSScreen? {

@@ -77,7 +77,7 @@ struct IslandPresentationPolicyTests {
         )
         XCTAssertEqual(
             IslandPresentationPolicy.compactSize(sessions: [activeTool], now: now),
-            CGSize(width: 244, height: 42),
+            CGSize(width: 300, height: 50),
             "Active compact size stays stable"
         )
         XCTAssertEqual(
@@ -298,11 +298,6 @@ struct IslandPresentationPolicyTests {
             IslandMotionPolicy.ContentTransition.crossfadeDuration <
                 IslandMotionPolicy.WindowTransition.duration(expanded: false),
             "Content should crossfade inside the longer collapse frame transition"
-        )
-        XCTAssertTrue(
-            IslandMotionPolicy.WindowTransition.resetDelay(expanded: false) >
-                UInt64(IslandMotionPolicy.WindowTransition.duration(expanded: false) * 1_000_000_000),
-            "Transition flags should clear only after the collapse animation settles"
         )
     }
 

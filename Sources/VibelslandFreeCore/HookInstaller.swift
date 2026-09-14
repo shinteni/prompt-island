@@ -513,8 +513,8 @@ package final class HookInstaller {
         #!/bin/zsh
         set -u
 
-        SOCKET="$HOME/.vibelsland-free/run/vibelsland.sock"
-        TOKEN_FILE="$HOME/.vibelsland-free/run/bridge-token"
+        SOCKET="${VIBELSLAND_HOME:-$HOME}/.vibelsland-free/run/vibelsland.sock"
+        TOKEN_FILE="${VIBELSLAND_HOME:-$HOME}/.vibelsland-free/run/bridge-token"
         SOURCE="unknown"
 
         while [[ $# -gt 0 ]]; do

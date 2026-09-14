@@ -52,7 +52,7 @@ final class SessionStore: ObservableObject {
     let codexAppServerLiveClient: CodexAppServerLiveClient
     let transcriptReader: ConversationTranscriptReader
     let approvalNotificationCenter = ApprovalNotificationCenter()
-    let statsStore = UsageStatsStore()
+    let statsStore: UsageStatsStore
     let logger: AppLogger
     var pendingReplies: [String: (String?) -> Void] = [:]
     var pendingEvents: [String: AgentEvent] = [:]
@@ -64,6 +64,9 @@ final class SessionStore: ObservableObject {
     var soundCooldowns: [String: Date] = [:]
     var isRefreshingCodexDesktop = false
     var lastCodexDesktopRefreshAt: Date?
+    var codexRefreshGeneration = 0
+    var pendingTranscriptEvents: [String: AgentEvent] = [:]
+    var transcriptRefreshTask: Task<Void, Never>?
     var compactTapSuppressedUntil: Date?
 
     var selectedSession: AgentSession? {
@@ -112,6 +115,7 @@ final class SessionStore: ObservableObject {
         codexLiveClient: CodexDesktopLiveClient = CodexDesktopLiveClient(),
         codexAppServerLiveClient: CodexAppServerLiveClient = CodexAppServerLiveClient(),
         transcriptReader: ConversationTranscriptReader = ConversationTranscriptReader(),
+        statsStore: UsageStatsStore = UsageStatsStore(),
         logger: AppLogger = .shared
     ) {
         self.configurationStore = configurationStore
@@ -121,6 +125,7 @@ final class SessionStore: ObservableObject {
         self.codexLiveClient = codexLiveClient
         self.codexAppServerLiveClient = codexAppServerLiveClient
         self.transcriptReader = transcriptReader
+        self.statsStore = statsStore
         self.logger = logger
 
         codexAppServerLiveClient.onApproval = { [weak self] approval in

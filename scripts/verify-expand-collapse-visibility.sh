@@ -145,6 +145,37 @@ fi
 
 wait_for_window "Task after collapse" "$MIN_TASK_WIDTH" "$MAX_TASK_WIDTH" "$MIN_TASK_HEIGHT" "$MAX_TASK_HEIGHT"
 
+# Hide during expansion: the display link must not move the off-screen window back.
+/usr/bin/swift - "$APP_PID" <<'SWIFT'
+import AppKit
+let pid = Int(CommandLine.arguments[1])!
+let center = DistributedNotificationCenter.default()
+center.postNotificationName(Notification.Name("free.vibelsland.verify.setExpanded"), object: nil,
+                            userInfo: ["expanded": "true"], deliverImmediately: true)
+Thread.sleep(forTimeInterval: 0.08)
+center.postNotificationName(Notification.Name("com.apple.expose.awake"), object: nil,
+                            userInfo: nil, deliverImmediately: true)
+Thread.sleep(forTimeInterval: 0.15)
+for _ in 0..<20 {
+    let windows = CGWindowListCopyWindowInfo(.optionAll, kCGNullWindowID) as? [[String: Any]] ?? []
+    let visible = windows.filter { window in
+        guard window[kCGWindowOwnerPID as String] as? Int == pid,
+              let bounds = window[kCGWindowBounds as String] as? [String: Any],
+              let width = bounds["Width"] as? Double,
+              let height = bounds["Height"] as? Double else { return false }
+        return width > 80 && height > 20
+    }
+    if !visible.isEmpty {
+        fputs("A hidden window resumed its interrupted animation\n", stderr)
+        exit(1)
+    }
+    Thread.sleep(forTimeInterval: 0.02)
+}
+print("Interrupted expansion remained hidden")
+SWIFT
+
+wait_for_window "Restored after interrupted expansion" 380 560 90 310
+
 if [[ -f "$LOG" ]] && /usr/bin/grep -E '\[error\]|codex\.sqlite\.read\.failed' "$LOG" >/dev/null; then
     echo "Expand/collapse verification failed: isolated log contains errors" >&2
     /usr/bin/tail -80 "$LOG" >&2

@@ -25,12 +25,20 @@ package final class ConversationTranscriptReader: @unchecked Sendable {
     }
 
     package func loadSnapshot(for event: AgentEvent, limit: Int = 8) -> AgentTranscriptSnapshot? {
-        for url in transcriptURLs(for: event) {
+        for url in explicitTranscriptURLs(for: event) {
             guard fileManager.fileExists(atPath: url.path),
                   let snapshot = loadSnapshot(from: url, source: event.source, limit: limit) else {
                 continue
             }
             return snapshot
+        }
+        // Hooks normally supply the exact path. Discover history only when it is absent or stale.
+        if let sessionID = event.sessionId, !sessionID.isEmpty {
+            for url in discoveredTranscriptURLs(sessionID: sessionID, source: event.source) {
+                if let snapshot = loadSnapshot(from: url, source: event.source, limit: limit) {
+                    return snapshot
+                }
+            }
         }
         return nil
     }
@@ -169,9 +177,9 @@ package final class ConversationTranscriptReader: @unchecked Sendable {
         usageCacheLock.unlock()
     }
 
-    private func transcriptURLs(for event: AgentEvent) -> [URL] {
+    private func explicitTranscriptURLs(for event: AgentEvent) -> [URL] {
         let object = event.payload.objectValue ?? [:]
-        var urls: [URL] = [
+        let urls: [URL] = [
             string(object["transcript_path"]),
             string(object["codex_transcript_path"]),
             string(object["transcriptPath"]),
@@ -179,10 +187,6 @@ package final class ConversationTranscriptReader: @unchecked Sendable {
         ]
             .compactMap { $0 }
             .map(expandedURL)
-
-        if let sessionID = event.sessionId, !sessionID.isEmpty {
-            urls.append(contentsOf: discoveredTranscriptURLs(sessionID: sessionID, source: event.source))
-        }
 
         var seen = Set<String>()
         return urls.filter { seen.insert($0.path).inserted }

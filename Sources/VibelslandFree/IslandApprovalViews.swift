@@ -19,9 +19,9 @@ struct ApprovalSummaryCard: View {
                     ZStack {
                         Circle()
                             .fill(Color.white.opacity(0.10))
-                        Image(systemName: "lock.fill")
+                        Image(systemName: "hand.raised")
                             .font(.system(size: 13, weight: .bold))
-                            .foregroundStyle(GlassText.primary)
+                            .foregroundStyle(.orange)
                     }
                     .frame(width: 30, height: 30)
 
@@ -42,7 +42,7 @@ struct ApprovalSummaryCard: View {
                                 .lineLimit(1)
                         }
                         Text(approval.detail.isEmpty ? approval.tool : approval.detail)
-                            .font(.system(size: 12, weight: .semibold))
+                            .font(.system(size: 12, weight: .medium, design: .monospaced))
                             .foregroundStyle(GlassText.primary)
                             .lineLimit(1)
                         Text(workspaceText)
@@ -85,20 +85,8 @@ struct ApprovalSummaryCard: View {
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 10)
-        .frame(height: 88)
-        .background(
-            ZStack {
-                DashboardCardBackground(highlighted: true, tint: Color.yellow.opacity(0.08))
-                StatusGlowBorder(
-                    status: .waitingApproval,
-                    accentColor: .orange,
-                    cornerRadius: 18,
-                    lineWidth: 1.1,
-                    glowRadius: 6,
-                    intensity: 0.86
-                )
-            }
-        )
+        .frame(height: 108)
+        .background(DashboardCardBackground(highlighted: true, tint: Color.orange.opacity(0.045)))
         .contentShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
     }
 
@@ -112,15 +100,14 @@ struct ApprovalSummaryCard: View {
                 .lineLimit(1)
                 .minimumScaleFactor(0.82)
                 .padding(.horizontal, 8)
-                .frame(height: 26)
+                .frame(height: 28)
                 .background(
                     ClearGlassCapsuleBackground(
                         highlighted: prominent,
-                        tint: prominent ? Color.white.opacity(0.16) : Color.white.opacity(0.030),
-                        materialOpacity: prominent ? 0.62 : 0.42
+                        tint: .clear
                     )
                 )
-                .foregroundStyle(prominent ? Color(red: 0.12, green: 0.42, blue: 0.84) : GlassText.primary)
+                .foregroundStyle(prominent ? Color(red: 0.09, green: 0.10, blue: 0.12) : GlassText.primary)
                 .clipShape(Capsule())
         }
         .buttonStyle(PressableButtonStyle())
@@ -182,19 +169,7 @@ struct ApprovalQueueCard: View {
         }
         .padding(.horizontal, 12)
         .padding(.vertical, ApprovalQueuePolicy.cardVerticalPadding)
-        .background(
-            ZStack {
-                DashboardCardBackground(highlighted: true, tint: Color.yellow.opacity(0.08))
-                StatusGlowBorder(
-                    status: .waitingApproval,
-                    accentColor: .orange,
-                    cornerRadius: 18,
-                    lineWidth: 1.1,
-                    glowRadius: 6,
-                    intensity: 0.86
-                )
-            }
-        )
+        .background(DashboardCardBackground(highlighted: true, tint: Color.orange.opacity(0.045)))
         .contentShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
     }
 
@@ -221,7 +196,7 @@ private struct ApprovalQueueRow: View {
                     AgentSourceIconView(source: session.source, size: 26, status: .waitingApproval)
                         .frame(width: 26, height: 26)
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("\(approval.source.shortName) · \(approval.tool)")
+                        Text("\(approval.source.shortName) · \(workspaceText)")
                             .font(.system(size: 11, weight: .semibold))
                             .foregroundStyle(GlassText.primary)
                             .lineLimit(1)
@@ -261,11 +236,10 @@ private struct ApprovalQueueRow: View {
                 .background(
                     ClearGlassCapsuleBackground(
                         highlighted: prominent,
-                        tint: prominent ? Color.white.opacity(0.16) : Color.white.opacity(0.030),
-                        materialOpacity: prominent ? 0.62 : 0.42
+                        tint: .clear
                     )
                 )
-                .foregroundStyle(prominent ? Color(red: 0.12, green: 0.42, blue: 0.84) : GlassText.primary)
+                .foregroundStyle(prominent ? Color(red: 0.09, green: 0.10, blue: 0.12) : GlassText.primary)
                 .clipShape(Capsule())
         }
         .buttonStyle(PressableButtonStyle())
@@ -375,11 +349,10 @@ struct ApprovalDetailCard: View {
                 .background(
                     ClearGlassCapsuleBackground(
                         highlighted: prominent,
-                        tint: prominent ? Color.white.opacity(0.16) : Color.white.opacity(0.030),
-                        materialOpacity: prominent ? 0.62 : 0.42
+                        tint: .clear
                     )
                 )
-                .foregroundStyle(prominent ? Color(red: 0.12, green: 0.42, blue: 0.84) : GlassText.primary)
+                .foregroundStyle(prominent ? Color(red: 0.09, green: 0.10, blue: 0.12) : GlassText.primary)
                 .clipShape(Capsule())
         }
         .buttonStyle(PressableButtonStyle())
@@ -413,7 +386,7 @@ struct DetailPill: View {
             .lineLimit(1)
             .padding(.horizontal, 7)
             .frame(height: 19)
-            .background(ClearGlassCapsuleBackground(tint: color.opacity(0.10), materialOpacity: 0.34))
+            .background(ClearGlassCapsuleBackground(tint: color.opacity(0.10)))
             .clipShape(Capsule())
     }
 }

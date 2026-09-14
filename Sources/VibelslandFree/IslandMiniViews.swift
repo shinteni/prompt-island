@@ -126,12 +126,13 @@ struct IdleMiniShellOverlay: View {
 }
 
 struct MiniStatusProgressRing: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     let status: SessionStatus
     let accentColor: Color
 
     var body: some View {
-        if status.isActiveVisual {
-            TimelineView(.periodic(from: .now, by: IslandMotion.MiniProgressRing.refreshInterval(for: status))) { context in
+        if status.isActiveVisual && !reduceMotion {
+            TimelineView(.animation(minimumInterval: IslandMotion.MiniProgressRing.refreshInterval(for: status))) { context in
                 ring(rotation: IslandMotion.MiniProgressRing.rotationDegrees(
                     time: context.date.timeIntervalSinceReferenceDate,
                     status: status
@@ -232,11 +233,12 @@ struct MiniStatusProgressRing: View {
 }
 
 struct MiniBreathingLights: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     let status: SessionStatus
     let accentColor: Color
 
     var body: some View {
-        if IslandMotion.BreathingLights.shouldAnimate(for: status) {
+        if IslandMotion.BreathingLights.shouldAnimate(for: status) && !reduceMotion {
             TimelineView(.animation(minimumInterval: IslandMotion.BreathingLights.refreshInterval(for: status))) { context in
                 lights(time: context.date.timeIntervalSinceReferenceDate)
             }
@@ -298,6 +300,7 @@ struct MiniBreathingLights: View {
 }
 
 struct CompactLoadingSpinner: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     let status: SessionStatus
     let color: Color
     let nsColor: NSColor
@@ -305,7 +308,7 @@ struct CompactLoadingSpinner: View {
 
     var body: some View {
         Group {
-            if status.isActiveVisual {
+            if status.isActiveVisual && !reduceMotion {
                 CoreAnimationLoadingSpinner(
                     color: spinnerNSColor,
                     trimEnd: trimEnd,
@@ -421,6 +424,7 @@ private final class CoreAnimationLoadingSpinnerView: NSView {
     private let arcLayer = CAShapeLayer()
     private var currentTrimEnd: CGFloat?
     private var currentCycle: TimeInterval?
+    private var pathBounds: NSRect?
 
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
@@ -456,15 +460,46 @@ private final class CoreAnimationLoadingSpinnerView: NSView {
         CATransaction.commit()
 
         if currentCycle != cycle {
-            restartAnimation(cycle: cycle)
+            arcLayer.removeAnimation(forKey: "rotation")
             currentCycle = cycle
         }
+        updateAnimationVisibility()
         updatePath()
+    }
+
+    override func viewDidMoveToWindow() {
+        super.viewDidMoveToWindow()
+        NotificationCenter.default.removeObserver(self, name: NSWindow.didChangeOcclusionStateNotification, object: nil)
+        if let window {
+            NotificationCenter.default.addObserver(self, selector: #selector(updateAnimationVisibility),
+                name: NSWindow.didChangeOcclusionStateNotification, object: window)
+        }
+        updateAnimationVisibility()
+    }
+
+    override func viewDidHide() {
+        super.viewDidHide()
+        updateAnimationVisibility()
+    }
+
+    override func viewDidUnhide() {
+        super.viewDidUnhide()
+        updateAnimationVisibility()
+    }
+
+    @objc private func updateAnimationVisibility() {
+        guard let window, window.isVisible, window.occlusionState.contains(.visible),
+              !isHiddenOrHasHiddenAncestor, let cycle = currentCycle else {
+            arcLayer.removeAnimation(forKey: "rotation")
+            return
+        }
+        if arcLayer.animation(forKey: "rotation") == nil { restartAnimation(cycle: cycle) }
     }
 
     private func updatePath() {
         let side = min(bounds.width, bounds.height)
-        guard side > 0 else { return }
+        guard side > 0, pathBounds != bounds else { return }
+        pathBounds = bounds
         let lineWidth: CGFloat = 2.2
         let rect = CGRect(
             x: (bounds.width - side) / 2 + lineWidth / 2,

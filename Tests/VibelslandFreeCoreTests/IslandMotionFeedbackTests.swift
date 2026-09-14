@@ -4,35 +4,35 @@ import Testing
 
 @Suite
 struct IslandMotionFeedbackTests {
-    @Test func testEasedProgressEndpointsAndClamping() {
-        for expanded in [true, false] {
-            XCTAssertEqual(IslandMotionPolicy.WindowTransition.easedProgress(0, expanded: expanded), 0, "Easing starts at 0")
-            XCTAssertEqual(IslandMotionPolicy.WindowTransition.easedProgress(1, expanded: expanded), 1, "Easing ends at 1")
-            XCTAssertEqual(IslandMotionPolicy.WindowTransition.easedProgress(-0.5, expanded: expanded), 0, "Progress clamps below 0")
-            XCTAssertEqual(IslandMotionPolicy.WindowTransition.easedProgress(1.5, expanded: expanded), 1, "Progress clamps above 1")
-        }
+    @Test func springSettlesAtItsTarget() {
+        let motion = IslandMotionPolicy.WindowTransition.self
+        #expect(motion.sample(start: 10, target: 100, elapsed: 0, duration: 0.32).value == 10)
+        #expect(motion.sample(start: 10, target: 100, elapsed: 0.32, duration: 0.32).value == 100)
+        #expect(motion.sample(start: 10, target: 100, elapsed: 0, duration: 0).value == 100)
     }
 
-    @Test func testEasedProgressIsMonotonic() {
-        for expanded in [true, false] {
-            var previous = -0.001
-            for step in 0...20 {
-                let value = IslandMotionPolicy.WindowTransition.easedProgress(Double(step) / 20, expanded: expanded)
-                XCTAssertTrue(value >= previous, "Easing must be monotonic (expanded=\(expanded), step=\(step))")
+    @Test func springFromRestDoesNotOvershoot() {
+        for target in [100.0, -100.0] {
+            var previous = 0.0
+            for step in 0...32 {
+                let value = IslandMotionPolicy.WindowTransition.sample(start: 0, target: target,
+                    elapsed: Double(step) / 100, duration: 0.32).value
+                #expect(abs(value) >= abs(previous))
+                #expect(abs(value) <= abs(target))
                 previous = value
             }
         }
     }
 
-    @Test func testExpansionEasingAttacksFasterThanCollapse() {
-        // 展开用 ease-out-cubic：前段进度领先，产生「跟手」的快速响应。
-        let expansionEarly = IslandMotionPolicy.WindowTransition.easedProgress(0.25, expanded: true)
-        let collapseEarly = IslandMotionPolicy.WindowTransition.easedProgress(0.25, expanded: false)
-        XCTAssertTrue(
-            expansionEarly > collapseEarly,
-            "Expansion easing leads at early progress (\(expansionEarly) vs \(collapseEarly))"
-        )
-        XCTAssertTrue(expansionEarly > 0.5, "Ease-out-cubic passes half distance by a quarter of the time")
+    @Test func reversingMidFlightPreservesPositionAndVelocity() {
+        let motion = IslandMotionPolicy.WindowTransition.self
+        let before = motion.sample(start: 240, target: 496, elapsed: 0.08, duration: 0.32)
+        let reversed = motion.sample(start: before.value, target: 240, velocity: before.velocity,
+                                     elapsed: 0, duration: 0.42)
+        #expect(abs(reversed.value - before.value) < 0.0001)
+        #expect(abs(reversed.velocity - before.velocity) < 0.0001)
+        #expect(motion.sample(start: before.value, target: 240, velocity: before.velocity,
+                              elapsed: 0.42, duration: 0.42).value == 240)
     }
 
     @Test func testReduceMotionCollapsesDurationsToZero() {

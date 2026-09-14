@@ -9,7 +9,7 @@ package enum IslandPresentationMode: Equatable {
 
 package enum IslandPresentationPolicy {
     package static let idleMiniDiameter: CGFloat = 34
-    package static let compactTaskSize = CGSize(width: 244, height: 42)
+    package static let compactTaskSize = CGSize(width: 300, height: 50)
 
     /// 浮岛整体缩放：内容按设计尺寸布局后整体缩到 0.8（字体、间距等比缩小），
     /// 窗口尺寸在 targetFrame 边界统一乘以该系数。所有策略里的尺寸常量

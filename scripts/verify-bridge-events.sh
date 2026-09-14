@@ -3,28 +3,21 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 APP_DIR="$ROOT/dist/>_ - island.app"
-LOG="$HOME/Library/Logs/VibelslandFree/app.log"
-BRIDGE="$HOME/.vibelsland-free/bin/vibelsland-bridge"
-SOCKET="$HOME/.vibelsland-free/run/vibelsland.sock"
+EXECUTABLE="$APP_DIR/Contents/MacOS/VibelslandFree"
+. "$ROOT/scripts/verify-support.sh"
+. "$ROOT/scripts/visible-test-window-guard.sh"
+TEMP_HOME="$(/usr/bin/mktemp -d /tmp/vibelsland-bridge-home.XXXXXX)"
+LOG="$(vibelsland_log_path "$TEMP_HOME")"
+BRIDGE="$(vibelsland_bridge_path "$TEMP_HOME")"
+SOCKET="$(vibelsland_socket_path "$TEMP_HOME")"
 SMOKE_ID="vibelsland-smoke-$(/bin/date +%s)-$$"
-SMOKE_WORKSPACE="${TMPDIR:-/tmp}/$SMOKE_ID"
+SMOKE_WORKSPACE="$TEMP_HOME/workspace"
 OLD_TIMESTAMP=1
-
-[[ -d "$APP_DIR" ]]
-
-if ! /usr/bin/pgrep -x VibelslandFree >/dev/null 2>&1; then
-    /usr/bin/open "$APP_DIR"
-fi
-
-for _ in {1..60}; do
-    if [[ -x "$BRIDGE" && -S "$SOCKET" ]]; then
-        break
-    fi
-    sleep 0.2
-done
-
-[[ -x "$BRIDGE" ]]
-[[ -S "$SOCKET" ]]
+vibelsland_write_test_config "$TEMP_HOME" enableClaude=true enableCodexCLI=true enableCodexDesktop=false
+VIBELSLAND_HOME="$TEMP_HOME" "$EXECUTABLE" >/dev/null 2>&1 &
+APP_PID="$!"
+trap 'vibelsland_cleanup_temp_home "$TEMP_HOME" "$APP_PID"' EXIT
+vibelsland_wait_for_bridge "$BRIDGE" "$SOCKET"
 
 if [[ -f "$LOG" ]]; then
     LOG_START_LINES="$(/usr/bin/wc -l < "$LOG" | tr -d ' ')"
@@ -32,13 +25,12 @@ else
     LOG_START_LINES=0
 fi
 
-RECENT_LOG="$(/usr/bin/mktemp "${TMPDIR:-/tmp}/vibelsland-bridge-log.XXXXXX")"
-trap 'rm -f "$RECENT_LOG"' EXIT
+RECENT_LOG="$TEMP_HOME/recent.log"
 
 send_bridge_event() {
     local source="$1"
     local payload="$2"
-    printf '%s\n' "$payload" | "$BRIDGE" --source "$source" >/dev/null
+    printf '%s\n' "$payload" | VIBELSLAND_HOME="$TEMP_HOME" "$BRIDGE" --source "$source" >/dev/null
 }
 
 refresh_recent_log() {
