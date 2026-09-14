@@ -23,8 +23,10 @@ package enum IslandDockingPolicy {
     package static let collapseDelay: TimeInterval = 0.65
 
     package static func edge(for frame: CGRect, in screen: CGRect) -> IslandDockEdge? {
-        let left = abs(frame.minX - screen.minX)
-        let right = abs(frame.maxX - screen.maxX)
+        // Dragging the pointer to an edge carries part of the window past it.
+        // Negative distances must still dock instead of pushing the island back in.
+        let left = frame.minX - screen.minX
+        let right = screen.maxX - frame.maxX
         guard min(left, right) <= snapDistance else { return nil }
         return left <= right ? .left : .right
     }
