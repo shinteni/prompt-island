@@ -26,6 +26,9 @@ final class IslandWindow: NSPanel {
     private var frameDisplayLink: CADisplayLink?
     private var frameAnimationContext: FrameAnimationContext?
     private var hasPresented = false
+    private var floatingCenter: NSPoint?
+    private(set) var isDragging = false
+    private var dragStart: (mouse: NSPoint, frame: NSRect)?
 
     private struct FrameAnimationContext {
         let start: NSRect
@@ -60,17 +63,13 @@ final class IslandWindow: NSPanel {
         hidesOnDeactivate = false
         ignoresMouseEvents = false
         acceptsMouseMovedEvents = true
-        isMovableByWindowBackground = true
+        isMovableByWindowBackground = false
 
         let hostingView = TransparentHostingView(
             rootView: IslandPanelView()
                 .environmentObject(store)
                 .environmentObject(store.configurationStore)
         )
-        hostingView.onDragEnded = { [weak self, weak store] in
-            store?.suppressCompactTapBriefly()
-            self?.rememberVisibleFrame()
-        }
         hostingView.wantsLayer = true
         hostingView.layer?.backgroundColor = NSColor.clear.cgColor
         contentView = hostingView
@@ -168,7 +167,62 @@ final class IslandWindow: NSPanel {
         if event.type == .leftMouseDown || event.type == .rightMouseDown || event.type == .keyDown {
             stopLaunchEntrance()
         }
+        if event.type == .leftMouseDown, NSRect(origin: .zero, size: frame.size).contains(event.locationInWindow),
+           store?.isExpanded == false || isHeaderDragPoint(event.locationInWindow) {
+            dragStart = (convertPoint(toScreen: event.locationInWindow), frame)
+            return
+        }
+        if event.type == .leftMouseDragged, let dragStart {
+            let mouse = convertPoint(toScreen: event.locationInWindow)
+            let dx = mouse.x - dragStart.mouse.x
+            let dy = mouse.y - dragStart.mouse.y
+            if isDragging || hypot(dx, dy) > 3 {
+                if !isDragging {
+                    isDragging = true
+                    stopFrameAnimation()
+                    stopAutoCollapseWatch()
+                }
+                setFrameOrigin(NSPoint(x: dragStart.frame.minX + dx, y: dragStart.frame.minY + dy))
+            }
+            return
+        }
+        if event.type == .leftMouseUp, dragStart != nil {
+            dragStart = nil
+            if isDragging {
+                finishDragging()
+            } else if store?.isExpanded == false {
+                store?.isExpanded = true
+            }
+            return
+        }
         super.sendEvent(event)
+    }
+
+    private func isHeaderDragPoint(_ point: NSPoint) -> Bool {
+        point.y >= frame.height - 38 * IslandPresentationPolicy.windowScale
+            && (point.x < 30 || (point.x > 240 && point.x < frame.width - 100))
+    }
+
+    func finishDragging() {
+        isDragging = false
+        guard let store, let screen = screenContainingFrame() else { return }
+        store.suppressCompactTapBriefly()
+        let visible = screen.visibleFrame
+        if let edge = IslandDockingPolicy.edge(for: frame, in: visible) {
+            floatingCenter = nil
+            store.configurationStore.config.islandDockPlacement = IslandDockPlacement(
+                edge: edge,
+                displayID: screen.deviceDescription[NSDeviceDescriptionKey("NSScreenNumber")] as? UInt32 ?? 0,
+                verticalFraction: (frame.midY - visible.minY) / visible.height
+            )
+            store.isExpanded = true
+        } else {
+            floatingCenter = NSPoint(x: frame.midX, y: frame.midY)
+            store.configurationStore.config.islandDockPlacement = nil
+        }
+        applyFrame(expanded: store.isExpanded, position: store.configurationStore.config.islandPosition, animated: true)
+        updateOutsideClickMonitor(expanded: store.isExpanded)
+        rememberVisibleFrame()
     }
 
     func setSuppressedForSettings(_ suppressed: Bool) {
@@ -218,7 +272,8 @@ final class IslandWindow: NSPanel {
                     isApprovalDetailVisible: content.2,
                     maxVisibleSessions: config.maxVisibleSessions,
                     position: config.islandPosition,
-                    isLaunchPresenceActive: self?.store?.isLaunchPresenceActive ?? false
+                    isLaunchPresenceActive: self?.store?.isLaunchPresenceActive ?? false,
+                    dockPlacement: config.islandDockPlacement
                 )
                 self?.applyLayout(signature, animated: true)
             }
@@ -271,7 +326,7 @@ final class IslandWindow: NSPanel {
     }
 
     func repairFrameIfNeeded(shouldOrder: Bool = true) {
-        guard let store else { return }
+        guard let store, !isDragging else { return }
         let target = targetFrame(
             expanded: store.isExpanded,
             position: store.configurationStore.config.islandPosition
@@ -302,6 +357,7 @@ final class IslandWindow: NSPanel {
         animated: Bool,
         shouldOrder: Bool = true
     ) {
+        guard !isDragging else { return }
         if shouldHideIdlePresentation(expanded: expanded) {
             stopFrameAnimation()
             store?.isIslandTransitioning = false
@@ -363,6 +419,7 @@ final class IslandWindow: NSPanel {
 
     private func shouldHideIdlePresentation(expanded: Bool) -> Bool {
         guard let store, !expanded else { return false }
+        if store.configurationStore.config.islandDockPlacement != nil { return false }
         // 启动亮相期内空闲也不隐藏，让用户看到应用已启动。
         if store.isLaunchPresenceActive {
             return false
@@ -439,6 +496,13 @@ final class IslandWindow: NSPanel {
 
     private func applyLayout(_ signature: IslandLayoutSignature, animated: Bool) {
         let previousSignature = lastLayoutSignature
+        if let previousSignature, previousSignature.position != signature.position {
+            floatingCenter = nil
+            if signature.dockPlacement != nil {
+                store?.configurationStore.config.islandDockPlacement = nil
+                return
+            }
+        }
         lastLayoutSignature = signature
         updateOutsideClickMonitor(expanded: signature.isExpanded)
 
@@ -483,8 +547,14 @@ final class IslandWindow: NSPanel {
             width: min(preferredSize.width, max(minSize.width, screenFrame.width - 48)),
             height: min(preferredSize.height, max(minSize.height, screenFrame.height - 32))
         )
+        if let dock = store?.configurationStore.config.islandDockPlacement {
+            return IslandDockingPolicy.frame(edge: dock.edge, size: size, screen: screenFrame,
+                verticalFraction: dock.verticalFraction)
+        }
         let x: CGFloat
-        if let preferredCenterX {
+        if let floatingCenter {
+            x = floatingCenter.x - size.width / 2
+        } else if let preferredCenterX {
             x = preferredCenterX - size.width / 2
         } else if canReuseCurrentCenter {
             x = previousFrame.midX - size.width / 2
@@ -502,13 +572,17 @@ final class IslandWindow: NSPanel {
         // frame so idle layout publications do not restart or cancel animations.
         return NSRect(
             x: min(max(x, screenFrame.minX + 12), screenFrame.maxX - size.width - 12),
-            y: screenFrame.maxY - size.height - 10,
+            y: min(max(floatingCenter.map { $0.y - size.height / 2 } ?? (screenFrame.maxY - size.height - 10),
+                       screenFrame.minY), screenFrame.maxY - size.height),
             width: size.width,
             height: size.height
         ).integral
     }
 
     private func compactPreferredSize() -> CGSize {
+        if store?.configurationStore.config.islandDockPlacement != nil {
+            return IslandDockingPolicy.tabSize
+        }
         guard let store else {
             return CGSize(
                 width: IslandPresentationPolicy.idleMiniDiameter,
@@ -570,9 +644,13 @@ final class IslandWindow: NSPanel {
     }
 
     private func targetScreen() -> NSScreen? {
-        if frame.width > 1,
-           frame.height > 1,
-           let screen = NSScreen.screens.first(where: { $0.frame.intersects(frame) }) {
+        if let dock = store?.configurationStore.config.islandDockPlacement,
+           let screen = NSScreen.screens.first(where: {
+               ($0.deviceDescription[NSDeviceDescriptionKey("NSScreenNumber")] as? UInt32) == dock.displayID
+           }) {
+            return screen
+        }
+        if let screen = screenContainingFrame() {
             return screen
         }
 
@@ -591,6 +669,14 @@ final class IslandWindow: NSPanel {
         return NSScreen.screens.first
     }
 
+    private func screenContainingFrame() -> NSScreen? {
+        NSScreen.screens.filter { $0.frame.intersects(frame) }.max {
+            let lhs = $0.frame.intersection(frame)
+            let rhs = $1.frame.intersection(frame)
+            return lhs.width * lhs.height < rhs.width * rhs.height
+        }
+    }
+
     private func applyWindowMask(expanded: Bool) {
         let isIdleMini = store.map {
             IslandPresentationPolicy.isIdleMiniPresentation(
@@ -603,7 +689,7 @@ final class IslandWindow: NSPanel {
         contentView?.layer?.backgroundColor = NSColor.clear.cgColor
         contentView?.layer?.masksToBounds = true
         contentView?.layer?.cornerCurve = .continuous
-        contentView?.layer?.cornerRadius = radius
+        contentView?.layer?.cornerRadius = store?.configurationStore.config.islandDockPlacement == nil ? radius : 0
     }
 
     private func rememberVisibleFrame() {
@@ -619,40 +705,11 @@ final class IslandWindow: NSPanel {
 }
 
 private final class TransparentHostingView<Content: View>: NSHostingView<Content> {
-    var onDragEnded: (() -> Void)?
-    private var mouseDownLocation: NSPoint?
-    private var didDrag = false
 
     override var isOpaque: Bool { false }
 
     override func acceptsFirstMouse(for event: NSEvent?) -> Bool {
         true
-    }
-
-    override func mouseDown(with event: NSEvent) {
-        mouseDownLocation = event.locationInWindow
-        didDrag = false
-        super.mouseDown(with: event)
-    }
-
-    override func mouseDragged(with event: NSEvent) {
-        if let mouseDownLocation {
-            let dx = event.locationInWindow.x - mouseDownLocation.x
-            let dy = event.locationInWindow.y - mouseDownLocation.y
-            if hypot(dx, dy) > 3 {
-                didDrag = true
-            }
-        }
-        super.mouseDragged(with: event)
-    }
-
-    override func mouseUp(with event: NSEvent) {
-        if didDrag {
-            onDragEnded?()
-        }
-        super.mouseUp(with: event)
-        mouseDownLocation = nil
-        didDrag = false
     }
 
     override func viewDidMoveToWindow() {

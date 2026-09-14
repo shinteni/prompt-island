@@ -26,6 +26,19 @@ enum IslandMetrics {
 }
 
 extension AgentSource {
+    var progressRingColors: [NSColor] {
+        switch self {
+        case .claudeCode:
+            return [NSColor(red: 0.98, green: 0.43, blue: 0.20, alpha: 1),
+                    NSColor(red: 1.00, green: 0.67, blue: 0.37, alpha: 1)]
+        case .codexCli, .codexDesktop:
+            return [NSColor(red: 0.34, green: 0.58, blue: 1.00, alpha: 1),
+                    NSColor(red: 0.66, green: 0.39, blue: 1.00, alpha: 1)]
+        case .unknown:
+            return [.lightGray, .gray]
+        }
+    }
+
     var nsColor: NSColor {
         switch self {
         case .claudeCode:

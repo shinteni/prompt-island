@@ -81,6 +81,11 @@ extension IslandWindow {
     func autoCollapseMouseEntered() {
         autoCollapseTimer?.invalidate()
         autoCollapseTimer = nil
+        if !isDragging, !hiddenForSystemOverview, !suppressedForSettings,
+           NSEvent.pressedMouseButtons & 1 == 0,
+           let store, !store.isExpanded, store.configurationStore.config.islandDockPlacement != nil {
+            store.isExpanded = true
+        }
     }
 
     func autoCollapseMouseExited() {
@@ -92,7 +97,9 @@ extension IslandWindow {
     private func armAutoCollapseTimer() {
         guard autoCollapseWatchActive, store?.isExpanded == true, !hasPendingApproval else { return }
         autoCollapseTimer?.invalidate()
-        let timer = Timer(timeInterval: IslandAutoCollapsePolicy.graceDuration, repeats: false) { [weak self] _ in
+        let delay = store?.configurationStore.config.islandDockPlacement == nil
+            ? IslandAutoCollapsePolicy.graceDuration : IslandDockingPolicy.collapseDelay
+        let timer = Timer(timeInterval: delay, repeats: false) { [weak self] _ in
             DispatchQueue.main.async {
                 self?.fireAutoCollapse()
             }
