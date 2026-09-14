@@ -154,6 +154,18 @@ struct IslandDockingTests {
         }
     }
 
+    @Test func savingDockPlacementDoesNotRefreshBackendConnections() async throws {
+        try await withWindow { _, store in
+            let generation = store.codexRefreshGeneration
+            store.configurationStore.config.islandDockPlacement = IslandDockPlacement(edge: .left, displayID: 0, verticalFraction: 0.5)
+            try await Task.sleep(for: .milliseconds(50))
+            #expect(store.codexRefreshGeneration == generation)
+            store.configurationStore.config.doNotDisturb.toggle()
+            try await Task.sleep(for: .milliseconds(50))
+            #expect(store.codexRefreshGeneration == generation + 1)
+        }
+    }
+
     private func withWindow(_ body: @MainActor (IslandWindow, SessionStore) async throws -> Void) async throws {
         _ = NSApplication.shared
         let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
