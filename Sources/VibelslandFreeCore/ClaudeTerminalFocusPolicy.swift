@@ -30,7 +30,10 @@ package enum ClaudeTerminalFocusPolicy {
     ) -> String? {
         let parentByPID = Dictionary(uniqueKeysWithValues: processSnapshots.map { ($0.pid, $0.ppid) })
         let candidates = processSnapshots
-            .filter { ClaudeCLIProcessMatcher.isClaudeCLIProcess($0.arguments) }
+            .filter { process in
+                ClaudeCLIProcessMatcher.isClaudeCLIProcess(process.arguments)
+                    && (sessionID.map { process.arguments.contains($0) } ?? true)
+            }
             .sorted { left, right in
                 claudeProcessScore(left, sessionID: sessionID) > claudeProcessScore(right, sessionID: sessionID)
             }

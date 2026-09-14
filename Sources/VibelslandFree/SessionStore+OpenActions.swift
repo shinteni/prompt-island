@@ -47,8 +47,8 @@ extension SessionStore {
                 logNamespace: logNamespace,
                 errorMessage: errorMessage
             )
-        case let .focusClaudeCodeTerminal(sessionID):
-            focusClaudeCodeTerminal(sessionID: sessionID)
+        case let .openClaudeCodeSession(sessionID):
+            openClaudeCodeSession(sessionID: sessionID, expectedSessionID: session.id)
         case let .focusApplication(source):
             focusApplication(for: source)
         }
@@ -91,9 +91,10 @@ extension SessionStore {
         }
     }
 
-    func confirmApplicationFocused(bundleID: String, errorMessage: String) {
+    func confirmApplicationFocused(bundleID: String, errorMessage: String, expectedSessionID: String? = nil) {
         Task { @MainActor in
             try? await Task.sleep(nanoseconds: 650_000_000)
+            if let expectedSessionID, selectedSessionID != expectedSessionID { return }
             let frontmostBundleID = NSWorkspace.shared.frontmostApplication?.bundleIdentifier
             if frontmostBundleID == bundleID {
                 isExpanded = false
@@ -167,25 +168,10 @@ extension SessionStore {
             )
 
             if frontmostBundleID == bundleID {
-                codexAppServerLiveClient.checkThreadLoaded(threadID) { [weak self] loaded in
-                    guard let self,
-                          self.selectedSessionID == expectedSessionID else {
-                        return
-                    }
-                    if loaded {
-                        self.isExpanded = false
-                        self.lastError = nil
-                        self.logger.info("session.open.\(logNamespace).verified", detail: threadID)
-                    } else {
-                        self.lastError = AppText.pick(
-                            self.configurationStore.config.language,
-                            english: "Codex opened, but the target thread was not confirmed",
-                            japanese: "Codex は開きましたが、対象の会話を確認できませんでした",
-                            chinese: "已打开 Codex，但未确认目标对话"
-                        )
-                        self.logger.error("session.open.\(logNamespace).thread.unverified", detail: threadID)
-                    }
-                }
+                // A separate app-server connection cannot report the desktop's selected thread.
+                isExpanded = false
+                lastError = nil
+                logger.info("session.open.\(logNamespace).delivered", detail: threadID)
                 return
             }
 
@@ -194,6 +180,31 @@ extension SessionStore {
                 "session.open.\(logNamespace).notFrontmost",
                 detail: "\(threadID) \(frontmostBundleID ?? "none")"
             )
+        }
+    }
+
+    func openClaudeCodeSession(sessionID: String?, expectedSessionID: String) {
+        guard let sessionID else {
+            focusClaudeCodeTerminal(sessionID: nil)
+            return
+        }
+        Task { @MainActor in
+            let deepLink = await Task.detached(priority: .userInitiated) {
+                ClaudeDesktopSessionLink.deepLink(forCLISessionID: sessionID)
+            }.value
+            guard selectedSessionID == expectedSessionID else { return }
+            guard let deepLink else {
+                focusClaudeCodeTerminal(sessionID: sessionID)
+                return
+            }
+            let bundleID = AgentSource.claudeCode.applicationBundleIdentifier!
+            logger.info("session.open.claude.desktop.deeplink", detail: deepLink)
+            if runOpenCommand(arguments: ["-b", bundleID, deepLink]) {
+                confirmApplicationFocused(bundleID: bundleID, errorMessage: cannotOpenText("Claude"), expectedSessionID: expectedSessionID)
+            } else {
+                lastError = cannotOpenText("Claude")
+                logger.error("session.open.claude.desktop.deeplink.failed", detail: sessionID)
+            }
         }
     }
 

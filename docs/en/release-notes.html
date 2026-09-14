@@ -6,13 +6,13 @@
     <title>Release Notes | Vibelsland Free</title>
     <meta
       name="description"
-      content="Vibelsland Free release notes for v0.3.1, including downloads, SHA-256 verification, key features, and install guidance."
+      content="Vibelsland Free release notes for v0.3.2, including downloads, SHA-256 verification, key features, and install guidance."
     >
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Vibelsland Free">
     <meta property="og:locale" content="en_US">
     <meta property="og:title" content="Vibelsland Free Release Notes">
-    <meta property="og:description" content="Review Vibelsland Free v0.3.1 features, download assets, checksum file, and install guidance.">
+    <meta property="og:description" content="Review Vibelsland Free v0.3.2 features, download assets, checksum file, and install guidance.">
     <meta property="og:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
     <meta property="og:image:width" content="1672">
     <meta property="og:image:height" content="941">
@@ -20,7 +20,7 @@
     <meta property="og:url" content="https://shinteni.github.io/prompt-island/en/release-notes.html">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Vibelsland Free Release Notes">
-    <meta name="twitter:description" content="Review Vibelsland Free v0.3.1 features, download assets, checksum file, and install guidance.">
+    <meta name="twitter:description" content="Review Vibelsland Free v0.3.2 features, download assets, checksum file, and install guidance.">
     <meta name="twitter:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
     <meta name="twitter:image:alt" content="Vibelsland Free macOS AI coding status interface">
     <meta name="theme-color" content="#070706">
@@ -60,18 +60,16 @@
         <div class="subpage-copy" data-reveal>
           <p class="eyebrow">Release Notes</p>
           <h1 id="release-title">Release history.</h1>
-          <p>
-            The current release is v0.3.1: the real island enters at the top of the screen with a brief fade and gentle scale, including the interface, motion and background-performance improvements from v0.3.0.
-          </p>
+          <p>v0.3.2 fixes Claude Desktop session links, removes false Codex navigation errors, and keeps raw tool output out of status labels.</p>
           <div class="hero-actions">
             <a class="button primary" href="download.html">View full download notes</a>
-            <a class="button secondary" href="https://github.com/shinteni/prompt-island/releases/tag/v0.3.1">Open GitHub Release</a>
+            <a class="button secondary" href="https://github.com/shinteni/prompt-island/releases/tag/v0.3.2">Open GitHub Release</a>
           </div>
         </div>
         <div class="privacy-summary" aria-label="Release summary" data-reveal>
           <div>
             <span>Current version</span>
-            <strong>v0.3.1</strong>
+            <strong>v0.3.2</strong>
           </div>
           <div>
             <span>System</span>
@@ -84,12 +82,24 @@
         </div>
       </section>
 
+      <section class="section data-section surface-section" aria-labelledby="v032-title">
+        <div class="section-heading align-left" data-reveal>
+          <p class="eyebrow">v0.3.2</p>
+          <h2 id="v032-title">Session navigation and clear tool status</h2>
+          <ul>
+            <li>Claude cards resolve the CLI session ID to the existing desktop conversation.</li>
+            <li>Codex navigation no longer mistakes a separate background connection for the desktop selection.</li>
+            <li>Tool badges show tool names instead of command output, JSON, tokens, or internal call IDs.</li>
+          </ul>
+        </div>
+      </section>
+
       <section class="section data-section surface-section" aria-labelledby="source-status-title">
         <div class="section-heading align-left" data-reveal>
           <p class="eyebrow">Improvements in v0.3.1 and v0.3.0</p>
           <h2 id="source-status-title">Less main-thread work, continuous window motion.</h2>
           <p>
-            <code>docs/release.json</code> records the v0.3.1 package currently published on GitHub Releases; the download, checksum, and Homebrew cask are all generated from the same metadata.
+            <code>docs/release.json</code> records the v0.3.2 package currently published on GitHub Releases; the download, checksum, and Homebrew cask are all generated from the same metadata.
           </p>
         </div>
         <div class="data-grid">
@@ -129,7 +139,7 @@
       <section class="section split-section" aria-labelledby="v031-title">
         <div class="split-copy" data-reveal>
           <p class="eyebrow">v0.3.1</p>
-          <h2 id="v031-title">The current release.</h2>
+          <h2 id="v031-title">v0.3.1: startup animation.</h2>
           <p>
             A new launch entrance fades and gently scales the real island at its final position, settling in about half a second. The separate center-screen intro and 2.2-second wait are gone. Clicks, approvals and settings interrupt the entrance immediately. Includes the subtle gradients and background-read improvements from v0.3.0.
           </p>
@@ -398,7 +408,7 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="../lang.js?v=f5a6c7c0f2fb" defer></script>
+    <script src="../lang.js?v=9971863412ff" defer></script>
     <script src="../effects.js?v=984d01b9fa2d" defer></script>
   </body>
 </html>

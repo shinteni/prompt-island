@@ -6,13 +6,13 @@
     <title>リリースノート | Vibelsland Free</title>
     <meta
       name="description"
-      content="Vibelsland Free v0.3.1 のリリースノート。ダウンロード、SHA-256 確認、主要機能、インストールを確認できます。"
+      content="Vibelsland Free v0.3.2 のリリースノート。ダウンロード、SHA-256 確認、主要機能、インストールを確認できます。"
     >
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Vibelsland Free">
     <meta property="og:locale" content="ja_JP">
     <meta property="og:title" content="Vibelsland Free リリースノート">
-    <meta property="og:description" content="Vibelsland Free v0.3.1 の機能、ダウンロード、チェックサム、インストールを確認できます。">
+    <meta property="og:description" content="Vibelsland Free v0.3.2 の機能、ダウンロード、チェックサム、インストールを確認できます。">
     <meta property="og:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
     <meta property="og:image:width" content="1672">
     <meta property="og:image:height" content="941">
@@ -20,7 +20,7 @@
     <meta property="og:url" content="https://shinteni.github.io/prompt-island/ja/release-notes.html">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Vibelsland Free リリースノート">
-    <meta name="twitter:description" content="Vibelsland Free v0.3.1 の機能、ダウンロード、チェックサム、インストールを確認できます。">
+    <meta name="twitter:description" content="Vibelsland Free v0.3.2 の機能、ダウンロード、チェックサム、インストールを確認できます。">
     <meta name="twitter:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
     <meta name="twitter:image:alt" content="Vibelsland Free macOS AI コーディング状態インターフェイス">
     <meta name="theme-color" content="#070706">
@@ -60,18 +60,16 @@
         <div class="subpage-copy" data-reveal>
           <p class="eyebrow">Release Notes</p>
           <h1 id="release-title">リリース履歴。</h1>
-          <p>
-            現在の公開版は v0.3.1 です。起動時は画面上部の実際のアイランドを短いフェードと拡大で表示します。v0.3.0 の画面、アニメーション、バックグラウンド性能の改善も含みます。
-          </p>
+          <p>v0.3.2 では Claude Desktop の会話リンク、Codex の移動時の誤ったエラー表示、ツール状態に生の出力が表示される問題を修正しました。</p>
           <div class="hero-actions">
             <a class="button primary" href="download.html">ダウンロード説明を見る</a>
-            <a class="button secondary" href="https://github.com/shinteni/prompt-island/releases/tag/v0.3.1">GitHub Release を開く</a>
+            <a class="button secondary" href="https://github.com/shinteni/prompt-island/releases/tag/v0.3.2">GitHub Release を開く</a>
           </div>
         </div>
         <div class="privacy-summary" aria-label="リリース概要" data-reveal>
           <div>
             <span>現在の版</span>
-            <strong>v0.3.1</strong>
+            <strong>v0.3.2</strong>
           </div>
           <div>
             <span>システム</span>
@@ -84,12 +82,24 @@
         </div>
       </section>
 
+      <section class="section data-section surface-section" aria-labelledby="v032-title">
+        <div class="section-heading align-left" data-reveal>
+          <p class="eyebrow">v0.3.2</p>
+          <h2 id="v032-title">会話への移動とツール状態の修正</h2>
+          <ul>
+            <li>CLI の会話 ID とデスクトップの会話 ID を照合し、Claude の対象会話を開きます。</li>
+            <li>別のバックグラウンド接続を使った Codex の移動判定をやめ、誤ったエラー表示を修正しました。</li>
+            <li>ツール名を表示し、コマンド出力、JSON、トークン、内部呼び出し ID を状態ラベルに表示しません。</li>
+          </ul>
+        </div>
+      </section>
+
       <section class="section data-section surface-section" aria-labelledby="source-status-title">
         <div class="section-heading align-left" data-reveal>
           <p class="eyebrow">v0.3.1 と v0.3.0 の改善</p>
           <h2 id="source-status-title">メインスレッドの処理を減らし、動きを滑らかに。</h2>
           <p>
-            <code>docs/release.json</code> は GitHub Releases に公開中の v0.3.1 パッケージを記録し、ダウンロード、チェックサム、Homebrew cask は同じメタデータから生成されます。
+            <code>docs/release.json</code> は GitHub Releases に公開中の v0.3.2 パッケージを記録し、ダウンロード、チェックサム、Homebrew cask は同じメタデータから生成されます。
           </p>
         </div>
         <div class="data-grid">
@@ -129,7 +139,7 @@
       <section class="section split-section" aria-labelledby="v031-title">
         <div class="split-copy" data-reveal>
           <p class="eyebrow">v0.3.1</p>
-          <h2 id="v031-title">現在のバージョン。</h2>
+          <h2 id="v031-title">v0.3.1：起動アニメーション。</h2>
           <p>
             起動時は画面上部の実際のアイランドがフェードインし、わずかに拡大して約半秒で表示が安定します。画面中央の演出と 2.2 秒の待機を廃止しました。クリック、承認、設定の表示ですぐに中断でき、v0.3.0 の淡いグラデーションとバックグラウンド処理の改善も含みます。
           </p>
@@ -398,7 +408,7 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="../lang.js?v=f5a6c7c0f2fb" defer></script>
+    <script src="../lang.js?v=9971863412ff" defer></script>
     <script src="../effects.js?v=984d01b9fa2d" defer></script>
   </body>
 </html>

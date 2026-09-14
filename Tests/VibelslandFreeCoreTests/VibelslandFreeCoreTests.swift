@@ -575,15 +575,6 @@ struct VibelslandFreeCoreTests {
         XCTAssertTrue(desktopCommandApproval?.threadID == "thread-1", "Desktop approval thread id mapping")
         XCTAssertTrue(desktopCommandApproval?.detail == "npm test", "Desktop command detail mapping")
         XCTAssertTrue(desktopCommandApproval?.approvalRequest.availableDecisions == [.accept, .acceptForSession, .decline, .cancel], "Desktop approval request decisions")
-        XCTAssertEqual(
-            CodexAppServerLiveClient.loadedThreadIDs(
-                from: ["id": 101, "result": ["data": ["thread-1", "thread-2"]]]
-            ),
-            ["thread-1", "thread-2"],
-            "Desktop loaded thread response is parsed for deep link verification"
-        )
-        XCTAssertEqual(CodexAppServerLiveClient.integerID(from: "101"), 101)
-        XCTAssertEqual(CodexAppServerLiveClient.integerID(from: 101.0), 101)
         XCTAssertTrue(
             CodexAppServerLiveClient.responseResult(for: desktopCommandApproval!, decision: .acceptForSession)?["decision"] as? String == "acceptForSession",
             "Desktop command session response"

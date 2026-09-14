@@ -98,7 +98,7 @@ package enum EventParser {
 
     package static func title(for event: AgentEvent) -> String {
         let object = event.payload.objectValue ?? [:]
-        if let value = string(object["prompt"]) ?? string(object["message"]) {
+        if event.kind != .tool, let value = string(object["prompt"]) ?? string(object["message"]) {
             return DisplayTextSanitizer.sanitize(String(value.prefix(80)))
         }
         if let tool = string(object["tool_name"]) ?? string(object["tool"]) {
@@ -152,6 +152,12 @@ package enum EventParser {
     package static func activity(for event: AgentEvent) -> ActivityItem {
         let object = event.payload.objectValue ?? [:]
         let tool = string(object["tool_name"]) ?? string(object["tool"]) ?? event.kind.rawValue
+        if event.kind == .tool {
+            let status = SessionStatusResolver.status(for: event)
+            let title = status == .failed ? "工具失败" : (status == .runningTool ? "工具调用" : "工具完成")
+            return ActivityItem(symbol: symbol(for: event.kind, tool: tool), title: title,
+                detail: tool == event.kind.rawValue ? "工具" : DisplayTextSanitizer.sanitize(tool), date: event.timestamp)
+        }
         let detail = string(object["message"])
             ?? string(object["command"])
             ?? string(object["cwd"])
