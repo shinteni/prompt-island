@@ -10,7 +10,7 @@ enum IslandMotion {
     }
 
     /// 审批卡片进出场：轻快弹簧，落定不晃。
-    static let approvalCardSpring = Animation.spring(response: 0.34, dampingFraction: 0.84)
+    static let approvalCardSpring = Animation.spring(response: 0.30, dampingFraction: 1.0)
 
     static func approvalCardSpring(reduceMotion: Bool) -> Animation? {
         reduceMotion ? nil : approvalCardSpring

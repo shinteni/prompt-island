@@ -6,13 +6,13 @@
     <title>版本历史 | Vibelsland Free</title>
     <meta
       name="description"
-      content="Vibelsland Free 版本历史：v0.2.2 的下载、SHA-256 校验、主要功能和安装说明。"
+      content="Vibelsland Free 版本历史：v0.3.0 的下载、SHA-256 校验、主要功能和安装说明。"
     >
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Vibelsland Free">
     <meta property="og:locale" content="zh_CN">
     <meta property="og:title" content="Vibelsland Free 版本历史">
-    <meta property="og:description" content="查看 Vibelsland Free v0.2.2 的发布内容、下载包、校验文件和安装说明。">
+    <meta property="og:description" content="查看 Vibelsland Free v0.3.0 的发布内容、下载包、校验文件和安装说明。">
     <meta property="og:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
     <meta property="og:image:width" content="1672">
     <meta property="og:image:height" content="941">
@@ -20,7 +20,7 @@
     <meta property="og:url" content="https://shinteni.github.io/prompt-island/release-notes.html">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Vibelsland Free 版本历史">
-    <meta name="twitter:description" content="查看 Vibelsland Free v0.2.2 的发布内容、下载包、校验文件和安装说明。">
+    <meta name="twitter:description" content="查看 Vibelsland Free v0.3.0 的发布内容、下载包、校验文件和安装说明。">
     <meta name="twitter:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
     <meta name="twitter:image:alt" content="Vibelsland Free macOS AI 编程状态界面">
     <meta name="theme-color" content="#070706">
@@ -61,17 +61,17 @@
           <p class="eyebrow">Release Notes</p>
           <h1 id="release-title">版本历史。</h1>
           <p>
-            Vibelsland Free 的官网版本记录。当前公开下载版本是 v0.2.2：恢复当前 Codex Desktop 的实时审批连接，并降低长时间运行时的后台负载。
+            当前公开下载版本是 v0.3.0：会话文件在后台读取，状态按批次更新；隐藏窗口会停止动画，待处理审批不受显示数量上限影响。
           </p>
           <div class="hero-actions">
             <a class="button primary" href="download.html">查看完整下载说明</a>
-            <a class="button secondary" href="https://github.com/shinteni/prompt-island/releases/tag/v0.2.2">打开 GitHub Release</a>
+            <a class="button secondary" href="https://github.com/shinteni/prompt-island/releases/tag/v0.3.0">打开 GitHub Release</a>
           </div>
         </div>
         <div class="privacy-summary" aria-label="版本摘要" data-reveal>
           <div>
             <span>当前版本</span>
-            <strong>v0.2.2</strong>
+            <strong>v0.3.0</strong>
           </div>
           <div>
             <span>系统要求</span>
@@ -86,48 +86,83 @@
 
       <section class="section data-section surface-section" aria-labelledby="source-status-title">
         <div class="section-heading align-left" data-reveal>
-          <p class="eyebrow">v0.2.2 新增</p>
-          <h2 id="source-status-title">恢复 Codex Desktop 连接，减少后台负载。</h2>
+          <p class="eyebrow">v0.3.0 新增</p>
+          <h2 id="source-status-title">减少主线程工作，保持动画连续。</h2>
           <p>
-            <code>docs/release.json</code> 记录当前发布到 GitHub Releases 的 v0.2.2 包；下载、校验和与 Homebrew cask 均由同一份元数据生成。
+            <code>docs/release.json</code> 记录当前发布到 GitHub Releases 的 v0.3.0 包；下载、校验和与 Homebrew cask 均由同一份元数据生成。
           </p>
         </div>
         <div class="data-grid">
           <article data-reveal>
-            <h3>当前 Codex IPC</h3>
+            <h3>后台读取</h3>
             <ul>
-              <li>优先连接当前 ChatGPT/Codex 使用的 <code>~/.codex/ipc/ipc.sock</code>。</li>
-              <li>旧版临时目录 socket 仍作为兼容回退保留。</li>
+              <li>使用进程内只读 SQLite 查询，省去每次刷新启动外部进程。</li>
+              <li>Hook 提供文件路径时直接读取，不再遍历全部历史目录。</li>
             </ul>
           </article>
           <article data-reveal>
-            <h3>重连控制</h3>
+            <h3>一致的任务状态</h3>
             <ul>
-              <li>避免重复深度扫描 socket 目录和并发重连。</li>
-              <li>短时间跳过刚失败的端点，减少空转。</li>
+              <li>Hook 状态立即显示，后台补充会话内容，过期结果不会覆盖新事件。</li>
+              <li>一次刷新只发布最终状态；数据库读取失败时保留上次任务。</li>
             </ul>
           </article>
           <article data-reveal>
-            <h3>资源清理</h3>
+            <h3>重新设计的界面与动画</h3>
             <ul>
-              <li>连接结束后注销 EOF 处理器。</li>
-              <li>限制 app-server 输出缓冲区，避免长期运行时持续增长。</li>
+              <li>深石墨底色、清晰的文字层级和高对比度审批按钮，减少多层毛玻璃与发光边框。</li>
+              <li>展开和收起使用保留速度的阻尼动画，连续点击也能自然转向，文字排版保持稳定。</li>
+              <li>隐藏窗口会停止帧动画和旋转动画，恢复显示后按当前状态继续。</li>
+              <li>旋转、呼吸与像素提示响应系统“减弱动态效果”。</li>
             </ul>
           </article>
           <article data-reveal>
-            <h3>活动状态数据库</h3>
+            <h3>审批保留</h3>
             <ul>
-              <li>根据数据库与 WAL 的最近活动选择当前 Codex 状态库。</li>
-              <li>从 v0.2.0 起可直接在设置页一键升级到本版本。</li>
+              <li>显示数量上限不会再丢弃待处理审批。</li>
+              <li>关闭 Codex Desktop 来源后不再启动连接检测进程。</li>
             </ul>
           </article>
+        </div>
+      </section>
+
+      <section class="section split-section" aria-labelledby="v030-title">
+        <div class="split-copy" data-reveal>
+          <p class="eyebrow">v0.3.0</p>
+          <h2 id="v030-title">当前版本。</h2>
+          <p>
+            重新设计浮岛、任务列表和审批界面，使用可中断的阻尼动画。进程内读取 Codex 数据库，后台读取会话文件，并合并状态更新；保留超过显示上限的待处理审批。
+          </p>
+          <a class="text-link" href="download.html">查看完整下载说明</a>
+        </div>
+        <div class="release-card" aria-label="v0.3.0 资产" data-reveal>
+          <span>发布文件</span>
+          <strong>Vibelsland-Free-0.3.0-macos.zip</strong>
+          <dl>
+            <div>
+              <dt>版本</dt>
+              <dd>v0.3.0</dd>
+            </div>
+            <div>
+              <dt>大小</dt>
+              <dd>约 3.7 MB</dd>
+            </div>
+            <div>
+              <dt>签名</dt>
+              <dd>ad-hoc 签名</dd>
+            </div>
+            <div>
+              <dt>校验</dt>
+              <dd>SHA-256</dd>
+            </div>
+          </dl>
         </div>
       </section>
 
       <section class="section split-section" aria-labelledby="v022-title">
         <div class="split-copy" data-reveal>
           <p class="eyebrow">v0.2.2</p>
-          <h2 id="v022-title">当前版本。</h2>
+          <h2 id="v022-title">上一版本：Codex Desktop 连接修复。</h2>
           <p>
             恢复与当前 ChatGPT/Codex Desktop 的实时审批连接，同时降低长期运行时的 socket 扫描、重连和缓冲开销，并更可靠地选择当前活动的 Codex 状态数据库。
           </p>
@@ -330,7 +365,7 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="lang.js?v=99fea880a93c" defer></script>
+    <script src="lang.js?v=725b9a48ca36" defer></script>
     <script src="effects.js?v=984d01b9fa2d" defer></script>
   </body>
 </html>

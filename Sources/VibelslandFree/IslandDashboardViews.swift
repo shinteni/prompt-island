@@ -89,16 +89,10 @@ struct HealthSummaryStrip: View {
                     HealthCountPill(text: HealthCheckStatus.normal.title(language: configurationStore.config.language), color: .green)
                 }
             }
-            .foregroundStyle(GlassText.primary)
-            .padding(.horizontal, 10)
+            .foregroundStyle(GlassText.secondary)
+            .padding(.horizontal, 8)
             .frame(height: 28)
-            .background(
-                ClearGlassRoundedBackground(
-                    cornerRadius: 10,
-                    highlighted: needsActionCount > 0,
-                    materialOpacity: 0.28
-                )
-            )
+            .background(Color.orange.opacity(0.065))
             .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
         }
         .buttonStyle(.plain)
@@ -163,8 +157,7 @@ struct HealthCountPill: View {
             .background(
                 ClearGlassCapsuleBackground(
                     highlighted: true,
-                    tint: color.opacity(0.10),
-                    materialOpacity: 0.36
+                    tint: color.opacity(0.10)
                 )
             )
             .clipShape(Capsule())
@@ -192,32 +185,15 @@ struct DashboardSessionCard: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
 
                 Image(systemName: session.source == .unknown ? "checkmark.circle" : "arrow.up.forward.app")
-                    .font(.system(size: 12, weight: .bold))
-                    .foregroundStyle(GlassText.control)
-                    .frame(width: 23, height: 23)
-                    .background(
-                        ClearGlassRoundedBackground(cornerRadius: 8, highlighted: false, materialOpacity: 0.26)
-                    )
+                    .font(.system(size: 11, weight: .medium))
+                    .foregroundStyle(GlassText.tertiary)
+                    .frame(width: 18, height: 23)
             }
         }
         .buttonStyle(.plain)
         .padding(.horizontal, 11)
-        .frame(height: isCondensed ? 48 : 62)
-        .background(
-            ZStack(alignment: .bottomLeading) {
-                DashboardRowBackground(highlighted: isSelected || session.approval != nil, tint: cardTint)
-                if !store.isIslandTransitioning {
-                    StatusGlowBorder(
-                        status: session.status,
-                        accentColor: session.source.color,
-                        cornerRadius: 14,
-                        lineWidth: isSelected ? 1.05 : 0.85,
-                        glowRadius: 4,
-                        intensity: rgbIntensity
-                    )
-                }
-            }
-        )
+        .frame(height: isCondensed ? 56 : 76)
+        .background(DashboardRowBackground(highlighted: isSelected, tint: cardTint))
         .contentShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
         .islandHoverHighlight(scale: 1.004)
         .help(session.source == .unknown ? AppText.pick(configurationStore.config.language, english: "Select session", japanese: "セッションを選択", chinese: "选中会话") : AppText.pick(configurationStore.config.language, english: "Open \(session.source.displayName)", japanese: "\(session.source.displayName) を開く", chinese: "打开 \(session.source.displayName)"))
@@ -242,11 +218,11 @@ struct DashboardSessionCard: View {
     private var sessionText: some View {
         VStack(alignment: .leading, spacing: 3) {
             Text(display.title)
-                .font(.system(size: 12, weight: .semibold))
+                .font(.system(size: 13, weight: .semibold))
                 .foregroundStyle(GlassText.primary)
                 .lineLimit(1)
             Text(display.primaryLine)
-                .font(.system(size: 10.5, weight: .medium))
+                .font(.system(size: 11, weight: .regular))
                 .foregroundStyle(GlassText.secondary)
                 .lineLimit(1)
             if !isCondensed, let secondaryLine = display.secondaryLine {
@@ -264,10 +240,6 @@ struct DashboardSessionCard: View {
             Text(display.statusText)
                 .font(.system(size: 11, weight: .semibold))
                 .foregroundStyle(statusTextColor)
-                .lineLimit(1)
-            Text(display.confidence.title)
-                .font(.system(size: 9, weight: .medium))
-                .foregroundStyle(GlassText.faint)
                 .lineLimit(1)
             Text(session.ageText)
                 .font(.system(size: 10, weight: .medium))
@@ -288,16 +260,6 @@ struct DashboardSessionCard: View {
         default:
             return .clear
         }
-    }
-
-    private var rgbIntensity: Double {
-        if session.status == .thinking || session.status == .runningTool {
-            return 0.68
-        }
-        if isSelected {
-            return 0.28
-        }
-        return 0.16
     }
 
     private var statusDotColor: Color {
@@ -362,7 +324,7 @@ struct DashboardSignalLine: View {
         .foregroundStyle(color)
         .padding(.horizontal, 5)
         .frame(height: 15)
-        .background(ClearGlassCapsuleBackground(tint: color.opacity(0.065), materialOpacity: 0.30))
+        .background(ClearGlassCapsuleBackground(tint: color.opacity(0.065)))
         .clipShape(Capsule())
     }
 
@@ -407,7 +369,7 @@ struct DashboardChip: View {
             .foregroundStyle(color)
             .padding(.horizontal, 7)
             .frame(height: 21)
-            .background(ClearGlassCapsuleBackground(highlighted: true, tint: color.opacity(0.10), materialOpacity: 0.36))
+            .background(ClearGlassCapsuleBackground(highlighted: true, tint: color.opacity(0.10)))
             .clipShape(Capsule())
     }
 }
@@ -423,7 +385,7 @@ struct ConfidenceChip: View {
             .foregroundStyle(color)
             .padding(.horizontal, 7)
             .frame(height: 21)
-            .background(ClearGlassCapsuleBackground(tint: color.opacity(0.085), materialOpacity: 0.34))
+            .background(ClearGlassCapsuleBackground(tint: color.opacity(0.085)))
             .clipShape(Capsule())
     }
 

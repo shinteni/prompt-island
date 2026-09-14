@@ -6,13 +6,13 @@
     <title>Release Notes | Vibelsland Free</title>
     <meta
       name="description"
-      content="Vibelsland Free release notes for v0.2.2, including downloads, SHA-256 verification, key features, and install guidance."
+      content="Vibelsland Free release notes for v0.3.0, including downloads, SHA-256 verification, key features, and install guidance."
     >
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Vibelsland Free">
     <meta property="og:locale" content="en_US">
     <meta property="og:title" content="Vibelsland Free Release Notes">
-    <meta property="og:description" content="Review Vibelsland Free v0.2.2 features, download assets, checksum file, and install guidance.">
+    <meta property="og:description" content="Review Vibelsland Free v0.3.0 features, download assets, checksum file, and install guidance.">
     <meta property="og:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
     <meta property="og:image:width" content="1672">
     <meta property="og:image:height" content="941">
@@ -20,7 +20,7 @@
     <meta property="og:url" content="https://shinteni.github.io/prompt-island/en/release-notes.html">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Vibelsland Free Release Notes">
-    <meta name="twitter:description" content="Review Vibelsland Free v0.2.2 features, download assets, checksum file, and install guidance.">
+    <meta name="twitter:description" content="Review Vibelsland Free v0.3.0 features, download assets, checksum file, and install guidance.">
     <meta name="twitter:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
     <meta name="twitter:image:alt" content="Vibelsland Free macOS AI coding status interface">
     <meta name="theme-color" content="#070706">
@@ -61,17 +61,17 @@
           <p class="eyebrow">Release Notes</p>
           <h1 id="release-title">Release history.</h1>
           <p>
-            The official website record for Vibelsland Free releases. The current public download is v0.2.2: Codex Desktop live approvals are restored for current builds, with lower background load during long-running use.
+            The current public download is v0.3.0: transcripts load in the background, session updates publish as a batch, hidden windows stop animating, and pending approvals survive the display limit.
           </p>
           <div class="hero-actions">
             <a class="button primary" href="download.html">View full download notes</a>
-            <a class="button secondary" href="https://github.com/shinteni/prompt-island/releases/tag/v0.2.2">Open GitHub Release</a>
+            <a class="button secondary" href="https://github.com/shinteni/prompt-island/releases/tag/v0.3.0">Open GitHub Release</a>
           </div>
         </div>
         <div class="privacy-summary" aria-label="Release summary" data-reveal>
           <div>
             <span>Current version</span>
-            <strong>v0.2.2</strong>
+            <strong>v0.3.0</strong>
           </div>
           <div>
             <span>System</span>
@@ -86,41 +86,76 @@
 
       <section class="section data-section surface-section" aria-labelledby="source-status-title">
         <div class="section-heading align-left" data-reveal>
-          <p class="eyebrow">New in v0.2.2</p>
-          <h2 id="source-status-title">Restored Codex Desktop connectivity with lower background load.</h2>
+          <p class="eyebrow">New in v0.3.0</p>
+          <h2 id="source-status-title">Less main-thread work, continuous window motion.</h2>
           <p>
-            <code>docs/release.json</code> records the v0.2.2 package currently published on GitHub Releases; the download, checksum, and Homebrew cask are all generated from the same metadata.
+            <code>docs/release.json</code> records the v0.3.0 package currently published on GitHub Releases; the download, checksum, and Homebrew cask are all generated from the same metadata.
           </p>
         </div>
         <div class="data-grid">
           <article data-reveal>
-            <h3>Current Codex IPC</h3>
+            <h3>Background reads</h3>
             <ul>
-              <li>Prefers the <code>~/.codex/ipc/ipc.sock</code> endpoint used by current ChatGPT/Codex builds.</li>
-              <li>Legacy temporary sockets remain available as a compatibility fallback.</li>
+              <li>Read-only SQLite queries run in process, without spawning a command for every refresh.</li>
+              <li>Explicit Hook transcript paths bypass history-directory discovery.</li>
             </ul>
           </article>
           <article data-reveal>
-            <h3>Reconnect control</h3>
+            <h3>Consistent session state</h3>
             <ul>
-              <li>Avoids repeated deep socket scans and duplicate reconnects.</li>
-              <li>Recently failed endpoints are skipped briefly to reduce idle work.</li>
+              <li>Hook status appears immediately; background transcript results cannot overwrite newer events.</li>
+              <li>Each refresh publishes its final state once; failed database reads preserve existing sessions.</li>
             </ul>
           </article>
           <article data-reveal>
-            <h3>Resource cleanup</h3>
+            <h3>Redesigned interface and motion</h3>
             <ul>
-              <li>EOF handlers are removed after a connection closes.</li>
-              <li>The app-server output buffer is bounded for long-running sessions.</li>
+              <li>A dark graphite surface, clearer typography and high-contrast approval actions replace stacked glass effects and glow borders.</li>
+              <li>Interruptible, damped window motion retains velocity during repeated clicks while text keeps a stable layout.</li>
+              <li>Hidden windows stop frame and spinner animations and resume from current state when shown.</li>
+              <li>Spinners, breathing lights and pixel indicators respect Reduce Motion.</li>
             </ul>
           </article>
           <article data-reveal>
-            <h3>Active state database</h3>
+            <h3>Approval retention</h3>
             <ul>
-              <li>The current Codex state database is selected using recent database and WAL activity.</li>
-              <li>From v0.2.0 you can upgrade to this release directly from settings.</li>
+              <li>Pending approvals are retained beyond the visible-session limit.</li>
+              <li>Disabling Codex Desktop also skips its connection probe process.</li>
             </ul>
           </article>
+        </div>
+      </section>
+
+      <section class="section split-section" aria-labelledby="v030-title">
+        <div class="split-copy" data-reveal>
+          <p class="eyebrow">v0.3.0</p>
+          <h2 id="v030-title">The current release.</h2>
+          <p>
+            Redesigned island, task list and approvals with interruptible damped motion. Reads Codex state in process, moves transcript reads off the main thread, batches session updates, and retains pending approvals beyond the display limit.
+          </p>
+          <a class="text-link" href="download.html">See full download notes</a>
+        </div>
+        <div class="release-card" aria-label="v0.3.0 assets" data-reveal>
+          <span>Release file</span>
+          <strong>Vibelsland-Free-0.3.0-macos.zip</strong>
+          <dl>
+            <div>
+              <dt>Version</dt>
+              <dd>v0.3.0</dd>
+            </div>
+            <div>
+              <dt>Size</dt>
+              <dd>About 3.7 MB</dd>
+            </div>
+            <div>
+              <dt>Signing</dt>
+              <dd>ad-hoc</dd>
+            </div>
+            <div>
+              <dt>Verification</dt>
+              <dd>SHA-256</dd>
+            </div>
+          </dl>
         </div>
       </section>
 
@@ -330,7 +365,7 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="../lang.js?v=99fea880a93c" defer></script>
+    <script src="../lang.js?v=725b9a48ca36" defer></script>
     <script src="../effects.js?v=984d01b9fa2d" defer></script>
   </body>
 </html>

@@ -34,7 +34,7 @@ let package = Package(
         ),
         .testTarget(
             name: "VibelslandFreeCoreTests",
-            dependencies: ["VibelslandFreeCore"],
+            dependencies: ["VibelslandFreeCore", "VibelslandFree"],
             swiftSettings: [
                 .unsafeFlags([
                     "-F", developerFrameworksPath,

@@ -1,8 +1,8 @@
 import Foundation
+import SQLite3
 
 package final class CodexDesktopStateReader: @unchecked Sendable {
     private let stateURL: URL
-    private let logger: AppLogger
     private let activityTailReadBytes = SessionMemoryPolicy.codexDesktopTailReadBytes
     private let activityTailLineLimit = SessionMemoryPolicy.codexDesktopTailLineLimit
     private let snapshotCacheLock = NSLock()
@@ -10,77 +10,81 @@ package final class CodexDesktopStateReader: @unchecked Sendable {
     private static let dateParser = ISO8601Parser()
     package static let childRecordHideAfter = DashboardSessionPolicy.activeHideAfter
 
-    package init(stateURL: URL = AppPaths.codexStateURL, logger: AppLogger = .shared) {
+    package init(stateURL: URL = AppPaths.codexStateURL) {
         self.stateURL = stateURL
-        self.logger = logger
     }
 
-    package func loadRecentThreads(limit: Int = 8, now: Date = Date()) -> [CodexThreadRecord] {
+    package func loadRecentThreads(limit: Int = 8, now: Date = Date()) throws -> [CodexThreadRecord] {
         guard FileManager.default.fileExists(atPath: stateURL.path) else {
             return []
         }
 
-        do {
-            let childCutoffMilliseconds = Int64(now.addingTimeInterval(-Self.childRecordHideAfter).timeIntervalSince1970 * 1000)
-            let recentChildSQL = """
-            \(Self.threadSelectSQL)
-              from threads
-             where ifnull(archived, 0) = 0
-               and json_valid(ifnull(source, '')) = 1
-               and json_extract(source, '$.subagent.thread_spawn.parent_thread_id') is not null
-               and ifnull(updated_at_ms, ifnull(updated_at, 0) * 1000) >= \(childCutoffMilliseconds)
-             order by updated_at_ms desc, updated_at desc
-             limit \(max(1, limit * 4));
-            """
-            let recentChildRecords = try queryThreadRows(sql: recentChildSQL).compactMap(Self.record)
-            let recentChildParentIDs = Array(Set(recentChildRecords.compactMap(\.parentThreadID))).sorted()
+        var database: OpaquePointer?
+        let result = sqlite3_open_v2(stateURL.path, &database, SQLITE_OPEN_READONLY | SQLITE_OPEN_NOMUTEX, nil)
+        defer { sqlite3_close(database) }
+        guard result == SQLITE_OK, let database else {
+            throw Self.databaseError(database, code: result)
+        }
+        sqlite3_busy_timeout(database, 100)
+        // All related queries see one snapshot; release the read transaction before parsing rollouts.
+        _ = try queryThreadRows(database: database, sql: "BEGIN")
+        defer { sqlite3_exec(database, "ROLLBACK", nil, nil, nil) }
+        let childCutoffMilliseconds = Int64(now.addingTimeInterval(-Self.childRecordHideAfter).timeIntervalSince1970 * 1000)
+        let recentChildSQL = """
+        \(Self.threadSelectSQL)
+          from threads
+         where ifnull(archived, 0) = 0
+           and json_valid(ifnull(source, '')) = 1
+           and json_extract(source, '$.subagent.thread_spawn.parent_thread_id') is not null
+           and ifnull(updated_at_ms, ifnull(updated_at, 0) * 1000) >= \(childCutoffMilliseconds)
+         order by updated_at_ms desc, updated_at desc
+         limit \(max(1, limit * 4));
+        """
+        let recentChildRecords = try queryThreadRows(database: database, sql: recentChildSQL).compactMap(Self.record)
+        let recentChildParentIDs = Array(Set(recentChildRecords.compactMap(\.parentThreadID))).sorted()
 
-            let parentSQL = """
+        let parentSQL = """
+        \(Self.threadSelectSQL)
+         from threads
+         where ifnull(archived, 0) = 0
+           and case
+                when json_valid(ifnull(source, '')) = 1
+                then json_extract(source, '$.subagent.thread_spawn.parent_thread_id')
+                else null
+           end is null
+         order by updated_at_ms desc, updated_at desc
+         limit \(max(1, limit));
+        """
+        let parentRows = try queryThreadRows(database: database, sql: parentSQL)
+        var parentRecords = parentRows.compactMap(Self.record)
+        if !recentChildParentIDs.isEmpty {
+            let childParentSQL = """
             \(Self.threadSelectSQL)
              from threads
              where ifnull(archived, 0) = 0
-               and case
-                    when json_valid(ifnull(source, '')) = 1
-                    then json_extract(source, '$.subagent.thread_spawn.parent_thread_id')
-                    else null
-               end is null
-             order by updated_at_ms desc, updated_at desc
-             limit \(max(1, limit));
+               and id in (\(Self.sqlStringList(recentChildParentIDs)));
             """
-            let parentRows = try queryThreadRows(sql: parentSQL)
-            var parentRecords = parentRows.compactMap(Self.record)
-            if !recentChildParentIDs.isEmpty {
-                let childParentSQL = """
-                \(Self.threadSelectSQL)
-                 from threads
-                 where ifnull(archived, 0) = 0
-                   and id in (\(Self.sqlStringList(recentChildParentIDs)));
-                """
-                parentRecords.append(contentsOf: try queryThreadRows(sql: childParentSQL).compactMap(Self.record))
-                parentRecords = Self.dedupedRecords(parentRecords)
-            }
-            let parentIDs = parentRecords.map(\.id)
-            guard !parentIDs.isEmpty else {
-                return []
-            }
-
-            let childSQL = """
-            \(Self.threadSelectSQL)
-              from threads
-             where ifnull(archived, 0) = 0
-               and json_valid(ifnull(source, '')) = 1
-               and json_extract(source, '$.subagent.thread_spawn.parent_thread_id') in (\(Self.sqlStringList(parentIDs)))
-               and ifnull(updated_at_ms, ifnull(updated_at, 0) * 1000) >= \(childCutoffMilliseconds)
-             order by updated_at_ms desc, updated_at desc;
-            """
-            let childRows = try queryThreadRows(sql: childSQL)
-            let records = parentRecords + childRows.compactMap(Self.record)
-            pruneSnapshotCache(keeping: Set(records.map(\.id)))
-            return records
-        } catch {
-            logger.error("codex.sqlite.read.failed", detail: error.localizedDescription)
+            parentRecords.append(contentsOf: try queryThreadRows(database: database, sql: childParentSQL).compactMap(Self.record))
+            parentRecords = Self.dedupedRecords(parentRecords)
+        }
+        let parentIDs = parentRecords.map(\.id)
+        guard !parentIDs.isEmpty else {
             return []
         }
+
+        let childSQL = """
+        \(Self.threadSelectSQL)
+          from threads
+         where ifnull(archived, 0) = 0
+           and json_valid(ifnull(source, '')) = 1
+           and json_extract(source, '$.subagent.thread_spawn.parent_thread_id') in (\(Self.sqlStringList(parentIDs)))
+           and ifnull(updated_at_ms, ifnull(updated_at, 0) * 1000) >= \(childCutoffMilliseconds)
+         order by updated_at_ms desc, updated_at desc;
+        """
+        let childRows = try queryThreadRows(database: database, sql: childSQL)
+        let records = parentRecords + childRows.compactMap(Self.record)
+        pruneSnapshotCache(keeping: Set(records.map(\.id)))
+        return records
     }
 
     package static func shouldIncludeChildRecord(updatedAt: Date, now: Date = Date()) -> Bool {
@@ -246,37 +250,41 @@ package final class CodexDesktopStateReader: @unchecked Sendable {
         """
     }
 
-    private func queryThreadRows(sql: String) throws -> [[String: Any]] {
-        let data = try run("/usr/bin/sqlite3", arguments: ["-readonly", "-json", stateURL.path, sql])
-        return try Self.decodeThreadRows(from: data)
+    private func queryThreadRows(database: OpaquePointer, sql: String) throws -> [[String: Any]] {
+        var statement: OpaquePointer?
+        let prepared = sqlite3_prepare_v2(database, sql, -1, &statement, nil)
+        defer { sqlite3_finalize(statement) }
+        guard prepared == SQLITE_OK else { throw Self.databaseError(database, code: prepared) }
+        var rows: [[String: Any]] = []
+        var result = sqlite3_step(statement)
+        while result == SQLITE_ROW {
+            var row: [String: Any] = [:]
+            for column in 0..<sqlite3_column_count(statement) {
+                let name = String(cString: sqlite3_column_name(statement, column))
+                switch sqlite3_column_type(statement, column) {
+                case SQLITE_INTEGER:
+                    row[name] = sqlite3_column_int64(statement, column)
+                case SQLITE_FLOAT:
+                    row[name] = sqlite3_column_double(statement, column)
+                case SQLITE_TEXT:
+                    if let bytes = sqlite3_column_text(statement, column) {
+                        row[name] = String(decoding: UnsafeBufferPointer(start: bytes, count: Int(sqlite3_column_bytes(statement, column))), as: UTF8.self)
+                    }
+                default:
+                    break
+                }
+            }
+            rows.append(row)
+            result = sqlite3_step(statement)
+        }
+        guard result == SQLITE_DONE else { throw Self.databaseError(database, code: result) }
+        return rows
     }
 
-    package static func decodeThreadRows(from data: Data) throws -> [[String: Any]] {
-        if data.allSatisfy({ byte in
-            byte == 9 || byte == 10 || byte == 13 || byte == 32
-        }) {
-            return []
-        }
-        return try JSONSerialization.jsonObject(with: data) as? [[String: Any]] ?? []
-    }
-
-    private func run(_ executable: String, arguments: [String]) throws -> Data {
-        let process = Process()
-        let output = Pipe()
-        let error = Pipe()
-        process.executableURL = URL(fileURLWithPath: executable)
-        process.arguments = arguments
-        process.standardOutput = output
-        process.standardError = error
-        try process.run()
-        let data = output.fileHandleForReading.readDataToEndOfFile()
-        let errorData = error.fileHandleForReading.readDataToEndOfFile()
-        process.waitUntilExit()
-        if process.terminationStatus != 0 {
-            let message = String(data: errorData, encoding: .utf8) ?? ""
-            throw NSError(domain: "VibelslandFree.sqlite", code: Int(process.terminationStatus), userInfo: [NSLocalizedDescriptionKey: message])
-        }
-        return data
+    private static func databaseError(_ database: OpaquePointer?, code: Int32) -> NSError {
+        NSError(domain: "VibelslandFree.sqlite", code: Int(code), userInfo: [
+            NSLocalizedDescriptionKey: String(cString: sqlite3_errmsg(database))
+        ])
     }
 
     private static func record(from row: [String: Any]) -> CodexThreadRecord? {
@@ -364,6 +372,8 @@ package final class CodexDesktopStateReader: @unchecked Sendable {
 
     private static func parseDate(_ value: Any?) -> Date? {
         switch value {
+        case let value as Int64:
+            return Date(timeIntervalSince1970: TimeInterval(value))
         case let value as Int:
             return Date(timeIntervalSince1970: TimeInterval(value))
         case let value as Double:

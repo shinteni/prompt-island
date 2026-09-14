@@ -460,11 +460,6 @@ struct VibelslandFreeCoreTests {
             ),
             "Stale Codex Desktop child records are skipped instead of repeatedly reading old transcripts"
         )
-        let emptyThreadRows = try CodexDesktopStateReader.decodeThreadRows(from: Data())
-        let whitespaceThreadRows = try CodexDesktopStateReader.decodeThreadRows(from: Data(" \n\t".utf8))
-        XCTAssertEqual(emptyThreadRows.count, 0, "sqlite3 -json returns empty stdout for zero rows; this is a valid empty result")
-        XCTAssertEqual(whitespaceThreadRows.count, 0, "Whitespace-only sqlite output is also treated as an empty result")
-
         let lateNotification = AgentEvent(
             source: .codexCli,
             kind: .notification,

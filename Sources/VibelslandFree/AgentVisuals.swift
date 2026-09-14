@@ -9,8 +9,8 @@ struct AgentSourceIconView: View {
     var showsStatus = true
     var contentPaddingRatio: CGFloat = 0.08
     var iconBackgroundOpacity: Double = 0.08
-    var strokeOpacity: Double = 0.20
-    var shadowOpacity: Double = 0.22
+    var strokeOpacity: Double = 0.08
+    var shadowOpacity: Double = 0
     var shadowRadius: CGFloat = 8
     var shadowY: CGFloat = 3
     var imageScale: CGFloat = 1.0
@@ -120,11 +120,12 @@ struct StatusPixelBadge: View {
 }
 
 struct PixelBlinker: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     let color: Color
     let isActive: Bool
 
     var body: some View {
-        if isActive {
+        if isActive && !reduceMotion {
             TimelineView(.animation(minimumInterval: 0.28)) { context in
                 pixels(pulse: (sin(context.date.timeIntervalSinceReferenceDate * 5.2) + 1) / 2)
             }

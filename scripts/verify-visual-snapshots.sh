@@ -56,6 +56,9 @@ wait_for_window() {
     shift
     local output=""
     for _ in {1..40}; do
+        if [[ "$1" -ge 380 ]]; then
+            post_expanded_state true
+        fi
         if output="$(/usr/bin/swift "$WINDOW_CHECKER" "$APP_PID" "$@" "$label" 2>&1)"; then
             return 0
         fi
@@ -127,7 +130,7 @@ ensure_no_window "Idle hidden" 0 "$MAX_IDLE_WIDTH" 0 "$MAX_IDLE_HEIGHT"
 SMOKE_ID="vibelsland-visual-$(/bin/date +%s)-$$"
 SMOKE_WORKSPACE="${TMPDIR:-/tmp}/$SMOKE_ID"
 (
-    export HOME="$TEMP_HOME"
+    export VIBELSLAND_HOME="$TEMP_HOME"
     printf '%s\n' "{\"hook_event_name\":\"UserPromptSubmit\",\"session_id\":\"$SMOKE_ID-codex\",\"thread_id\":\"$SMOKE_ID-thread\",\"cwd\":\"$SMOKE_WORKSPACE\",\"prompt\":\"Verify visual snapshots\"}" |
         "$BRIDGE" --source codex >/dev/null
 )
@@ -138,6 +141,36 @@ capture_window "Task visual" "$TEMP_HOME/task.png" "$MIN_TASK_WIDTH" "$MAX_TASK_
 post_expanded_state true
 wait_for_window "Expanded visual" 380 560 90 310
 capture_window "Expanded visual" "$TEMP_HOME/expanded.png" 380 560 90 310
+
+send_task() {
+    local index="$1"
+    printf '%s\n' "{\"hook_event_name\":\"UserPromptSubmit\",\"session_id\":\"visual-task-$index\",\"cwd\":\"/tmp/project-$index\",\"prompt\":\"Review the background synchronization and window animation for project $index\"}" |
+        VIBELSLAND_HOME="$TEMP_HOME" "$BRIDGE" --source claude >/dev/null
+}
+
+for index in {1..5}; do
+    send_task "$index"
+done
+wait_for_window "Five tasks" 380 560 310 370
+capture_window "Five tasks" "$TEMP_HOME/five-tasks.png" 380 560 310 370
+
+for index in {1..3}; do
+    printf '%s\n' "{\"hook_event_name\":\"PermissionRequest\",\"session_id\":\"visual-approval-$index\",\"cwd\":\"/tmp/project-$index\",\"tool_name\":\"Bash\",\"tool_input\":{\"command\":\"swift test --filter BackgroundReaderTests\"}}" |
+        VIBELSLAND_HOME="$TEMP_HOME" VIBELSLAND_BRIDGE_TIMEOUT=1 "$BRIDGE" --source claude >/dev/null || true
+    if [[ "$index" == "1" ]]; then
+        post_expanded_state true
+        wait_for_window "Approval summary" 380 560 340 400
+        capture_window "Approval summary" "$TEMP_HOME/approval.png" 380 560 340 400
+    fi
+done
+# Four fresh tasks must not evict the three pending approvals or get clipped
+# below their queue. This exceeds the old hard-coded expanded-height cap.
+for index in {1..4}; do
+    send_task "$index"
+done
+post_expanded_state true
+wait_for_window "Approval queue and four tasks" 380 560 430 480
+capture_window "Approval queue and four tasks" "$TEMP_HOME/queue.png" 380 560 430 480
 
 if [[ -f "$LOG" ]] && /usr/bin/grep -E '\[error\]|codex\.sqlite\.read\.failed' "$LOG" >/dev/null; then
     echo "Visual snapshot verification failed: isolated log contains errors" >&2

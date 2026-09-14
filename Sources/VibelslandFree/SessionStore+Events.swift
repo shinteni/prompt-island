@@ -83,10 +83,6 @@ extension SessionStore {
         session.updatedAt = event.timestamp
         session.status = SessionStateReducer.status(after: session.status, event: event)
         session.activity.append(EventParser.activity(for: event))
-        if let transcript = transcriptReader.loadSnapshot(for: event),
-           SessionStateReducer.shouldApplyTranscriptContent(transcript, to: event) {
-            apply(transcript, to: &session, event: event)
-        }
         if let message = assistantMessage(from: event) {
             session.lastAssistantMessage = message
         }
@@ -121,6 +117,37 @@ extension SessionStore {
             notifyApprovalIfNeeded(approval)
         } else {
             playEventSound(event: event, previous: previousSession, current: session)
+        }
+        scheduleTranscriptRefresh(for: event, sessionID: sessionID)
+    }
+
+    /// Publish the Hook immediately, then enrich it off the main thread. Bursts for
+    /// the same session coalesce; a late read cannot overwrite a newer event.
+    func scheduleTranscriptRefresh(for event: AgentEvent, sessionID: String) {
+        pendingTranscriptEvents[sessionID] = event
+        guard transcriptRefreshTask == nil else { return }
+        transcriptRefreshTask = Task { [weak self] in
+            guard let self else { return }
+            defer { transcriptRefreshTask = nil }
+            while let (id, event) = pendingTranscriptEvents.first {
+                pendingTranscriptEvents.removeValue(forKey: id)
+                guard sourceEnabled(event.source), sessions.contains(where: { $0.id == id }) else { continue }
+                let reader = transcriptReader
+                let snapshot = await Task.detached(priority: .utility) {
+                    reader.loadSnapshot(for: event)
+                }.value
+                guard let snapshot, pendingTranscriptEvents[id] == nil,
+                      sourceEnabled(event.source),
+                      var session = sessions.first(where: { $0.id == id }),
+                      session.updatedAt == event.timestamp,
+                      SessionStateReducer.shouldApplyTranscriptContent(snapshot, to: event) else { continue }
+                let previous = session
+                apply(snapshot, to: &session, event: event)
+                // The Hook's explicit reply remains authoritative over the file tail.
+                if let message = assistantMessage(from: event) { session.lastAssistantMessage = message }
+                upsert(session)
+                playStatusTransitionSound(previous: previous, current: session)
+            }
         }
     }
 
@@ -171,10 +198,12 @@ extension SessionStore {
     }
 
     func refreshCodexConnectivity() async {
+        guard configurationStore.config.enableCodexDesktop else { return }
         let client = codexLiveClient
         let result = await Task.detached(priority: .utility) {
             client.initializeProbe()
         }.value
+        guard configurationStore.config.enableCodexDesktop else { return }
         codexAppServerReachable = result.reachable
         codexAppServerUserAgent = result.userAgent
         codexAppServerThreadListAvailable = result.threadListAvailable
@@ -192,21 +221,30 @@ extension SessionStore {
         }
         guard !isRefreshingCodexDesktop else { return }
         isRefreshingCodexDesktop = true
+        let generation = codexRefreshGeneration
         defer {
             isRefreshingCodexDesktop = false
-            lastCodexDesktopRefreshAt = Date()
+            if generation == codexRefreshGeneration { lastCodexDesktopRefreshAt = Date() }
         }
 
         let limit = configurationStore.config.maxVisibleSessions
         let reader = codexStateReader
-        let snapshot = await Task.detached(priority: .utility) {
-            let records = reader.loadRecentThreads(limit: limit)
+        let result = await Task.detached(priority: .utility) {
+            let records = try reader.loadRecentThreads(limit: limit)
             let threadSnapshots = Dictionary(uniqueKeysWithValues: records.map { record in
                 (record.id, reader.loadThreadSnapshot(for: record))
             })
             return (records: records, snapshotsByID: threadSnapshots)
-        }.value
+        }.result
+        guard configurationStore.config.enableCodexDesktop, generation == codexRefreshGeneration else { return }
+        guard case .success(let snapshot) = result else {
+            if case .failure(let error) = result {
+                logger.error("codex.sqlite.read.failed", detail: error.localizedDescription)
+            }
+            return
+        }
 
+        var updatedSessions = sessions
         let parentThreadIDs = Set(snapshot.records.filter { $0.parentThreadID == nil }.map(\.id))
         for record in snapshot.records {
             if record.parentThreadID != nil {
@@ -242,12 +280,17 @@ extension SessionStore {
                 usage: threadSnapshot?.usage ?? existing?.usage
             )
             if existing != session {
-                upsert(session)
+                recordStatsTransition(previous: existing, current: session)
+                if let index = updatedSessions.firstIndex(where: { $0.id == session.id }) {
+                    updatedSessions[index] = session
+                } else {
+                    updatedSessions.append(session)
+                }
                 playStatusTransitionSound(previous: existing, current: session)
             }
         }
 
-        let filteredSessions = sessions.filter { session in
+        let filteredSessions = updatedSessions.filter { session in
             guard session.source == .codexDesktop,
                   session.id.hasPrefix("codex-desktop-") else {
                 return true
@@ -258,12 +301,7 @@ extension SessionStore {
             let threadID = String(session.id.dropFirst("codex-desktop-".count))
             return parentThreadIDs.contains(threadID)
         }
-        if filteredSessions.count != sessions.count {
-            sessions = filteredSessions
-            if !sessions.contains(where: { $0.id == selectedSessionID }) {
-                selectedSessionID = sessions.first?.id
-            }
-        }
+        publishSessions(filteredSessions)
     }
 
     var codexDesktopRefreshInterval: TimeInterval {
@@ -320,17 +358,26 @@ extension SessionStore {
     func upsert(_ session: AgentSession) {
         let session = SessionMemoryPolicy.compact(session)
         recordStatsTransition(previous: sessions.first { $0.id == session.id }, current: session)
-        if let index = sessions.firstIndex(where: { $0.id == session.id }) {
-            sessions[index] = session
+        var updated = sessions
+        if let index = updated.firstIndex(where: { $0.id == session.id }) {
+            updated[index] = session
         } else {
-            sessions.append(session)
+            updated.append(session)
         }
-        let deduped = SessionDeduper.compact(sessions, selectedSessionID: selectedSessionID)
-        sessions = deduped.sessions.map(SessionMemoryPolicy.compact)
-        selectedSessionID = deduped.selectedSessionID
-        sessions.sort { $0.updatedAt > $1.updatedAt }
-        sessions = Array(sessions.prefix(configuredVisibleSessionLimit))
-        selectedSessionID = selectedSessionID ?? sessions.first?.id
+        publishSessions(updated)
+    }
+
+    func publishSessions(_ updated: [AgentSession]) {
+        let deduped = SessionDeduper.compact(updated, selectedSessionID: selectedSessionID)
+        let sorted = deduped.sessions.map(SessionMemoryPolicy.compact).sorted { $0.updatedAt > $1.updatedAt }
+        // The display limit must never evict an unresolved approval.
+        let retained = sorted.enumerated().compactMap { index, session in
+            index < configuredVisibleSessionLimit || session.approval != nil ? session : nil
+        }
+        if sessions != retained { sessions = retained }
+        let selected = retained.contains(where: { $0.id == deduped.selectedSessionID })
+            ? deduped.selectedSessionID : retained.first?.id
+        if selectedSessionID != selected { selectedSessionID = selected }
     }
 
     /// 只记录状态转移与增量，upsert 的重复回放（如 Codex 刷新重建会话）不会重复计数。
@@ -362,11 +409,9 @@ extension SessionStore {
     }
 
     func handleConfigurationChanged() {
-        sessions.removeAll { !sourceEnabled($0.source) }
-        sessions = Array(sessions.prefix(configuredVisibleSessionLimit))
-        if !sessions.contains(where: { $0.id == selectedSessionID }) {
-            selectedSessionID = sessions.first?.id
-        }
+        codexRefreshGeneration += 1
+        lastCodexDesktopRefreshAt = nil
+        publishSessions(sessions.filter { sourceEnabled($0.source) })
         if configurationStore.config.enableCodexDesktop {
             codexAppServerLiveClient.start()
             startCodexDesktopRefreshTimer()

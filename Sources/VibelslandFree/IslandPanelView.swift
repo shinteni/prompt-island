@@ -36,6 +36,8 @@ struct IslandPanelView: View {
                 if showsExpandedLayer {
                     // 交叉淡化叠加细微缩放：展开内容从 0.98 生长到位，读作形变而非替换。
                     expandedContent
+                        .frame(width: 620)
+                        .fixedSize(horizontal: false, vertical: true)
                         .opacity(contentPresentationExpanded ? 1 : 0)
                         .scaleEffect(
                             reduceMotion || contentPresentationExpanded
@@ -47,6 +49,7 @@ struct IslandPanelView: View {
                 }
                 if showsCompactLayer {
                     compactContent
+                        .frame(width: isIdleMiniPresentation ? IslandMetrics.idleMiniDiameter : IslandPresentationPolicy.compactTaskSize.width)
                         .opacity(contentPresentationExpanded ? 0 : 1)
                         .scaleEffect(
                             !reduceMotion && contentPresentationExpanded
@@ -60,20 +63,8 @@ struct IslandPanelView: View {
             .zIndex(1)
         }
         .background(Color.clear)
-        .overlay(
-            Group {
-                if isIdleMiniPresentation {
-                    IdleMiniShellOverlay(status: idleMiniStatus, accentColor: idleMiniAccentColor)
-                        .frame(width: IslandMetrics.idleMiniDiameter, height: IslandMetrics.idleMiniDiameter)
-                }
-            }
-        )
         .clipShape(RoundedRectangle(cornerRadius: radius, style: .continuous))
-        .overlay {
-            if isCompactTaskPresentation && !store.isIslandTransitioning {
-                CompactRGBOuterGlow(cornerRadius: radius)
-            }
-        }
+        .preferredColorScheme(.dark)
         .contentShape(RoundedRectangle(cornerRadius: radius, style: .continuous))
         .contextMenu {
             Button(store.isExpanded ? collapseTitle : expandTitle) {
@@ -100,6 +91,12 @@ struct IslandPanelView: View {
         }
         .onChange(of: store.isExpanded) { _, isExpanded in
             contentTransitionID += 1
+            if reduceMotion {
+                contentPresentationExpanded = isExpanded
+                showExpandedContentLayer = isExpanded
+                showCompactContentLayer = !isExpanded
+                return
+            }
             let transitionID = contentTransitionID
             showExpandedContentLayer = true
             showCompactContentLayer = true
@@ -126,113 +123,33 @@ struct IslandPanelView: View {
 
     private func islandBackground(radius: CGFloat) -> some View {
         ZStack {
-            if isIdleMiniPresentation {
-                IdleMiniGlassBackground(accentColor: idleMiniAccentColor)
-                    .frame(width: IslandMetrics.idleMiniDiameter, height: IslandMetrics.idleMiniDiameter)
-            } else {
-                VisualEffectView(
-                    material: store.isExpanded ? .underWindowBackground : .popover,
-                    blendingMode: .behindWindow,
-                    cornerRadius: radius
-                )
-                .opacity(store.isExpanded ? 0.30 : 0.26)
-                RoundedRectangle(cornerRadius: radius, style: .continuous)
-                    .fill(islandFill)
-                RoundedRectangle(cornerRadius: radius, style: .continuous)
-                    .fill(
-                        RadialGradient(
-                            colors: [
-                                Color.white.opacity(store.isExpanded ? 0.16 : 0.12),
-                                Color.white.opacity(0.024),
-                                Color.clear
-                            ],
-                            center: .topLeading,
-                            startRadius: 0,
-                            endRadius: store.isExpanded ? 520 : 180
-                        )
-                    )
-                RoundedRectangle(cornerRadius: radius, style: .continuous)
-                    .fill(
-                        RadialGradient(
-                            colors: [
-                                ClearGlass.cyanEdge.opacity(store.isExpanded ? 0.20 : 0.15),
-                                ClearGlass.violetEdge.opacity(0.070),
-                                Color.clear
-                            ],
-                            center: .bottomTrailing,
-                            startRadius: 12,
-                            endRadius: store.isExpanded ? 360 : 130
-                        )
-                    )
-                    .blendMode(.plusLighter)
-                RoundedRectangle(cornerRadius: radius, style: .continuous)
-                    .stroke(
-                        LinearGradient(
-                            colors: [
-                                Color.white.opacity(store.isExpanded ? 0.78 : 0.64),
-                                ClearGlass.cyanEdge.opacity(0.30),
-                                ClearGlass.warmEdge.opacity(0.24),
-                                Color.white.opacity(store.isExpanded ? 0.20 : 0.16)
-                            ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        ),
-                        lineWidth: store.isExpanded ? 1.15 : 0.95
-                    )
-                RoundedRectangle(cornerRadius: radius - 1, style: .continuous)
-                    .stroke(Color.white.opacity(store.isExpanded ? 0.34 : 0.22), lineWidth: 0.7)
-                    .padding(1.0)
-                RoundedRectangle(cornerRadius: radius - 2, style: .continuous)
-                    .stroke(ClearGlass.smoke.opacity(store.isExpanded ? 0.14 : 0.10), lineWidth: 1.0)
-                    .blendMode(.multiply)
-                    .padding(2.0)
-                GlassRefractionHighlights(cornerRadius: radius, isExpanded: store.isExpanded)
-            }
+            VisualEffectView(material: .hudWindow, blendingMode: .behindWindow, cornerRadius: radius)
+            RoundedRectangle(cornerRadius: radius, style: .continuous)
+                .fill(Color(red: 0.075, green: 0.080, blue: 0.095).opacity(0.94))
+            RoundedRectangle(cornerRadius: radius, style: .continuous)
+                .fill(LinearGradient(colors: [.white.opacity(0.045), .clear], startPoint: .top, endPoint: .bottom))
+            RoundedRectangle(cornerRadius: radius, style: .continuous)
+                .strokeBorder(.white.opacity(0.16), lineWidth: 0.75)
         }
-    }
-
-    private var islandFill: LinearGradient {
-        if store.isExpanded {
-            return LinearGradient(
-                colors: [
-                    ClearGlass.smoke.opacity(0.58),
-                    Color.black.opacity(0.38),
-                    ClearGlass.smoke.opacity(0.46)
-                ],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-        }
-        return LinearGradient(
-            colors: [
-                ClearGlass.smoke.opacity(0.52),
-                Color.black.opacity(0.34),
-                ClearGlass.smoke.opacity(0.42)
-            ],
-            startPoint: .topLeading,
-            endPoint: .bottomTrailing
-        )
     }
 
     private var compactContent: some View {
         Group {
             if isIdleMiniMode {
-                IdleMiniContent(
-                    status: idleMiniStatus,
-                    accentColor: idleMiniAccentColor,
-                    language: configurationStore.config.language
-                )
+                Image(systemName: "terminal")
+                    .font(.system(size: 14, weight: .medium))
+                    .foregroundStyle(GlassText.primary)
                     .frame(width: IslandMetrics.idleMiniDiameter, height: IslandMetrics.idleMiniDiameter)
             } else {
-                HStack(spacing: 7) {
+                HStack(spacing: 10) {
                     sourceDots
                     VStack(alignment: .leading, spacing: 1) {
                         Text(compactSession.map { SessionDisplaySnapshot(session: $0, language: configurationStore.config.language).title } ?? ">_ - island")
-                            .font(.system(size: 11, weight: .semibold))
+                            .font(.system(size: 12.5, weight: .semibold))
                             .foregroundStyle(GlassText.primary)
                             .lineLimit(1)
                         Text(compactDetail)
-                            .font(.system(size: 9, weight: .medium))
+                            .font(.system(size: 10, weight: .regular))
                             .foregroundStyle(GlassText.secondary)
                             .lineLimit(1)
                     }
@@ -245,7 +162,7 @@ struct IslandPanelView: View {
                     )
                     .frame(width: 18, height: 18)
                 }
-                .padding(.horizontal, 10)
+                .padding(.horizontal, 13)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -274,7 +191,7 @@ struct IslandPanelView: View {
     }
 
     private var expandedContent: some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: 8) {
             dashboardHeader
             if store.healthChecks.contains(where: { $0.status == .needsAction }) {
                 HealthSummaryStrip(items: store.healthChecks)
@@ -316,7 +233,9 @@ struct IslandPanelView: View {
             if showingApprovalDetail && approvalDetailSession != nil {
                 EmptyView()
             } else if dashboardSessions.isEmpty {
-                DashboardEmptyCard()
+                if approvalQueueSessions.isEmpty {
+                    DashboardEmptyCard()
+                }
             } else {
                 ForEach(dashboardSessions) { session in
                     DashboardSessionCard(
@@ -328,8 +247,8 @@ struct IslandPanelView: View {
                 }
             }
         }
-        .padding(.horizontal, 10)
-        .padding(.vertical, 8)
+        .padding(.horizontal, 14)
+        .padding(.vertical, 12)
         .onChange(of: showingApprovalDetail) { _, value in
             store.isApprovalDetailVisible = value && approvalDetailSession != nil
         }
@@ -340,8 +259,10 @@ struct IslandPanelView: View {
     }
 
     private var dashboardHeader: some View {
-        HStack(spacing: 10) {
-            sourceDots
+        HStack(spacing: 8) {
+            Text(">_")
+                .font(.system(size: 14, weight: .semibold, design: .monospaced))
+                .foregroundStyle(GlassText.tertiary)
             if let usage = dashboardUsage {
                 Button {
                     NSApp.sendAction(#selector(AppDelegate.openSettings), to: nil, from: nil)
@@ -356,8 +277,8 @@ struct IslandPanelView: View {
                     NSApp.sendAction(#selector(AppDelegate.openSettings), to: nil, from: nil)
                 } label: {
                     Text(statusLine)
-                        .font(.system(size: 13, weight: .semibold))
-                        .foregroundStyle(GlassText.primary)
+                        .font(.system(size: 12, weight: .medium))
+                        .foregroundStyle(GlassText.secondary)
                 }
                 .buttonStyle(.plain)
                 .islandHoverHighlight(scale: 1.0)
@@ -367,14 +288,14 @@ struct IslandPanelView: View {
             Button {
                 configurationStore.config.doNotDisturb.toggle()
             } label: {
-                Image(systemName: configurationStore.config.doNotDisturb ? "bell.slash.fill" : "bell.fill")
+                Image(systemName: configurationStore.config.doNotDisturb ? "bell.slash" : "bell")
             }
             .buttonStyle(DashboardIconButtonStyle())
             .help(configurationStore.config.doNotDisturb ? AppText.pick(configurationStore.config.language, english: "Turn off Do Not Disturb", japanese: "集中モードをオフ", chinese: "关闭勿扰") : AppText.pick(configurationStore.config.language, english: "Turn on Do Not Disturb", japanese: "集中モードをオン", chinese: "开启勿扰"))
             Button {
                 NSApp.sendAction(#selector(AppDelegate.openSettings), to: nil, from: nil)
             } label: {
-                Image(systemName: "gearshape.fill")
+                Image(systemName: "gearshape")
             }
             .buttonStyle(DashboardIconButtonStyle())
             .help(settingsTitle)
@@ -392,7 +313,7 @@ struct IslandPanelView: View {
             .buttonStyle(DashboardIconButtonStyle())
             .help(collapseTitle)
         }
-        .frame(height: 24)
+        .frame(height: 32)
     }
 
     private var sourceDots: some View {

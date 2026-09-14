@@ -33,8 +33,7 @@ struct SessionRow: View {
             ClearGlassRoundedBackground(
                 cornerRadius: 16,
                 highlighted: isSelected,
-                tint: isSelected ? Color.white.opacity(0.12) : .clear,
-                materialOpacity: isSelected ? 0.72 : 0.46
+                tint: isSelected ? Color.white.opacity(0.12) : .clear
             )
         )
     }
@@ -181,8 +180,7 @@ struct UsageMetric: View {
         .background(
             ClearGlassCapsuleBackground(
                 highlighted: accent,
-                tint: accent ? Color.orange.opacity(0.10) : Color.white.opacity(0.040),
-                materialOpacity: 0.40
+                tint: accent ? Color.orange.opacity(0.10) : Color.white.opacity(0.040)
             )
         )
         .clipShape(Capsule())
@@ -207,7 +205,7 @@ struct AssistantMessageCard: View {
         .padding(.horizontal, 12)
         .padding(.vertical, 10)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(ClearGlassRoundedBackground(cornerRadius: 10, highlighted: true, materialOpacity: 0.30))
+        .background(ClearGlassRoundedBackground(cornerRadius: 10, highlighted: true))
         .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
     }
 }
@@ -232,8 +230,7 @@ struct SubagentSummaryView: View {
         .background(
             ClearGlassCapsuleBackground(
                 highlighted: true,
-                tint: Color.white.opacity(0.050),
-                materialOpacity: 0.40
+                tint: Color.white.opacity(0.050)
             )
         )
         .clipShape(Capsule())
@@ -326,8 +323,7 @@ struct ApprovalPanel: View {
             ClearGlassRoundedBackground(
                 cornerRadius: 8,
                 highlighted: true,
-                tint: Color.yellow.opacity(0.10),
-                materialOpacity: 0.32
+                tint: Color.yellow.opacity(0.10)
             )
         )
         .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
@@ -352,7 +348,7 @@ struct ActivityRow: View {
     var body: some View {
         HStack(spacing: 14) {
             ZStack {
-                ClearGlassRoundedBackground(cornerRadius: 12, highlighted: true, materialOpacity: 0.28)
+                ClearGlassRoundedBackground(cornerRadius: 12, highlighted: true)
                 Image(systemName: item.symbol)
                     .font(.system(size: 14, weight: .semibold))
             }
@@ -408,7 +404,7 @@ struct StatusBadge: View {
         .font(.system(size: 11, weight: .semibold))
         .padding(.horizontal, 14)
         .frame(height: 36)
-        .background(ClearGlassCapsuleBackground(highlighted: true, tint: color.opacity(0.12), materialOpacity: 0.28))
+        .background(ClearGlassCapsuleBackground(highlighted: true, tint: color.opacity(0.12)))
         .foregroundStyle(color)
         .overlay(
             ZStack {

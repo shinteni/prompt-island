@@ -6,13 +6,13 @@
     <title>リリースノート | Vibelsland Free</title>
     <meta
       name="description"
-      content="Vibelsland Free v0.2.2 のリリースノート。ダウンロード、SHA-256 確認、主要機能、インストールを確認できます。"
+      content="Vibelsland Free v0.3.0 のリリースノート。ダウンロード、SHA-256 確認、主要機能、インストールを確認できます。"
     >
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Vibelsland Free">
     <meta property="og:locale" content="ja_JP">
     <meta property="og:title" content="Vibelsland Free リリースノート">
-    <meta property="og:description" content="Vibelsland Free v0.2.2 の機能、ダウンロード、チェックサム、インストールを確認できます。">
+    <meta property="og:description" content="Vibelsland Free v0.3.0 の機能、ダウンロード、チェックサム、インストールを確認できます。">
     <meta property="og:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
     <meta property="og:image:width" content="1672">
     <meta property="og:image:height" content="941">
@@ -20,7 +20,7 @@
     <meta property="og:url" content="https://shinteni.github.io/prompt-island/ja/release-notes.html">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Vibelsland Free リリースノート">
-    <meta name="twitter:description" content="Vibelsland Free v0.2.2 の機能、ダウンロード、チェックサム、インストールを確認できます。">
+    <meta name="twitter:description" content="Vibelsland Free v0.3.0 の機能、ダウンロード、チェックサム、インストールを確認できます。">
     <meta name="twitter:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
     <meta name="twitter:image:alt" content="Vibelsland Free macOS AI コーディング状態インターフェイス">
     <meta name="theme-color" content="#070706">
@@ -61,17 +61,17 @@
           <p class="eyebrow">Release Notes</p>
           <h1 id="release-title">リリース履歴。</h1>
           <p>
-            Vibelsland Free の公式サイト上のリリース記録です。現在の公開ダウンロードは v0.2.2：現行版 Codex Desktop のリアルタイム承認接続を復旧し、長時間利用時のバックグラウンド負荷を軽減しました。
+            現在の公開版は v0.3.0 です。会話ファイルをバックグラウンドで読み取り、状態をまとめて更新します。非表示のウィンドウではアニメーションを停止し、表示上限を超えた承認待ちも保持します。
           </p>
           <div class="hero-actions">
             <a class="button primary" href="download.html">ダウンロード説明を見る</a>
-            <a class="button secondary" href="https://github.com/shinteni/prompt-island/releases/tag/v0.2.2">GitHub Release を開く</a>
+            <a class="button secondary" href="https://github.com/shinteni/prompt-island/releases/tag/v0.3.0">GitHub Release を開く</a>
           </div>
         </div>
         <div class="privacy-summary" aria-label="リリース概要" data-reveal>
           <div>
             <span>現在の版</span>
-            <strong>v0.2.2</strong>
+            <strong>v0.3.0</strong>
           </div>
           <div>
             <span>システム</span>
@@ -86,48 +86,83 @@
 
       <section class="section data-section surface-section" aria-labelledby="source-status-title">
         <div class="section-heading align-left" data-reveal>
-          <p class="eyebrow">v0.2.2 の新機能</p>
-          <h2 id="source-status-title">Codex Desktop 接続を復旧し、バックグラウンド負荷を軽減。</h2>
+          <p class="eyebrow">v0.3.0 の新機能</p>
+          <h2 id="source-status-title">メインスレッドの処理を減らし、動きを滑らかに。</h2>
           <p>
-            <code>docs/release.json</code> は GitHub Releases に公開中の v0.2.2 パッケージを記録し、ダウンロード、チェックサム、Homebrew cask は同じメタデータから生成されます。
+            <code>docs/release.json</code> は GitHub Releases に公開中の v0.3.0 パッケージを記録し、ダウンロード、チェックサム、Homebrew cask は同じメタデータから生成されます。
           </p>
         </div>
         <div class="data-grid">
           <article data-reveal>
-            <h3>現行 Codex IPC</h3>
+            <h3>バックグラウンド読み取り</h3>
             <ul>
-              <li>現行の ChatGPT/Codex が使用する <code>~/.codex/ipc/ipc.sock</code> を優先します。</li>
-              <li>旧式の一時 socket は互換フォールバックとして維持します。</li>
+              <li>読み取り専用の SQLite クエリをアプリ内で実行し、更新ごとの外部プロセス起動を省きます。</li>
+              <li>Hook がファイルパスを渡した場合、履歴ディレクトリの探索を省きます。</li>
             </ul>
           </article>
           <article data-reveal>
-            <h3>再接続の制御</h3>
+            <h3>一貫したタスク状態</h3>
             <ul>
-              <li>socket の深い再走査と重複した再接続を避けます。</li>
-              <li>直近で失敗した接続先を短時間スキップし、空転を減らします。</li>
+              <li>Hook の状態をすぐに表示し、古い読み取り結果が新しいイベントを上書きしないようにします。</li>
+              <li>更新結果を一度に反映し、DB の読み取りに失敗しても既存のタスクを保持します。</li>
             </ul>
           </article>
           <article data-reveal>
-            <h3>リソース解放</h3>
+            <h3>画面とアニメーションを刷新</h3>
             <ul>
-              <li>接続終了後に EOF ハンドラーを解除します。</li>
-              <li>app-server の出力バッファを制限し、長時間セッションでの増大を防ぎます。</li>
+              <li>暗いグラファイト色の背景、読みやすい文字、明瞭な承認ボタンを採用し、重なるぼかしと発光枠を減らしました。</li>
+              <li>開閉中にクリックしても速度を保って滑らかに切り替わり、文字の配置は変わりません。</li>
+              <li>非表示時はサイズ変更と回転のアニメーションを停止します。</li>
+              <li>回転、呼吸、ピクセル表示がシステムの「視差効果を減らす」に従います。</li>
             </ul>
           </article>
           <article data-reveal>
-            <h3>アクティブな状態 DB</h3>
+            <h3>承認待ちの保持</h3>
             <ul>
-              <li>データベースと WAL の最近の活動から、現行の Codex 状態 DB を選択します。</li>
-              <li>v0.2.0 からは設定画面からワンクリックで本バージョンへ更新できます。</li>
+              <li>表示件数の上限を超えても承認待ちは保持します。</li>
+              <li>Codex Desktop を無効にすると、接続確認プロセスも起動しません。</li>
             </ul>
           </article>
+        </div>
+      </section>
+
+      <section class="section split-section" aria-labelledby="v030-title">
+        <div class="split-copy" data-reveal>
+          <p class="eyebrow">v0.3.0</p>
+          <h2 id="v030-title">現在のバージョン。</h2>
+          <p>
+            浮島、タスク一覧、承認画面を刷新し、途中で切り替えられる滑らかな開閉動作にしました。Codex の DB をアプリ内で読み取り、会話ファイルはバックグラウンドで処理します。状態更新をまとめ、表示上限を超えた承認待ちも保持します。
+          </p>
+          <a class="text-link" href="download.html">ダウンロード手順を見る</a>
+        </div>
+        <div class="release-card" aria-label="v0.3.0 アセット" data-reveal>
+          <span>リリースファイル</span>
+          <strong>Vibelsland-Free-0.3.0-macos.zip</strong>
+          <dl>
+            <div>
+              <dt>バージョン</dt>
+              <dd>v0.3.0</dd>
+            </div>
+            <div>
+              <dt>サイズ</dt>
+              <dd>約 3.7 MB</dd>
+            </div>
+            <div>
+              <dt>署名</dt>
+              <dd>ad-hoc 署名</dd>
+            </div>
+            <div>
+              <dt>検証</dt>
+              <dd>SHA-256</dd>
+            </div>
+          </dl>
         </div>
       </section>
 
       <section class="section split-section" aria-labelledby="v022-title">
         <div class="split-copy" data-reveal>
           <p class="eyebrow">v0.2.2</p>
-          <h2 id="v022-title">現在のバージョン。</h2>
+          <h2 id="v022-title">前のバージョン：Codex Desktop の接続修復。</h2>
           <p>
             現行の ChatGPT/Codex Desktop とのリアルタイム承認接続を復旧し、長時間利用時の socket 探索、再接続、バッファの負荷を軽減しました。アクティブな Codex 状態データベースもより確実に選択します。
           </p>
@@ -330,7 +365,7 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="../lang.js?v=99fea880a93c" defer></script>
+    <script src="../lang.js?v=725b9a48ca36" defer></script>
     <script src="../effects.js?v=984d01b9fa2d" defer></script>
   </body>
 </html>
