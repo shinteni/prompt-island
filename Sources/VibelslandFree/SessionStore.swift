@@ -148,6 +148,12 @@ final class SessionStore: ObservableObject {
         }
 
         configCancellable = configurationStore.$config
+            .map { config in
+                var runtimeConfig = config
+                runtimeConfig.islandDockPlacement = nil
+                return runtimeConfig
+            }
+            .removeDuplicates()
             .dropFirst()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
