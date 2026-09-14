@@ -26,7 +26,7 @@ struct IslandPanelView: View {
     }
 
     private var islandContent: some View {
-        let radius: CGFloat = store.isExpanded ? 22 : (isIdleMiniPresentation ? IslandMetrics.idleMiniRadius : 21)
+        let radius: CGFloat = store.isExpanded ? 22 : (dockEdge != nil ? IslandDockingPolicy.tabSize.height / 2 : (isIdleMiniPresentation ? IslandMetrics.idleMiniRadius : 21))
         return ZStack {
             islandBackground(radius: radius)
                 .allowsHitTesting(false)
@@ -49,7 +49,7 @@ struct IslandPanelView: View {
                 }
                 if showsCompactLayer {
                     compactContent
-                        .frame(width: isIdleMiniPresentation ? IslandMetrics.idleMiniDiameter : IslandPresentationPolicy.compactTaskSize.width)
+                        .frame(width: dockEdge != nil ? IslandDockingPolicy.tabSize.width : (isIdleMiniPresentation ? IslandMetrics.idleMiniDiameter : IslandPresentationPolicy.compactTaskSize.width))
                         .opacity(contentPresentationExpanded ? 0 : 1)
                         .scaleEffect(
                             !reduceMotion && contentPresentationExpanded
@@ -63,9 +63,9 @@ struct IslandPanelView: View {
             .zIndex(1)
         }
         .background(Color.clear)
-        .clipShape(RoundedRectangle(cornerRadius: radius, style: .continuous))
+        .clipShape(panelShape(radius: radius))
         .preferredColorScheme(.dark)
-        .contentShape(RoundedRectangle(cornerRadius: radius, style: .continuous))
+        .contentShape(panelShape(radius: radius))
         .contextMenu {
             Button(store.isExpanded ? collapseTitle : expandTitle) {
                 store.isExpanded.toggle()
@@ -123,10 +123,10 @@ struct IslandPanelView: View {
 
     private func islandBackground(radius: CGFloat) -> some View {
         ZStack {
-            VisualEffectView(material: .hudWindow, blendingMode: .behindWindow, cornerRadius: radius)
-            RoundedRectangle(cornerRadius: radius, style: .continuous)
+            VisualEffectView(material: .hudWindow, blendingMode: .behindWindow, cornerRadius: dockEdge == nil ? radius : 0)
+            panelShape(radius: radius)
                 .fill(Color(red: 0.075, green: 0.080, blue: 0.095).opacity(0.94))
-            RoundedRectangle(cornerRadius: radius, style: .continuous)
+            panelShape(radius: radius)
                 .fill(LinearGradient(
                     colors: [
                         Color(red: 0.16, green: 0.33, blue: 0.55).opacity(0.24),
@@ -136,14 +136,45 @@ struct IslandPanelView: View {
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
                 ))
-            RoundedRectangle(cornerRadius: radius, style: .continuous)
+            panelShape(radius: radius)
                 .strokeBorder(.white.opacity(0.16), lineWidth: 0.75)
         }
     }
 
+    private var dockEdge: IslandDockEdge? {
+        configurationStore.config.islandDockPlacement?.edge
+    }
+
+    private func panelShape(radius: CGFloat) -> UnevenRoundedRectangle {
+        UnevenRoundedRectangle(
+            topLeadingRadius: dockEdge == .left ? 0 : radius,
+            bottomLeadingRadius: dockEdge == .left ? 0 : radius,
+            bottomTrailingRadius: dockEdge == .right ? 0 : radius,
+            topTrailingRadius: dockEdge == .right ? 0 : radius,
+            style: dockEdge == nil ? .continuous : .circular
+        )
+    }
+
+    private var statusSpinner: some View {
+        CompactLoadingSpinner(
+            status: compactSession?.status ?? .idle,
+            source: compactSession?.source ?? store.selectedSession?.source ?? .unknown,
+            language: configurationStore.config.language
+        )
+    }
+
     private var compactContent: some View {
         Group {
-            if isIdleMiniMode {
+            if dockEdge != nil {
+                ZStack {
+                    statusSpinner.frame(width: 22, height: 22)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel("\((compactSession?.source ?? store.selectedSession?.source ?? .unknown).shortName) · \((compactSession?.status ?? .idle).displayName(language: configurationStore.config.language))")
+                .accessibilityAddTraits(.isButton)
+                .accessibilityAction { store.isExpanded = true }
+            } else if isIdleMiniMode {
                 Image(systemName: "terminal")
                     .font(.system(size: 14, weight: .medium))
                     .foregroundStyle(GlassText.primary)
@@ -162,12 +193,7 @@ struct IslandPanelView: View {
                             .lineLimit(1)
                     }
                     Spacer(minLength: 2)
-                    CompactLoadingSpinner(
-                        status: compactSession?.status ?? .idle,
-                        color: compactSession?.source.color ?? Color(red: 0.35, green: 0.68, blue: 1.0),
-                        nsColor: compactSession?.source.nsColor ?? NSColor(red: 0.35, green: 0.68, blue: 1.0, alpha: 1),
-                        language: configurationStore.config.language
-                    )
+                    statusSpinner
                     .frame(width: 18, height: 18)
                 }
                 .padding(.horizontal, 13)
@@ -271,6 +297,7 @@ struct IslandPanelView: View {
             Text(">_")
                 .font(.system(size: 14, weight: .semibold, design: .monospaced))
                 .foregroundStyle(GlassText.tertiary)
+                .help(AppText.pick(configurationStore.config.language, english: "Drag to move the island", japanese: "ドラッグして移動", chinese: "拖动以移动浮岛"))
             if let usage = dashboardUsage {
                 Button {
                     NSApp.sendAction(#selector(AppDelegate.openSettings), to: nil, from: nil)

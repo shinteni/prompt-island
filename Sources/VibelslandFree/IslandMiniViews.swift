@@ -302,28 +302,34 @@ struct MiniBreathingLights: View {
 struct CompactLoadingSpinner: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     let status: SessionStatus
-    let color: Color
-    let nsColor: NSColor
+    let source: AgentSource
     let language: AppLanguage
 
     var body: some View {
-        Group {
+        ZStack {
             if status.isActiveVisual && !reduceMotion {
                 CoreAnimationLoadingSpinner(
-                    color: spinnerNSColor,
+                    colors: source.progressRingColors,
                     trimEnd: trimEnd,
                     cycle: IslandMotion.CompactLoadingSpinner.rotationCycle(for: status)
                 )
             } else {
                 spinner(rotation: -90)
             }
+            if let symbol = statusSymbol {
+                Image(systemName: symbol)
+                    .font(.system(size: 8, weight: .bold))
+                    .foregroundStyle(statusColor)
+            }
         }
         .allowsHitTesting(false)
-        .accessibilityLabel(status.isActiveVisual ? loadingText : status.displayName(language: language))
+        .accessibilityLabel("\(source.shortName) · \(status.displayName(language: language))")
     }
 
     private func spinner(rotation: Double) -> some View {
         ZStack {
+            Circle()
+                .stroke(Color.white.opacity(0.20), lineWidth: 2.2)
             Circle()
                 .trim(from: 0, to: trimEnd)
                 .stroke(spinnerStyle, style: StrokeStyle(lineWidth: 2.2, lineCap: .round))
@@ -332,7 +338,7 @@ struct CompactLoadingSpinner: View {
                     color: statusColor.opacity(status.isActiveVisual ? IslandMotion.CompactLoadingSpinner.activeShadowOpacity : IslandMotion.CompactLoadingSpinner.inactiveShadowOpacity),
                     radius: 2.2
                 )
-            if !status.isActiveVisual {
+            if status == .idle {
                 Circle()
                     .fill(statusColor.opacity(IslandMotion.CompactLoadingSpinner.inactiveDotOpacity))
                     .frame(width: 4.4, height: 4.4)
@@ -363,50 +369,29 @@ struct CompactLoadingSpinner: View {
             return Color(red: 1.00, green: 0.30, blue: 0.20)
         case .waitingApproval, .waitingQuestion:
             return Color.orange
-        case .thinking, .runningTool:
-            return color
-        case .idle:
-            return Color.black.opacity(0.42)
+        case .thinking, .runningTool, .idle:
+            return Color(nsColor: source.progressRingColors[0])
         }
     }
 
-    private var spinnerStyle: AnyShapeStyle {
+    private var statusSymbol: String? {
         switch status {
-        case .thinking, .runningTool, .waitingApproval, .waitingQuestion:
-            return AnyShapeStyle(statusColor.opacity(IslandMotion.CompactLoadingSpinner.activeStyleOpacity))
-        default:
-            return AnyShapeStyle(
-                statusColor.opacity(
-                    status.isActiveVisual
-                    ? IslandMotion.CompactLoadingSpinner.activeStyleOpacity
-                    : IslandMotion.CompactLoadingSpinner.inactiveStyleOpacity
-                )
-            )
+        case .done: return "checkmark"
+        case .failed: return "xmark"
+        case .waitingApproval: return "exclamationmark"
+        case .waitingQuestion: return "questionmark"
+        default: return nil
         }
     }
 
-    private var spinnerNSColor: NSColor {
-        switch status {
-        case .done:
-            return .systemGreen
-        case .failed:
-            return .systemRed
-        case .waitingApproval, .waitingQuestion:
-            return .systemOrange
-        case .thinking, .runningTool:
-            return nsColor
-        case .idle:
-            return .tertiaryLabelColor
-        }
-    }
-
-    private var loadingText: String {
-        AppText.pick(language, english: "Loading", japanese: "読み込み中", chinese: "加载中")
+    private var spinnerStyle: AngularGradient {
+        let colors = source.progressRingColors.map { Color(nsColor: $0) }
+        return AngularGradient(colors: colors + [colors[0]], center: .center)
     }
 }
 
 private struct CoreAnimationLoadingSpinner: NSViewRepresentable {
-    let color: NSColor
+    let colors: [NSColor]
     let trimEnd: CGFloat
     let cycle: TimeInterval
 
@@ -415,13 +400,14 @@ private struct CoreAnimationLoadingSpinner: NSViewRepresentable {
     }
 
     func updateNSView(_ view: CoreAnimationLoadingSpinnerView, context: Context) {
-        view.configure(color: color, trimEnd: trimEnd, cycle: cycle)
+        view.configure(colors: colors, trimEnd: trimEnd, cycle: cycle)
     }
 }
 
 private final class CoreAnimationLoadingSpinnerView: NSView {
     private let trackLayer = CAShapeLayer()
     private let arcLayer = CAShapeLayer()
+    private let gradientLayer = CAGradientLayer()
     private var currentTrimEnd: CGFloat?
     private var currentCycle: TimeInterval?
     private var pathBounds: NSRect?
@@ -435,8 +421,14 @@ private final class CoreAnimationLoadingSpinnerView: NSView {
             shapeLayer.lineCap = .round
             shapeLayer.lineJoin = .round
             shapeLayer.contentsScale = NSScreen.main?.backingScaleFactor ?? 2
-            layer?.addSublayer(shapeLayer)
         }
+        layer?.addSublayer(trackLayer)
+        layer?.addSublayer(gradientLayer)
+        gradientLayer.type = .conic
+        gradientLayer.startPoint = CGPoint(x: 0.5, y: 0.5)
+        gradientLayer.endPoint = CGPoint(x: 1, y: 0.5)
+        gradientLayer.mask = arcLayer
+        arcLayer.strokeColor = NSColor.white.cgColor
         trackLayer.strokeColor = NSColor.white.withAlphaComponent(0.20).cgColor
         trackLayer.strokeEnd = 1
     }
@@ -451,16 +443,16 @@ private final class CoreAnimationLoadingSpinnerView: NSView {
         updatePath()
     }
 
-    func configure(color: NSColor, trimEnd: CGFloat, cycle: TimeInterval) {
+    func configure(colors: [NSColor], trimEnd: CGFloat, cycle: TimeInterval) {
         CATransaction.begin()
         CATransaction.setDisableActions(true)
-        arcLayer.strokeColor = color.withAlphaComponent(0.90).cgColor
+        gradientLayer.colors = (colors + [colors[0]]).map { $0.withAlphaComponent(0.95).cgColor }
         arcLayer.strokeEnd = trimEnd
         currentTrimEnd = trimEnd
         CATransaction.commit()
 
         if currentCycle != cycle {
-            arcLayer.removeAnimation(forKey: "rotation")
+            gradientLayer.removeAnimation(forKey: "rotation")
             currentCycle = cycle
         }
         updateAnimationVisibility()
@@ -490,10 +482,10 @@ private final class CoreAnimationLoadingSpinnerView: NSView {
     @objc private func updateAnimationVisibility() {
         guard let window, window.isVisible, window.occlusionState.contains(.visible),
               !isHiddenOrHasHiddenAncestor, let cycle = currentCycle else {
-            arcLayer.removeAnimation(forKey: "rotation")
+            gradientLayer.removeAnimation(forKey: "rotation")
             return
         }
-        if arcLayer.animation(forKey: "rotation") == nil { restartAnimation(cycle: cycle) }
+        if gradientLayer.animation(forKey: "rotation") == nil { restartAnimation(cycle: cycle) }
     }
 
     private func updatePath() {
@@ -510,6 +502,7 @@ private final class CoreAnimationLoadingSpinnerView: NSView {
         let path = CGPath(ellipseIn: rect, transform: nil)
         CATransaction.begin()
         CATransaction.setDisableActions(true)
+        gradientLayer.frame = bounds
         [trackLayer, arcLayer].forEach { shapeLayer in
             shapeLayer.frame = bounds
             shapeLayer.path = path
@@ -519,7 +512,7 @@ private final class CoreAnimationLoadingSpinnerView: NSView {
     }
 
     private func restartAnimation(cycle: TimeInterval) {
-        arcLayer.removeAnimation(forKey: "rotation")
+        gradientLayer.removeAnimation(forKey: "rotation")
         let animation = CABasicAnimation(keyPath: "transform.rotation.z")
         animation.fromValue = -CGFloat.pi / 2
         animation.toValue = CGFloat.pi * 1.5
@@ -527,6 +520,6 @@ private final class CoreAnimationLoadingSpinnerView: NSView {
         animation.repeatCount = .greatestFiniteMagnitude
         animation.timingFunction = CAMediaTimingFunction(name: .linear)
         animation.isRemovedOnCompletion = false
-        arcLayer.add(animation, forKey: "rotation")
+        gradientLayer.add(animation, forKey: "rotation")
     }
 }

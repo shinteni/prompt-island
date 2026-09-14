@@ -44,6 +44,7 @@ package struct AppConfiguration: Codable, Equatable {
     package var doNotDisturb: Bool
     package var launchAtLogin: Bool
     package var islandPosition: IslandPosition
+    package var islandDockPlacement: IslandDockPlacement?
     package var language: AppLanguage
     package var approvalTimeoutSeconds: TimeInterval
     package var maxVisibleSessions: Int
@@ -80,6 +81,7 @@ package struct AppConfiguration: Codable, Equatable {
         case doNotDisturb
         case launchAtLogin
         case islandPosition
+        case islandDockPlacement
         case language
         case approvalTimeoutSeconds
         case maxVisibleSessions
@@ -133,6 +135,7 @@ package struct AppConfiguration: Codable, Equatable {
         doNotDisturb = try container.decodeIfPresent(Bool.self, forKey: .doNotDisturb) ?? Self.default.doNotDisturb
         launchAtLogin = try container.decodeIfPresent(Bool.self, forKey: .launchAtLogin) ?? Self.default.launchAtLogin
         islandPosition = try container.decodeIfPresent(IslandPosition.self, forKey: .islandPosition) ?? Self.default.islandPosition
+        islandDockPlacement = try container.decodeIfPresent(IslandDockPlacement.self, forKey: .islandDockPlacement)
         language = try container.decodeIfPresent(AppLanguage.self, forKey: .language) ?? Self.default.language
         approvalTimeoutSeconds = try container.decodeIfPresent(TimeInterval.self, forKey: .approvalTimeoutSeconds) ?? Self.default.approvalTimeoutSeconds
         maxVisibleSessions = try container.decodeIfPresent(Int.self, forKey: .maxVisibleSessions) ?? Self.default.maxVisibleSessions

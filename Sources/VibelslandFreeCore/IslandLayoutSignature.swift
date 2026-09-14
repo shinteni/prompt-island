@@ -3,6 +3,7 @@ import Foundation
 package struct IslandLayoutSignature: Equatable {
     package var isExpanded: Bool
     package var position: IslandPosition
+    package var dockPlacement: IslandDockPlacement?
     package var presentationMode: IslandPresentationMode
     package var hasHealthWarning: Bool
     package var pendingApprovalID: AgentSession.ID?
@@ -19,6 +20,7 @@ package struct IslandLayoutSignature: Equatable {
         maxVisibleSessions: Int,
         position: IslandPosition,
         isLaunchPresenceActive: Bool = false,
+        dockPlacement: IslandDockPlacement? = nil,
         now: Date = Date()
     ) {
         let approvalQueue = ApprovalQueuePolicy.queue(in: sessions)
@@ -26,6 +28,7 @@ package struct IslandLayoutSignature: Equatable {
         let configuredLimit = DashboardSessionPolicy.configuredVisibleSessionLimit(maxVisibleSessions)
         self.isExpanded = isExpanded
         self.position = position
+        self.dockPlacement = dockPlacement
         self.presentationMode = IslandPresentationPolicy.mode(
             sessions: sessions,
             isExpanded: isExpanded,
