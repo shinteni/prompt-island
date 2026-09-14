@@ -3,7 +3,7 @@ import Foundation
 package enum SessionOpenAction: Equatable {
     case selectOnly
     case openCodexThread(threadID: String, logNamespace: String, errorMessage: String)
-    case focusClaudeCodeTerminal(sessionID: String?)
+    case openClaudeCodeSession(sessionID: String?)
     case focusApplication(AgentSource)
 }
 
@@ -31,7 +31,7 @@ package enum SessionOpenPolicy {
             }
             return .focusApplication(.codexCli)
         case .claudeCode:
-            return .focusClaudeCodeTerminal(sessionID: claudeCodeSessionID(for: session))
+            return .openClaudeCodeSession(sessionID: claudeCodeSessionID(for: session))
         }
     }
 

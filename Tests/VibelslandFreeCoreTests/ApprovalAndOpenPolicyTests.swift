@@ -124,8 +124,8 @@ struct ApprovalAndOpenPolicyTests {
         )
         XCTAssertEqual(
             SessionOpenPolicy.action(for: claudeUUID),
-            .focusClaudeCodeTerminal(sessionID: "123E4567-E89B-12D3-A456-426614174000"),
-            "Claude CLI cards prefer the matching terminal process when the session id is usable"
+            .openClaudeCodeSession(sessionID: "123E4567-E89B-12D3-A456-426614174000"),
+            "Claude cards resolve the desktop session mapping before falling back to a CLI terminal"
         )
 
         let claudeSynthetic = linkPolicySession(
@@ -134,7 +134,7 @@ struct ApprovalAndOpenPolicyTests {
         )
         XCTAssertEqual(
             SessionOpenPolicy.action(for: claudeSynthetic),
-            .focusClaudeCodeTerminal(sessionID: nil),
+            .openClaudeCodeSession(sessionID: nil),
             "Synthetic Claude ids focus a running Claude terminal without pretending to know the exact session"
         )
 
@@ -162,6 +162,15 @@ struct ApprovalAndOpenPolicyTests {
             nil,
             "A random running terminal should not be focused for an old Claude card when no Claude CLI process is present"
         )
+    }
+
+    @Test func testClaudeTerminalDoesNotOpenAnotherSession() {
+        XCTAssertEqual(ClaudeTerminalFocusPolicy.terminalBundleIdentifier(
+            forSessionID: "target-session",
+            processSnapshots: [
+                ProcessSnapshot(pid: 10, ppid: 1, arguments: "Terminal"),
+                ProcessSnapshot(pid: 11, ppid: 10, arguments: "claude --resume other-session")
+            ], runningAppsByPID: [10: "com.apple.Terminal"]), nil)
     }
 
     @Test func testClaudeTerminalFocusPolicyFindsParentTerminal() {

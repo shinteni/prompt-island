@@ -244,10 +244,9 @@ package final class ConversationTranscriptReader: @unchecked Sendable {
            let message = object["message"] as? [String: Any],
            let content = message["content"] as? [[String: Any]] {
             for item in content where item["type"] as? String == "tool_result" {
-                let detail = toolResultDetail(from: item)
-                if !detail.isEmpty {
-                    items.append(ActivityItem(symbol: "checkmark.circle", title: "工具完成", detail: detail, date: timestamp))
-                }
+                let failed = item["is_error"] as? Bool == true
+                items.append(ActivityItem(symbol: failed ? "exclamationmark.circle" : "checkmark.circle",
+                    title: failed ? "工具失败" : "工具完成", detail: failed ? "执行失败" : "工具已返回", date: timestamp))
             }
         }
 
@@ -465,17 +464,9 @@ package final class ConversationTranscriptReader: @unchecked Sendable {
         return sanitized(raw, limit: 700)
     }
 
-    private func toolResultDetail(from item: [String: Any]) -> String {
-        if let content = string(item["content"]), !content.isEmpty {
-            return sanitized(content, limit: 90) ?? ""
-        }
-        return "工具已返回"
-    }
-
     private func safeToolName(from payload: [String: Any]) -> String {
         let raw = string(payload["name"])
             ?? string(payload["tool_name"])
-            ?? string(payload["call_id"])
             ?? "工具"
         return DisplayTextSanitizer.sanitize(raw)
     }

@@ -201,7 +201,7 @@ package struct SessionDisplaySnapshot: Equatable {
     private static func latestTool(from session: AgentSession) -> String? {
         session.activity.reversed().compactMap { item -> String? in
             let title = item.title
-            guard title.contains("工具") || title.contains("修改") else { return nil }
+            guard title == "工具调用" || title == "修改文件" else { return nil }
             let raw = item.detail.isEmpty ? item.title : item.detail
             let text = clean(raw, limit: 36)
             return text.isEmpty ? nil : text
@@ -211,7 +211,8 @@ package struct SessionDisplaySnapshot: Equatable {
     private static func latestActivityText(from session: AgentSession) -> String? {
         session.activity.reversed().compactMap { item -> String? in
             guard !["token_count", "reasoning"].contains(item.title) else { return nil }
-            let raw = item.detail.isEmpty ? item.title : "\(item.title) · \(item.detail)"
+            let isToolResult = item.title == "工具完成" || item.title == "工具失败"
+            let raw = item.detail.isEmpty || isToolResult ? item.title : "\(item.title) · \(item.detail)"
             let text = clean(raw, limit: 92)
             return text.isEmpty ? nil : text
         }.first

@@ -6,6 +6,29 @@ import Testing
 
 @Suite @MainActor
 struct SessionStorePublicationTests {
+    @Test func toolOutputDoesNotBecomeAnAssistantMessage() async throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let store = SessionStore(
+            configurationStore: AppConfigurationStore(url: root.appendingPathComponent("config.json")),
+            transcriptReader: ConversationTranscriptReader(homeURL: root),
+            statsStore: UsageStatsStore(url: root.appendingPathComponent("stats.json"))
+        )
+        defer { store.statsStore.flush() }
+        for source in [AgentSource.claudeCode, .codexCli] {
+            for hook in ["PreToolUse", "PostToolUse"] {
+                store.ingest(event: AgentEvent(source: source, kind: .tool, sessionId: source.rawValue,
+                    payload: .object(["hook_event_name": .string(hook), "tool_name": .string("Bash"),
+                        "message": .string("create: 200 private-test-value")])))
+                await store.transcriptRefreshTask?.value
+                let session = try #require(store.sessions.first { $0.id == source.rawValue })
+                #expect(session.lastAssistantMessage == nil)
+                #expect(!String(describing: SessionDisplaySnapshot(session: session)).contains("private-test-value"))
+            }
+        }
+    }
+
     @Test func transcriptEnrichmentDoesNotBlockOrPublishStaleContent() async throws {
         let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)

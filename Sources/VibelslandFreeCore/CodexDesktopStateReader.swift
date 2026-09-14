@@ -431,7 +431,7 @@ package final class CodexDesktopStateReader: @unchecked Sendable {
             case "function_call", "custom_tool_call", "mcp_tool_call":
                 return ActivityItem(symbol: "wrench.and.screwdriver", title: "工具调用", detail: safeToolName(from: payload) ?? "工具", date: timestamp)
             case "function_call_output", "custom_tool_call_output", "mcp_tool_call_end":
-                guard let detail = safeToolName(from: payload, includeCallID: false) else { return nil }
+                guard let detail = safeToolName(from: payload) else { return nil }
                 return ActivityItem(symbol: "checkmark.circle", title: "工具完成", detail: detail, date: timestamp)
             case "patch_apply_begin", "patch_apply_end":
                 return ActivityItem(symbol: "square.and.pencil", title: "修改文件", detail: type == "patch_apply_end" ? "修改已完成" : "正在修改", date: timestamp)
@@ -714,16 +714,13 @@ package final class CodexDesktopStateReader: @unchecked Sendable {
         return safeKeys.joined(separator: ", ")
     }
 
-    private func safeToolName(from dictionary: [String: Any], includeCallID: Bool = true) -> String? {
+    private func safeToolName(from dictionary: [String: Any]) -> String? {
         if let name = dictionary["name"] as? String {
             return name
         }
         if let invocation = dictionary["invocation"] as? [String: Any],
            let name = invocation["name"] as? String {
             return name
-        }
-        if includeCallID, let callID = dictionary["call_id"] as? String {
-            return callID
         }
         return nil
     }

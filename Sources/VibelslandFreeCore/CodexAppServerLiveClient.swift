@@ -63,7 +63,6 @@ package final class CodexAppServerLiveClient: @unchecked Sendable {
     package typealias ResolvedHandler = @MainActor (String) -> Void
     package typealias StatusHandler = @MainActor (Bool, String?, Date?, String?) -> Void
     package typealias ResponseHandler = @MainActor (Result<Void, CodexDesktopApprovalResponseError>) -> Void
-    package typealias ThreadLoadedHandler = @MainActor (Bool) -> Void
 
     private let logger: AppLogger
     private let fileManager: FileManager
@@ -85,7 +84,6 @@ package final class CodexAppServerLiveClient: @unchecked Sendable {
     private var reconnectWorkItem: DispatchWorkItem?
     private var reconnectGeneration = 0
     private var connectionStartedAt: Date?
-    private var pendingThreadLoadedChecks: [Int: (threadID: String, completion: ThreadLoadedHandler)] = [:]
     private let deepSocketScanInterval: TimeInterval = 60
     private let maximumStdoutBufferBytes = 1_048_576
 
@@ -145,43 +143,6 @@ package final class CodexAppServerLiveClient: @unchecked Sendable {
             ]
             let writeResult = self.writeJSONObject(response)
             self.publishResponse(writeResult, completion)
-        }
-    }
-
-    package func checkThreadLoaded(
-        _ threadID: String,
-        timeout: TimeInterval = 1.4,
-        completion: @escaping ThreadLoadedHandler
-    ) {
-        queue.async { [weak self] in
-            guard let self,
-                  self.process?.isRunning == true else {
-                self?.publishThreadLoaded(false, completion)
-                return
-            }
-
-            let requestID = self.nextRequestID
-            self.nextRequestID += 1
-            self.pendingThreadLoadedChecks[requestID] = (threadID, completion)
-            let writeResult = self.writeJSONObject([
-                "id": requestID,
-                "method": "thread/loaded/list",
-                "params": ["limit": 50]
-            ])
-            if case .failure = writeResult {
-                self.pendingThreadLoadedChecks.removeValue(forKey: requestID)
-                self.publishThreadLoaded(false, completion)
-                return
-            }
-
-            self.queue.asyncAfter(deadline: .now() + timeout) { [weak self] in
-                guard let self,
-                      let pending = self.pendingThreadLoadedChecks.removeValue(forKey: requestID) else {
-                    return
-                }
-                self.logger.error("codex.desktop.thread.loaded.timeout", detail: pending.threadID)
-                self.publishThreadLoaded(false, pending.completion)
-            }
         }
     }
 
@@ -379,7 +340,6 @@ package final class CodexAppServerLiveClient: @unchecked Sendable {
         socketPath = nil
         connectionStartedAt = nil
         stdoutBuffer.removeAll()
-        failPendingThreadLoadedChecks()
         if terminateIfRunning, currentProcess?.isRunning == true {
             currentProcess?.terminate()
         }
@@ -473,14 +433,6 @@ package final class CodexAppServerLiveClient: @unchecked Sendable {
     }
 
     private func handleMessage(_ message: [String: Any]) {
-        if let id = Self.integerID(from: message["id"]),
-           let pending = pendingThreadLoadedChecks.removeValue(forKey: id) {
-            let loaded = Self.loadedThreadIDs(from: message).contains(pending.threadID)
-            logger.info("codex.desktop.thread.loaded.check", detail: "\(pending.threadID) \(loaded)")
-            publishThreadLoaded(loaded, pending.completion)
-            return
-        }
-
         guard let method = message["method"] as? String else {
             return
         }
@@ -510,14 +462,6 @@ package final class CodexAppServerLiveClient: @unchecked Sendable {
                     "message": ">_ - island does not handle \(method)"
                 ]
             ])
-        }
-    }
-
-    private func failPendingThreadLoadedChecks() {
-        let pending = Array(pendingThreadLoadedChecks.values)
-        pendingThreadLoadedChecks.removeAll()
-        for item in pending {
-            publishThreadLoaded(false, item.completion)
         }
     }
 
@@ -568,12 +512,6 @@ package final class CodexAppServerLiveClient: @unchecked Sendable {
         }
     }
 
-    private func publishThreadLoaded(_ loaded: Bool, _ completion: @escaping ThreadLoadedHandler) {
-        Task { @MainActor in
-            completion(loaded)
-        }
-    }
-
     private func publishStatus(_ connected: Bool, _ path: String?) {
         let lastConnectedAt = lastConnectedAt
         let lastFailureMessage = lastFailureMessage
@@ -588,27 +526,6 @@ package final class CodexAppServerLiveClient: @unchecked Sendable {
 }
 
 package extension CodexAppServerLiveClient {
-    static func loadedThreadIDs(from message: [String: Any]) -> [String] {
-        guard let result = message["result"] as? [String: Any],
-              let data = result["data"] as? [Any] else {
-            return []
-        }
-        return data.compactMap { $0 as? String }
-    }
-
-    static func integerID(from value: Any?) -> Int? {
-        if let int = value as? Int {
-            return int
-        }
-        if let double = value as? Double {
-            return Int(double)
-        }
-        if let string = value as? String {
-            return Int(string)
-        }
-        return nil
-    }
-
     static func approval(from message: [String: Any]) -> CodexDesktopApproval? {
         guard let method = message["method"] as? String,
               let requestID = message["id"],
