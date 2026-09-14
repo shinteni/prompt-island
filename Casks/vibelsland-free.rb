@@ -1,6 +1,6 @@
 cask "vibelsland-free" do
   version "0.3.2"
-  sha256 "3242751e201b7c672f20896e869fa87172f237d8fd2502aafced3df01e0bf95a"
+  sha256 "f5867988706c24cc132faeb854b4739382812b6bd8df2aa9354dae825ad67339"
 
   url "https://github.com/shinteni/prompt-island/releases/download/v#{version}/Vibelsland-Free-#{version}-macos.zip"
   name "Vibelsland Free"

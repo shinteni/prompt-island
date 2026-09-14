@@ -94,7 +94,7 @@ extension SessionStore {
             object["last_assistant_message"]?.stringValue,
             object["last_agent_message"]?.stringValue,
             object["assistant_response"]?.stringValue,
-            object["message"]?.stringValue
+            event.kind == .tool ? nil : object["message"]?.stringValue
         ]
         return candidates.compactMap { value -> String? in
             guard let value, !value.isEmpty else { return nil }
