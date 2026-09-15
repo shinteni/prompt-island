@@ -14,7 +14,6 @@ struct IslandPreferencesSection: View {
     @Binding var maxVisibleSessions: Int
     @Binding var globalHotKeysEnabled: Bool
     let playPreview: (RetroSoundKind) -> Void
-    let playAllPreviews: () -> Void
 
     var body: some View {
         SettingsCard(
@@ -58,7 +57,7 @@ struct IslandPreferencesSection: View {
                         .labelsHidden()
                 }
                 SettingsDivider()
-                SettingsRow(icon: "speaker.wave.2", title: AppText.pick(configurationStore.config.language, english: "Sound", japanese: "サウンド", chinese: "声音")) {
+                SettingsRow(icon: "speaker.wave.2", title: AppText.pick(configurationStore.config.language, english: "Completion sound", japanese: "完了サウンド", chinese: "完成提示音")) {
                     HStack(spacing: 8) {
                         Toggle("", isOn: $soundsEnabled)
                             .labelsHidden()
@@ -70,24 +69,8 @@ struct IslandPreferencesSection: View {
                         .labelsHidden()
                         .frame(width: 112)
                         .disabled(!soundsEnabled)
-                        Menu(AppText.pick(configurationStore.config.language, english: "Preview", japanese: "試聴", chinese: "试听")) {
-                            Button(AppText.pick(configurationStore.config.language, english: "Task started", japanese: "タスク開始", chinese: "任务开始")) {
-                                playPreview(.taskStarted)
-                            }
-                            Button(AppText.pick(configurationStore.config.language, english: "Tool call", japanese: "ツール呼び出し", chinese: "工具调用")) {
-                                playPreview(.toolTick)
-                            }
-                            Button(AppText.pick(configurationStore.config.language, english: "Task completed", japanese: "タスク完了", chinese: "任务完成")) {
-                                playPreview(.taskCompleted)
-                            }
-                            Button(AppText.pick(configurationStore.config.language, english: "Task failed", japanese: "タスク失敗", chinese: "任务失败")) {
-                                playPreview(.taskFailed)
-                            }
-                            Button(AppText.pick(configurationStore.config.language, english: "Approval alert", japanese: "承認通知", chinese: "审批提醒")) {
-                                playPreview(.approval)
-                            }
-                            Divider()
-                            Button(AppText.pick(configurationStore.config.language, english: "Preview all", japanese: "すべて試聴", chinese: "试听全部"), action: playAllPreviews)
+                        Button(AppText.pick(configurationStore.config.language, english: "Preview", japanese: "試聴", chinese: "试听")) {
+                            playPreview(.taskCompleted)
                         }
                         .disabled(!soundsEnabled)
                     }

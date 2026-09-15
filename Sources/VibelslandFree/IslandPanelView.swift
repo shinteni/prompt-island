@@ -161,7 +161,7 @@ struct IslandPanelView: View {
         Group {
             if dockEdge != nil {
                 ZStack {
-                    statusSpinner.frame(width: 22, height: 22)
+                    statusSpinner.frame(width: 30, height: 30)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .accessibilityElement(children: .ignore)

@@ -88,7 +88,7 @@ struct IslandDockingTests {
                 window.applyFrame(expanded: false, position: .topCenter, animated: false)
                 let tab = window.frame
                 #expect(window.isVisible)
-                #expect(tab.width <= 26 && tab.height <= 42)
+                #expect((33...35).contains(tab.width) && tab.height == 56)
                 #expect(abs(tab.midY - (screen.midY + 20)) <= 1)
                 window.autoCollapseMouseEntered()
                 #expect(store.isExpanded)
@@ -157,7 +157,7 @@ struct IslandDockingTests {
                     #expect(store.configurationStore.config.islandDockPlacement?.edge == edge)
                     store.isExpanded = false
                     window.applyFrame(expanded: false, position: .topCenter, animated: false)
-                    #expect(window.frame.width <= 26 && window.frame.height <= 42)
+                    #expect((33...35).contains(window.frame.width) && window.frame.height == 56)
                     #expect(edge == .left ? window.frame.minX == screen.minX : window.frame.maxX == screen.maxX)
                 }
             }

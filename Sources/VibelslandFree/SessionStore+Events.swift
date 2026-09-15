@@ -113,10 +113,9 @@ extension SessionStore {
                 isExpanded = true
             }
             logger.info("approval.focused", detail: "expanded=\(isExpanded) doNotDisturb=\(configurationStore.config.doNotDisturb)")
-            playSound(.approval, key: "approval:\(session.id)", minimumInterval: 1.0)
             notifyApprovalIfNeeded(approval)
         } else {
-            playEventSound(event: event, previous: previousSession, current: session)
+            playStatusTransitionSound(previous: previousSession, current: session)
         }
         scheduleTranscriptRefresh(for: event, sessionID: sessionID)
     }
@@ -191,7 +190,6 @@ extension SessionStore {
         if !configurationStore.config.doNotDisturb {
             isExpanded = true
         }
-        playSound(.approval, key: "approval:\(session.id)", minimumInterval: 1.0)
         notifyApprovalIfNeeded(approval.approvalRequest)
         logger.info("approval.focused", detail: "expanded=\(isExpanded) doNotDisturb=\(configurationStore.config.doNotDisturb)")
         logger.info("codex.desktop.approval.received", detail: approval.method)

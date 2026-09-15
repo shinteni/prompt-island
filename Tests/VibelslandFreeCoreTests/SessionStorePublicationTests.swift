@@ -27,6 +27,14 @@ struct SessionStorePublicationTests {
                 #expect(!String(describing: SessionDisplaySnapshot(session: session)).contains("private-test-value"))
             }
         }
+        for kind in [AgentEventKind.prompt, .notification, .approval, .status] {
+            let event = AgentEvent(source: .claudeCode, kind: kind,
+                payload: .object(["message": .string("An internal event, not an assistant reply")]))
+            #expect(store.assistantMessage(from: event) == nil)
+        }
+        let reply = AgentEvent(source: .codexCli, kind: .status,
+            payload: .object(["type": .string("agent_message"), "message": .string("The requested change is ready.")]))
+        #expect(store.assistantMessage(from: reply) == "The requested change is ready.")
     }
 
     @Test func transcriptEnrichmentDoesNotBlockOrPublishStaleContent() async throws {

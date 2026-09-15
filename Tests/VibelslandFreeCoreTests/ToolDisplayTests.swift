@@ -28,8 +28,8 @@ struct ToolDisplayTests {
         let snapshot = try #require(ConversationTranscriptReader().loadSnapshot(from: url, source: .claudeCode))
         #expect(!snapshot.activities.contains { $0.detail.contains("private-test-value") || $0.detail.contains("create: 200") })
         let display = SessionDisplaySnapshot(session: session(activity: snapshot.activities))
-        #expect(display.primaryLine == "工具：Bash")
-        #expect(display.signals.first?.text == "Bash")
+        #expect(display.primaryLine == "等待 AI 回复")
+        #expect(!display.signals.contains { $0.symbol == "wrench.and.screwdriver" })
     }
 
     @Test func historicalResultIsNotUsedAsToolName() {
@@ -38,8 +38,8 @@ struct ToolDisplayTests {
             ActivityItem(symbol: "checkmark.circle", title: "工具完成", detail: #"create: 200 {"token":"private-test-value"}"#, date: Date())
         ]
         let display = SessionDisplaySnapshot(session: session(activity: activity))
-        #expect(display.primaryLine == "工具：Bash")
-        #expect(display.signals.first?.text == "Bash")
+        #expect(display.primaryLine == "等待 AI 回复")
+        #expect(!display.signals.contains { $0.symbol == "wrench.and.screwdriver" })
     }
 
     @Test func failedResultOnlyShowsTheFailureState() throws {
@@ -51,7 +51,7 @@ struct ToolDisplayTests {
         #expect(snapshot.activities.first?.title == "工具失败")
         #expect(SessionMemoryPolicy.compactActivities(snapshot.activities).count == 1)
         let display = SessionDisplaySnapshot(session: session(activity: snapshot.activities))
-        #expect(display.primaryLine.contains("工具失败"))
+        #expect(display.primaryLine == "等待 AI 回复")
         #expect(!display.primaryLine.contains("private-test-value"))
     }
 
@@ -65,9 +65,24 @@ struct ToolDisplayTests {
         try lines.joined(separator: "\n").write(to: url, atomically: true, encoding: .utf8)
         let snapshot = try #require(ConversationTranscriptReader().loadSnapshot(from: url, source: .codexCli))
         let display = SessionDisplaySnapshot(session: session(activity: snapshot.activities))
-        #expect(display.primaryLine == "工具：exec_command")
-        #expect(display.signals.first?.text == "exec_command")
+        #expect(display.primaryLine == "等待 AI 回复")
+        #expect(!display.signals.contains { $0.symbol == "wrench.and.screwdriver" })
         #expect(!snapshot.activities.contains { $0.detail.contains("call-internal-id") || $0.detail.contains("private-test-value") })
+    }
+
+    @Test func assistantReplyStaysVisibleWhileToolsRunOrFail() {
+        var current = session(activity: [ActivityItem(symbol: "terminal", title: "工具调用", detail: "exec")])
+        current.lastAssistantMessage = "已经完成页面布局。"
+        current.lastUserMessage = "不要把这条用户消息当成回答。"
+        for status in [SessionStatus.runningTool, .thinking, .failed, .done] {
+            current.status = status
+            let display = SessionDisplaySnapshot(session: current)
+            #expect(display.primaryLine == "AI：已经完成页面布局。")
+            #expect(display.secondaryLine == nil)
+            #expect(!display.signals.contains { $0.text == "exec" })
+        }
+        current.lastAssistantMessage = nil
+        #expect(SessionDisplaySnapshot(session: current).primaryLine == "暂无 AI 回复")
     }
 
     private func session(activity: [ActivityItem]) -> AgentSession {

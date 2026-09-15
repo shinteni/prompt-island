@@ -36,7 +36,7 @@ final class ApprovalNotificationCenter: NSObject {
         registerCategory(language: language)
         guard !isActivated else { return }
         isActivated = true
-        center.requestAuthorization(options: [.alert, .sound]) { [weak self] granted, error in
+        center.requestAuthorization(options: [.alert]) { [weak self] granted, error in
             Task { @MainActor [weak self] in
                 self?.authorizationDenied = !granted
                 if let error {
@@ -80,7 +80,7 @@ final class ApprovalNotificationCenter: NSObject {
         )
         content.body = ApprovalNotificationPolicy.body(for: approval)
         content.categoryIdentifier = ApprovalNotificationPolicy.categoryIdentifier
-        // 浮岛已经播放审批提示音，这里不再叠加系统提示音。
+        // 审批只显示通知，声音仅用于任务完成。
         let request = UNNotificationRequest(
             identifier: ApprovalNotificationPolicy.notificationIdentifier(approvalID: approval.id),
             content: content,

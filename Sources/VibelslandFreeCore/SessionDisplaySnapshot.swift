@@ -39,39 +39,16 @@ package struct SessionDisplaySnapshot: Equatable {
             return
         }
 
-        if session.status == .runningTool,
-           let tool = Self.latestTool(from: session) {
-            primaryLine = "\(Self.toolLabel(language))\(Self.separator(language))\(tool)"
-            secondaryLine = Self.conversationLine(for: session, preferAssistant: true, language: language)
-            return
-        }
-
-        if session.status == .failed {
-            primaryLine = "\(Self.errorLabel(language))\(Self.separator(language))\(Self.latestActivityText(from: session) ?? Self.taskFailedFallback(language))"
-            secondaryLine = Self.conversationLine(for: session, preferAssistant: true, language: language)
-            return
-        }
-
-        if let message = session.lastAssistantMessage, !message.isEmpty {
+        secondaryLine = nil
+        if let message = session.lastAssistantMessage, !message.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             primaryLine = "AI\(Self.separator(language))\(Self.clean(message, limit: 110))"
-            secondaryLine = session.lastUserMessage.map { "\(Self.youLabel(language))\(Self.separator(language))\(Self.clean($0, limit: 92))" }
-            return
+        } else {
+            switch language {
+            case .english: primaryLine = session.status.isActiveVisual ? "Waiting for AI reply" : "No AI reply yet"
+            case .japanese: primaryLine = session.status.isActiveVisual ? "AI の返信を待っています" : "AI の返信はまだありません"
+            case .chinese: primaryLine = session.status.isActiveVisual ? "等待 AI 回复" : "暂无 AI 回复"
+            }
         }
-
-        if let message = session.lastUserMessage, !message.isEmpty {
-            primaryLine = "\(Self.youLabel(language))\(Self.separator(language))\(Self.clean(message, limit: 110))"
-            secondaryLine = Self.latestActivityText(from: session).map { "\(Self.activityLabel(language))\(Self.separator(language))\($0)" }
-            return
-        }
-
-        if let activity = Self.latestActivityText(from: session) {
-            primaryLine = "\(Self.activityLabel(language))\(Self.separator(language))\(activity)"
-            secondaryLine = Self.workspaceLine(for: session)
-            return
-        }
-
-        primaryLine = statusText
-        secondaryLine = Self.workspaceLine(for: session)
     }
 
     private static func confidence(for session: AgentSession) -> DisplayConfidence {
@@ -128,14 +105,18 @@ package struct SessionDisplaySnapshot: Equatable {
                 return approvalFallbackText(language)
             }
         }
+        if session.status == .runningTool {
+            switch language {
+            case .english: return "Working"
+            case .japanese: return "処理中"
+            case .chinese: return "处理中"
+            }
+        }
         return session.status.displayName(language: language)
     }
 
     private static func signals(for session: AgentSession, language: AppLanguage) -> [Signal] {
         var result: [Signal] = []
-        if let tool = latestTool(from: session) {
-            result.append(Signal(symbol: "wrench.and.screwdriver", text: tool))
-        }
         let activeSubagentCount = session.subagents.filter { $0.status.isActiveVisual }.count
         if activeSubagentCount > 0 {
             result.append(Signal(symbol: "person.2", text: subagentSignal(active: activeSubagentCount, total: session.subagents.count, language: language)))
@@ -183,31 +164,6 @@ package struct SessionDisplaySnapshot: Equatable {
         return true
     }
 
-    private static func conversationLine(for session: AgentSession, preferAssistant: Bool, language: AppLanguage) -> String? {
-        if preferAssistant,
-           let message = session.lastAssistantMessage,
-           !message.isEmpty {
-            return "AI\(separator(language))\(clean(message, limit: 92))"
-        }
-        if let message = session.lastUserMessage, !message.isEmpty {
-            return "\(youLabel(language))\(separator(language))\(clean(message, limit: 92))"
-        }
-        if let message = session.lastAssistantMessage, !message.isEmpty {
-            return "AI\(separator(language))\(clean(message, limit: 92))"
-        }
-        return nil
-    }
-
-    private static func latestTool(from session: AgentSession) -> String? {
-        session.activity.reversed().compactMap { item -> String? in
-            let title = item.title
-            guard title == "工具调用" || title == "修改文件" else { return nil }
-            let raw = item.detail.isEmpty ? item.title : item.detail
-            let text = clean(raw, limit: 36)
-            return text.isEmpty ? nil : text
-        }.first
-    }
-
     private static func latestActivityText(from session: AgentSession) -> String? {
         session.activity.reversed().compactMap { item -> String? in
             guard !["token_count", "reasoning"].contains(item.title) else { return nil }
@@ -241,30 +197,6 @@ package struct SessionDisplaySnapshot: Equatable {
         }
     }
 
-    private static func toolLabel(_ language: AppLanguage) -> String {
-        switch language {
-        case .english: "Tool"
-        case .japanese: "ツール"
-        case .chinese: "工具"
-        }
-    }
-
-    private static func errorLabel(_ language: AppLanguage) -> String {
-        switch language {
-        case .english: "Error"
-        case .japanese: "エラー"
-        case .chinese: "出错"
-        }
-    }
-
-    private static func activityLabel(_ language: AppLanguage) -> String {
-        switch language {
-        case .english: "Activity"
-        case .japanese: "アクティビティ"
-        case .chinese: "活动"
-        }
-    }
-
     private static func youLabel(_ language: AppLanguage) -> String {
         switch language {
         case .english: "You"
@@ -277,14 +209,6 @@ package struct SessionDisplaySnapshot: Equatable {
         switch language {
         case .english: ": "
         case .japanese, .chinese: "："
-        }
-    }
-
-    private static func taskFailedFallback(_ language: AppLanguage) -> String {
-        switch language {
-        case .english: "Task did not complete normally"
-        case .japanese: "タスクは正常に完了しませんでした"
-        case .chinese: "任务未正常完成"
         }
     }
 

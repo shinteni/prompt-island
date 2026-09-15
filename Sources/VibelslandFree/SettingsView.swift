@@ -40,8 +40,7 @@ struct SettingsView: View {
                     doNotDisturb: binding(\.doNotDisturb),
                     maxVisibleSessions: binding(\.maxVisibleSessions),
                     globalHotKeysEnabled: binding(\.enableGlobalHotKeys),
-                    playPreview: store.playSoundPreview,
-                    playAllPreviews: store.playAllSoundPreviews
+                    playPreview: store.playSoundPreview
                 )
 
                 ApprovalPreferencesSection(
@@ -172,4 +171,3 @@ private struct SettingsHeader: View {
         .padding(.bottom, 2)
     }
 }
-

@@ -115,11 +115,6 @@ final class IslandWindow: NSPanel {
         }
         alphaValue = 1
         if animateEntrance {
-            if let config = store?.configurationStore.config,
-               config.enableSounds, !config.doNotDisturb {
-                RetroSoundPlayer.shared.prepare(.launch, theme: config.soundTheme)
-                RetroSoundPlayer.shared.play(.launch, theme: config.soundTheme)
-            }
             animateLaunchEntrance()
         }
         if store?.isExpanded == true {
