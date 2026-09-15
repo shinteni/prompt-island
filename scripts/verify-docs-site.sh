@@ -700,9 +700,9 @@ for path in [docs / "index.html", docs / "en" / "index.html", docs / "ja" / "ind
             'data-demo-decision="deny"',
             'class="demo-disclaimer"',
             'class="interface-grid"',
-            'v0.3.4-compact.png',
-            'v0.3.4-expanded.png',
-            'v0.3.4-settings.png',
+            'v0.3.6-compact.png',
+            'v0.3.6-expanded.png',
+            'v0.3.6-settings.png',
             'class="artwork-note"',
             release_archive_url,
         ]:

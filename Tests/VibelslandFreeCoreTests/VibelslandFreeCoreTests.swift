@@ -61,8 +61,8 @@ struct VibelslandFreeCoreTests {
         )
         let englishDisplay = SessionDisplaySnapshot(session: session, language: .english)
         let japaneseDisplay = SessionDisplaySnapshot(session: session, language: .japanese)
-        XCTAssertTrue(englishDisplay.primaryLine.hasPrefix("Tool:"), "English display uses English labels")
-        XCTAssertTrue(japaneseDisplay.primaryLine.hasPrefix("ツール："), "Japanese display uses Japanese labels")
+        XCTAssertEqual(englishDisplay.primaryLine, "Waiting for AI reply", "English display uses English labels")
+        XCTAssertEqual(japaneseDisplay.primaryLine, "AI の返信を待っています", "Japanese display uses Japanese labels")
     }
 
     @Test func testCodexStatePathPrefersTheActivelyUpdatedDatabase() throws {
@@ -712,7 +712,7 @@ struct VibelslandFreeCoreTests {
         let display = SessionDisplaySnapshot(session: displaySession)
         XCTAssertTrue(display.title.hasPrefix("当前任务已经结束"), "Low value Claude title falls back to user task")
         XCTAssertTrue(display.primaryLine.contains("AI：已修复状态显示"), "Display snapshot prioritizes assistant message")
-        XCTAssertTrue(display.signals.contains(where: { $0.text == "Bash" }), "Display snapshot exposes tool signal")
+        XCTAssertFalse(display.signals.contains(where: { $0.text == "Bash" }), "Tool names stay out of the answer card")
         XCTAssertTrue(display.confidence == .transcript, "Display confidence uses transcript data")
         XCTAssertTrue(display.statusText == "已完成", "Transcript backed completion stays certain")
 

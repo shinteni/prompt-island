@@ -54,6 +54,7 @@ final class SessionStore: ObservableObject {
     let approvalNotificationCenter = ApprovalNotificationCenter()
     let statsStore: UsageStatsStore
     let logger: AppLogger
+    let soundPlayer: (RetroSoundKind, SoundTheme) -> Void
     var pendingReplies: [String: (String?) -> Void] = [:]
     var pendingEvents: [String: AgentEvent] = [:]
     var pendingCodexDesktopApprovals: [String: CodexDesktopApproval] = [:]
@@ -116,7 +117,8 @@ final class SessionStore: ObservableObject {
         codexAppServerLiveClient: CodexAppServerLiveClient = CodexAppServerLiveClient(),
         transcriptReader: ConversationTranscriptReader = ConversationTranscriptReader(),
         statsStore: UsageStatsStore = UsageStatsStore(),
-        logger: AppLogger = .shared
+        logger: AppLogger = .shared,
+        soundPlayer: @escaping (RetroSoundKind, SoundTheme) -> Void = { RetroSoundPlayer.shared.play($0, theme: $1) }
     ) {
         self.configurationStore = configurationStore
         self.bridgeServer = bridgeServer
@@ -127,6 +129,7 @@ final class SessionStore: ObservableObject {
         self.transcriptReader = transcriptReader
         self.statsStore = statsStore
         self.logger = logger
+        self.soundPlayer = soundPlayer
 
         codexAppServerLiveClient.onApproval = { [weak self] approval in
             self?.ingest(codexDesktopApproval: approval)
