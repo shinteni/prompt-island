@@ -15,7 +15,7 @@
 <p align="center">
   <a href="https://shinteni.github.io/prompt-island/">Website</a>
   ·
-  <a href="https://github.com/shinteni/prompt-island/releases/download/v0.3.5/Vibelsland-Free-0.3.5-macos.zip">Download v0.3.5</a>
+  <a href="https://github.com/shinteni/prompt-island/releases/download/v0.3.6/Vibelsland-Free-0.3.6-macos.zip">Download v0.3.6</a>
   ·
   <a href="https://shinteni.github.io/prompt-island/en/install.html">Install Guide</a>
   ·
@@ -43,7 +43,7 @@ Vibelsland Free brings Claude Code, Codex CLI, and Codex Desktop task status, to
 
 ## Download And Install
 
-[Download Vibelsland Free v0.3.5](https://github.com/shinteni/prompt-island/releases/download/v0.3.5/Vibelsland-Free-0.3.5-macos.zip), unzip it, and move `>_ - island.app` to the Applications folder.
+[Download Vibelsland Free v0.3.6](https://github.com/shinteni/prompt-island/releases/download/v0.3.6/Vibelsland-Free-0.3.6-macos.zip), unzip it, and move `>_ - island.app` to the Applications folder.
 
 The current release uses ad-hoc signing. If macOS blocks the first launch, follow the [Install & Trust guide](https://shinteni.github.io/prompt-island/en/install.html).
 

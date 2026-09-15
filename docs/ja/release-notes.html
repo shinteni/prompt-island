@@ -6,13 +6,13 @@
     <title>リリースノート | Vibelsland Free</title>
     <meta
       name="description"
-      content="Vibelsland Free v0.3.5 のリリースノート。ダウンロード、SHA-256 確認、主要機能、インストールを確認できます。"
+      content="Vibelsland Free v0.3.6 のリリースノート。ダウンロード、SHA-256 確認、主要機能、インストールを確認できます。"
     >
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Vibelsland Free">
     <meta property="og:locale" content="ja_JP">
     <meta property="og:title" content="Vibelsland Free リリースノート">
-    <meta property="og:description" content="Vibelsland Free v0.3.5 の機能、ダウンロード、チェックサム、インストールを確認できます。">
+    <meta property="og:description" content="Vibelsland Free v0.3.6 の機能、ダウンロード、チェックサム、インストールを確認できます。">
     <meta property="og:image" content="https://shinteni.github.io/prompt-island/assets/readme/v0.3.6-expanded.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="750">
@@ -20,7 +20,7 @@
     <meta property="og:url" content="https://shinteni.github.io/prompt-island/ja/release-notes.html">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Vibelsland Free リリースノート">
-    <meta name="twitter:description" content="Vibelsland Free v0.3.5 の機能、ダウンロード、チェックサム、インストールを確認できます。">
+    <meta name="twitter:description" content="Vibelsland Free v0.3.6 の機能、ダウンロード、チェックサム、インストールを確認できます。">
     <meta name="twitter:image" content="https://shinteni.github.io/prompt-island/assets/readme/v0.3.6-expanded.png">
     <meta name="twitter:image:alt" content="Vibelsland Free macOS AI コーディング状態インターフェイス">
     <meta name="theme-color" content="#f7f6f2">
@@ -60,16 +60,16 @@
         <div class="subpage-copy" data-reveal>
           <p class="eyebrow">Release Notes</p>
           <h1 id="release-title">リリース履歴。</h1>
-          <p>v0.3.5 では、上下が画面端に沿い、中央が丸くふくらむ小さな状態表示に変更しました。</p>
+          <p>v0.3.6 では、画面端の状態表示を拡大し、音はタスク完了時のみ、カード本文は AI の返信のみ表示するようにしました。</p>
           <div class="hero-actions">
             <a class="button primary" href="download.html">ダウンロード説明を見る</a>
-            <a class="button secondary" href="https://github.com/shinteni/prompt-island/releases/tag/v0.3.5">GitHub Release を開く</a>
+            <a class="button secondary" href="https://github.com/shinteni/prompt-island/releases/tag/v0.3.6">GitHub Release を開く</a>
           </div>
         </div>
         <div class="privacy-summary" aria-label="リリース概要" data-reveal>
           <div>
             <span>現在の版</span>
-            <strong>v0.3.5</strong>
+            <strong>v0.3.6</strong>
           </div>
           <div>
             <span>システム</span>
@@ -79,6 +79,18 @@
             <span>配布</span>
             <strong>GitHub Releases</strong>
           </div>
+        </div>
+      </section>
+
+      <section class="section data-section surface-section" aria-labelledby="v036-title">
+        <div class="section-heading align-left" data-reveal>
+          <p class="eyebrow">v0.3.6</p>
+          <h2 id="v036-title">大きな状態リングと静かな完了通知</h2>
+          <ul>
+            <li>画面端の状態表示を約 40% 拡大。上下が端に沿う滑らかな輪郭はそのままです。</li>
+            <li>ツール呼び出し、開始、承認、エラー、起動時は無音です。完了音は消音・集中モードに従い、重複を抑えます。</li>
+            <li>ツール名や実行結果をカードから除き、処理中も AI の返信を表示します。内部イベントの文字を返信として扱いません。</li>
+          </ul>
         </div>
       </section>
 
@@ -134,7 +146,7 @@
           <p class="eyebrow">v0.3.1 と v0.3.0 の改善</p>
           <h2 id="source-status-title">メインスレッドの処理を減らし、動きを滑らかに。</h2>
           <p>
-            <code>docs/release.json</code> は GitHub Releases に公開中の v0.3.5 パッケージを記録し、ダウンロード、チェックサム、Homebrew cask は同じメタデータから生成されます。
+            <code>docs/release.json</code> は GitHub Releases に公開中の v0.3.6 パッケージを記録し、ダウンロード、チェックサム、Homebrew cask は同じメタデータから生成されます。
           </p>
         </div>
         <div class="data-grid">
@@ -443,7 +455,7 @@
         <a href="https://github.com/shinteni/prompt-island">GitHub</a>
       </nav>
     </footer>
-    <script src="../lang.js?v=c1f6ae9b2d97" defer></script>
+    <script src="../lang.js?v=fc396f4f1460" defer></script>
     <script src="../effects.js?v=0208923b079a" defer></script>
   </body>
 </html>
