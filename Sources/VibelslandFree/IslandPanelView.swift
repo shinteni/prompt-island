@@ -163,8 +163,7 @@ struct IslandPanelView: View {
                 ZStack {
                     statusSpinner.frame(width: 22, height: 22)
                 }
-                .frame(width: IslandDockingPolicy.tabSize.height)
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: dockEdge == .left ? .trailing : .leading)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .accessibilityElement(children: .ignore)
                 .accessibilityLabel("\((compactSession?.source ?? store.selectedSession?.source ?? .unknown).shortName) · \((compactSession?.status ?? .idle).displayName(language: configurationStore.config.language))")
                 .accessibilityAddTraits(.isButton)
@@ -605,23 +604,14 @@ struct IslandPanelShape: InsettableShape {
             ).path(in: rect)
         }
 
-        let radius = rect.height / 2
-        let centerX = rect.minX + radius
-        let arc = radius * 0.55228475
         var path = Path()
-        path.move(to: CGPoint(x: rect.maxX, y: rect.midY))
-        path.addCurve(to: CGPoint(x: centerX, y: rect.minY),
-            control1: CGPoint(x: rect.maxX - rect.width * 0.2, y: rect.midY),
-            control2: CGPoint(x: centerX + radius * 0.8, y: rect.minY))
+        path.move(to: CGPoint(x: rect.maxX, y: rect.minY))
         path.addCurve(to: CGPoint(x: rect.minX, y: rect.midY),
-            control1: CGPoint(x: centerX - arc, y: rect.minY),
-            control2: CGPoint(x: rect.minX, y: rect.midY - arc))
-        path.addCurve(to: CGPoint(x: centerX, y: rect.maxY),
-            control1: CGPoint(x: rect.minX, y: rect.midY + arc),
-            control2: CGPoint(x: centerX - arc, y: rect.maxY))
-        path.addCurve(to: CGPoint(x: rect.maxX, y: rect.midY),
-            control1: CGPoint(x: centerX + radius * 0.8, y: rect.maxY),
-            control2: CGPoint(x: rect.maxX - rect.width * 0.2, y: rect.midY))
+            control1: CGPoint(x: rect.maxX, y: rect.minY + rect.height * 0.22),
+            control2: CGPoint(x: rect.minX, y: rect.minY + rect.height * 0.20))
+        path.addCurve(to: CGPoint(x: rect.maxX, y: rect.maxY),
+            control1: CGPoint(x: rect.minX, y: rect.minY + rect.height * 0.80),
+            control2: CGPoint(x: rect.maxX, y: rect.minY + rect.height * 0.78))
         path.closeSubpath()
         return dockEdge == .right ? path : path.applying(
             CGAffineTransform(a: -1, b: 0, c: 0, d: 1, tx: rect.minX + rect.maxX, ty: 0)

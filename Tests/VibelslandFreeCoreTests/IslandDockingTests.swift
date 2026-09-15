@@ -5,20 +5,20 @@ import Testing
 
 @Suite(.serialized) @MainActor
 struct IslandDockingTests {
-    @Test func dropShapeNarrowsAtTheScreenEdgeAndMirrorsForTheLeftSide() {
-        let bounds = CGRect(x: 10, y: 20, width: 45, height: 32)
+    @Test func edgeBumpNarrowsAtBothEndsAndMirrorsForTheLeftSide() {
+        let bounds = CGRect(x: 10, y: 20, width: 30, height: 50)
         let right = IslandPanelShape(edge: .right, expanded: false, cornerRadius: 16).path(in: bounds)
         let left = IslandPanelShape(edge: .left, expanded: false, cornerRadius: 16).path(in: bounds)
-        #expect(right.contains(CGPoint(x: 26, y: 36)))
-        #expect(right.contains(CGPoint(x: 16, y: 36)))
-        #expect(!right.contains(CGPoint(x: 51, y: 24)))
-        #expect(!right.contains(CGPoint(x: 51, y: 48)))
+        #expect(right.contains(CGPoint(x: 25, y: 45)))
+        #expect(right.contains(CGPoint(x: 16, y: 45)))
+        #expect(!right.contains(CGPoint(x: 12, y: 24)))
+        #expect(!right.contains(CGPoint(x: 12, y: 66)))
         let expanded = IslandPanelShape(edge: .right, expanded: true, cornerRadius: 22)
             .path(in: CGRect(x: 0, y: 0, width: 496, height: 200))
         #expect(expanded.contains(CGPoint(x: 490, y: 10)))
         #expect(expanded.contains(CGPoint(x: 490, y: 190)))
-        for x in stride(from: bounds.minX, through: bounds.maxX, by: 3) {
-            for y in stride(from: bounds.minY, through: bounds.maxY, by: 3) {
+        for x in stride(from: bounds.minX + 0.5, to: bounds.maxX, by: 3) {
+            for y in stride(from: bounds.minY + 0.5, to: bounds.maxY, by: 3) {
                 #expect(right.contains(CGPoint(x: x, y: y)) == left.contains(
                     CGPoint(x: bounds.minX + bounds.maxX - x, y: y)
                 ))
@@ -88,7 +88,7 @@ struct IslandDockingTests {
                 window.applyFrame(expanded: false, position: .topCenter, animated: false)
                 let tab = window.frame
                 #expect(window.isVisible)
-                #expect(tab.width > tab.height && tab.height <= 28)
+                #expect(tab.width <= 26 && tab.height <= 42)
                 #expect(abs(tab.midY - (screen.midY + 20)) <= 1)
                 window.autoCollapseMouseEntered()
                 #expect(store.isExpanded)
@@ -157,7 +157,7 @@ struct IslandDockingTests {
                     #expect(store.configurationStore.config.islandDockPlacement?.edge == edge)
                     store.isExpanded = false
                     window.applyFrame(expanded: false, position: .topCenter, animated: false)
-                    #expect(window.frame.width > window.frame.height && window.frame.height <= 28)
+                    #expect(window.frame.width <= 26 && window.frame.height <= 42)
                     #expect(edge == .left ? window.frame.minX == screen.minX : window.frame.maxX == screen.maxX)
                 }
             }
