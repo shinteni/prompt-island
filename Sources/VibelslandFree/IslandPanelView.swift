@@ -145,14 +145,8 @@ struct IslandPanelView: View {
         configurationStore.config.islandDockPlacement?.edge
     }
 
-    private func panelShape(radius: CGFloat) -> UnevenRoundedRectangle {
-        UnevenRoundedRectangle(
-            topLeadingRadius: dockEdge == .left ? 0 : radius,
-            bottomLeadingRadius: dockEdge == .left ? 0 : radius,
-            bottomTrailingRadius: dockEdge == .right ? 0 : radius,
-            topTrailingRadius: dockEdge == .right ? 0 : radius,
-            style: dockEdge == nil ? .continuous : .circular
-        )
+    private func panelShape(radius: CGFloat) -> IslandPanelShape {
+        IslandPanelShape(edge: dockEdge, expanded: store.isExpanded, cornerRadius: radius)
     }
 
     private var statusSpinner: some View {
@@ -169,7 +163,8 @@ struct IslandPanelView: View {
                 ZStack {
                     statusSpinner.frame(width: 22, height: 22)
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .frame(width: IslandDockingPolicy.tabSize.height)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: dockEdge == .left ? .trailing : .leading)
                 .accessibilityElement(children: .ignore)
                 .accessibilityLabel("\((compactSession?.source ?? store.selectedSession?.source ?? .unknown).shortName) · \((compactSession?.status ?? .idle).displayName(language: configurationStore.config.language))")
                 .accessibilityAddTraits(.isButton)
@@ -588,5 +583,54 @@ struct IslandPanelView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
+    }
+}
+
+struct IslandPanelShape: InsettableShape {
+    let edge: IslandDockEdge?
+    let expanded: Bool
+    let cornerRadius: CGFloat
+    var insetAmount: CGFloat = 0
+
+    func path(in bounds: CGRect) -> Path {
+        let rect = bounds.insetBy(dx: insetAmount, dy: insetAmount)
+        guard let dockEdge = edge, !expanded else {
+            let radius = max(0, cornerRadius - insetAmount)
+            return UnevenRoundedRectangle(
+                topLeadingRadius: edge == .left ? 0 : radius,
+                bottomLeadingRadius: edge == .left ? 0 : radius,
+                bottomTrailingRadius: edge == .right ? 0 : radius,
+                topTrailingRadius: edge == .right ? 0 : radius,
+                style: edge == nil ? .continuous : .circular
+            ).path(in: rect)
+        }
+
+        let radius = rect.height / 2
+        let centerX = rect.minX + radius
+        let arc = radius * 0.55228475
+        var path = Path()
+        path.move(to: CGPoint(x: rect.maxX, y: rect.midY))
+        path.addCurve(to: CGPoint(x: centerX, y: rect.minY),
+            control1: CGPoint(x: rect.maxX - rect.width * 0.2, y: rect.midY),
+            control2: CGPoint(x: centerX + radius * 0.8, y: rect.minY))
+        path.addCurve(to: CGPoint(x: rect.minX, y: rect.midY),
+            control1: CGPoint(x: centerX - arc, y: rect.minY),
+            control2: CGPoint(x: rect.minX, y: rect.midY - arc))
+        path.addCurve(to: CGPoint(x: centerX, y: rect.maxY),
+            control1: CGPoint(x: rect.minX, y: rect.midY + arc),
+            control2: CGPoint(x: centerX - arc, y: rect.maxY))
+        path.addCurve(to: CGPoint(x: rect.maxX, y: rect.midY),
+            control1: CGPoint(x: centerX + radius * 0.8, y: rect.maxY),
+            control2: CGPoint(x: rect.maxX - rect.width * 0.2, y: rect.midY))
+        path.closeSubpath()
+        return dockEdge == .right ? path : path.applying(
+            CGAffineTransform(a: -1, b: 0, c: 0, d: 1, tx: rect.minX + rect.maxX, ty: 0)
+        )
+    }
+
+    func inset(by amount: CGFloat) -> some InsettableShape {
+        var shape = self
+        shape.insetAmount += amount
+        return shape
     }
 }

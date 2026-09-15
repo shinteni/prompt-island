@@ -5,6 +5,27 @@ import Testing
 
 @Suite(.serialized) @MainActor
 struct IslandDockingTests {
+    @Test func dropShapeNarrowsAtTheScreenEdgeAndMirrorsForTheLeftSide() {
+        let bounds = CGRect(x: 10, y: 20, width: 45, height: 32)
+        let right = IslandPanelShape(edge: .right, expanded: false, cornerRadius: 16).path(in: bounds)
+        let left = IslandPanelShape(edge: .left, expanded: false, cornerRadius: 16).path(in: bounds)
+        #expect(right.contains(CGPoint(x: 26, y: 36)))
+        #expect(right.contains(CGPoint(x: 16, y: 36)))
+        #expect(!right.contains(CGPoint(x: 51, y: 24)))
+        #expect(!right.contains(CGPoint(x: 51, y: 48)))
+        let expanded = IslandPanelShape(edge: .right, expanded: true, cornerRadius: 22)
+            .path(in: CGRect(x: 0, y: 0, width: 496, height: 200))
+        #expect(expanded.contains(CGPoint(x: 490, y: 10)))
+        #expect(expanded.contains(CGPoint(x: 490, y: 190)))
+        for x in stride(from: bounds.minX, through: bounds.maxX, by: 3) {
+            for y in stride(from: bounds.minY, through: bounds.maxY, by: 3) {
+                #expect(right.contains(CGPoint(x: x, y: y)) == left.contains(
+                    CGPoint(x: bounds.minX + bounds.maxX - x, y: y)
+                ))
+            }
+        }
+    }
+
     @Test func onlySideEdgesSnapIncludingDisplaysWithNegativeOrigins() {
         let screen = CGRect(x: -1512, y: 200, width: 1512, height: 950)
         #expect(IslandDockingPolicy.edge(for: CGRect(x: -1500, y: 500, width: 240, height: 40), in: screen) == .left)
@@ -24,7 +45,7 @@ struct IslandDockingTests {
         let screen = CGRect(x: -1512, y: -900, width: 1512, height: 900)
         for edge in [IslandDockEdge.left, .right] {
             for fraction in [0.0, 0.5, 1.0] {
-                let tab = IslandDockingPolicy.frame(edge: edge, size: CGSize(width: 29, height: 58), screen: screen, verticalFraction: fraction)
+                let tab = IslandDockingPolicy.frame(edge: edge, size: IslandPresentationPolicy.scaled(IslandDockingPolicy.tabSize), screen: screen, verticalFraction: fraction)
                 let panel = IslandDockingPolicy.frame(edge: edge, size: CGSize(width: 496, height: 300), screen: screen, verticalFraction: fraction)
                 #expect(screen.contains(tab))
                 #expect(screen.contains(panel))
@@ -67,7 +88,7 @@ struct IslandDockingTests {
                 window.applyFrame(expanded: false, position: .topCenter, animated: false)
                 let tab = window.frame
                 #expect(window.isVisible)
-                #expect(tab.width <= 30 && tab.height <= 60)
+                #expect(tab.width > tab.height && tab.height <= 28)
                 #expect(abs(tab.midY - (screen.midY + 20)) <= 1)
                 window.autoCollapseMouseEntered()
                 #expect(store.isExpanded)
@@ -106,9 +127,13 @@ struct IslandDockingTests {
 
     @Test func droppingThePointerAtEitherScreenEdgeDocksCompactAndExpandedWindows() async throws {
         try await withWindow { window, store in
-            let screen = try #require(NSScreen.main?.visibleFrame)
             for expanded in [false, true] {
                 for edge in [IslandDockEdge.left, .right] {
+                    // Cross an outer desktop edge, not the seam with another display.
+                    let target = edge == .left
+                        ? NSScreen.screens.min { $0.frame.minX < $1.frame.minX }
+                        : NSScreen.screens.max { $0.frame.maxX < $1.frame.maxX }
+                    let screen = try #require(target?.visibleFrame)
                     store.configurationStore.config.islandDockPlacement = nil
                     store.isExpanded = expanded
                     let size = expanded ? CGSize(width: 496, height: 200) : CGSize(width: 240, height: 40)
@@ -132,7 +157,7 @@ struct IslandDockingTests {
                     #expect(store.configurationStore.config.islandDockPlacement?.edge == edge)
                     store.isExpanded = false
                     window.applyFrame(expanded: false, position: .topCenter, animated: false)
-                    #expect(window.frame.width <= 30 && window.frame.height <= 60)
+                    #expect(window.frame.width > window.frame.height && window.frame.height <= 28)
                     #expect(edge == .left ? window.frame.minX == screen.minX : window.frame.maxX == screen.maxX)
                 }
             }
