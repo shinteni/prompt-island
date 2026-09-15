@@ -460,13 +460,10 @@ for path in html_files:
         elif expected_value and value != expected_value:
             errors.append(f"Unexpected social meta {key} in {rel}: {value}")
     og_image = parser.meta.get("og:image", "")
-    expected_dimensions = None
-    if og_image.endswith("/hero-island-light.jpg"):
-        expected_dimensions = ("1672", "941")
-    elif og_image.endswith("/ui-island-light.jpg"):
-        expected_dimensions = ("1040", "860")
+    image_path = docs / "assets" / "readme" / Path(urlparse(og_image).path).name
+    expected_dimensions = image_dimensions(image_path) if image_path.is_file() else None
     if expected_dimensions:
-        width, height = expected_dimensions
+        width, height = map(str, expected_dimensions)
         if parser.meta.get("og:image:width") != width:
             errors.append(f"Unexpected og:image:width in {rel}: {parser.meta.get('og:image:width')}")
         if parser.meta.get("og:image:height") != height:
@@ -703,9 +700,10 @@ for path in [docs / "index.html", docs / "en" / "index.html", docs / "ja" / "ind
             'data-demo-decision="deny"',
             'class="demo-disclaimer"',
             'class="interface-grid"',
-            'start-collapsed.jpg',
-            'start-expanded.jpg',
-            'start-settings.jpg',
+            'v0.3.4-compact.png',
+            'v0.3.4-expanded.png',
+            'v0.3.4-settings.png',
+            'class="artwork-note"',
             release_archive_url,
         ]:
             if phrase not in home_text:
