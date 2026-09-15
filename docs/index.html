@@ -23,7 +23,7 @@
     <meta name="twitter:description" content="把 Claude Code、Codex CLI 和 Codex Desktop 的本地状态留在 macOS 顶部。">
     <meta name="twitter:image" content="https://shinteni.github.io/prompt-island/assets/readme/hero-island-light.jpg">
     <meta name="twitter:image:alt" content="Vibelsland Free macOS AI 编程状态界面">
-    <meta name="theme-color" content="#070706">
+    <meta name="theme-color" content="#121510">
     <link rel="canonical" href="https://shinteni.github.io/prompt-island/">
     <link rel="alternate" hreflang="zh-CN" href="https://shinteni.github.io/prompt-island/">
     <link rel="alternate" hreflang="en" href="https://shinteni.github.io/prompt-island/en/">
@@ -32,7 +32,7 @@
     <link rel="icon" href="assets/readme/app-icon.png">
     <link rel="apple-touch-icon" href="assets/readme/app-icon.png">
     <link rel="manifest" href="site.webmanifest">
-    <link rel="stylesheet" href="styles.css?v=1204c2d83443">
+    <link rel="stylesheet" href="styles.css?v=57fe0d14b0d9">
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -78,148 +78,46 @@
     </header>
 
     <main id="main">
-      <section class="start-hero" aria-labelledby="hero-title">
-        <div class="landing-copy">
-          <img class="start-logo" src="assets/readme/app-icon-192.png" alt="" width="96" height="96" fetchpriority="high">
-          <p class="landing-eyebrow">macOS 14+ · 下载 v0.3.4 · 源码持续更新</p>
-          <h1 id="hero-title" class="landing-title">
-            <span>永远在线。</span>
-            <span class="landing-title-gradient">永远不打扰。</span>
-          </h1>
-          <span class="visually-hidden" data-i18n="home.hero.title">永远在线。永远不打扰。</span>
-          <p class="landing-lede" data-i18n="home.hero.copy">把 Claude Code、Codex CLI 与 Codex Desktop 的本地会话状态留在屏幕顶端。空闲时安静，运行中呼吸，需要回应时发光。</p>
-          <div class="landing-actions">
-            <a class="button primary start-download" href="https://github.com/shinteni/prompt-island/releases/download/v0.3.4/Vibelsland-Free-0.3.4-macos.zip">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M12 3v11m0 0 4-4m-4 4-4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"></path>
-              </svg>
-              <span data-i18n="home.hero.primary">免费下载</span>
-            </a>
-            <a class="landing-link" href="#overview">了解更多</a>
+      <section class="signal-hero" aria-labelledby="hero-title">
+        <div class="hero-wordmark" aria-hidden="true">island.</div>
+        <div class="signal-hero-grid">
+          <div class="signal-copy">
+            <p class="signal-eyebrow hero-enter"><span class="live-dot" aria-hidden="true"></span>为 AI 编程而生的 macOS 浮岛</p>
+            <h1 id="hero-title" class="signal-title hero-enter"><span>专注，</span><span>不用切换。</span></h1>
+            <p class="signal-intro hero-enter">Claude 和 Codex 正在做什么，一眼就知道。把任务进度、工具调用和待办审批，留在一座小小的浮岛里。</p>
+            <div class="signal-actions hero-enter"><a class="button primary" href="https://github.com/shinteni/prompt-island/releases/download/v0.3.4/Vibelsland-Free-0.3.4-macos.zip">免费下载 macOS 版<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a><a class="text-link" href="#playground">试试浮岛 <span aria-hidden="true">↘</span></a></div>
+            <p class="hero-meta hero-enter">v0.3.4 <span>·</span> macOS 14+ <span>·</span> Apple Silicon &amp; Intel <a href="install.html">安装说明</a></p>
           </div>
-          <p class="landing-free">免费 · 本地优先 · 零遥测</p>
-        </div>
-        <div class="landing-mac" aria-label="Vibelsland Free 浮岛状态预览">
-          <div class="landing-mac-bar">
-            <span class="landing-apple" aria-hidden="true"></span>
-            <span class="landing-app-name">&gt;_ - island</span>
-            <span class="landing-bar-spacer"></span>
-            <span class="landing-status-dot" aria-hidden="true"></span>
-            <span>10:08</span>
-          </div>
-          <div class="landing-stage">
-            <div class="landing-island landing-island-running">
-              <span class="landing-terminal-icon" aria-hidden="true">&gt;_</span>
-              <span class="landing-island-text">
-                <strong>Codex Desktop</strong>
-                <small>running tool · local session</small>
-              </span>
-              <span class="landing-bars" aria-hidden="true"><i></i><i></i><i></i></span>
+          <div class="island-playground hero-enter" id="playground" data-state="running" data-motion>
+            <div class="playground-heading"><span><span class="live-dot" aria-hidden="true"></span>交互演示</span><span class="preview-label">ISLAND / 01</span></div>
+            <div class="demo-tabs" role="tablist" aria-label="交互演示"><button type="button" role="tab" id="demo-tab-running" aria-controls="demo-running" aria-selected="true" tabindex="0" data-demo-state="running"><span>01</span>运行中</button><button type="button" role="tab" id="demo-tab-approval" aria-controls="demo-approval" aria-selected="false" tabindex="-1" data-demo-state="approval"><span>02</span>待审批</button><button type="button" role="tab" id="demo-tab-docked" aria-controls="demo-docked" aria-selected="false" tabindex="-1" data-demo-state="docked"><span>03</span>靠边收起</button></div>
+            <div class="demo-stage">
+              <div class="orbit orbit-one" aria-hidden="true"><i></i></div><div class="orbit orbit-two" aria-hidden="true"><i></i></div>
+              <span class="stage-coordinate" aria-hidden="true">+ 37.0 / LOCAL</span>
+              <div class="demo-editor" aria-hidden="true"><div><span></span><span></span><span></span><b>my-project / app.ts</b></div><code><i>01</i> <em>const</em> next = <em>await</em> build();<br><i>02</i> <span>// keep your focus here</span><br><i>03</i> next.<strong>create</strong>();<b class="editor-cursor">▍</b></code></div>
+              <div class="demo-island">
+                <div id="demo-running" class="demo-content demo-running" role="tabpanel" aria-labelledby="demo-tab-running" tabindex="0"><span class="demo-terminal" aria-hidden="true">&gt;_</span><div><strong>Codex Desktop</strong><span>正在执行工具</span></div><i class="provider-ring" aria-hidden="true"></i></div>
+                <div id="demo-approval" class="demo-content demo-approval" role="tabpanel" aria-labelledby="demo-tab-approval" tabindex="0" hidden><div class="approval-heading"><span class="claude-glyph" aria-hidden="true">✳</span><strong>Claude 需要你的确认</strong><i class="provider-ring claude-ring" aria-hidden="true"></i></div><p>允许读取这个项目文件吗？</p><code>Read · src/app.ts</code><div class="demo-approval-actions"><button type="button" data-demo-decision="allow">允许一次</button><button type="button" data-demo-decision="deny">拒绝</button></div><p class="demo-feedback" aria-live="polite" data-allowed="已允许 · 继续执行" data-denied="已拒绝 · 等待下一步"></p></div>
+                <div id="demo-docked" class="demo-content demo-docked" role="tabpanel" aria-labelledby="demo-tab-docked" hidden><button type="button" data-demo-expand aria-label="点击展开浮岛"><i class="provider-ring" aria-hidden="true"></i></button></div>
+              </div>
+              <span class="demo-caption" aria-hidden="true"><i></i> 正在读取项目文件</span>
             </div>
+            <p class="playground-hint">点击上方标签，看看浮岛如何变化。</p><span class="demo-disclaimer">示例状态 · 不连接真实会话</span>
           </div>
         </div>
+        <div class="hero-bottom"><span>SMALL ON SCREEN. BIG ON FOCUS.</span><a href="#overview" aria-label="了解全部功能"><span aria-hidden="true">↓</span></a><span>DESIGNED TO STAY OUT OF YOUR WAY</span></div>
       </section>
-
-      <section class="landing-tools" id="overview" aria-labelledby="tools-title">
-        <p class="landing-section-eyebrow">支持</p>
-        <h2 id="tools-title">三个工具，一座岛。</h2>
-        <p>Claude Code 与 Codex CLI 通过 Hooks 转发的事件、Codex Desktop 的实时连接，都在同一个浮岛里显示。</p>
-        <div class="landing-agent-row" aria-label="支持的 AI 编程工具">
-          <div class="landing-agent">
-            <img src="assets/readme/icon-claude.png" alt="" width="48" height="48" loading="lazy" decoding="async">
-            <span><strong>Claude Code</strong><small>Hook 事件</small></span>
-          </div>
-          <div class="landing-agent">
-            <span class="landing-terminal-icon" aria-hidden="true">&gt;_</span>
-            <span><strong>Codex CLI</strong><small>Hook 事件</small></span>
-          </div>
-          <div class="landing-agent">
-            <img src="assets/readme/icon-codex-desktop.png" alt="" width="48" height="48" loading="lazy" decoding="async">
-            <span><strong>Codex Desktop</strong><small>实时连接</small></span>
-          </div>
-        </div>
+      <section class="provider-strip" aria-label="接入你已经在用的工具"><p>接入你已经在用的工具</p><div><img src="assets/readme/icon-claude.png" alt="" width="28" height="28"><strong>Claude Code</strong><span>本地 Hook 事件</span></div><div><span class="provider-terminal" aria-hidden="true">&gt;_</span><strong>Codex CLI</strong><span>本地 Hook 事件</span></div><div><img src="assets/readme/icon-codex-desktop.png" alt="" width="28" height="28"><strong>Codex Desktop</strong><span>桌面实时连接</span></div></section>
+      <section class="focus-section" id="overview" aria-labelledby="focus-title">
+        <div class="section-intro" data-reveal><div><p class="index-label">01 / LESS FRICTION</p><h2 id="focus-title">少切一次窗口。<br>多留一点专注。</h2></div><p>从任务开始，到需要你回应。<br>该看到的信息，出现在合适的位置。</p></div>
+        <div class="focus-grid"><article class="focus-feature" data-reveal><div class="feature-visual feature-visual-1" aria-hidden="true" data-motion><span class="mini-pill"><i class="provider-ring"></i><b>Codex</b><em class="signal-bars"><i></i><i></i><i></i></em></span></div><span class="index-label">01 /</span><h3>进度，就在眼前。</h3><p>正在思考、调用工具，还是等待回应？不用翻找窗口，扫一眼就有答案。</p></article><article class="focus-feature" data-reveal><div class="feature-visual feature-visual-2" aria-hidden="true" data-motion><span class="mini-approval"><i></i><b>Claude</b><em>&#8599;</em></span></div><span class="index-label">02 /</span><h3>需要你时，展开。</h3><p>审批请求集中显示，确认上下文后再允许或拒绝。处理完，继续手头的工作。</p></article><article class="focus-feature" data-reveal><div class="feature-visual feature-visual-3" aria-hidden="true" data-motion><span class="edge-line"></span><span class="mini-dock"><i class="provider-ring"></i></span></div><span class="index-label">03 /</span><h3>靠边，也看得见。</h3><p>拖到左右边缘，自动收成半圆。Claude 橙色，Codex 蓝紫色，状态始终可辨。</p></article></div>
       </section>
-
-      <section class="landing-states" aria-labelledby="states-title">
-        <div class="landing-section-head">
-          <p class="landing-section-eyebrow">形态</p>
-          <h2 id="states-title">同一座岛，三种状态。</h2>
-          <p>浮岛根据会话状态自动变形。颜色就是协议，位置始终保持低干扰。</p>
-        </div>
-        <div class="landing-state-grid">
-          <article class="landing-state-card">
-            <span>01</span>
-            <h3>运行</h3>
-            <p>RGB 光带标记正在工作的工具，不必切回终端也能知道任务仍在推进。</p>
-          </article>
-          <article class="landing-state-card">
-            <span>02</span>
-            <h3>审批</h3>
-            <p>需要权限时变成琥珀色；支持的来源可处理允许一次、本轮允许、拒绝和取消任务，Codex CLI Hook 只回传允许或拒绝。</p>
-          </article>
-          <article class="landing-state-card">
-            <span>03</span>
-            <h3>并行</h3>
-            <p>多个 agent 同时运行时，以堆叠头像展示谁在思考、谁在等待。</p>
-          </article>
-        </div>
+      <section class="interface-section" aria-labelledby="interface-title"><div class="section-intro" data-reveal><div><p class="index-label">02 / A CLOSER LOOK</p><h2 id="interface-title">小窗口。<br>完整的工作现场。</h2></div><a class="text-link" href="advantages.html">了解全部功能<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a></div><div class="interface-grid"><figure class="interface-shot" data-reveal><a href="download.html" class="interface-image"><img src="assets/readme/start-collapsed.jpg" alt="Vibelsland Free 收起状态界面" width="860" height="484" loading="lazy" decoding="async"></a><figcaption><span class="index-label">01</span><span>收起，保留进度。</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></figcaption></figure><figure class="interface-shot" data-reveal><a href="advantages.html" class="interface-image"><img src="assets/readme/start-expanded.jpg" alt="Vibelsland Free 展开任务面板" width="960" height="540" loading="lazy" decoding="async"></a><figcaption><span class="index-label">02</span><span>展开，看到上下文。</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></figcaption></figure><figure class="interface-shot" data-reveal><a href="install.html" class="interface-image"><img src="assets/readme/start-settings.jpg" alt="Vibelsland Free 设置界面" width="640" height="360" loading="lazy" decoding="async"></a><figcaption><span class="index-label">03</span><span>设置，按习惯调整。</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></figcaption></figure></div></section>
+      <section class="local-section" aria-labelledby="local-title">
+        <div class="local-copy" data-reveal><p class="index-label">03 / LOCAL BY DESIGN</p><h2 id="local-title">你的工作，<br>留在你的 Mac。</h2><p>会话状态与用量在本机处理。无需账号，不收集遥测。代码开放，每一处行为都可以查看。</p><a class="text-link" href="privacy.html">阅读隐私说明<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a></div>
+        <div class="local-diagram" data-reveal data-motion><div class="local-boundary" aria-hidden="true"><span class="local-boundary-label">YOUR MAC</span><div class="local-node node-claude">✳<small>Claude</small></div><div class="local-node node-island">&gt;_<small>island</small></div><div class="local-node node-codex">⌘<small>Codex</small></div><svg viewBox="0 0 400 190"><path d="M80 96H165M235 96H320"/><path class="local-signal" d="M80 96H165M320 96H235"/></svg><span class="local-boundary-caption">LOCAL CONNECTIONS ONLY</span></div><dl class="local-stats"><div><dt>遥测收集</dt><dd>0</dd></div><div><dt>账号注册</dt><dd>0</dd></div><div><dt>开源许可</dt><dd>MIT</dd></div></dl></div>
       </section>
-
-      <section class="landing-privacy" aria-labelledby="privacy-title">
-        <p class="landing-section-eyebrow">本地优先</p>
-        <h2 id="privacy-title">不上传。不同步。不需要账户。</h2>
-        <p>它只读取你电脑里的本地状态文件，用来在浮岛上显示进度。没有云端，没有遥测，源码完全开放。</p>
-        <div class="landing-stat-row">
-          <div><strong>0</strong><span>条数据离开你的电脑</span></div>
-          <div><strong>0</strong><span>个账户或登录态</span></div>
-          <div><strong>100%</strong><span>本地运行，开源可审计</span></div>
-        </div>
-      </section>
-
-      <section class="start-steps" aria-label="三步开始" data-i18n-aria-label="aria.homeSteps">
-        <figure class="start-card">
-          <a class="start-card-image" href="download.html" aria-label="查看下载详情">
-            <img class="start-shot start-shot-collapsed" src="assets/readme/start-collapsed.jpg" alt="Vibelsland Free 收起状态浮岛截图" width="860" height="484" loading="lazy" decoding="async">
-          </a>
-          <figcaption class="start-caption">
-            <span data-i18n="home.step1.title">1</span>
-            <p data-i18n="home.step1.copy">收起浮岛：运行状态常驻顶部。</p>
-          </figcaption>
-        </figure>
-        <figure class="start-card">
-          <a class="start-card-image" href="install.html" aria-label="查看安装与信任">
-            <img class="start-shot start-shot-expanded" src="assets/readme/start-expanded.jpg" alt="Vibelsland Free 展开状态浮岛截图" width="960" height="540" loading="lazy" decoding="async">
-          </a>
-          <figcaption class="start-caption">
-            <span data-i18n="home.step2.title">2</span>
-            <p data-i18n="home.step2.copy">展开浮岛：查看工具调用和最近进度。</p>
-          </figcaption>
-        </figure>
-        <figure class="start-card">
-          <a class="start-card-image" href="support.html" aria-label="查看支持">
-            <img class="start-shot start-shot-settings" src="assets/readme/start-settings.jpg" alt="Vibelsland Free 设置界面截图" width="640" height="360" loading="lazy" decoding="async">
-          </a>
-          <figcaption class="start-caption">
-            <span data-i18n="home.step3.title">3</span>
-            <p data-i18n="home.step3.copy">设置界面：管理来源、提醒与本地选项。</p>
-          </figcaption>
-        </figure>
-      </section>
-
-      <section class="landing-install" aria-labelledby="install-title">
-        <p class="landing-section-eyebrow">安装</p>
-        <h2 id="install-title">三分钟，装好上路。</h2>
-        <p>v0.3.4 使用 ad-hoc 签名，首次启动需要在系统设置中手动信任。</p>
-        <div class="landing-install-grid">
-          <ol>
-            <li><strong>下载并解压</strong><span>从 GitHub Releases 拉取 zip 包，把 <code>&gt;_ - island.app</code> 拖进 Applications。</span></li>
-            <li><strong>校验 SHA-256</strong><span>用 <code>shasum -a 256 -c</code> 对比官方校验文件，确认包体未被篡改。</span></li>
-            <li><strong>首次启动并安装 Hooks</strong><span>若出现 Apple 无法验证提示，点“完成”，到“隐私与安全性”里点“仍要打开”，再安装 Hooks。</span></li>
-          </ol>
-          <pre><code>$ shasum -a 256 -c Vibelsland-Free-0.3.4-macos.zip.sha256
-Vibelsland-Free-0.3.4-macos.zip: OK</code></pre>
-        </div>
-      </section>
+      <section class="download-banner" aria-labelledby="get-started-title" data-reveal><div><p class="index-label">READY WHEN YOU ARE.</p><h2 id="get-started-title">下一次开工，<br>带上你的浮岛。</h2><p>免费使用。macOS 14+。为你的日常工作而做。</p></div><div class="download-banner-actions"><a class="button primary" href="https://github.com/shinteni/prompt-island/releases/download/v0.3.4/Vibelsland-Free-0.3.4-macos.zip">免费下载 macOS 版<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a><a class="text-link" href="install.html">先看安装指南<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a></div><span class="banner-mark" aria-hidden="true">&gt;_</span></section>
     </main>
 
     <footer class="site-footer">
@@ -240,6 +138,6 @@ Vibelsland-Free-0.3.4-macos.zip: OK</code></pre>
       </nav>
     </footer>
     <script src="lang.js?v=9d838da0745f" defer></script>
-    <script src="effects.js?v=984d01b9fa2d" defer></script>
+    <script src="effects.js?v=0208923b079a" defer></script>
   </body>
 </html>

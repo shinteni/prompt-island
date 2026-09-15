@@ -673,6 +673,13 @@ for path in [docs / "download.html", docs / "en" / "download.html", docs / "ja" 
             if phrase and phrase not in page_text and escaped_phrase not in page_text:
                 errors.append(f"Download page missing release metadata value in {display(path)}: {phrase}")
 
+for path in [docs / "install.html", docs / "en" / "install.html", docs / "ja" / "install.html"]:
+    if path.exists():
+        install_text = path.read_text(encoding="utf-8")
+        displayed_hashes = re.findall(r'<code>([a-f0-9]{64})</code>', install_text)
+        if displayed_hashes != [release_archive_hash]:
+            errors.append(f"Install checksum does not match release.json in {display(path)}")
+
 for path in [docs / "support.html", docs / "en" / "support.html", docs / "ja" / "support.html"]:
     if path.exists():
         support_text = path.read_text(encoding="utf-8")
@@ -685,24 +692,31 @@ for path in [docs / "index.html", docs / "en" / "index.html", docs / "ja" / "ind
         home_text = path.read_text(encoding="utf-8")
         for phrase in [
             'class="home-entry"',
-            'class="start-hero"',
-            'class="start-logo"',
-            'start-download',
-            'class="start-steps"',
-            'class="start-card"',
-            'class="start-card-image"',
-            'class="start-caption"',
+            'class="signal-hero"',
+            'id="hero-title"',
+            'id="playground"',
+            'role="tablist"',
+            'data-demo-state="running"',
+            'data-demo-state="approval"',
+            'data-demo-state="docked"',
+            'data-demo-decision="allow"',
+            'data-demo-decision="deny"',
+            'class="demo-disclaimer"',
+            'class="interface-grid"',
             'start-collapsed.jpg',
             'start-expanded.jpg',
             'start-settings.jpg',
-            'data-i18n="home.hero.title"',
-            'data-i18n="home.step1.title"',
-            'data-i18n="home.step2.title"',
-            'data-i18n="home.step3.title"',
-            'data-i18n-aria-label="aria.homeSteps"',
+            release_archive_url,
         ]:
             if phrase not in home_text:
-                errors.append(f"Home page missing start layout in {display(path)}: {phrase}")
+                errors.append(f"Home page missing product preview in {display(path)}: {phrase}")
+        for state in ["running", "approval", "docked"]:
+            tab = re.search(rf'<button\b(?=[^>]*id="demo-tab-{state}")[^>]*>', home_text)
+            panel = re.search(rf'<div\b(?=[^>]*id="demo-{state}")[^>]*>', home_text)
+            if not tab or f'aria-controls="demo-{state}"' not in tab.group(0):
+                errors.append(f"Demo tab has no matching panel in {display(path)}: {state}")
+            if not panel or f'aria-labelledby="demo-tab-{state}"' not in panel.group(0):
+                errors.append(f"Demo panel has no tab label in {display(path)}: {state}")
 
 sitemap_path = docs / "sitemap.xml"
 if sitemap_path.exists():
