@@ -2260,9 +2260,9 @@ html[lang="ja"] .signal-title { font-size: clamp(35px, 4.2vw, 62px); line-height
 .demo-approval-actions button:first-child { background: #ffc15c; color: #1c1c1c; }
 .demo-approval-actions button:hover { filter: brightness(1.15); }
 .demo-approval .demo-feedback { margin-top: 8px; font-size: 10px; color: #ffc15c; min-height: 15px; }
-.island-playground[data-state="docked"] .demo-island { left: 100%; top: 45%; width: 43px; height: 84px; border-radius: 44px 0 0 44px; transform: translate(-100%, -50%); }
+.island-playground[data-state="docked"] .demo-island { left: 100%; top: 45%; width: 76px; height: 44px; border-radius: 24px 0 0 24px; transform: translate(-100%, -50%); }
 .demo-docked button { display: grid; place-items: center; width: 100%; height: 100%; padding: 0 2px 0 0; border: 0; border-radius: inherit; background: transparent; cursor: pointer; }
-.demo-docked .provider-ring { width: 22px; height: 22px; }
+.demo-docked .provider-ring { width: 20px; height: 20px; }
 .demo-caption { position: absolute; bottom: 22px; right: 18px; display: flex; align-items: center; gap: 6px; padding: 8px 10px; border: 1px solid #ffc15c29; border-radius: 4px; background: #2b2620; color: #e1bd85; font-size: 9px; box-shadow: 0 5px 14px #0002; }
 .demo-caption i { width: 4px; height: 4px; background: #ffc15c; border-radius: 50%; }
 .playground-hint { margin: 0; padding: 9px 20px 0; color: #bcb3a6; text-align: center; font-size: 11px; }
@@ -2302,8 +2302,8 @@ html[lang="ja"] .signal-title { font-size: clamp(35px, 4.2vw, 62px); line-height
 .mini-approval b { color: #423a2e; font-size: 12px; font-weight: 500; }
 .mini-approval em { display: grid; place-items: center; width: 30px; height: 26px; margin-left: auto; border-radius: 4px; background: #ffc15c; color: #342b20; font-style: normal; }
 .edge-line { height: 100px; width: 1px; background: #c3b7a4; position: absolute; left: 70%; }
-.mini-dock { position: absolute; top: 33px; right: 30%; display: grid; place-items: center; width: 35px; height: 68px; background: #262626; border-radius: 40px 0 0 40px; box-shadow: -8px 8px 16px #24242415; animation: dock-breathe 4s ease-in-out infinite; }
-.mini-dock .provider-ring { width: 19px; height: 19px; }
+.mini-dock { position: absolute; top: calc(50% - 17px); right: 30%; display: grid; place-items: center; width: 64px; height: 34px; background: #262626; border-radius: 18px 0 0 18px; box-shadow: -4px 6px 12px #24242415; animation: dock-breathe 4s ease-in-out infinite; }
+.mini-dock .provider-ring { width: 18px; height: 18px; }
 .interface-section { background: #1b1b1b; border-bottom: 1px solid var(--line); }
 .interface-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); max-width: 1440px; margin: auto; gap: 22px; }
 .interface-shot { margin: 0; min-width: 0; }
