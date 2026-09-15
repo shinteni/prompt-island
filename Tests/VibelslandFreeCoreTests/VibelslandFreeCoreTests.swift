@@ -61,8 +61,8 @@ struct VibelslandFreeCoreTests {
         )
         let englishDisplay = SessionDisplaySnapshot(session: session, language: .english)
         let japaneseDisplay = SessionDisplaySnapshot(session: session, language: .japanese)
-        XCTAssertTrue(englishDisplay.primaryLine.hasPrefix("Tool:"), "English display uses English labels")
-        XCTAssertTrue(japaneseDisplay.primaryLine.hasPrefix("ツール："), "Japanese display uses Japanese labels")
+        XCTAssertEqual(englishDisplay.primaryLine, "Waiting for AI reply", "English display uses English labels")
+        XCTAssertEqual(japaneseDisplay.primaryLine, "AI の返信を待っています", "Japanese display uses Japanese labels")
     }
 
     @Test func testCodexStatePathPrefersTheActivelyUpdatedDatabase() throws {
