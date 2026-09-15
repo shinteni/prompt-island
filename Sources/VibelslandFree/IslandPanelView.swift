@@ -145,14 +145,8 @@ struct IslandPanelView: View {
         configurationStore.config.islandDockPlacement?.edge
     }
 
-    private func panelShape(radius: CGFloat) -> UnevenRoundedRectangle {
-        UnevenRoundedRectangle(
-            topLeadingRadius: dockEdge == .left ? 0 : radius,
-            bottomLeadingRadius: dockEdge == .left ? 0 : radius,
-            bottomTrailingRadius: dockEdge == .right ? 0 : radius,
-            topTrailingRadius: dockEdge == .right ? 0 : radius,
-            style: dockEdge == nil ? .continuous : .circular
-        )
+    private func panelShape(radius: CGFloat) -> IslandPanelShape {
+        IslandPanelShape(edge: dockEdge, expanded: store.isExpanded, cornerRadius: radius)
     }
 
     private var statusSpinner: some View {
@@ -588,5 +582,45 @@ struct IslandPanelView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
+    }
+}
+
+struct IslandPanelShape: InsettableShape {
+    let edge: IslandDockEdge?
+    let expanded: Bool
+    let cornerRadius: CGFloat
+    var insetAmount: CGFloat = 0
+
+    func path(in bounds: CGRect) -> Path {
+        let rect = bounds.insetBy(dx: insetAmount, dy: insetAmount)
+        guard let dockEdge = edge, !expanded else {
+            let radius = max(0, cornerRadius - insetAmount)
+            return UnevenRoundedRectangle(
+                topLeadingRadius: edge == .left ? 0 : radius,
+                bottomLeadingRadius: edge == .left ? 0 : radius,
+                bottomTrailingRadius: edge == .right ? 0 : radius,
+                topTrailingRadius: edge == .right ? 0 : radius,
+                style: edge == nil ? .continuous : .circular
+            ).path(in: rect)
+        }
+
+        var path = Path()
+        path.move(to: CGPoint(x: rect.maxX, y: rect.minY))
+        path.addCurve(to: CGPoint(x: rect.minX, y: rect.midY),
+            control1: CGPoint(x: rect.maxX, y: rect.minY + rect.height * 0.22),
+            control2: CGPoint(x: rect.minX, y: rect.minY + rect.height * 0.20))
+        path.addCurve(to: CGPoint(x: rect.maxX, y: rect.maxY),
+            control1: CGPoint(x: rect.minX, y: rect.minY + rect.height * 0.80),
+            control2: CGPoint(x: rect.maxX, y: rect.minY + rect.height * 0.78))
+        path.closeSubpath()
+        return dockEdge == .right ? path : path.applying(
+            CGAffineTransform(a: -1, b: 0, c: 0, d: 1, tx: rect.minX + rect.maxX, ty: 0)
+        )
+    }
+
+    func inset(by amount: CGFloat) -> some InsettableShape {
+        var shape = self
+        shape.insetAmount += amount
+        return shape
     }
 }

@@ -19,7 +19,7 @@ package struct IslandDockPlacement: Codable, Equatable {
 
 package enum IslandDockingPolicy {
     package static let snapDistance: CGFloat = 24
-    package static let tabSize = CGSize(width: 36, height: 72)
+    package static let tabSize = CGSize(width: 30, height: 50)
     package static let collapseDelay: TimeInterval = 0.65
 
     package static func edge(for frame: CGRect, in screen: CGRect) -> IslandDockEdge? {
